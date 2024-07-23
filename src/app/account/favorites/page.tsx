@@ -1,24 +1,6 @@
-"use client";
-
-import Image from "next/image";
-import { GeistSans } from "geist/font/sans";
-import ServerList from "@/components/ServerList";
-import { Button } from "@/components/ui/button";
-import { ModeToggle as ThemeSwitcher } from "@/components/ThemeSwitcher";
-import {
-  SignInButton,
-  SignedIn,
-  SignedOut,
-  UserProfile,
-  useUser,
-  useClerk,
-} from "@clerk/nextjs";
-import { useEffect, useState } from "react";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { banner } from "@/banner";
+import TopBar from "@/components/clerk/Topbar";
+import FavoritesView from "@/components/FavoritesView";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -27,11 +9,9 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { X, UserCog, Server } from "lucide-react";
-import TopBar from "@/components/clerk/Topbar";
-import { banner } from "@/banner";
+import { Server } from "lucide-react";
 
-export default function Home() {
+export default function Favorites() {
   return (
     <main>
       {banner.isBanner && (
@@ -54,7 +34,7 @@ export default function Home() {
               </BreadcrumbItem>
               <BreadcrumbSeparator className="max-sm:hidden" />
               <BreadcrumbItem>
-                <BreadcrumbPage>Home</BreadcrumbPage>
+                <BreadcrumbPage>Favorites</BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
@@ -63,7 +43,7 @@ export default function Home() {
         <TopBar />
       </div>
       <div className="  pt-[60px] p-4">
-        <ServerList />
+        <FavoritesView />
       </div>
     </main>
   );

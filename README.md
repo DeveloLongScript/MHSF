@@ -1,36 +1,34 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# MHSF
 
-## Getting Started
+An open-source Minehut server viewer/finder made in React + Next.js. Is much better than the Minehut one, as has many filters and is improving everyday.
 
-First, run the development server:
+## Tech-stack
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+[React](https://react.dev): Component based syntaxing for the web
+[Next.js](https://nextjs.org): Handles API, server-based metadata, and so much more.
+[Clerk](https://clerk.com): Authentication for MHSF (very cool library)
+[TailwindCSS](https://tailwindcss.com): Styling without CSS, simplified
+[shadcn/ui](https://ui.shadcn.com): Provides the awesome UI for MHSF
+And many other smaller libraries are in use to make sure MHSF is feature-packed.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Contributing
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+If you'd like to contribute, you must follow the guidelines below:
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+- Make sure to lint (`npm run lint`) every time you finish lines of code
+- Use common sense! Don't make comments that could offend someone, or just seems like a bad ideaa
+- Be respectful when making your PR. We would love to take your code, but if you argue, it doesn't help.
 
-## Learn More
+## Building
 
-To learn more about Next.js, take a look at the following resources:
+Clone the repo!
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+First, you must supply the following services with API keys:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+- [Clerk](https://clerk.com): Create an app and put the respective keys in `.env.local`
 
-## Deploy on Vercel
+Second, run `npm i` and `npm run build`. To start the app, run `npm run start`.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Dev
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Swap `npm run build` for `npm run dev`.
