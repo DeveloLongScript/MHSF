@@ -26,6 +26,7 @@ Clone the repo!
 First, you must supply the following services with API keys:
 
 - [Clerk](https://clerk.com): Create an app and put the respective keys in `.env.local`
+- MongoDB: Create a database, can be anywhere, and put the location to connect in `.env.local` for the key `MONGO_DB`
 
 Second, run `npm i` and `npm run build`. To start the app, run `npm run start`.
 

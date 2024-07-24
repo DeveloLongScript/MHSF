@@ -151,6 +151,7 @@ function createHTML(
 ) {
   if (className == undefined) className = "";
   if (contents == undefined) contents = "";
+  if (contents == "undefined") contents = "<br/>";
 
   if (tw == false || tw == undefined) {
     return (
