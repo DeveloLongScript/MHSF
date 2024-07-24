@@ -104,7 +104,7 @@ export default function parseToHTML(m: string, tw?: boolean): Promise<string> {
               }
             });
           }
-          g("<div>" + allHTML + "</div>");
+          g("<span>" + allHTML + "</span>");
         }
       });
       if (!j.ok) {
@@ -181,7 +181,6 @@ type Element = {
 };
 
 function colorConvert(className: string) {
-  console.log(className);
   const classes = className.split(" ");
   let result = "";
   classes.forEach((classUnique) => {

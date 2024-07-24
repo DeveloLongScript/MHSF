@@ -749,7 +749,7 @@ export default function ServerList() {
         }
         style={{ overflow: "hidden !important", paddingLeft: 6 }}
       >
-        <div className="  grid sm:grid-cols-4 gap-4">
+        <div className=" grid sm:grid-cols-4 gap-4">
           {servers.map((b: any) => (
             <>
               <ServerCard b={b} motd={motdList[b.name]} />

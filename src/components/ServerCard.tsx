@@ -35,7 +35,10 @@ export default function ServerCard({ b, motd }: any) {
   return (
     <ContextMenu>
       <ContextMenuTrigger>
-        <Card key={b.name} className="  mb-4 flex items-center">
+        <Card
+          key={b.name}
+          className="min-h-[450px] max-h-[450px] mb-4 flex items-start"
+        >
           <CardHeader>
             <CardTitle className="  m-0">
               <IconDisplay server={b} /> {b.name}{" "}
@@ -57,7 +60,9 @@ export default function ServerCard({ b, motd }: any) {
                     <Button
                       variant="ghost"
                       onClick={() => {
-                        navigator.clipboard.writeText(b.name + ".minehut.gg");
+                        navigator.clipboard.writeText(
+                          b.name + ".mshf.minehut.gg",
+                        );
                         toast.success("Copied IP to clipboard");
                       }}
                     >
@@ -122,7 +127,9 @@ export default function ServerCard({ b, motd }: any) {
                       variant="secondary"
                       className="  min-w-[128px] max-w-[328px] h-[32px] mt-2 ml-2 max-md:hidden"
                       onClick={() => {
-                        navigator.clipboard.writeText(b.name + ".minehut.gg");
+                        navigator.clipboard.writeText(
+                          b.name + ".mshf.minehut.gg",
+                        );
                         toast.success("Copied IP to clipboard");
                       }}
                     >
@@ -143,7 +150,8 @@ export default function ServerCard({ b, motd }: any) {
                         </Button>
                       </TooltipTrigger>
                       <TooltipContent>
-                        Open up the server page to see more information about the server
+                        Open up the server page to see more information about
+                        the server
                       </TooltipContent>
                     </Tooltip>
                   </>
@@ -151,7 +159,9 @@ export default function ServerCard({ b, motd }: any) {
                 <ContextMenuContent>
                   <ContextMenuItem
                     onClick={() => {
-                      navigator.clipboard.writeText(b.name + ".minehut.gg");
+                      navigator.clipboard.writeText(
+                        b.name + ".mshf.minehut.gg",
+                      );
                       toast.success("Copied IP to clipboard");
                     }}
                   >
@@ -172,7 +182,9 @@ export default function ServerCard({ b, motd }: any) {
               </ContextMenu>
             </CardDescription>
             <CardContent>
-              <div dangerouslySetInnerHTML={{ __html: motd }} />
+              {b.name != "Skylegendz" && (
+                <span dangerouslySetInnerHTML={{ __html: motd }} />
+              )}
             </CardContent>
           </CardHeader>
         </Card>
@@ -180,7 +192,7 @@ export default function ServerCard({ b, motd }: any) {
       <ContextMenuContent>
         <ContextMenuItem
           onClick={() => {
-            navigator.clipboard.writeText(b.name + ".minehut.gg");
+            navigator.clipboard.writeText(b.name + ".mshf.minehut.gg");
             toast.success("Copied IP to clipboard");
           }}
         >

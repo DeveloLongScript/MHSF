@@ -10,6 +10,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Server } from "lucide-react";
+import Link from "next/link";
 
 export default function Favorites() {
   return (

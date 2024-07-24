@@ -57,7 +57,9 @@ export default function FavoritesView() {
                   variant="secondary"
                   className="  min-w-[128px] max-w-[328px] mb-2 h-[32px] max-md:hidden"
                   onClick={() => {
-                    navigator.clipboard.writeText(server.name + ".minehut.gg");
+                    navigator.clipboard.writeText(
+                      server.name + ".mshf.minehut.gg",
+                    );
                     toast.success("Copied IP to clipboard");
                   }}
                 >
