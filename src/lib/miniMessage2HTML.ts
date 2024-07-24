@@ -151,7 +151,6 @@ function createHTML(
 ) {
   if (className == undefined) className = "";
   if (contents == undefined) contents = "";
-  if (contents == "undefined") return "<br/>";
 
   if (tw == false || tw == undefined) {
     return (
@@ -181,6 +180,7 @@ type Element = {
 };
 
 function colorConvert(className: string) {
+  console.log(className);
   const classes = className.split(" ");
   let result = "";
   classes.forEach((classUnique) => {

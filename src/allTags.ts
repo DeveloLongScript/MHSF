@@ -91,7 +91,7 @@ export var allTags: Array<{
     },
     tooltipDesc: "Is this server not directly hosted on Minehuts servers?",
     htmlDocs:
-      "Is this server not directly hosted on Minehuts servers, most likely because the server runs on an multi-server network (like Velocity or Bungeecord)",
+      "This tag represents servers not directly hosted on Minehut's servers, most likely because the server runs on an multi-server network (like Velocity or Bungeecord)",
     docsName: "External",
     primary: true,
     role: "red",

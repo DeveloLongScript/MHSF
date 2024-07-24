@@ -4,12 +4,12 @@ An open-source Minehut server viewer/finder made in React + Next.js. Is much bet
 
 ## Tech-stack
 
-[React](https://react.dev): Component based syntaxing for the web
-[Next.js](https://nextjs.org): Handles API, server-based metadata, and so much more.
-[Clerk](https://clerk.com): Authentication for MHSF (very cool library)
-[TailwindCSS](https://tailwindcss.com): Styling without CSS, simplified
-[shadcn/ui](https://ui.shadcn.com): Provides the awesome UI for MHSF
-And many other smaller libraries are in use to make sure MHSF is feature-packed.
+[React](https://react.dev): Component based syntaxing for the web <br/>
+[Next.js](https://nextjs.org): Handles API, server-based metadata, and so much  more.<br/>
+[Clerk](https://clerk.com): Authentication for MHSF (very cool library) <br/>
+[TailwindCSS](https://tailwindcss.com): Styling without CSS, simplified<br/>
+[shadcn/ui](https://ui.shadcn.com): Provides the awesome UI for MHSF<br/>
+And many other smaller libraries are in use to make sure MHSF is feature-packed.<br/>
 
 ## Contributing
 
