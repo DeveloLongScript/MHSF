@@ -29,9 +29,11 @@ export default function Favorites() {
         <div className="me-auto mt-3 pl-7">
           <Breadcrumb>
             <BreadcrumbList>
-              <BreadcrumbItem className="max-sm:hidden">
-                <Server />
-              </BreadcrumbItem>
+              <Link href="/">
+                <BreadcrumbPage className="max-sm:hidden">
+                  <Server />
+                </BreadcrumbPage>
+              </Link>
               <BreadcrumbSeparator className="max-sm:hidden" />
               <BreadcrumbItem>
                 <BreadcrumbPage>Favorites</BreadcrumbPage>

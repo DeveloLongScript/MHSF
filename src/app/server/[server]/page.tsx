@@ -89,9 +89,11 @@ export default function ServerPage({ params }: { params: { server: string } }) {
         <div className="  me-auto mt-3 pl-7">
           <Breadcrumb className="  ">
             <BreadcrumbList>
-              <BreadcrumbItem className="  max-sm:hidden">
-                <Server />
-              </BreadcrumbItem>
+              <Link href="/">
+                <BreadcrumbPage className="max-sm:hidden">
+                  <Server />
+                </BreadcrumbPage>
+              </Link>
               <BreadcrumbSeparator className="  max-sm:hidden" />
               <BreadcrumbItem className="  max-sm:hidden">
                 Server

@@ -13,14 +13,6 @@ import Image from "next/image";
 import { ClerkThemeProvider } from "@/components/clerk/ClerkThemeProvider";
 import { useEffectOnce } from "@/lib/useEffectOnce";
 
-export async function generateMetadata(): Promise<Metadata> {
-  return {
-    title: `Currently online servers | MHSF`,
-    description: "View all servers currently on Minehut.",
-    icons: "/favicon.ico",
-  };
-}
-
 export default async function RootLayout({
   children,
 }: Readonly<{

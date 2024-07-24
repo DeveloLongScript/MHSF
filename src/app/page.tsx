@@ -1,5 +1,3 @@
-"use client";
-
 import Image from "next/image";
 import { GeistSans } from "geist/font/sans";
 import ServerList from "@/components/ServerList";
@@ -30,6 +28,8 @@ import {
 import { X, UserCog, Server } from "lucide-react";
 import TopBar from "@/components/clerk/Topbar";
 import { banner } from "@/banner";
+import { ResolvingMetadata, Metadata } from "next";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -49,9 +49,11 @@ export default function Home() {
         <div className="me-auto mt-3 pl-7">
           <Breadcrumb>
             <BreadcrumbList>
-              <BreadcrumbItem className="max-sm:hidden">
-                <Server />
-              </BreadcrumbItem>
+              <Link href="/">
+                <BreadcrumbPage className="max-sm:hidden">
+                  <Server />
+                </BreadcrumbPage>
+              </Link>
               <BreadcrumbSeparator className="max-sm:hidden" />
               <BreadcrumbItem>
                 <BreadcrumbPage>Home</BreadcrumbPage>
