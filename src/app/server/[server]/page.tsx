@@ -12,6 +12,7 @@ import { Server } from "lucide-react";
 import type { Metadata, ResolvingMetadata } from "next";
 import { IconDisplayClient } from "@/components/IconDisplay";
 import { banner } from "@/banner";
+import Link from "next/link";
 
 type Props = {
   params: { server: string };
