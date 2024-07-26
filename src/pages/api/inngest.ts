@@ -17,7 +17,7 @@ export default serve({
   functions: [
     inngest.createFunction(
       { id: "every-60-min" },
-      [{ cron: "*/30 * * * *" }, { event: "every-60-min" }],
+      [{ cron: "*/30 * * * *" }],
       async ({ event, step }) => {
         const mongo = new MongoClient(process.env.MONGO_DB as string);
         try {
