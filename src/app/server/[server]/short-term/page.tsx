@@ -14,7 +14,6 @@ import { IconDisplayClient } from "@/components/IconDisplay";
 import { banner } from "@/banner";
 import Link from "next/link";
 import TabServer from "@/components/misc/TabServer";
-import { ChartComponent } from "@/components/Chart";
 import { NewChart } from "@/components/NewChart";
 
 type Props = {

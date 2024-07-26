@@ -22,14 +22,14 @@ export default function TabServer({
           setTab(tac);
           setTabLoading(true);
           if (tac == "historical")
-            window.location.replace(`/server/${server}/historical-data`);
+            window.location.replace(`/server/${server}/short-term`);
           if (tac == "general") window.location.replace(`/server/${server}`);
         }}
         className="w-[300px]"
       >
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="general"> General Information</TabsTrigger>
-          <TabsTrigger value="historical">Historical Data</TabsTrigger>
+          <TabsTrigger value="historical">Short Term</TabsTrigger>
         </TabsList>
       </Tabs>
     </div>
