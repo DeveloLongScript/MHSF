@@ -14,7 +14,7 @@ export default function FavoritesView() {
   const [loading, setLoading] = useState(true);
 
   useEffectOnce(() => {
-    fetch("/api/accountLocked/getAllFavorites").then((c) => {
+    fetch("/api/favorites/getAllFavorites").then((c) => {
       c.json().then((d) => {
         let num = 0;
         d.result.forEach((a: any, i: number) => {
@@ -28,7 +28,7 @@ export default function FavoritesView() {
                 if (num == d.result.length) {
                   setLoading(false);
                 }
-              }),
+              })
           );
         });
         if (d.result.length == 0) setLoading(false);
@@ -65,7 +65,7 @@ export default function FavoritesView() {
                   className="  min-w-[128px] max-w-[328px] mb-2 h-[32px] max-md:hidden"
                   onClick={() => {
                     navigator.clipboard.writeText(
-                      server.name + ".mshf.minehut.gg",
+                      server.name + ".mshf.minehut.gg"
                     );
                     toast.success("Copied IP to clipboard");
                   }}
@@ -105,7 +105,7 @@ export default function FavoritesView() {
 }
 
 function convert(value: number) {
-  var result: string = "";
+  var result: string = value.toString();
   if (value >= 1000000) {
     result = Math.floor(value / 1000000) + "m";
   } else if (value >= 1000) {

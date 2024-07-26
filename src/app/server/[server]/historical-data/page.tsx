@@ -15,6 +15,7 @@ import { banner } from "@/banner";
 import Link from "next/link";
 import TabServer from "@/components/misc/TabServer";
 import { ChartComponent } from "@/components/Chart";
+import { NewChart } from "@/components/NewChart";
 
 type Props = {
   params: { server: string };
@@ -81,9 +82,8 @@ export default function ServerPage({ params }: { params: { server: string } }) {
         <TabServer server={params.server} tabDef="historical" />
         <div className="pt-8">
           <ServerView server={params.server} />
-          <div className="p-4 grid grid-cols-2 gap-4">
-            <ChartComponent chart="player_count" server={params.server} />
-            <ChartComponent chart="favorites" server={params.server} />
+          <div className="p-4 gap-4">
+            <NewChart server={params.server} />
           </div>
         </div>
       </div>

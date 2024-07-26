@@ -5,7 +5,7 @@ import { decreaseNum, increaseNum } from "./getCommunityNum";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse,
+  res: NextApiResponse
 ) {
   const { userId } = getAuth(req);
 
@@ -41,7 +41,7 @@ export default async function handler(
         {
           user: userId,
           favorites: existingFavorites,
-        },
+        }
       );
       res.send({ message: "Unfavorited " + server });
     } else {
@@ -52,7 +52,7 @@ export default async function handler(
         {
           user: userId,
           favorites: existingFavorites,
-        },
+        }
       );
       res.send({ message: "Favorited " + server });
     }

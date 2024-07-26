@@ -54,7 +54,7 @@ export default function ServerView(props: { server: string }) {
   useEffect(() => {
     setRandomText(getRandomText());
     single.init().then(() => {
-      fetch("/api/accountLocked/isFavorited", {
+      fetch("/api/favorites/isFavorited", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -211,7 +211,7 @@ export default function ServerView(props: { server: string }) {
               <Button
                 variant="outline"
                 onClick={() => {
-                  fetch("/api/accountLocked/favoriteServer", {
+                  fetch("/api/favorites/favoriteServer", {
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
                       server: single.grabOffline()?.name,
@@ -223,7 +223,7 @@ export default function ServerView(props: { server: string }) {
               >
                 {favorited && (
                   <motion.div
-                    animate={{ color: "yellow", fill: "yellow" }}
+                    animate={{ color: "yellow", fill: "yellow" }}
                     transition={{ duration: 2 }}
                   >
                     <Star
@@ -237,7 +237,7 @@ export default function ServerView(props: { server: string }) {
                 {!favorited && (
                   <motion.div
                     transition={{ duration: 1 }}
-                    animate={{ color: "yellow", fill: "yellow" }}
+                    animate={{ color: "yellow", fill: "yellow" }}
                   >
                     <Star className="mr-2" size="16" />
                   </motion.div>

@@ -4,13 +4,8 @@ import { getAuth } from "@clerk/nextjs/server";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse,
+  res: NextApiResponse
 ) {
-  const { userId } = getAuth(req);
-
-  if (!userId) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
   const server = checkForInfoOrLeave(res, req.body.server);
   const client = new MongoClient(process.env.MONGO_DB as string);
 
@@ -47,7 +42,7 @@ export async function increaseNum(client: MongoClient, server: string) {
     const entry = find[0];
     collection.findOneAndReplace(
       { server: server },
-      { server: server, favorites: entry.favorites + 1 },
+      { server: server, favorites: entry.favorites + 1 }
     );
   }
 }
@@ -64,7 +59,7 @@ export async function decreaseNum(client: MongoClient, server: string) {
     const entry = find[0];
     collection.findOneAndReplace(
       { server: server },
-      { server: server, favorites: entry.favorites - 1 },
+      { server: server, favorites: entry.favorites - 1 }
     );
   }
 }
