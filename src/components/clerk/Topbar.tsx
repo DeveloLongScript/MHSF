@@ -6,12 +6,14 @@ import { Button } from "../ui/button";
 import { ModeToggle as ThemeSwitcher } from "../ThemeSwitcher";
 import { Popover, PopoverTrigger, PopoverContent } from "../ui/popover";
 import Image from "next/image";
-import { UserCog, X } from "lucide-react";
+import { Circle, InfoIcon, UserCog, X } from "lucide-react";
 import LoggedInPopover from "./LoggedInPopover";
 import SignInPopoverButton from "./SignInPopoverButton";
 import { version } from "@/version";
+import InfoPopover from "../misc/InfoPopover";
+import Link from "next/link";
 
-export default function TopBar() {
+export default function TopBar({ inter }: { inter: string }) {
   const [loading, setLoading] = useState(true);
   const [isAuthenticating, setAuthenticating] = useState(false);
   const clerk = useClerk();
@@ -31,7 +33,9 @@ export default function TopBar() {
       <SignedOut>
         <div className="  mt-1 gap-1 grid grid-cols-5">
           {isAuthenticating && <SignInPopoverButton className="col-span-2" />}
-          {version}
+          <Button size="icon" variant="ghost">
+            <InfoIcon size={18} />
+          </Button>
           <Button variant="ghost" size="icon">
             <svg
               viewBox="0 0 438.549 438.549"
@@ -47,12 +51,11 @@ export default function TopBar() {
         </div>
       </SignedOut>
       <SignedIn>
-        <div className="  mt-1 grid grid-cols-4">
-          <span className="flex items-center">{version}</span>
+        <div className="mt-1 grid grid-cols-4 gap-1">
           <Popover>
             <PopoverTrigger>
               {isAuthenticating && !loading && (
-                <Button size="icon" variant="ghost">
+                <Button size="icon" variant="ghost" className="mb-1">
                   <Image
                     alt="Clerk Image"
                     src={
@@ -60,8 +63,9 @@ export default function TopBar() {
                         ? "https://img.clerk.com/preview.png?size=144&seed=seed&initials=AD&isSquare=true&bgType=marble&bgColor=6c47ff&fgType=silhouette&fgColor=FFFFFF&type=user&w=48&q=75"
                         : user?.imageUrl
                     }
-                    width={32}
-                    height={32}
+                    width={26}
+                    height={26}
+                    className="rounded-full"
                   />
                 </Button>
               )}
@@ -70,8 +74,25 @@ export default function TopBar() {
               <LoggedInPopover />
             </PopoverContent>
           </Popover>
-
-          <Button variant="ghost" size="icon">
+          <Popover>
+            <PopoverTrigger>
+              <Button size="icon" variant="ghost" className="mb-1">
+                <InfoIcon className="  h-[1.2rem] w-[1.2rem]" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent>
+              <InfoPopover />
+            </PopoverContent>
+          </Popover>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() =>
+              window
+                .open("https://github.com/DeveloLongScript/MHSF", "_blank")
+                ?.focus()
+            }
+          >
             <svg
               viewBox="0 0 438.549 438.549"
               className="  h-[1.2rem] w-[1.2rem]"

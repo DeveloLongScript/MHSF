@@ -13,8 +13,8 @@ import type { Metadata, ResolvingMetadata } from "next";
 import { IconDisplayClient } from "@/components/IconDisplay";
 import { banner } from "@/banner";
 import Link from "next/link";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import TabServer from "@/components/misc/TabServer";
+import { ChartComponent } from "@/components/Chart";
 
 type Props = {
   params: { server: string };
@@ -22,7 +22,7 @@ type Props = {
 
 export async function generateMetadata(
   { params }: Props,
-  parent: ResolvingMetadata,
+  parent: ResolvingMetadata
 ): Promise<Metadata> {
   // read route params
   const { server } = params;
@@ -78,9 +78,13 @@ export default function ServerPage({ params }: { params: { server: string } }) {
   return (
     <main>
       <div className="pt-16">
-        <TabServer server={params.server} tabDef="general" />
+        <TabServer server={params.server} tabDef="historical" />
         <div className="pt-8">
           <ServerView server={params.server} />
+          <div className="p-4 grid grid-cols-2 gap-4">
+            <ChartComponent chart="player_count" server={params.server} />
+            <ChartComponent chart="favorites" server={params.server} />
+          </div>
         </div>
       </div>
     </main>

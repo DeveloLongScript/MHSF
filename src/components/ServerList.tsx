@@ -629,14 +629,14 @@ export default function ServerList() {
                   <br />
                   <br />
                   <code className="  border p-3 rounded">
-                    {randomData.name}.minehut.gg{" "}
+                    {randomData.name}.mshf.minehut.gg{" "}
                     <Button
                       size="icon"
                       className="  ml-1 h-[20px]"
                       onClick={() => {
                         setTextCopied(true);
                         navigator.clipboard.writeText(
-                          randomData.name + ".minehut.gg",
+                          randomData.name + ".mshf.minehut.gg",
                         );
                         toast.success("Copied!");
                         setTimeout(() => setTextCopied(false), 1000);
@@ -823,7 +823,7 @@ export function TagShower(props: { server: OnlineServer; className?: string }) {
             <DialogTrigger>
               <Tooltip>
                 <TooltipTrigger>
-                  <Badge variant={t.role} className={"mr-1" + props.className}>
+                  <Badge variant={t.role} className={props.className}>
                     {t.name}
                   </Badge>
                 </TooltipTrigger>

@@ -25,7 +25,7 @@ export default function LoggedInPopover() {
       </Button>
       <Button
         variant={"ghost"}
-        className="  text-red-500"
+        className="text-red-500"
         onClick={() => clerk.signOut()}
       >
         <X size={18} className="  mr-2" />

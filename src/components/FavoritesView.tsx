@@ -5,7 +5,7 @@ import { Card, CardHeader, CardTitle } from "./ui/card";
 import { ServerResponse } from "./ServerView";
 import { useEffectOnce } from "@/lib/useEffectOnce";
 import { Button } from "./ui/button";
-import { Copy, Layers } from "lucide-react";
+import { Copy, Layers, X, XIcon } from "lucide-react";
 import toast from "react-hot-toast";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
@@ -31,6 +31,7 @@ export default function FavoritesView() {
               }),
           );
         });
+        if (d.result.length == 0) setLoading(false);
       });
     });
   });
@@ -46,6 +47,12 @@ export default function FavoritesView() {
 
   return (
     <>
+      {apiFavorites.length == 0 && (
+        <div className="flex items-center justify-center">
+          <XIcon />
+          Your favorites are empty. Maybe favorite a server!
+        </div>
+      )}
       <div className="  grid sm:grid-cols-4 gap-4">
         {apiFavorites.map((server: ServerResponse) => (
           <Card key={server.name}>
