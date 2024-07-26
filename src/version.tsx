@@ -1,8 +1,8 @@
-export const version = "b-0.5";
+export const version = "b-0.4.5";
 
 const User = ({ user }: { user: string }) => (
   <span className="cursor-pointer bg-[rgba(255,165,0,0.25);] rounded p-[2.5px]">
-    @Tarna
+    {user}
   </span>
 );
 
