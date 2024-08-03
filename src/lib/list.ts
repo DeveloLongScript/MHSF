@@ -1,5 +1,6 @@
-import { OnlineServer } from "@/components/ServerView";
+import { OnlineServer } from "./types/server";
 import toast from "react-hot-toast";
+import { getMOTDFromServer } from "./api";
 
 var numberOfItemsInView = 20;
 
@@ -28,7 +29,7 @@ export default class ServersList {
             console.log(
               "%c[MHSF] STOP! There was an error while requesting Minehut's API! Heres the fetch object for debugging: ",
               "font-weight: bold",
-              b,
+              b
             );
             toast.error(`
             Error while grabbing servers from API.
@@ -82,7 +83,7 @@ export default class ServersList {
           console.log(
             "%c[MHSF] STOP! There was an error while requesting Minehut's API! Heres the error for debugging: ",
             "font-weight: bold",
-            b,
+            b
           );
           bc();
         });
@@ -92,14 +93,14 @@ export default class ServersList {
   moveListDown() {
     const slicedArray = this.servers.slice(
       this.it * numberOfItemsInView,
-      this.it * numberOfItemsInView + numberOfItemsInView,
+      this.it * numberOfItemsInView + numberOfItemsInView
     );
     this.currentServers = this.currentServers.concat(slicedArray);
     this.it++;
     console.log(
       "%c[MHSF] Moved list down! Updated entries: ",
       "font-weight: bold",
-      slicedArray,
+      slicedArray
     );
     if (slicedArray.length != numberOfItemsInView) {
       this.hasMore = false;
@@ -114,16 +115,10 @@ export default class ServersList {
     this.hasMore = true;
   }
 
-  async getMOTDs(list: Array<{ server: string; motd: string }>) {
-    let response = await fetch("/api/getMOTD", {
-      body: JSON.stringify({ motd: list }),
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    let json = await response.json();
-    return json.result;
+  async getMOTDs(
+    list: Array<{ server: string; motd: string }>
+  ): Promise<Array<{ server: string; motd: string }>> {
+    return await getMOTDFromServer(list);
   }
 }
 

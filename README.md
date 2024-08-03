@@ -25,7 +25,7 @@ Clone the repo!
 
 First, you must supply the following services with API keys:
 
-- [Clerk](https://clerk.com): Create an app and put the respective keys in `.env.local`. Also, add `IS_AUTH=true`.
+- [Clerk](https://clerk.com): Create an app and put the respective keys in `.env.local`
 - MongoDB: Create a database, can be anywhere, and put the location to connect in `.env.local` for the key `MONGO_DB` (this isn't required by any means, but if you want to store any short term or historical data, use this.)
 - Inngest: Inngest is a smaller library, but runs the `cron` jobs which will make servers automaticly get added to the database.
 

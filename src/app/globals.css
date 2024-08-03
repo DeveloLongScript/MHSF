@@ -95,6 +95,11 @@
   }
 }
 
+.backdrop-blur {
+  -webkit-backdrop-filter: blur(8px)!important;
+  backdrop-filter: blur(8px)!important;
+}
+
 /* width */
 ::-webkit-scrollbar {
   width: 10px;

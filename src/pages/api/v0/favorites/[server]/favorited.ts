@@ -4,14 +4,14 @@ import { getAuth } from "@clerk/nextjs/server";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse,
+  res: NextApiResponse
 ) {
   const { userId } = getAuth(req);
 
   if (!userId) {
     return res.status(401).json({ error: "Unauthorized" });
   }
-  const server = checkForInfoOrLeave(res, req.body.server);
+  const server = req.query.server as string;
   const client = new MongoClient(process.env.MONGO_DB as string);
   await client.connect();
 
@@ -23,10 +23,4 @@ export default async function handler(
     res.send({ result: find[0].favorites.includes(server) });
   }
   client.close();
-}
-
-function checkForInfoOrLeave(res: NextApiResponse, info: any) {
-  if (info == undefined)
-    res.status(400).json({ message: "Information wasn't supplied" });
-  return info;
 }

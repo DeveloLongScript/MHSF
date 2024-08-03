@@ -1,7 +1,7 @@
 import type { NextApiResponse, NextApiRequest } from "next";
 import { MongoClient, ObjectId } from "mongodb";
 import { getAuth } from "@clerk/nextjs/server";
-import { decreaseNum, increaseNum } from "./getCommunityNum";
+import { decreaseNum, increaseNum } from "./community-favorites";
 
 export default async function handler(
   req: NextApiRequest,
@@ -12,7 +12,7 @@ export default async function handler(
   if (!userId) {
     return res.status(401).json({ error: "Unauthorized" });
   }
-  const server = checkForInfoOrLeave(res, req.body.server);
+  const server = req.query.server as string;
   const client = new MongoClient(process.env.MONGO_DB as string);
   await client.connect();
 
@@ -57,10 +57,4 @@ export default async function handler(
       res.send({ message: "Favorited " + server });
     }
   }
-}
-
-function checkForInfoOrLeave(res: NextApiResponse, info: any) {
-  if (info == undefined)
-    res.status(400).json({ message: "Information wasn't supplied" });
-  return info;
 }

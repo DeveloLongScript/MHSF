@@ -1,9 +1,11 @@
 import { useClerk, useUser } from "@clerk/nextjs";
 import { Button } from "../ui/button";
 import { Star, UserCog, X } from "lucide-react";
+import { useRouter } from '@/lib/useRouter'
 
 export default function LoggedInPopover() {
   const clerk = useClerk();
+  const router = useRouter()
   const { user } = useUser();
 
   return (
@@ -19,7 +21,7 @@ export default function LoggedInPopover() {
       </Button>
       <Button
         variant={"ghost"}
-        onClick={() => window.location.replace("/account/favorites")}
+        onClick={() => router.push("/account/favorites")}
       >
         <Star size={18} className="  mr-2" /> Favorites
       </Button>

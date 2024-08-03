@@ -11,15 +11,17 @@ import { SignIn, useClerk } from "@clerk/nextjs";
 
 export default function SignInPopoverButton({
   className,
+  variant
 }: {
   className?: string;
+  variant?: "default" | "destructive" | "secondary" | "outline" | "ghost" | "link";
 }) {
   const clerk = useClerk();
 
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button className={className}>Sign In</Button>
+        <Button className={className} variant={variant}>Sign In</Button>
       </PopoverTrigger>
       <PopoverContent className="w-full">
         <div className=" grid w-[200px]">

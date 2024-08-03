@@ -3,11 +3,11 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse,
+  res: NextApiResponse
 ) {
   const client = new MongoClient(process.env.MONGO_DB as string);
-  const db = client.db("mhsf").collection("history");
-  const server = checkForInfoOrLeave(res, req.body.server);
+  const db = client.db("mhsf").collection("historical");
+  const server = req.query.server as string;
   const scopes: Array<string> = checkForInfoOrLeave(res, req.body.scopes);
 
   const allData = await db.find({ server }).toArray();

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Button } from "../ui/button";
-import { Activity, Calendar, Star } from "lucide-react";
+import { Activity, Calendar, Star, TerminalIcon } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -11,6 +11,7 @@ import {
 } from "../ui/dialog";
 import { useState } from "react";
 import { Changelog, version } from "@/version";
+import events from "@/lib/commandEvent"
 
 export default function InfoPopover() {
   const [changeLog, setChangelog] = useState(false);
@@ -48,13 +49,8 @@ export default function InfoPopover() {
       >
         <Star size={18} className="mr-2" /> Star on GitHub
       </Button>
-      <Button
-        variant="ghost"
-        onClick={() =>
-          window.open("https://mhsf.betteruptime.com/", "_blank")?.focus()
-        }
-      >
-        <Activity size={18} className="mr-2" /> View status
+      <Button variant="ghost" onClick={() => events.emit("cmd-event")}>
+        <TerminalIcon size={18} className="mr-2" /> Open commands
       </Button>
     </div>
   );

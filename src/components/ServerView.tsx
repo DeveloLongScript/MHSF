@@ -38,11 +38,14 @@ import toast from "react-hot-toast";
 import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
 import SignInPopoverButton from "./clerk/SignInPopoverButton";
 import { Sparkle, Star, X } from "lucide-react";
+import { favoriteServer, isFavorited } from "@/lib/api";
+import { LoadingButton } from "./ui/loading-button";
 
 export default function ServerView(props: { server: string }) {
   const [single, setSingle] = useState(new ServerSingle(props.server));
   const [loading, setLoading] = useState(true);
   const [favorited, setFavorited] = useState(false);
+  const [loadingFavorite, setLoadingFavorite] = useState(false);
   const [randomText, setRandomText] = useState("");
   const [lastOnline, setLastOnline] = useState(0);
   const [format, setFormat] = useState("");
@@ -54,22 +57,14 @@ export default function ServerView(props: { server: string }) {
   useEffect(() => {
     setRandomText(getRandomText());
     single.init().then(() => {
-      fetch("/api/favorites/isFavorited", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          server: single.grabOffline()?.name,
-        }),
-      })
+      isFavorited(single.grabOffline()?.name as string)
         .then((b) => {
-          b.json().then((c) => {
-            setFavorited(c.result);
-            setLoading(false);
-            var online = single.grabOffline()?.last_online;
-            if (online != undefined) {
-              setLastOnline(online);
-            }
-          });
+          setFavorited(b);
+          setLoading(false);
+          var online = single.grabOffline()?.last_online;
+          if (online != undefined) {
+            setLastOnline(online);
+          }
         })
         .catch(() => {
           setLoading(false);
@@ -208,42 +203,46 @@ export default function ServerView(props: { server: string }) {
               <SignInPopoverButton />
             </SignedOut>
             <SignedIn>
-              <Button
-                variant="outline"
-                onClick={() => {
-                  fetch("/api/favorites/favoriteServer", {
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                      server: single.grabOffline()?.name,
-                    }),
-                    method: "POST",
-                  }).then(() => {});
-                  setFavorited(!favorited);
-                }}
-              >
-                {favorited && (
-                  <motion.div
-                    animate={{ color: "yellow", fill: "yellow" }}
-                    transition={{ duration: 2 }}
-                  >
-                    <Star
-                      className="mr-2"
-                      size="16"
-                      color="yellow"
-                      fill="yellow"
-                    />
-                  </motion.div>
-                )}
-                {!favorited && (
-                  <motion.div
-                    transition={{ duration: 1 }}
-                    animate={{ color: "yellow", fill: "yellow" }}
-                  >
-                    <Star className="mr-2" size="16" />
-                  </motion.div>
-                )}
-                Favorite Server
-              </Button>
+              {loadingFavorite && (
+                <LoadingButton variant="outline">Favorite Server</LoadingButton>
+              )}
+              {!loadingFavorite && (
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setLoadingFavorite(true);
+                    favoriteServer(single.grabOffline()?.name as string).then(
+                      () => {
+                        setFavorited(!favorited);
+                        setLoadingFavorite(false);
+                      }
+                    );
+                  }}
+                >
+                  {favorited && (
+                    <motion.div
+                      animate={{ color: "yellow", fill: "yellow" }}
+                      transition={{ duration: 2 }}
+                    >
+                      <Star
+                        className="mr-2"
+                        size="16"
+                        color="yellow"
+                        fill="yellow"
+                      />
+                    </motion.div>
+                  )}
+                  {!favorited && (
+                    <motion.div
+                      transition={{ duration: 1 }}
+                      animate={{ color: "yellow", fill: "yellow" }}
+                    >
+                      <Star className="mr-2" size="16" />
+                    </motion.div>
+                  )}
+                  {favorited && "Unf"}{!favorited && "F"}avorite Server
+                </Button>
+              )}
             </SignedIn>
           </CardContent>
           <CardFooter>
@@ -268,86 +267,4 @@ function timeConverter(UNIX_timestamp: any) {
   var date = a.getDate();
   var time = month + "/" + date + "/" + year;
   return time;
-}
-
-export interface ServerResponse {
-  __unix?: string;
-  deletion?: Deletion;
-  _id: string;
-  categories: string[];
-  inheritedCategories: any[];
-  purchased_icons: string[];
-  backup_slots: number;
-  suspended: boolean;
-  server_version_type: string;
-  proxy: boolean;
-  connectedServers: any[];
-  motd: string;
-  visibility: boolean;
-  server_plan: string;
-  storage_node: string;
-  default_banner_image: string;
-  default_banner_tint: string;
-  owner: string;
-  name: string;
-  name_lower: string;
-  creation: number;
-  platform: string;
-  credits_per_day: number;
-  in_game: boolean;
-  using_cosmetics: boolean;
-  __v: number;
-  port: number;
-  last_online: number;
-  joins: number;
-  active_icon: string;
-  expired: boolean;
-  icon: string;
-  online: boolean;
-  maxPlayers: number;
-  playerCount: number;
-  rawPlan: string;
-  activeServerPlan: string;
-}
-
-export interface Deletion {
-  started: boolean;
-  started_at: number;
-  reason: string;
-  completed: boolean;
-  completed_at: number;
-  storage_completed: boolean;
-  storage_completed_at: number;
-}
-
-export interface OnlineServer {
-  staticInfo: StaticInfo;
-  maxPlayers: number;
-  name: string;
-  motd: string;
-  icon: string;
-  playerData: PlayerData;
-  connectable: boolean;
-  visibility: boolean;
-  allCategories: string[];
-  usingCosmetics: boolean;
-  author?: string;
-  authorRank: string;
-}
-
-export interface StaticInfo {
-  _id: string;
-  serverPlan: string;
-  serviceStartDate: number;
-  platform: string;
-  planMaxPlayers: number;
-  planRam: number;
-  alwaysOnline: boolean;
-  rawPlan: string;
-  connectedServers: any[];
-}
-
-export interface PlayerData {
-  playerCount: number;
-  timeNoPlayers: number;
 }

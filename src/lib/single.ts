@@ -1,4 +1,4 @@
-import { OnlineServer, ServerResponse } from "@/components/ServerView";
+import { OnlineServer, ServerResponse } from "./types/server";
 import toast from "react-hot-toast";
 
 export default class ServerSingle {
@@ -27,7 +27,7 @@ export default class ServerSingle {
                         g(true);
                       }
                     });
-                  }),
+                  })
                 );
               } else g(true);
             });
@@ -35,7 +35,7 @@ export default class ServerSingle {
             console.log(
               "%c[MHSF] STOP! There was an error while requesting Minehut's API! Heres the fetch object for debugging: ",
               "font-weight: bold",
-              d,
+              d
             );
             toast.error(`
             Error while grabbing servers from API.
@@ -52,7 +52,7 @@ export default class ServerSingle {
           console.log(
             "%c[MHSF] STOP! There was an error while requesting Minehut's API! Heres the error for debugging: ",
             "font-weight: bold",
-            b,
+            b
           );
           bc();
         });

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { GeistSans } from "geist/font/sans";
-import { Github, CodeXml, Server } from "lucide-react";
+import { Github, CodeXml, Server, Command } from "lucide-react";
 
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
@@ -12,6 +12,7 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import Image from "next/image";
 import { ClerkThemeProvider } from "@/components/clerk/ClerkThemeProvider";
 import { useEffectOnce } from "@/lib/useEffectOnce";
+import NextTopLoader from '@/lib/top-loader';
 import { banner } from "@/banner";
 import {
   Breadcrumb,
@@ -24,6 +25,12 @@ import Link from "next/link";
 import TopBar from "@/components/clerk/Topbar";
 import TextFromPathname from "@/components/TextFromPathname";
 import { Inter as interFont } from "next/font/google";
+import {
+  CommandBar,
+  CommandBarer,
+  SearchCommandBar,
+  SubLinkCommandBar,
+} from "@/components/CommandBar";
 
 const inter = interFont({ variable: "--font-inter", subsets: ["latin"] });
 export default async function RootLayout({
@@ -40,6 +47,7 @@ export default async function RootLayout({
         disableTransitionOnChange
       >
         <TooltipProvider>
+          
           {banner.isBanner && (
             <div className="bg-orange-600 w-screen h-8 border-b fixed text-black flex items-center text-center font-medium pl-2">
               {banner.bannerText}
@@ -65,8 +73,9 @@ export default async function RootLayout({
             </div>
             <TopBar inter={inter.className} />
           </div>
-          <div>{children}</div>{" "}
+          <div><NextTopLoader/>{children}</div>{" "}
           <Toaster position="bottom-center" reverseOrder={false} />
+          <CommandBarer />
         </TooltipProvider>
       </ThemeProvider>
     </ClerkThemeProvider>

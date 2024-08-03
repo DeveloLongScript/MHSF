@@ -1,4 +1,5 @@
-import { twi } from "tw-to-css";
+// rendering engine for MOTDs (aka Minehut)
+
 const divList: any = {
   black: "000000",
   dark_blue: "002bff",
@@ -147,7 +148,7 @@ function createHTML(
   tag: string,
   className: string,
   contents: string,
-  tw?: boolean,
+  tw?: boolean
 ) {
   if (className == undefined) className = "";
   if (contents == undefined) contents = "";

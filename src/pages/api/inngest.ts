@@ -2,7 +2,7 @@
 // its fully automatic
 
 import Favorites from "@/app/account/favorites/page";
-import { OnlineServer } from "@/components/ServerView";
+import { OnlineServer } from "@/lib/types/server";
 import { Inngest } from "inngest";
 import { serve } from "inngest/next";
 import { MongoClient } from "mongodb";
@@ -16,8 +16,8 @@ export default serve({
   client: inngest,
   functions: [
     inngest.createFunction(
-      { id: "every-60-min" },
-      [{ cron: "*/30 * * * *" }],
+      { id: "every-30-min" },
+      [{ cron: "*/30 * * * *" }, { event: "test/30-min" }],
       async ({ event, step }) => {
         const mongo = new MongoClient(process.env.MONGO_DB as string);
         try {
@@ -79,7 +79,7 @@ export default serve({
           mongo.close();
           return { event, body: "Cloudflare.. aborting " + e };
         }
-      },
+      }
     ),
     inngest.createFunction(
       { id: "every-two-months" },
@@ -118,7 +118,7 @@ export default serve({
           event,
           body: "Dropped database. ",
         };
-      },
+      }
     ),
   ],
 });

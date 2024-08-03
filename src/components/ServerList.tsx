@@ -79,24 +79,25 @@ import {
 import remarkGfm from "remark-gfm";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Spinner } from "./ui/spinner";
+import { CommandIcon } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { OnlineServer, ServerResponse } from "./ServerView";
+import { OnlineServer, ServerResponse } from "@/lib/types/server";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useEffectOnce } from "@/lib/useEffectOnce";
 import ServerCard from "./ServerCard";
 import { useHotkeys } from "react-hotkeys-hook";
+import events from "@/lib/commandEvent";
+import { BorderBeam } from "@/components/effects/border-beam";
 
 export default function ServerList() {
   const [loading, setLoading]: any = useState(true);
-  const [command, setCommand] = useState(false);
   const [randomText, setRandomText] = useState("");
   const [motdList, setMotdList] = useState<any>({});
   const allText = [""];
   const getRandomText = () => {
     return allText[Math.floor(Math.random() * allText.length)];
   };
-  const [searchRes, setSearchRes] = useState<any>(undefined);
   const [templateFilter, setTemplateFilter] = useState(false);
   const [random, setRandom] = useState(false);
   const [serverList, setServerList] = useState(new ServersList([]));
@@ -108,14 +109,13 @@ export default function ServerList() {
     server.playerData.playerCount < 15 &&
     server.playerData.playerCount > 7;
   const [nameFilters, setNameFilters] = useState<any>({});
-  useHotkeys("ctrl+k", () => setCommand(true), []);
   const [inErrState, setErrState] = useState(false);
   const [servers, setServers] = useState<Array<OnlineServer>>([]);
   const [filters, setFilters] = useState<
     Array<(server: OnlineServer) => Promise<boolean>>
   >([]);
   const [randomData, setRandomData] = useState<OnlineServer | undefined>(
-    undefined,
+    undefined
   );
 
   useEffectOnce(() => {
@@ -175,9 +175,10 @@ export default function ServerList() {
       <div className="  max-lg:grid-cols-2 grid grid-cols-3 gap-4 ">
         <Stat
           title="Players online"
+          className="relative"
           desc={serverList.getExtraData().total_players.toString()}
           icon={CircleUser}
-        />
+        ><BorderBeam size={135} duration={12} delay={9}/></Stat>
         <Stat
           title="Servers online"
           desc={serverList.getExtraData().total_servers.toString()}
@@ -203,11 +204,15 @@ export default function ServerList() {
       <Separator />
       <div className="  mt-3 ml-3">
         <Button
-          onClick={() => setCommand(true)}
+          onClick={() => events.emit("search-request-event")}
           variant="secondary"
           className="  max-lg:mb-3"
         >
-          Search <code className="ml-2">Ctrl+K</code>
+          Search{" "}
+          <code className="ml-2 flex items-center">
+            <CommandIcon size={14}/>
+            +Shift+K
+          </code>
         </Button>
         <Popover>
           <PopoverTrigger>
@@ -338,7 +343,7 @@ export default function ServerList() {
                     error: "Error while changing filters",
                     loading: "Changing filters...",
                     success: "Changed filters!",
-                  },
+                  }
                 );
               }}
               defaultValue={(() => {
@@ -571,7 +576,7 @@ export default function ServerList() {
                 success: "Succesfully refreshed servers",
                 loading: "Refreshing...",
                 error: "Error while refreshing",
-              },
+              }
             );
           }}
         >
@@ -636,7 +641,7 @@ export default function ServerList() {
                       onClick={() => {
                         setTextCopied(true);
                         navigator.clipboard.writeText(
-                          randomData.name + ".mshf.minehut.gg",
+                          randomData.name + ".mshf.minehut.gg"
                         );
                         toast.success("Copied!");
                         setTimeout(() => setTextCopied(false), 1000);
@@ -655,68 +660,6 @@ export default function ServerList() {
           </DialogContent>
         </Dialog>
       </div>
-      <CommandDialog open={command} onOpenChange={setCommand}>
-        <CommandInput
-          placeholder="Search for a server (offline or online)"
-          onValueChange={(c) => {
-            fetch("https://api.minehut.com/server/" + c + "?byName=true").then(
-              (l) => {
-                if (l.ok) {
-                  console.log("found!");
-                  l.json().then((m: any) => {
-                    setSearchRes(m.server);
-                    console.log(searchRes);
-                  });
-                } else {
-                  setSearchRes(undefined);
-                }
-              },
-            );
-          }}
-        />
-        <CommandList>
-          <CommandEmpty>
-            No results found. (Minehut deleted legacy servers)
-          </CommandEmpty>
-          {searchRes == undefined ? (
-            ""
-          ) : (
-            <CommandGroup heading="Search Results">
-              <CommandItem
-                onSelect={() => {
-                  window.location.replace("/server/" + searchRes.name);
-                }}
-              >
-                <div className="block">
-                  <span className="font-medium">{searchRes.name}</span> <br />
-                  <code className="text-gray-500 text-[14px]">
-                    {searchRes.joins} total joins •{" "}
-                    {searchRes.online ? "Online" : "Offline"}
-                  </code>
-                </div>
-              </CommandItem>
-            </CommandGroup>
-          )}
-
-          <CommandGroup heading="Popular Servers">
-            {serverList.currentServers.map((b: OnlineServer) => (
-              <CommandItem
-                key={b.name}
-                onSelect={() => {
-                  window.location.replace("/server/" + b.name);
-                }}
-              >
-                <div className="block">
-                  <span className="font-medium">{b.name}</span> <br />
-                  <code className="text-gray-500 text-[14px]">
-                    <TagShower server={b} />
-                  </code>
-                </div>
-              </CommandItem>
-            ))}
-          </CommandGroup>
-        </CommandList>
-      </CommandDialog>
       <br />
       <InfiniteScroll
         dataLength={serverList.currentServers.length}

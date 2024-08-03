@@ -15,7 +15,7 @@ import {
 } from "./ui/card";
 import IconDisplay from "./IconDisplay";
 import { TagShower } from "./ServerList";
-import { Copy, EllipsisVertical, Layers, MoveRight } from "lucide-react";
+import { Copy, EllipsisVertical, Layers, MoveRight, Router } from "lucide-react";
 import { Button } from "./ui/button";
 import {
   Drawer,
@@ -30,8 +30,11 @@ import {
 import { useEffect, useState } from "react";
 import { Tooltip } from "@radix-ui/react-tooltip";
 import { TooltipContent, TooltipTrigger } from "./ui/tooltip";
+import { useRouter } from '@/lib/useRouter'
+import Link from "next/link";
 
 export default function ServerCard({ b, motd }: any) {
+  const router = useRouter()
   return (
     <ContextMenu>
       <ContextMenuTrigger>
@@ -72,7 +75,7 @@ export default function ServerCard({ b, motd }: any) {
                     <Button
                       variant="ghost"
                       onClick={() => {
-                        window.location.href = "/server/" + b.name;
+                        router.push("/server/" + b.name);
                       }}
                     >
                       Open server page
@@ -138,16 +141,15 @@ export default function ServerCard({ b, motd }: any) {
                     </Button>
                     <Tooltip>
                       <TooltipTrigger>
+                        <Link href={"/server/" + b.name}>
                         <Button
                           size="icon"
                           variant="secondary"
                           className="  w-[32px] h-[32px] mt-2 ml-2 max-md:hidden"
-                          onClick={() => {
-                            window.location.href = "/server/" + b.name;
-                          }}
                         >
                           <Layers size={18} />
                         </Button>
+                        </Link>
                       </TooltipTrigger>
                       <TooltipContent>
                         Open up the server page to see more information about
@@ -171,20 +173,19 @@ export default function ServerCard({ b, motd }: any) {
                     </div>
                   </ContextMenuItem>
                   <ContextMenuSeparator />
+                  <Link href={"/server/" + b.name}>
                   <ContextMenuItem
-                    onClick={() => {
-                      window.location.href = "/server/" + b.name;
-                    }}
+                    
                   >
                     Open server page
-                  </ContextMenuItem>
+                  </ContextMenuItem></Link>
                 </ContextMenuContent>
               </ContextMenu>
             </CardDescription>
             <CardContent>
-              {b.name != "Skylegendz" && (
-                <span dangerouslySetInnerHTML={{ __html: motd }} />
-              )}
+              
+                <span dangerouslySetInnerHTML={{ __html: motd }} className="max-w-[12px] text-center"/>
+              
             </CardContent>
           </CardHeader>
         </Card>
@@ -204,7 +205,7 @@ export default function ServerCard({ b, motd }: any) {
         <ContextMenuSeparator />
         <ContextMenuItem
           onClick={() => {
-            window.location.href = "/server/" + b.name;
+            router.push("/server/" + b.name);
           }}
         >
           Open server page

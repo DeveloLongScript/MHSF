@@ -1,4 +1,4 @@
-import { OnlineServer, ServerResponse } from "./components/ServerView";
+import { OnlineServer, ServerResponse } from "./lib/types/server";
 
 const serverCache: any = {};
 
@@ -262,7 +262,7 @@ export var allCategories: Array<{
 async function requestServer(s: OnlineServer): Promise<ServerResponse> {
   if (serverCache[s.name] == undefined) {
     const re = await fetch(
-      "https://api.minehut.com/server/" + s.name + "?byName=true",
+      "https://api.minehut.com/server/" + s.name + "?byName=true"
     );
     const json = await re.json();
     serverCache[s.name] = json.server;

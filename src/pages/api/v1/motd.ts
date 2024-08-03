@@ -1,11 +1,11 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import parseToHTML from "@/lib/miniMessage2HTML";
+import parseToHTML from "@/lib/motdEngine";
 
 let num = 0;
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse,
+  res: NextApiResponse
 ) {
   num++;
   var body: Array<{ server: string; motd: string }> = req.body.motd;

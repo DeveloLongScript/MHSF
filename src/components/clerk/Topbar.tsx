@@ -14,28 +14,24 @@ import InfoPopover from "../misc/InfoPopover";
 import Link from "next/link";
 
 export default function TopBar({ inter }: { inter: string }) {
-  const [loading, setLoading] = useState(true);
-  const [isAuthenticating, setAuthenticating] = useState(false);
   const clerk = useClerk();
   const { user } = useUser();
-
-  useEffect(() => {
-    fetch("/api/isAuthenticating").then((b) => {
-      b.json().then((m) => {
-        setAuthenticating(m.message);
-        setLoading(false);
-      });
-    });
-  }, []);
 
   return (
     <>
       <SignedOut>
         <div className="  mt-1 gap-1 grid grid-cols-5">
-          {isAuthenticating && <SignInPopoverButton className="col-span-2" />}
-          <Button size="icon" variant="ghost">
-            <InfoIcon size={18} />
-          </Button>
+          <SignInPopoverButton className="col-span-2" variant="outline"/>
+          <Popover>
+            <PopoverTrigger>
+              <Button size="icon" variant="ghost">
+                <InfoIcon size={18} />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent>
+              <InfoPopover />
+            </PopoverContent>
+          </Popover>
           <Button variant="ghost" size="icon">
             <svg
               viewBox="0 0 438.549 438.549"
@@ -54,21 +50,19 @@ export default function TopBar({ inter }: { inter: string }) {
         <div className="mt-1 grid grid-cols-4 gap-1">
           <Popover>
             <PopoverTrigger>
-              {isAuthenticating && !loading && (
-                <Button size="icon" variant="ghost" className="mb-1">
-                  <Image
-                    alt="Clerk Image"
-                    src={
-                      user?.imageUrl == undefined
-                        ? "https://img.clerk.com/preview.png?size=144&seed=seed&initials=AD&isSquare=true&bgType=marble&bgColor=6c47ff&fgType=silhouette&fgColor=FFFFFF&type=user&w=48&q=75"
-                        : user?.imageUrl
-                    }
-                    width={26}
-                    height={26}
-                    className="rounded-full"
-                  />
-                </Button>
-              )}
+              <Button size="icon" variant="ghost" className="mb-1">
+                <Image
+                  alt="Clerk Image"
+                  src={
+                    user?.imageUrl == undefined
+                      ? "https://img.clerk.com/preview.png?size=144&seed=seed&initials=AD&isSquare=true&bgType=marble&bgColor=6c47ff&fgType=silhouette&fgColor=FFFFFF&type=user&w=48&q=75"
+                      : user?.imageUrl
+                  }
+                  width={26}
+                  height={26}
+                  className="rounded-full"
+                />
+              </Button>
             </PopoverTrigger>
             <PopoverContent>
               <LoggedInPopover />

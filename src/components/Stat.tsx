@@ -1,14 +1,17 @@
 import { DollarSign } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Children } from "react";
 
 export default function Component(props: {
   title: string;
   desc: string | JSX.Element;
   icon: any;
   className?: string;
+  children?: any;
 }) {
   return (
     <Card className={props.className}>
+      {props.children}
       <CardHeader className="  flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="  text-sm font-medium m-0">
           {props.title}

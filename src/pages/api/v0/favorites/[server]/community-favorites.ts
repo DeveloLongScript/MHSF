@@ -6,7 +6,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const server = checkForInfoOrLeave(res, req.body.server);
+  const { server } = req.query;
   const client = new MongoClient(process.env.MONGO_DB as string);
 
   await client.connect();
@@ -23,12 +23,6 @@ export default async function handler(
   }
 
   client.close();
-}
-
-function checkForInfoOrLeave(res: NextApiResponse, info: any) {
-  if (info == undefined)
-    res.status(400).json({ message: "Information wasn't supplied" });
-  return info;
 }
 
 export async function increaseNum(client: MongoClient, server: string) {

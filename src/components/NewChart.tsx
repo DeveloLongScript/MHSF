@@ -17,7 +17,8 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { useEffectOnce } from "@/lib/useEffectOnce";
-import { ServerResponse } from "./ServerView";
+import { ServerResponse } from "@/lib/types/server";
+import { getCommunityServerFavorites, getShortTermData } from "@/lib/api";
 
 const chartConfig = {
   player_count: {
@@ -40,25 +41,10 @@ export function NewChart({ server }: { server: string }) {
 
   const allNums = { player_count: joins, favorites };
   useEffectOnce(() => {
-    fetch("/api/history/getShortTermData", {
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        scopes: ["player_count", "favorites", "time"],
-        server,
-      }),
-      method: "POST",
-    }).then((c) => {
-      c.json().then((b) => {
-        setChartData(b.data);
-        fetch("/api/favorites/getCommunityNum", {
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ server }),
-          method: "POST",
-        }).then((b) =>
-          b.json().then((f) => {
-            setFavorites(f.result);
-          })
-        );
+    getShortTermData(server, ["player_count", "favorites", "time"]).then(
+      (c) => {
+        setChartData(c);
+        getCommunityServerFavorites(server).then((b) => setFavorites(b));
         fetch("https://api.minehut.com/server/" + server + "?byName=true").then(
           (k) => {
             k.json().then((p: { server: ServerResponse }) => {
@@ -66,8 +52,8 @@ export function NewChart({ server }: { server: string }) {
             });
           }
         );
-      });
-    });
+      }
+    );
   });
 
   return (
