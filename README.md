@@ -34,4 +34,4 @@ Second, run `yarn` and `yarn build`. To start the app, run `yarn start`.
 
 ### Dev
 
-Swap `npm run build` for `npm run dev`.
+Swap `yarn build` for `yarn dev`.
