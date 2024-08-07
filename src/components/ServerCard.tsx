@@ -15,7 +15,13 @@ import {
 } from "./ui/card";
 import IconDisplay from "./IconDisplay";
 import { TagShower } from "./ServerList";
-import { Copy, EllipsisVertical, Layers, MoveRight, Router } from "lucide-react";
+import {
+  Copy,
+  EllipsisVertical,
+  Layers,
+  MoveRight,
+  Router,
+} from "lucide-react";
 import { Button } from "./ui/button";
 import {
   Drawer,
@@ -30,11 +36,11 @@ import {
 import { useEffect, useState } from "react";
 import { Tooltip } from "@radix-ui/react-tooltip";
 import { TooltipContent, TooltipTrigger } from "./ui/tooltip";
-import { useRouter } from '@/lib/useRouter'
+import { useRouter } from "@/lib/useRouter";
 import Link from "next/link";
 
 export default function ServerCard({ b, motd }: any) {
-  const router = useRouter()
+  const router = useRouter();
   return (
     <ContextMenu>
       <ContextMenuTrigger>
@@ -64,7 +70,7 @@ export default function ServerCard({ b, motd }: any) {
                       variant="ghost"
                       onClick={() => {
                         navigator.clipboard.writeText(
-                          b.name + ".mshf.minehut.gg",
+                          b.name + ".mshf.minehut.gg"
                         );
                         toast.success("Copied IP to clipboard");
                       }}
@@ -131,7 +137,7 @@ export default function ServerCard({ b, motd }: any) {
                       className="  min-w-[128px] max-w-[328px] h-[32px] mt-2 ml-2 max-md:hidden"
                       onClick={() => {
                         navigator.clipboard.writeText(
-                          b.name + ".mshf.minehut.gg",
+                          b.name + ".mshf.minehut.gg"
                         );
                         toast.success("Copied IP to clipboard");
                       }}
@@ -142,13 +148,13 @@ export default function ServerCard({ b, motd }: any) {
                     <Tooltip>
                       <TooltipTrigger>
                         <Link href={"/server/" + b.name}>
-                        <Button
-                          size="icon"
-                          variant="secondary"
-                          className="  w-[32px] h-[32px] mt-2 ml-2 max-md:hidden"
-                        >
-                          <Layers size={18} />
-                        </Button>
+                          <Button
+                            size="icon"
+                            variant="secondary"
+                            className="  w-[32px] h-[32px] mt-2 ml-2 max-md:hidden"
+                          >
+                            <Layers size={18} />
+                          </Button>
                         </Link>
                       </TooltipTrigger>
                       <TooltipContent>
@@ -162,7 +168,7 @@ export default function ServerCard({ b, motd }: any) {
                   <ContextMenuItem
                     onClick={() => {
                       navigator.clipboard.writeText(
-                        b.name + ".mshf.minehut.gg",
+                        b.name + ".mshf.minehut.gg"
                       );
                       toast.success("Copied IP to clipboard");
                     }}
@@ -174,18 +180,16 @@ export default function ServerCard({ b, motd }: any) {
                   </ContextMenuItem>
                   <ContextMenuSeparator />
                   <Link href={"/server/" + b.name}>
-                  <ContextMenuItem
-                    
-                  >
-                    Open server page
-                  </ContextMenuItem></Link>
+                    <ContextMenuItem>Open server page</ContextMenuItem>
+                  </Link>
                 </ContextMenuContent>
               </ContextMenu>
             </CardDescription>
             <CardContent>
-              
-                <span dangerouslySetInnerHTML={{ __html: motd }} className="max-w-[12px] text-center"/>
-              
+              <span
+                dangerouslySetInnerHTML={{ __html: motd }}
+                className="w-[30px] text-center break-all overflow-hidden"
+              />
             </CardContent>
           </CardHeader>
         </Card>

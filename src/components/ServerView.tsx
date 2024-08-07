@@ -38,17 +38,20 @@ import toast from "react-hot-toast";
 import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
 import SignInPopoverButton from "./clerk/SignInPopoverButton";
 import { Sparkle, Star, X } from "lucide-react";
-import { favoriteServer, isFavorited } from "@/lib/api";
+import { favoriteServer, getCustomization, isFavorited } from "@/lib/api";
 import { LoadingButton } from "./ui/loading-button";
+import { useTheme } from "next-themes";
 
 export default function ServerView(props: { server: string }) {
   const [single, setSingle] = useState(new ServerSingle(props.server));
   const [loading, setLoading] = useState(true);
   const [favorited, setFavorited] = useState(false);
+  const { resolvedTheme } = useTheme();
   const [loadingFavorite, setLoadingFavorite] = useState(false);
   const [randomText, setRandomText] = useState("");
   const [lastOnline, setLastOnline] = useState(0);
   const [format, setFormat] = useState("");
+  const [description, setDescription] = useState("");
   const allText = [""];
   const getRandomText = () => {
     return allText[Math.floor(Math.random() * allText.length)];
@@ -56,6 +59,7 @@ export default function ServerView(props: { server: string }) {
 
   useEffect(() => {
     setRandomText(getRandomText());
+
     single.init().then(() => {
       isFavorited(single.grabOffline()?.name as string)
         .then((b) => {
@@ -203,46 +207,43 @@ export default function ServerView(props: { server: string }) {
               <SignInPopoverButton />
             </SignedOut>
             <SignedIn>
-              {loadingFavorite && (
-                <LoadingButton variant="outline">Favorite Server</LoadingButton>
-              )}
-              {!loadingFavorite && (
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    setLoadingFavorite(true);
-                    favoriteServer(single.grabOffline()?.name as string).then(
-                      () => {
-                        setFavorited(!favorited);
-                        setLoadingFavorite(false);
-                      }
-                    );
-                  }}
-                >
-                  {favorited && (
-                    <motion.div
-                      animate={{ color: "yellow", fill: "yellow" }}
-                      transition={{ duration: 2 }}
-                    >
-                      <Star
-                        className="mr-2"
-                        size="16"
-                        color="yellow"
-                        fill="yellow"
-                      />
-                    </motion.div>
-                  )}
-                  {!favorited && (
-                    <motion.div
-                      transition={{ duration: 1 }}
-                      animate={{ color: "yellow", fill: "yellow" }}
-                    >
-                      <Star className="mr-2" size="16" />
-                    </motion.div>
-                  )}
-                  {favorited && "Unf"}{!favorited && "F"}avorite Server
-                </Button>
-              )}
+              <LoadingButton
+                variant={resolvedTheme == "dark" ? "outline" : "default"}
+                loading={loadingFavorite}
+                onClick={() => {
+                  setLoadingFavorite(true);
+                  favoriteServer(single.grabOffline()?.name as string).then(
+                    () => {
+                      setFavorited(!favorited);
+                      setLoadingFavorite(false);
+                    }
+                  );
+                }}
+              >
+                {favorited && (
+                  <motion.div
+                    animate={{ color: "yellow", fill: "yellow" }}
+                    transition={{ duration: 2 }}
+                  >
+                    <Star
+                      className="mr-2"
+                      size="16"
+                      color="yellow"
+                      fill="yellow"
+                    />
+                  </motion.div>
+                )}
+                {!favorited && (
+                  <motion.div
+                    transition={{ duration: 1 }}
+                    animate={{ color: "yellow", fill: "yellow" }}
+                  >
+                    <Star className="mr-2" size="16" />
+                  </motion.div>
+                )}
+                {favorited && "Unf"}
+                {!favorited && "F"}avorite Server
+              </LoadingButton>
             </SignedIn>
           </CardContent>
           <CardFooter>

@@ -20,6 +20,7 @@ import {
   SlidersHorizontal,
   Check,
   XIcon,
+  Info,
 } from "lucide-react";
 import Stat from "./Stat";
 import {
@@ -175,15 +176,62 @@ export default function ServerList() {
       <div className="  max-lg:grid-cols-2 grid grid-cols-3 gap-4 ">
         <Stat
           title="Players online"
-          className="relative"
           desc={serverList.getExtraData().total_players.toString()}
           icon={CircleUser}
-        ><BorderBeam size={135} duration={12} delay={9}/></Stat>
+        ></Stat>
         <Stat
-          title="Servers online"
-          desc={serverList.getExtraData().total_servers.toString()}
+          title={
+            <div
+              className={
+                serverList.getExtraData().total_servers >= 3200
+                  ? "bg-clip-text text-transparent bg-gradient-to-r from-cyan-500 to-blue-500"
+                  : ""
+              }
+            >
+              Servers online{" "}
+            </div>
+          }
+          className="relative z-0"
+          desc={
+            <div className="flex items-center">
+              <div
+                className={
+                  serverList.getExtraData().total_servers >= 3200
+                    ? "bg-clip-text text-transparent bg-gradient-to-r from-cyan-500 to-blue-500 "
+                    : ""
+                }
+              >
+                {serverList.getExtraData().total_servers.toString()}
+              </div>
+              {serverList.getExtraData().total_servers >= 3200 && (
+                <Tooltip>
+                  <TooltipTrigger>
+                    <Info size={16} className="ml-2" />
+                  </TooltipTrigger>
+                  <TooltipContent className="font-normal">
+                    The server amount is over 3.2k, meaning that new servers
+                    have to go into a queue before being able to be online.{" "}
+                    <br />
+                    (the server count isn't entirely accurate, so sometimes you
+                    might not go into a queue even when the server count is at
+                    3.2k)
+                  </TooltipContent>
+                </Tooltip>
+              )}
+            </div>
+          }
           icon={Network}
-        />
+        >
+          {serverList.getExtraData().total_servers >= 3200 && (
+            <BorderBeam
+              size={135}
+              duration={12}
+              delay={9}
+              colorFrom="rgb(6 182 212)"
+              colorTo="rgb(59 130 246)"
+            />
+          )}
+        </Stat>
         <Stat
           title="Current most popular server (in filter)"
           className="  max-lg:col-span-2"
@@ -210,7 +258,7 @@ export default function ServerList() {
         >
           Search{" "}
           <code className="ml-2 flex items-center">
-            <CommandIcon size={14}/>
+            <CommandIcon size={14} />
             +Shift+K
           </code>
         </Button>

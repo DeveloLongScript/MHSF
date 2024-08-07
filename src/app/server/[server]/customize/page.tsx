@@ -8,17 +8,20 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import TopBar from "@/components/clerk/Topbar";
-import { Server } from "lucide-react";
+import { CornerDownLeft, Server, X } from "lucide-react";
 import type { Metadata, ResolvingMetadata } from "next";
 import { IconDisplayClient } from "@/components/IconDisplay";
 import { banner } from "@/banner";
 import Link from "next/link";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import TabServer from "@/components/misc/TabServer";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Tooltip } from "@/components/ui/tooltip";
+import ServerCustomize from "@/components/ServerCustomize";
 import { useColor } from "@/lib/use-color";
-import ColorProvider from "@/components/ColorProvider";
-import AfterServerView from "@/components/AfterServerView";
-import Banner from "@/components/Banner";
+import CustomizeRoot from "@/components/CustomizeRoot";
 
 type Props = {
   params: { server: string };
@@ -81,16 +84,7 @@ export async function generateMetadata(
 export default function ServerPage({ params }: { params: { server: string } }) {
   return (
     <main>
-      <ColorProvider server={params.server}>
-        <div className={"pt-16"}>
-          <Banner server={params.server} />
-          <TabServer server={params.server} tabDef="general" />
-          <div className="pt-8">
-            <ServerView server={params.server} />
-          </div>
-          <AfterServerView server={params.server} />
-        </div>
-      </ColorProvider>
+      <CustomizeRoot params={params} />
     </main>
   );
 }

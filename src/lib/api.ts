@@ -173,3 +173,185 @@ export async function getMetaShortTerm(
 
   return (await response.json()).data;
 }
+
+/** requires authentication */
+export async function linkMCAccount(code: string): Promise<string | undefined> {
+  try {
+    const response = await fetch(
+      connector(`/account-linking/claim-account-code`, { version: 0 }),
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ code }),
+      }
+    );
+
+    if (response.status == 400) {
+      return undefined;
+    }
+
+    return (await response.json()).player;
+  } catch {
+    throw Error("Incorrect code");
+  }
+}
+
+/** requires authentication */
+export async function unlinkMCAccount(): Promise<boolean> {
+  try {
+    const response = await fetch(
+      connector(`/account-linking/unlink-account`, { version: 0 }),
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    return true;
+  } catch {
+    throw Error(
+      "Not authenticated with a user or user already linked account."
+    );
+  }
+}
+
+export async function serverOwned(server: string): Promise<boolean> {
+  try {
+    const response = await fetch(
+      connector(`/account-linking/is-owned`, { version: 0 }),
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ server }),
+      }
+    );
+
+    return (await response.json()).owned;
+  } catch {
+    throw Error("Error while running API");
+  }
+}
+
+/** requires authentication */
+export async function userOwnedServer(server: string): Promise<boolean> {
+  try {
+    const response = await fetch(
+      connector(`/account-linking/owned-user`, { version: 0 }),
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ server }),
+      }
+    );
+
+    return (await response.json()).result;
+  } catch {
+    throw Error("Error while running API");
+  }
+}
+
+/** requires authentication */
+export async function ownServer(server: string): Promise<boolean> {
+  try {
+    const response = await fetch(
+      connector(`/account-linking/own-server`, { version: 0 }),
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ server }),
+      }
+    );
+
+    if (response.status == 400) {
+      return false;
+    }
+
+    return true;
+  } catch {
+    throw Error("Error while running API");
+  }
+}
+
+/** requires authentication */
+export async function unownServer(server: string): Promise<boolean> {
+  try {
+    const response = await fetch(
+      connector(`/account-linking/unown-server`, { version: 0 }),
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ server }),
+      }
+    );
+
+    if (response.status == 400) {
+      return false;
+    }
+
+    return true;
+  } catch {
+    throw Error("Error while running API");
+  }
+}
+
+/** requires authentication */
+export async function setCustomization(
+  server: string,
+  customization: any
+): Promise<boolean | Error> {
+  try {
+    const response = await fetch(
+      connector(`/customization/${server}/set`, { version: 0 }),
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ customization }),
+      }
+    );
+
+    if (response.status == 400) {
+      throw Error("Error while running API");
+      return false;
+    }
+
+    return true;
+  } catch {
+    throw Error("Error while running API");
+  }
+}
+
+export async function getCustomization(server: string): Promise<any> {
+  try {
+    const response = await fetch(
+      connector(`/customization/${server}/get`, { version: 0 }),
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (response.status == 400) {
+      return false;
+    }
+
+    return (await response.json()).results;
+  } catch {
+    throw Error("Error while running API");
+  }
+}

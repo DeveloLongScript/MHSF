@@ -1,11 +1,11 @@
 import { useClerk, useUser } from "@clerk/nextjs";
 import { Button } from "../ui/button";
 import { Star, UserCog, X } from "lucide-react";
-import { useRouter } from '@/lib/useRouter'
+import { useRouter } from "@/lib/useRouter";
 
 export default function LoggedInPopover() {
   const clerk = useClerk();
-  const router = useRouter()
+  const router = useRouter();
   const { user } = useUser();
 
   return (
@@ -15,7 +15,10 @@ export default function LoggedInPopover() {
         Make comments about servers and favorite servers. Secured by Clerk
       </small>
       <br />
-      <Button variant={"ghost"} onClick={() => clerk.openUserProfile()}>
+      <Button
+        variant={"ghost"}
+        onClick={() => router.push("/account/settings")}
+      >
         <UserCog size={18} className="  mr-2" />
         Security/Profile settings
       </Button>

@@ -38,6 +38,14 @@ export default function TextFromPathname() {
               </BreadcrumbItem>
             </>
           )}
+          {pathname.endsWith("/customize") && (
+            <>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage>Customize</BreadcrumbPage>
+              </BreadcrumbItem>
+            </>
+          )}
         </>
       )}
       {pathname == "/account/favorites" && (
@@ -45,6 +53,34 @@ export default function TextFromPathname() {
           <BreadcrumbSeparator className="  max-sm:hidden" />
           <BreadcrumbItem>
             <BreadcrumbPage>Favorites</BreadcrumbPage>
+          </BreadcrumbItem>
+        </>
+      )}
+      {pathname == "/account/claim-account" && (
+        <>
+          <BreadcrumbSeparator className="  max-sm:hidden" />
+          <BreadcrumbItem>
+            <BreadcrumbPage>Claim Minecraft Account</BreadcrumbPage>
+          </BreadcrumbItem>
+        </>
+      )}
+      {pathname == "/account/settings" && (
+        <>
+          <BreadcrumbSeparator className="  max-sm:hidden" />
+          <BreadcrumbItem>
+            <BreadcrumbPage>Settings</BreadcrumbPage>
+          </BreadcrumbItem>
+        </>
+      )}
+      {pathname == "/legal/external-content-agreement" && (
+        <>
+          <BreadcrumbSeparator className="  max-sm:hidden" />
+          <BreadcrumbItem>
+            <BreadcrumbPage>Legal</BreadcrumbPage>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>ECA Agreement</BreadcrumbPage>
           </BreadcrumbItem>
         </>
       )}

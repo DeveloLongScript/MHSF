@@ -15,6 +15,9 @@ import { banner } from "@/banner";
 import Link from "next/link";
 import TabServer from "@/components/misc/TabServer";
 import { NewChart } from "@/components/NewChart";
+import { useColor } from "@/lib/use-color";
+import ColorProvider from "@/components/ColorProvider";
+import Banner from "@/components/Banner";
 
 type Props = {
   params: { server: string };
@@ -77,15 +80,18 @@ export async function generateMetadata(
 export default function ServerPage({ params }: { params: { server: string } }) {
   return (
     <main>
-      <div className="pt-16">
-        <TabServer server={params.server} tabDef="historical" />
-        <div className="pt-8">
-          <ServerView server={params.server} />
-          <div className="p-4 gap-4">
-            <NewChart server={params.server} />
+      <ColorProvider server={params.server}>
+        <div className={"pt-16"}>
+          <Banner server={params.server} />
+          <TabServer server={params.server} tabDef="historical" />
+          <div className="pt-8">
+            <ServerView server={params.server} />
+            <div className="p-4 gap-4">
+              <NewChart server={params.server} />
+            </div>
           </div>
         </div>
-      </div>
+      </ColorProvider>
     </main>
   );
 }

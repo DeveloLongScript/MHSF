@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Children } from "react";
 
 export default function Component(props: {
-  title: string;
+  title: string | JSX.Element;
   desc: string | JSX.Element;
   icon: any;
   className?: string;

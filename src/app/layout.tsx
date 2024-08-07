@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { GeistSans } from "geist/font/sans";
 import { Github, CodeXml, Server, Command } from "lucide-react";
-
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
 import { headers } from "next/headers";
@@ -12,7 +13,7 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import Image from "next/image";
 import { ClerkThemeProvider } from "@/components/clerk/ClerkThemeProvider";
 import { useEffectOnce } from "@/lib/useEffectOnce";
-import NextTopLoader from '@/lib/top-loader';
+import NextTopLoader from "@/lib/top-loader";
 import { banner } from "@/banner";
 import {
   Breadcrumb,
@@ -47,7 +48,6 @@ export default async function RootLayout({
         disableTransitionOnChange
       >
         <TooltipProvider>
-          
           {banner.isBanner && (
             <div className="bg-orange-600 w-screen h-8 border-b fixed text-black flex items-center text-center font-medium pl-2">
               {banner.bannerText}
@@ -55,11 +55,11 @@ export default async function RootLayout({
           )}
           <div
             className={
-              "w-screen h-12 border-b fixed backdrop-blur flex " +
+              "w-screen h-12 border-b fixed backdrop-blur flex z-10 " +
               (banner.isBanner == true ? "mt-8" : "")
             }
           >
-            <div className="  me-auto mt-3 pl-7">
+            <div className="items-center me-auto mt-3 pl-7">
               <Breadcrumb>
                 <BreadcrumbList>
                   <Link href="/">
@@ -73,9 +73,14 @@ export default async function RootLayout({
             </div>
             <TopBar inter={inter.className} />
           </div>
-          <div><NextTopLoader/>{children}</div>{" "}
+          <div>
+            <NextTopLoader />
+            {children}
+          </div>{" "}
           <Toaster position="bottom-center" reverseOrder={false} />
           <CommandBarer />
+          <SpeedInsights />
+          <Analytics />
         </TooltipProvider>
       </ThemeProvider>
     </ClerkThemeProvider>

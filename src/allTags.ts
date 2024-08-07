@@ -84,18 +84,6 @@ export var allTags: Array<{
     primary: true,
     role: "violet",
   }, */
-  {
-    name: async () => "External",
-    condition: async (s) => {
-      return (await requestServer(s)).activeServerPlan == "External Server";
-    },
-    tooltipDesc: "Is this server not directly hosted on Minehuts servers?",
-    htmlDocs:
-      "This tag represents servers not directly hosted on Minehut's servers, most likely because the server runs on an multi-server network (like Velocity or Bungeecord)",
-    docsName: "External",
-    primary: true,
-    role: "red",
-  },
 ];
 
 export var allCategories: Array<{
