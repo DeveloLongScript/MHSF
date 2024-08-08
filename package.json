@@ -88,7 +88,7 @@
     "@unocss/preset-uno": "^0.61.5",
     "@unocss/transformer-compile-class": "^0.61.5",
     "eslint": "^8",
-    "eslint-config-next": "14.2.3",
+    "eslint-config-next": "14.2.5",
     "jotai": "^2.9.1",
     "mangle-css-class-webpack-plugin": "^5.1.0",
     "postcss": "^8",
