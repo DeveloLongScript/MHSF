@@ -81,44 +81,5 @@ export default serve({
         }
       }
     ),
-    inngest.createFunction(
-      { id: "every-two-months" },
-      [{ cron: "0 0 1 */2 *" }],
-      async ({ event, step }) => {
-        const mongo = new MongoClient(process.env.MONGO_DB as string);
-        const meta = mongo.db("mhsf").collection("history");
-        const historical = mongo.db("mhsf").collection("historical");
-
-        const array = await meta.find().toArray();
-        const result: any = {};
-
-        array.forEach((c) => {
-          if (result[c.server] == undefined) {
-            result[c.server] = {
-              server: c.server,
-              player_count: [c.player_count],
-              favorites: [c.favorites],
-              time: Date.now(),
-            };
-          } else {
-            result[c.server] = {
-              server: c.server,
-              player_count: [...result[c.server]?.player_count, c.player_count],
-              favorites: [...result[c.server]?.favorites, c.favorites],
-              time: c.time,
-            };
-          }
-        });
-
-        historical.insertMany(Object.values(result));
-        meta.drop();
-        mongo.close();
-
-        return {
-          event,
-          body: "Dropped database. ",
-        };
-      }
-    ),
   ],
 });
