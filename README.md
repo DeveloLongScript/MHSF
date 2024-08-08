@@ -27,7 +27,6 @@ First, you must supply the following services with API keys:
 
 - [Clerk](https://clerk.com): Create an app and put the respective keys in `.env.local`
 - MongoDB: Create a database, can be anywhere, and put the location to connect in `.env.local` for the key `MONGO_DB` (this isn't required by any means, but if you want to store any short term or historical data, use this.)
-- Inngest: Inngest is a smaller library, but runs the `cron` jobs which will make servers automaticly get added to the database.
 
 _This project uses `yarn` as the main package manager. If `package-lock.json` is present, your pull request will get denied._
 Second, run `yarn` and `yarn build`. To start the app, run `yarn start`.

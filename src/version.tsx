@@ -1,4 +1,4 @@
-export const version = "b-0.7.0";
+export const version = "b-0.7.2";
 
 const User = ({ user }: { user: string }) => (
   <span className="cursor-pointer bg-[rgba(255,165,0,0.25);] rounded p-[2.5px]">
@@ -8,6 +8,17 @@ const User = ({ user }: { user: string }) => (
 
 export const Changelog = () => (
   <>
+    <div>
+      <strong className="flex items-center">
+        Version b-0.7.2 (August 7th 2024)
+      </strong>
+      <ul>
+        <li>• Adding new spinners to pages that needed it</li>
+        <li>• Fixed lots of bugs</li>
+        <li>• Moved from Inngest to Vercel Cron</li>
+      </ul>
+    </div>
+    <br />
     <div>
       <strong className="flex items-center">
         Version b-0.7.0 (August 7th 2024)
