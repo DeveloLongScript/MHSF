@@ -21,7 +21,7 @@ export default function IconDisplay(props: { server: any }) {
         />
       </TooltipTrigger>
       <TooltipContent>
-        <div className="  font-mono">
+        <div className="font-mono">
           {props.server.icon != null
             ? props.server.icon.toLowerCase()
             : "oak_sign"}
@@ -42,7 +42,7 @@ export function IconDisplayClient(props: { server: string }) {
 
   useEffect(() => {
     fetch(
-      "https://api.minehut.com/server/" + props.server + "?byName=true",
+      "https://api.minehut.com/server/" + props.server + "?byName=true"
     ).then((b) => b.json().then((c) => setIcon(c.server.icon)));
   }, []);
 
@@ -62,7 +62,7 @@ export function IconDisplayClient(props: { server: string }) {
             />
           </TooltipTrigger>
           <TooltipContent>
-            <div className="  font-mono">
+            <div className="font-mono">
               {icon != null ? icon.toLowerCase() : "oak_sign"}
             </div>
             {icon == null && (

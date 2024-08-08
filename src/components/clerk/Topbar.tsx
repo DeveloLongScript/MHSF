@@ -17,7 +17,7 @@ export default function TopBar({ inter }: { inter: string }) {
   return (
     <>
       <SignedOut>
-        <div className="  mt-1 gap-1 grid grid-cols-5">
+        <div className="mt-1 gap-1 grid grid-cols-5">
           <SignInPopoverButton className="col-span-2" variant="outline" />
           <Popover>
             <PopoverTrigger>
@@ -32,7 +32,7 @@ export default function TopBar({ inter }: { inter: string }) {
           <Button variant="ghost" size="icon">
             <svg
               viewBox="0 0 438.549 438.549"
-              className="  h-[1.2rem] w-[1.2rem]"
+              className="h-[1.2rem] w-[1.2rem]"
             >
               <path
                 fill="currentColor"
@@ -68,7 +68,7 @@ export default function TopBar({ inter }: { inter: string }) {
           <Popover>
             <PopoverTrigger>
               <Button size="icon" variant="ghost" className="mb-1">
-                <InfoIcon className="  h-[1.2rem] w-[1.2rem]" />
+                <InfoIcon className="h-[1.2rem] w-[1.2rem]" />
               </Button>
             </PopoverTrigger>
             <PopoverContent>
@@ -86,7 +86,7 @@ export default function TopBar({ inter }: { inter: string }) {
           >
             <svg
               viewBox="0 0 438.549 438.549"
-              className="  h-[1.2rem] w-[1.2rem]"
+              className="h-[1.2rem] w-[1.2rem]"
             >
               <path
                 fill="currentColor"

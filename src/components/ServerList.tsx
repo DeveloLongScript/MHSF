@@ -108,10 +108,10 @@ export default function ServerList() {
   if (loading) {
     return (
       <>
-        <Spinner className="  flex items-center" />
+        <Spinner className="flex items-center" />
         <br />
         <div
-          className="  flex justify-center"
+          className="flex justify-center"
           dangerouslySetInnerHTML={{ __html: randomText }}
         ></div>
       </>
@@ -120,7 +120,7 @@ export default function ServerList() {
 
   return (
     <>
-      <div className="  max-lg:grid-cols-2 grid grid-cols-3 gap-4 ">
+      <div className="max-lg:grid-cols-2 grid grid-cols-3 gap-4 ">
         <Stat
           title="Players online"
           desc={serverList.getExtraData().total_players.toString()}
@@ -181,7 +181,7 @@ export default function ServerList() {
         </Stat>
         <Stat
           title="Current most popular server (in filter)"
-          className="  max-lg:col-span-2"
+          className="max-lg:col-span-2"
           desc={
             <>
               {serverList.currentServers[0] != undefined
@@ -197,11 +197,11 @@ export default function ServerList() {
       </div>
       <br />
       <Separator />
-      <div className="  mt-3 ml-3">
+      <div className="mt-3 ml-3">
         <Button
           onClick={() => events.emit("search-request-event")}
           variant="secondary"
-          className="  max-lg:mb-3"
+          className="max-lg:mb-3"
         >
           Search{" "}
           <code className="ml-2 flex items-center">
@@ -211,12 +211,12 @@ export default function ServerList() {
         </Button>
         <Popover>
           <PopoverTrigger>
-            <Button className="  ml-3" variant="secondary">
+            <Button className="ml-3" variant="secondary">
               Filter
               <code className="ml-2">{filters.length}</code>
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="  w-[390px] z-3">
+          <PopoverContent className="w-[390px] z-3">
             <RadioGroup
               onValueChange={(v) => {
                 toast.promise(
@@ -351,41 +351,41 @@ export default function ServerList() {
                 }
               })()}
             >
-              <div className="  items-top flex space-x-2">
+              <div className="items-top flex space-x-2">
                 <RadioGroupItem id="smaller" value="smaller" />
-                <div className="  grid gap-1.5 leading-none">
+                <div className="grid gap-1.5 leading-none">
                   <label
                     htmlFor="smaller"
-                    className="  text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                   >
                     Only allow smaller servers
                   </label>
-                  <p className="  text-sm text-muted-foreground">
+                  <p className="text-sm text-muted-foreground">
                     Server have 15-7 players, cannot be{" "}
                     <Badge variant="secondary">Always Online</Badge>
                   </p>
                 </div>
               </div>
-              <div className="  items-top flex space-x-2">
+              <div className="items-top flex space-x-2">
                 <RadioGroupItem id="bigger" value="bigger" />
-                <div className="  grid gap-1.5 leading-none">
+                <div className="grid gap-1.5 leading-none">
                   <label
                     htmlFor="bigger"
-                    className="  text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                   >
                     Only allow bigger servers
                   </label>
-                  <p className="  text-sm text-muted-foreground">
+                  <p className="text-sm text-muted-foreground">
                     Server has 16 players or more
                   </p>
                 </div>
               </div>
-              <div className="  items-top flex space-x-2">
+              <div className="items-top flex space-x-2">
                 <RadioGroupItem id="none" value="none" />
-                <div className="  grid gap-1.5 leading-none">
+                <div className="grid gap-1.5 leading-none">
                   <label
                     htmlFor="none"
-                    className="  text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                   >
                     Custom/no requirements
                   </label>
@@ -394,13 +394,13 @@ export default function ServerList() {
             </RadioGroup>
             <br />
             <br />
-            <strong className="  pb-2">Tags</strong>
+            <strong className="pb-2">Tags</strong>
             <br />
 
             {allTags.map((tag) => (
               <div key={tag.docsName}>
                 {tag.docsName && tag.__filter == undefined && (
-                  <div className="  items-top flex space-x-2 pb-1">
+                  <div className="items-top flex space-x-2 pb-1">
                     <Checkbox
                       disabled={templateFilter && tag.__disab != undefined}
                       id={tag.docsName}
@@ -445,12 +445,12 @@ export default function ServerList() {
                         });
                       }}
                     />
-                    <div className="  grid gap-1.5 leading-none">
+                    <div className="grid gap-1.5 leading-none">
                       <label
                         htmlFor={tag.docsName}
-                        className="  text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                       >
-                        <Badge variant={tag.role} className="  mr-1">
+                        <Badge variant={tag.role} className="mr-1">
                           {tag.docsName}
                         </Badge>
                       </label>
@@ -464,7 +464,7 @@ export default function ServerList() {
             <br />
             {allCategories.map((categorie) => (
               <div
-                className="  items-top flex space-x-2 pb-1"
+                className="items-top flex space-x-2 pb-1"
                 key={categorie.name}
               >
                 <Checkbox
@@ -508,12 +508,12 @@ export default function ServerList() {
                     return nameFilters["c-" + categorie.name];
                   })()}
                 />
-                <div className="  grid gap-1.5 leading-none">
+                <div className="grid gap-1.5 leading-none">
                   <label
                     htmlFor={categorie.name}
-                    className="  text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                   >
-                    <Badge variant={categorie.role} className="  mr-1">
+                    <Badge variant={categorie.role} className="mr-1">
                       {categorie.name}
                     </Badge>
                   </label>
@@ -524,7 +524,7 @@ export default function ServerList() {
         </Popover>
         <Button
           variant="secondary"
-          className="  md:ml-3 "
+          className="md:ml-3 "
           onClick={() => {
             setRandomData(serverList.getRandomServer());
             setRandom(true);
@@ -534,7 +534,7 @@ export default function ServerList() {
         </Button>
         <Button
           variant="secondary"
-          className="  ml-3"
+          className="ml-3"
           onClick={() => {
             toast.promise(
               new Promise((s, e) => {
@@ -585,7 +585,7 @@ export default function ServerList() {
                 <DialogTitle>
                   <IconDisplay server={randomData} /> {randomData.name}
                   {randomData.author != undefined ? (
-                    <div className="  text-sm text-muted-foreground">
+                    <div className="text-sm text-muted-foreground">
                       by {randomData.author}
                     </div>
                   ) : (
@@ -593,11 +593,11 @@ export default function ServerList() {
                   )}
                   <TagShower server={randomData} />
                 </DialogTitle>
-                <DialogDescription className="  float-left inline">
-                  <span className="  flex items-center">
+                <DialogDescription className="float-left inline">
+                  <span className="flex items-center">
                     {randomData.playerData.playerCount == 0 ? (
                       <div
-                        className="  items-center border"
+                        className="items-center border"
                         style={{
                           width: ".5rem",
                           height: ".5rem",
@@ -606,7 +606,7 @@ export default function ServerList() {
                       />
                     ) : (
                       <div
-                        className="  items-center"
+                        className="items-center"
                         style={{
                           backgroundColor: "#0cce6b",
                           width: ".5rem",
@@ -616,7 +616,7 @@ export default function ServerList() {
                       />
                     )}
 
-                    <span className="  pl-1">
+                    <span className="pl-1">
                       {randomData.playerData.playerCount}{" "}
                       {randomData.playerData.playerCount == 1
                         ? "player"
@@ -628,11 +628,11 @@ export default function ServerList() {
                   <strong>Server IP</strong>
                   <br />
                   <br />
-                  <code className="  border p-3 rounded">
+                  <code className="border p-3 rounded">
                     {randomData.name}.mshf.minehut.gg{" "}
                     <Button
                       size="icon"
-                      className="  ml-1 h-[20px]"
+                      className="ml-1 h-[20px]"
                       onClick={() => {
                         setTextCopied(true);
                         navigator.clipboard.writeText(
@@ -643,7 +643,7 @@ export default function ServerList() {
                       }}
                     >
                       {textCopied ? (
-                        <Check size={16} className="  flex items-center" />
+                        <Check size={16} className="flex items-center" />
                       ) : (
                         <p>Copy</p>
                       )}
@@ -676,7 +676,7 @@ export default function ServerList() {
             setLoading(false);
           });
         }}
-        loader={<Spinner className="  flex items-center" />}
+        loader={<Spinner className="flex items-center" />}
         endMessage={
           <p
             style={{ textAlign: "center" }}
@@ -766,7 +766,7 @@ export function TagShower(props: { server: OnlineServer; className?: string }) {
                   </Badge>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <div className="  font-normal">
+                  <div className="font-normal">
                     {t.tooltip}
                     <br />
                     Click the tag to learn more about it.

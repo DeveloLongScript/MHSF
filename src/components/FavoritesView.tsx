@@ -40,7 +40,7 @@ export default function FavoritesView() {
   if (loading) {
     return (
       <>
-        <Spinner className="  flex items-center" />
+        <Spinner className="flex items-center" />
         <br />
       </>
     );
@@ -54,7 +54,7 @@ export default function FavoritesView() {
           Your favorites are empty. Maybe favorite a server!
         </div>
       )}
-      <div className="  grid sm:grid-cols-4 gap-4">
+      <div className="grid sm:grid-cols-4 gap-4">
         {apiFavorites.map((server: ServerResponse) => (
           <Card key={server.name}>
             <CardHeader>
@@ -63,7 +63,7 @@ export default function FavoritesView() {
                 <Button
                   size="icon"
                   variant="secondary"
-                  className="  min-w-[128px] max-w-[328px] mb-2 h-[32px] max-md:hidden"
+                  className="min-w-[128px] max-w-[328px] mb-2 h-[32px] max-md:hidden"
                   onClick={() => {
                     navigator.clipboard.writeText(
                       server.name + ".mshf.minehut.gg"
@@ -79,7 +79,7 @@ export default function FavoritesView() {
                     <Button
                       size="icon"
                       variant="secondary"
-                      className="  w-[32px] h-[32px] mb-2 ml-2 max-md:hidden"
+                      className="w-[32px] h-[32px] mb-2 ml-2 max-md:hidden"
                       onClick={() => {
                         router.push("/server/" + server.name);
                       }}

@@ -14,17 +14,17 @@ export default function TextFromPathname() {
     <>
       {pathname == "/" && (
         <>
-          <BreadcrumbSeparator className="  max-sm:hidden" />
-          <BreadcrumbItem className="  max-sm:hidden">
+          <BreadcrumbSeparator className="max-sm:hidden" />
+          <BreadcrumbItem className="max-sm:hidden">
             <BreadcrumbPage>Home</BreadcrumbPage>
           </BreadcrumbItem>
         </>
       )}
       {pathname?.startsWith("/server") && (
         <>
-          <BreadcrumbSeparator className="  max-sm:hidden" />
-          <BreadcrumbItem className="  max-sm:hidden">Server</BreadcrumbItem>
-          <BreadcrumbSeparator className="  max-sm:hidden" />
+          <BreadcrumbSeparator className="max-sm:hidden" />
+          <BreadcrumbItem className="max-sm:hidden">Server</BreadcrumbItem>
+          <BreadcrumbSeparator className="max-sm:hidden" />
           <BreadcrumbItem>
             <BreadcrumbPage>
               {pathname.split("/server/")[1].split("/")[0]}
@@ -50,7 +50,7 @@ export default function TextFromPathname() {
       )}
       {pathname == "/account/favorites" && (
         <>
-          <BreadcrumbSeparator className="  max-sm:hidden" />
+          <BreadcrumbSeparator className="max-sm:hidden" />
           <BreadcrumbItem>
             <BreadcrumbPage>Favorites</BreadcrumbPage>
           </BreadcrumbItem>
@@ -58,7 +58,7 @@ export default function TextFromPathname() {
       )}
       {pathname == "/account/claim-account" && (
         <>
-          <BreadcrumbSeparator className="  max-sm:hidden" />
+          <BreadcrumbSeparator className="max-sm:hidden" />
           <BreadcrumbItem>
             <BreadcrumbPage>Claim Minecraft Account</BreadcrumbPage>
           </BreadcrumbItem>
@@ -66,7 +66,7 @@ export default function TextFromPathname() {
       )}
       {pathname == "/account/settings" && (
         <>
-          <BreadcrumbSeparator className="  max-sm:hidden" />
+          <BreadcrumbSeparator className="max-sm:hidden" />
           <BreadcrumbItem>
             <BreadcrumbPage>Settings</BreadcrumbPage>
           </BreadcrumbItem>
@@ -74,7 +74,7 @@ export default function TextFromPathname() {
       )}
       {pathname == "/legal/external-content-agreement" && (
         <>
-          <BreadcrumbSeparator className="  max-sm:hidden" />
+          <BreadcrumbSeparator className="max-sm:hidden" />
           <BreadcrumbItem>
             <BreadcrumbPage>Legal</BreadcrumbPage>
           </BreadcrumbItem>

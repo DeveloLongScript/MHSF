@@ -69,7 +69,7 @@ export default function ServerView(props: { server: string }) {
         <Spinner className="flex items-center" />
         <br />
         <div
-          className="  flex justify-center"
+          className="flex justify-center"
           dangerouslySetInnerHTML={{ __html: randomText }}
         ></div>
       </>
@@ -78,9 +78,9 @@ export default function ServerView(props: { server: string }) {
   return (
     <>
       {single.grabOnline() == undefined && (
-        <div className="  grid pl-4 pr-4">
+        <div className="grid pl-4 pr-4">
           <div
-            className="   rounded p-2"
+            className=" rounded p-2"
             style={{ backgroundColor: "rgba(244, 63, 94, .16)" }}
           >
             <strong className="flex items-center">
@@ -95,13 +95,13 @@ export default function ServerView(props: { server: string }) {
         </div>
       )}
 
-      <div className="  grid p-4 sm:grid-cols-3 gap-4">
-        <Card className="  sm:col-span-2">
+      <div className="grid p-4 sm:grid-cols-3 gap-4">
+        <Card className="sm:col-span-2">
           <BetterHeader>
-            <CardTitle className="  flex items-center">
+            <CardTitle className="flex items-center">
               {single.grabOnline() == undefined ? (
                 <div
-                  className="  items-center mr-1"
+                  className="items-center mr-1"
                   style={{
                     width: ".75rem",
                     height: ".75rem",
@@ -111,7 +111,7 @@ export default function ServerView(props: { server: string }) {
                 />
               ) : (
                 <div
-                  className="  items-center mr-1"
+                  className="items-center mr-1"
                   style={{
                     width: ".75rem",
                     height: ".75rem",

@@ -40,13 +40,13 @@ export default function ServerCard({ b, motd }: any) {
           className="min-h-[450px] max-h-[450px] mb-4 flex items-start"
         >
           <CardHeader>
-            <CardTitle className="  m-0">
+            <CardTitle className="m-0">
               <IconDisplay server={b} /> {b.name}{" "}
               <Drawer>
                 <DrawerTrigger>
                   <Button
                     size="icon"
-                    className="  w-[24px] h-[24px] ml-2 md:hidden"
+                    className="w-[24px] h-[24px] ml-2 md:hidden"
                     variant="secondary"
                   >
                     <EllipsisVertical size={16} />
@@ -67,7 +67,7 @@ export default function ServerCard({ b, motd }: any) {
                       }}
                     >
                       Copy server IP
-                      <Copy size={18} className="  ml-4" />
+                      <Copy size={18} className="ml-4" />
                     </Button>
                     <Button
                       variant="ghost"
@@ -81,7 +81,7 @@ export default function ServerCard({ b, motd }: any) {
                 </DrawerContent>
               </Drawer>
               {b.author != undefined ? (
-                <div className="  text-sm text-muted-foreground">
+                <div className="text-sm text-muted-foreground">
                   by {b.author}
                 </div>
               ) : (
@@ -89,11 +89,11 @@ export default function ServerCard({ b, motd }: any) {
               )}
               <TagShower server={b} />
             </CardTitle>
-            <CardDescription className="  float-left inline">
-              <span className="  flex items-center">
+            <CardDescription className="float-left inline">
+              <span className="flex items-center">
                 {b.playerData.playerCount == 0 ? (
                   <div
-                    className="  items-center border"
+                    className="items-center border"
                     style={{
                       width: ".5rem",
                       height: ".5rem",
@@ -102,7 +102,7 @@ export default function ServerCard({ b, motd }: any) {
                   />
                 ) : (
                   <div
-                    className="  items-center"
+                    className="items-center"
                     style={{
                       backgroundColor: "#0cce6b",
                       width: ".5rem",
@@ -112,7 +112,7 @@ export default function ServerCard({ b, motd }: any) {
                   />
                 )}
 
-                <span className="  pl-1">
+                <span className="pl-1">
                   {b.playerData.playerCount}{" "}
                   {b.playerData.playerCount == 1 ? "player" : "players"}{" "}
                   currently online
@@ -125,7 +125,7 @@ export default function ServerCard({ b, motd }: any) {
                     <Button
                       size="icon"
                       variant="secondary"
-                      className="  min-w-[128px] max-w-[328px] h-[32px] mt-2 ml-2 max-md:hidden"
+                      className="min-w-[128px] max-w-[328px] h-[32px] mt-2 ml-2 max-md:hidden"
                       onClick={() => {
                         navigator.clipboard.writeText(
                           b.name + ".mshf.minehut.gg"
@@ -142,7 +142,7 @@ export default function ServerCard({ b, motd }: any) {
                           <Button
                             size="icon"
                             variant="secondary"
-                            className="  w-[32px] h-[32px] mt-2 ml-2 max-md:hidden"
+                            className="w-[32px] h-[32px] mt-2 ml-2 max-md:hidden"
                           >
                             <Layers size={18} />
                           </Button>
@@ -165,7 +165,7 @@ export default function ServerCard({ b, motd }: any) {
                     }}
                   >
                     Copy server IP
-                    <div className="  RightSlot">
+                    <div className="RightSlot">
                       <Copy size={18} />
                     </div>
                   </ContextMenuItem>
@@ -193,7 +193,7 @@ export default function ServerCard({ b, motd }: any) {
           }}
         >
           Copy server IP
-          <div className="  RightSlot">
+          <div className="RightSlot">
             <Copy size={18} />
           </div>
         </ContextMenuItem>

@@ -9,11 +9,11 @@ export function TextCopyComp() {
   const [textCopied, setTextCopied] = useState(false);
 
   return (
-    <code className="  border p-3 rounded">
+    <code className="border p-3 rounded">
       MHSFPV.minehut.gg{" "}
       <Button
         size="icon"
-        className="  ml-1 h-[20px]"
+        className="ml-1 h-[20px]"
         onClick={() => {
           setTextCopied(true);
           navigator.clipboard.writeText("MHSFPV.minehut.gg");
@@ -22,7 +22,7 @@ export function TextCopyComp() {
         }}
       >
         {textCopied ? (
-          <Check size={16} className="  flex items-center" />
+          <Check size={16} className="flex items-center" />
         ) : (
           <p>Copy</p>
         )}
