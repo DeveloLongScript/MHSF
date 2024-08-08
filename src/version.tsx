@@ -40,6 +40,7 @@ export const Changelog = () => (
           `| ${process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_MESSAGE}`}
       </code>
     </div>
+    <br />
     <div>
       <strong className="flex items-center">
         Version b-0.7.2 (August 7th 2024)
