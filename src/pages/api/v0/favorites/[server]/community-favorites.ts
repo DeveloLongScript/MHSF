@@ -1,6 +1,5 @@
 import type { NextApiResponse, NextApiRequest } from "next";
-import { MongoClient, ObjectId } from "mongodb";
-import { getAuth } from "@clerk/nextjs/server";
+import { MongoClient } from "mongodb";
 
 export default async function handler(
   req: NextApiRequest,

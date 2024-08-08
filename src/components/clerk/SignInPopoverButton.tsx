@@ -5,23 +5,30 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Button } from "../ui/button";
-import { AtSign, LogIn, UserCog } from "lucide-react";
-import { useState } from "react";
-import { SignIn, useClerk } from "@clerk/nextjs";
+import { AtSign, LogIn } from "lucide-react";
+import { useClerk } from "@clerk/nextjs";
 
 export default function SignInPopoverButton({
   className,
-  variant
+  variant,
 }: {
   className?: string;
-  variant?: "default" | "destructive" | "secondary" | "outline" | "ghost" | "link";
+  variant?:
+    | "default"
+    | "destructive"
+    | "secondary"
+    | "outline"
+    | "ghost"
+    | "link";
 }) {
   const clerk = useClerk();
 
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button className={className} variant={variant}>Sign In</Button>
+        <Button className={className} variant={variant}>
+          Sign In
+        </Button>
       </PopoverTrigger>
       <PopoverContent className="w-full">
         <div className=" grid w-[200px]">

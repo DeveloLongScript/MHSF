@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse,
+  res: NextApiResponse
 ) {
   const client = new MongoClient(process.env.MONGO_DB as string);
   const db = client.db("mhsf").collection("mh");

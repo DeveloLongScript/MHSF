@@ -1,8 +1,6 @@
 "use client";
-
 import { useState } from "react";
 import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
-import { Spinner } from "../ui/spinner";
 import { useRouter } from "@/lib/useRouter";
 import { Database, Home, Paintbrush } from "lucide-react";
 

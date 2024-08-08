@@ -1,4 +1,4 @@
-import { OnlineServer, ServerResponse } from "./lib/types/server";
+import { OnlineServer, ServerResponse } from "./lib/types/mh-server";
 
 const serverCache: any = {};
 

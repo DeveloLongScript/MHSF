@@ -1,4 +1,4 @@
-import { OnlineServer } from "./types/server";
+import { OnlineServer } from "./types/mh-server";
 import toast from "react-hot-toast";
 import { getMOTDFromServer } from "./api";
 

@@ -12,12 +12,10 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { TextCopyComp } from "@/components/misc/TextCopyComp";
 import { Button } from "@/components/ui/button";
 import {
   InputOTP,
   InputOTPGroup,
-  InputOTPSeparator,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { linkMCAccount } from "@/lib/api";
@@ -26,14 +24,11 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
-import { SetStateAction, useEffect, useState } from "react";
+import { SetStateAction, useState } from "react";
 import Confetti from "@/components/effects/confetti";
-import { useUser } from "@clerk/nextjs";
 
 const FormSchema = z.object({
   code: z.string().min(6, {

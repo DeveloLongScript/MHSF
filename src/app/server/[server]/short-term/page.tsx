@@ -1,21 +1,7 @@
 import ServerView from "@/components/ServerView";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import TopBar from "@/components/clerk/Topbar";
-import { Server } from "lucide-react";
 import type { Metadata, ResolvingMetadata } from "next";
-import { IconDisplayClient } from "@/components/IconDisplay";
-import { banner } from "@/banner";
-import Link from "next/link";
 import TabServer from "@/components/misc/TabServer";
 import { NewChart } from "@/components/NewChart";
-import { useColor } from "@/lib/use-color";
 import ColorProvider from "@/components/ColorProvider";
 import Banner from "@/components/Banner";
 

@@ -1,27 +1,10 @@
 "use client";
-import { useEffect, useState } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { useState } from "react";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Badge } from "./ui/badge";
 import ServersList from "@/lib/list";
-import {
-  CircleUser,
-  Network,
-  Copy,
-  Sun,
-  SlidersHorizontal,
-  Check,
-  XIcon,
-  Info,
-} from "lucide-react";
+import { CircleUser, Network, Sun, Check, XIcon, Info } from "lucide-react";
 import Stat from "./Stat";
 import {
   Dialog,
@@ -32,37 +15,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import {
-  ResizableHandle,
-  ResizablePanel,
-  ResizablePanelGroup,
-} from "@/components/ui/resizable";
-import {
-  ContextMenu,
-  ContextMenuCheckboxItem,
-  ContextMenuContent,
-  ContextMenuItem,
-  ContextMenuLabel,
-  ContextMenuRadioGroup,
-  ContextMenuRadioItem,
-  ContextMenuSeparator,
-  ContextMenuShortcut,
-  ContextMenuSub,
-  ContextMenuSubContent,
-  ContextMenuSubTrigger,
-  ContextMenuTrigger,
-} from "@/components/ui/context-menu";
-import {
-  Command,
-  CommandDialog,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-  CommandSeparator,
-  CommandShortcut,
-} from "@/components/ui/command";
-import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
@@ -71,23 +23,18 @@ import toast from "react-hot-toast";
 import { allTags, allCategories } from "@/allTags";
 import IconDisplay from "./IconDisplay";
 import InfiniteScroll from "react-infinite-scroll-component";
-import Markdown from "react-markdown";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import remarkGfm from "remark-gfm";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Spinner } from "./ui/spinner";
 import { CommandIcon } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { OnlineServer, ServerResponse } from "@/lib/types/server";
+import { OnlineServer } from "@/lib/types/mh-server";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useEffectOnce } from "@/lib/useEffectOnce";
 import ServerCard from "./ServerCard";
-import { useHotkeys } from "react-hotkeys-hook";
 import events from "@/lib/commandEvent";
 import { BorderBeam } from "@/components/effects/border-beam";
 

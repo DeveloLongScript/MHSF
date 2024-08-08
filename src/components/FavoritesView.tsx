@@ -1,20 +1,20 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Spinner } from "./ui/spinner";
 import { Card, CardHeader, CardTitle } from "./ui/card";
-import { ServerResponse } from "@/lib/types/server";
+import { ServerResponse } from "@/lib/types/mh-server";
 import { useEffectOnce } from "@/lib/useEffectOnce";
 import { Button } from "./ui/button";
 import { Copy, Layers, XIcon } from "lucide-react";
 import toast from "react-hot-toast";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 import { getAccountFavorites } from "@/lib/api";
-import { useRouter } from '@/lib/useRouter'
+import { useRouter } from "@/lib/useRouter";
 
 export default function FavoritesView() {
   const [apiFavorites, setApiFavorites] = useState<any>([]);
   const [loading, setLoading] = useState(true);
-  const router = useRouter()
+  const router = useRouter();
 
   useEffectOnce(() => {
     getAccountFavorites().then((d) => {

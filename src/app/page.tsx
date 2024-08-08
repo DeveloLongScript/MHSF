@@ -1,34 +1,10 @@
-import Image from "next/image";
-import { GeistSans } from "geist/font/sans";
 import ServerList from "@/components/ServerList";
-import { Button } from "@/components/ui/button";
-import { ModeToggle as ThemeSwitcher } from "@/components/ThemeSwitcher";
-import {
-  SignInButton,
-  SignedIn,
-  SignedOut,
-  UserProfile,
-  useUser,
-  useClerk,
-} from "@clerk/nextjs";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import { X, UserCog, Server } from "lucide-react";
-import TopBar from "@/components/clerk/Topbar";
-import { banner } from "@/banner";
-import { ResolvingMetadata, Metadata } from "next";
-import Link from "next/link";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "the MHSF project by dvelo",
+  description: `currently running in ${process.env.NEXT_PUBLIC_VERCEL_ENV} | commit (${process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA}) ${process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_MESSAGE} by ${process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_AUTHOR_NAME}`,
+};
 
 export default function Home() {
   return (

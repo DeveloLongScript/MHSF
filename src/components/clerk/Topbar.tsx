@@ -1,17 +1,14 @@
 "use client";
-import { useState, useEffect } from "react";
 import { useClerk, useUser } from "@clerk/nextjs";
-import { SignedOut, SignedIn, SignInButton } from "@clerk/nextjs";
+import { SignedOut, SignedIn } from "@clerk/nextjs";
 import { Button } from "../ui/button";
 import { ModeToggle as ThemeSwitcher } from "../ThemeSwitcher";
 import { Popover, PopoverTrigger, PopoverContent } from "../ui/popover";
 import Image from "next/image";
-import { Circle, InfoIcon, UserCog, X } from "lucide-react";
+import { InfoIcon } from "lucide-react";
 import LoggedInPopover from "./LoggedInPopover";
 import SignInPopoverButton from "./SignInPopoverButton";
-import { version } from "@/version";
 import InfoPopover from "../misc/InfoPopover";
-import Link from "next/link";
 
 export default function TopBar({ inter }: { inter: string }) {
   const clerk = useClerk();
@@ -21,7 +18,7 @@ export default function TopBar({ inter }: { inter: string }) {
     <>
       <SignedOut>
         <div className="  mt-1 gap-1 grid grid-cols-5">
-          <SignInPopoverButton className="col-span-2" variant="outline"/>
+          <SignInPopoverButton className="col-span-2" variant="outline" />
           <Popover>
             <PopoverTrigger>
               <Button size="icon" variant="ghost">

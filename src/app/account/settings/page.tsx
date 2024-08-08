@@ -1,15 +1,6 @@
 "use client";
-import { ShowInfo } from "@/components/misc/InfoClaim";
-import { TextCopyComp } from "@/components/misc/TextCopyComp";
 import { Button } from "@/components/ui/button";
-import {
-  InputOTP,
-  InputOTPGroup,
-  InputOTPSeparator,
-  InputOTPSlot,
-} from "@/components/ui/input-otp";
 import { useClerk, useUser } from "@clerk/nextjs";
-import { default as NextLink } from "next/link";
 import { ExternalLink, KeyRound, Link, UserPen } from "lucide-react";
 import {
   ResizableHandle,
@@ -19,7 +10,6 @@ import {
 import toast from "react-hot-toast";
 import { unlinkMCAccount } from "@/lib/api";
 import { useEffect, useState } from "react";
-import { link } from "fs";
 import { Dialog } from "@/components/ui/dialog";
 import { DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import CodeDialog from "@/components/misc/LinkDialog";

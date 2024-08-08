@@ -1,12 +1,7 @@
-// inngest in mh-stats provides information periodicly. like every 30 minutes for historical data.
-// its fully automatic
-
-import Favorites from "@/app/account/favorites/page";
-import { OnlineServer } from "@/lib/types/server";
+import { OnlineServer } from "@/lib/types/mh-server";
 import { Inngest } from "inngest";
 import { serve } from "inngest/next";
 import { MongoClient } from "mongodb";
-import { Noto_Sans_Mahajani } from "next/font/google";
 
 // Create a client to send and receive events
 export const inngest = new Inngest({ id: "my-app" });

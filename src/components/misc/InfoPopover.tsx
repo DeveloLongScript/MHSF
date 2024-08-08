@@ -1,17 +1,9 @@
-import Link from "next/link";
 import { Button } from "../ui/button";
-import { Activity, Calendar, Star, TerminalIcon } from "lucide-react";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "../ui/dialog";
+import { Calendar, Star, TerminalIcon } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import { useState } from "react";
 import { Changelog, version } from "@/version";
-import events from "@/lib/commandEvent"
+import events from "@/lib/commandEvent";
 
 export default function InfoPopover() {
   const [changeLog, setChangelog] = useState(false);

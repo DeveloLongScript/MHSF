@@ -1,4 +1,4 @@
-import { OnlineServer, ServerResponse } from "./types/server";
+import { OnlineServer, ServerResponse } from "./types/mh-server";
 import toast from "react-hot-toast";
 
 export default class ServerSingle {

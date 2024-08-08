@@ -1,6 +1,5 @@
 "use client";
 import {
-  Command,
   CommandDialog,
   CommandEmpty,
   CommandGroup,
@@ -11,11 +10,10 @@ import {
   CommandShortcut,
 } from "@/components/ui/command";
 import { TagShower } from "./ServerList";
-import { useEffect, useState } from "react";
-import { OnlineServer } from "@/lib/types/server";
+import { useState } from "react";
+import { OnlineServer } from "@/lib/types/mh-server";
 import events from "@/lib/commandEvent";
 import { useHotkeys } from "react-hotkeys-hook";
-import Link from "next/link";
 import {
   ArrowDown01,
   ArrowLeft,
@@ -27,14 +25,16 @@ import {
 } from "lucide-react";
 import { useEffectOnce } from "@/lib/useEffectOnce";
 import { useClerk, useUser } from "@clerk/nextjs";
-import { useRouter } from '@/lib/useRouter'
+import { useRouter } from "@/lib/useRouter";
+import type { SVGProps } from "react";
+import { getAccountFavorites } from "@/lib/api";
 
 export function SearchCommandBar() {
   const [serverList, setServerList] = useState<OnlineServer[]>([]);
   const [open, setOpen] = useState(false);
   const [backEnabled, setBackEnabled] = useState(false);
   const [searchRes, setSearchRes] = useState<any>(undefined);
-  const router = useRouter()
+  const router = useRouter();
   useHotkeys("mod+shift+k", () => setOpen(true), []);
 
   useEffectOnce(() => {
@@ -252,9 +252,6 @@ export function SubLinkCommandBar() {
     </CommandDialog>
   );
 }
-import * as React from "react";
-import type { SVGProps } from "react";
-import { getAccountFavorites } from "@/lib/api";
 const Github = (props: SVGProps<SVGSVGElement>) => (
   <svg
     viewBox="0 0 256 250"
@@ -274,7 +271,7 @@ export function FavoriteBar() {
     undefined
   );
   const clerk = useClerk();
-  const router = useRouter()
+  const router = useRouter();
 
   useEffectOnce(() => {
     events.on("cmd-event-favorites", () => setOpen(true));
@@ -297,7 +294,7 @@ export function FavoriteBar() {
             Go back
           </CommandItem>
         </CommandGroup>
-        
+
         <CommandGroup heading="Favorites">
           {favorites == undefined && (
             <CommandItem onSelect={() => clerk.openSignIn()}>

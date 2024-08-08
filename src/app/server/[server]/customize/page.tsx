@@ -1,26 +1,4 @@
-import ServerView from "@/components/ServerView";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import TopBar from "@/components/clerk/Topbar";
-import { CornerDownLeft, Server, X } from "lucide-react";
 import type { Metadata, ResolvingMetadata } from "next";
-import { IconDisplayClient } from "@/components/IconDisplay";
-import { banner } from "@/banner";
-import Link from "next/link";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import TabServer from "@/components/misc/TabServer";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Tooltip } from "@/components/ui/tooltip";
-import ServerCustomize from "@/components/ServerCustomize";
-import { useColor } from "@/lib/use-color";
 import CustomizeRoot from "@/components/CustomizeRoot";
 
 type Props = {

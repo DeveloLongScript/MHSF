@@ -9,6 +9,38 @@ const User = ({ user }: { user: string }) => (
 export const Changelog = () => (
   <>
     <div>
+      Running on commit{" "}
+      <code>
+        <a
+          href={`https://github.com/DeveloLongScript/mhsf/commit/${process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA}`}
+        >
+          {(
+            process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA || "unknown"
+          ).substring(0, 7)}
+        </a>{" "}
+        {process.env.NEXT_PUBLIC_VERCEL_GIT_PULL_REQUEST_ID != undefined &&
+          process.env.NEXT_PUBLIC_VERCEL_GIT_PULL_REQUEST_ID != "" && (
+            <>
+              {" "}
+              | on PR{" "}
+              <a
+                href={`https://github.com/DeveloLongScript/MHSF/pull/${process.env.NEXT_PUBLIC_VERCEL_GIT_PULL_REQUEST_ID}`}
+              >
+                {process.env.NEXT_PUBLIC_VERCEL_GIT_PULL_REQUEST_ID}
+              </a>{" "}
+              by{" "}
+              <a
+                href={`https://github.com/${process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_AUTHOR_NAME}`}
+              >
+                {process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_AUTHOR_NAME}
+              </a>
+            </>
+          )}{" "}
+        {process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_MESSAGE != undefined &&
+          `| ${process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_MESSAGE}`}
+      </code>
+    </div>
+    <div>
       <strong className="flex items-center">
         Version b-0.7.2 (August 7th 2024)
       </strong>

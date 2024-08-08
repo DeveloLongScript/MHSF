@@ -15,25 +15,16 @@ import {
 } from "./ui/card";
 import IconDisplay from "./IconDisplay";
 import { TagShower } from "./ServerList";
-import {
-  Copy,
-  EllipsisVertical,
-  Layers,
-  MoveRight,
-  Router,
-} from "lucide-react";
+import { Copy, EllipsisVertical, Layers } from "lucide-react";
 import { Button } from "./ui/button";
 import {
   Drawer,
-  DrawerClose,
   DrawerContent,
-  DrawerDescription,
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import { useEffect, useState } from "react";
 import { Tooltip } from "@radix-ui/react-tooltip";
 import { TooltipContent, TooltipTrigger } from "./ui/tooltip";
 import { useRouter } from "@/lib/useRouter";

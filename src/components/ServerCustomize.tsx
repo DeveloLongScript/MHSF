@@ -1,8 +1,7 @@
 "use client";
-import { Label } from "./ui/label";
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
-import { CheckIcon, CornerDownLeft, X } from "lucide-react";
+import { CheckIcon, X } from "lucide-react";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import {
   getCustomization,
@@ -14,9 +13,8 @@ import {
 } from "@/lib/api";
 import toast from "react-hot-toast";
 import { SignedIn, SignedOut, useUser } from "@clerk/nextjs";
-import { OnlineServer } from "@/lib/types/server";
+import { OnlineServer } from "@/lib/types/mh-server";
 import Link from "next/link";
-import { useEffectOnce } from "@/lib/useEffectOnce";
 import Setting from "./ui/setting";
 import {
   FormControl,
@@ -30,7 +28,6 @@ import {
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Input } from "./ui/input";
 import "@/themes.css";
 import {
   Card,
@@ -43,7 +40,6 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { themes } from "@/lib/themes";
 import { useTheme } from "next-themes";
-import { useColor } from "@/lib/use-color";
 import { DiscordPopover } from "./misc/DiscordPopover";
 import { Spinner } from "./ui/spinner";
 import { BannerPopover } from "./misc/BannerPopover";

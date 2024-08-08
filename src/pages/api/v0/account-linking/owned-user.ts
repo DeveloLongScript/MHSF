@@ -1,8 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { clerkClient, getAuth } from "@clerk/nextjs/server";
 import { MongoClient } from "mongodb";
-import ServersList from "@/lib/list";
-import { OnlineServer } from "@/lib/types/server";
 
 export default async function handler(
   req: NextApiRequest,

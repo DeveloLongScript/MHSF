@@ -1,4 +1,3 @@
-import { OnlineServer } from "@/lib/types/server";
 import { MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 

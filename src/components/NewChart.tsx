@@ -17,7 +17,7 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { useEffectOnce } from "@/lib/useEffectOnce";
-import { ServerResponse } from "@/lib/types/server";
+import { ServerResponse } from "@/lib/types/mh-server";
 import { getCommunityServerFavorites, getShortTermData } from "@/lib/api";
 
 const chartConfig = {

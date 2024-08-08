@@ -1,7 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
 import { Spinner } from "./ui/spinner";
-import IconDisplay from "./IconDisplay";
 import {
   Card,
   CardContent,
@@ -11,34 +10,18 @@ import {
   CardTitle,
   BetterHeader,
 } from "@/components/ui/card";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import beautify from "json-beautify";
+import { motion } from "framer-motion";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Badge } from "./ui/badge";
-import Editor from "@monaco-editor/react";
-import { allTags } from "@/allTags";
 import ServerSingle from "@/lib/single";
-import { parse, parseExpression } from "@babel/parser";
-import { NEXT_ROUTER_STATE_TREE } from "next/dist/client/components/app-router-headers";
-import { Button } from "./ui/button";
-import * as prettierPluginBabel from "prettier/plugins/babel";
-import toast from "react-hot-toast";
-import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
+import { SignedIn, SignedOut } from "@clerk/nextjs";
 import SignInPopoverButton from "./clerk/SignInPopoverButton";
-import { Sparkle, Star, X } from "lucide-react";
-import { favoriteServer, getCustomization, isFavorited } from "@/lib/api";
+import { Star, X } from "lucide-react";
+import { favoriteServer, isFavorited } from "@/lib/api";
 import { LoadingButton } from "./ui/loading-button";
 import { useTheme } from "next-themes";
 
