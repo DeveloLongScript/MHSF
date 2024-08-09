@@ -4,6 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import { useState } from "react";
 import { Changelog, version } from "@/version";
 import events from "@/lib/commandEvent";
+import { ScrollArea } from "../ui/scroll-area";
 
 export default function InfoPopover() {
   const [changeLog, setChangelog] = useState(false);
@@ -24,10 +25,12 @@ export default function InfoPopover() {
       </Button>
       <Dialog open={changeLog} onOpenChange={setChangelog}>
         <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Changelog</DialogTitle>
-            <Changelog />
-          </DialogHeader>
+          <ScrollArea className="max-h-[500px]">
+            <DialogHeader>
+              <DialogTitle>Changelog</DialogTitle>
+              <Changelog />
+            </DialogHeader>
+          </ScrollArea>
         </DialogContent>
       </Dialog>
 

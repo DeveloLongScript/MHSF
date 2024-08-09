@@ -37,7 +37,7 @@ export const Changelog = () => (
             </>
           )}{" "}
         {process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_MESSAGE != undefined &&
-          `| ${process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_MESSAGE}`}
+          `| ${process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_MESSAGE.substring(0, 24)}`}
       </code>
     </div>
     <br />
