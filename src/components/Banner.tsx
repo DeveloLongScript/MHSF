@@ -10,8 +10,10 @@ export default function Banner({ server }: { server: string }) {
 
   useEffect(() => {
     getCustomization(server).then((c) => {
-      setLoading(false);
-      setBannerURL(c.banner == undefined ? "" : c.banner);
+      if (c != null) {
+        setLoading(false);
+        setBannerURL(c.banner == undefined ? "" : c.banner);
+      }
     });
   }, [server]);
 
