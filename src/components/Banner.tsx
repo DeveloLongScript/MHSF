@@ -1,8 +1,6 @@
 "use client";
-
 import { getCustomization } from "@/lib/api";
 import { useEffect, useState } from "react";
-import { Spinner } from "./ui/spinner";
 
 export default function Banner({ server }: { server: string }) {
   const [bannerURL, setBannerURL] = useState("");
@@ -13,6 +11,8 @@ export default function Banner({ server }: { server: string }) {
       if (c != null) {
         setLoading(false);
         setBannerURL(c.banner == undefined ? "" : c.banner);
+      } else {
+        setLoading(false);
       }
     });
   }, [server]);
@@ -20,7 +20,6 @@ export default function Banner({ server }: { server: string }) {
   if (loading) {
     return (
       <>
-        <Spinner className="flex items-center" />
         <br />
       </>
     );
