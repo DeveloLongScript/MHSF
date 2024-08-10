@@ -4,7 +4,7 @@ import { serve } from "inngest/next";
 import { MongoClient } from "mongodb";
 
 // Create a client to send and receive events
-export const inngest = new Inngest({ id: "my-app" });
+export const inngest = new Inngest({ id: "mhsf" });
 
 // Create an API that serves zero functions
 export default serve({
