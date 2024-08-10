@@ -3,7 +3,6 @@ import { Server } from "lucide-react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
-import { Toaster } from "react-hot-toast";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { ClerkThemeProvider } from "@/components/clerk/ClerkThemeProvider";
@@ -19,6 +18,7 @@ import TopBar from "@/components/clerk/Topbar";
 import TextFromPathname from "@/components/TextFromPathname";
 import { Inter as interFont } from "next/font/google";
 import { CommandBarer } from "@/components/CommandBar";
+import ThemedToaster from "@/components/misc/ThemedToaster";
 
 const inter = interFont({ variable: "--font-inter", subsets: ["latin"] });
 export default async function RootLayout({
@@ -64,7 +64,7 @@ export default async function RootLayout({
             <NextTopLoader />
             {children}
           </div>{" "}
-          <Toaster position="bottom-center" reverseOrder={false} />
+          <ThemedToaster />
           <CommandBarer />
           <SpeedInsights />
           <Analytics />
