@@ -6,6 +6,9 @@ An open-source customizable server-list for Minehut built in React. Check it out
 > [!WARNING]
 > If you want more of a explanation what this is, please use the built-in info popover. This README is mostly for contributing. Thanks!
 
+## Info
+![Alt](https://repobeats.axiom.co/api/embed/0ee8fb5584604adac02f04cff49f1091af45c3a8.svg "Repobeats analytics image")
+
 ## Tech-stack
 
 [React](https://react.dev): Component based syntaxing for the web <br/>
