@@ -198,13 +198,13 @@ export function ServerCommandBar() {
 
         <CommandGroup heading="Server Actions">
           <CommandItem
-            onClick={() => router.push("/server/" + serverName + "/")}
+            onSelect={() => router.push("/server/" + serverName + "/")}
           >
             <Server className="mr-2 h-4 w-4" />
             Open Server Page
           </CommandItem>
           <CommandItem
-            onClick={() => {
+            onSelect={() => {
               favoriteServer(serverName).then(() => toast.success("Done!"));
             }}
           >
@@ -212,7 +212,7 @@ export function ServerCommandBar() {
             Favorite Server
           </CommandItem>
           <CommandItem
-            onClick={() => router.push("/server/" + serverName + "/statistics")}
+            onSelect={() => router.push("/server/" + serverName + "/statistics")}
           >
             <Database className="mr-2 h-4 w-4" />
             See Statistics
