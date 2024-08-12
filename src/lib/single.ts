@@ -1,3 +1,4 @@
+import { serverOwned } from "./api";
 import { OnlineServer, ServerResponse } from "./types/mh-server";
 import toast from "react-hot-toast";
 
@@ -10,7 +11,15 @@ export default class ServerSingle {
   constructor(name: string) {
     this.name = name;
   }
-  init(): Promise<boolean> {
+  setName(newName: string) {
+    this.name = newName;
+  }
+
+  isCustomized(): Promise<boolean> {
+    return serverOwned(this.name);
+  }
+
+  init(skipOnline?: boolean): Promise<boolean> {
     return new Promise<boolean>((g, bc) => {
       fetch("https://api.minehut.com/server/" + this.name + "?byName=true")
         .then((d) => {
@@ -18,7 +27,7 @@ export default class ServerSingle {
             d.json().then((m) => {
               this.online = m.server.online;
               this.offlineObj = m.server;
-              if (this.online == true) {
+              if (this.online == true && skipOnline != true) {
                 fetch("https://api.minehut.com/servers").then((l) =>
                   l.json().then((o) => {
                     o.servers.forEach((j: OnlineServer) => {

@@ -7,18 +7,24 @@ import {
 } from "@/components/ui/tooltip";
 import { useState, useEffect } from "react";
 
-export default function IconDisplay(props: { server: any }) {
+export default function IconDisplay(props: {
+  server: any;
+  className?: string;
+}) {
   return (
     <Tooltip>
       <TooltipTrigger>
-        <i
-          className={
-            props.server.icon != null
-              ? "icon-minecraft icon-minecraft-" +
-                props.server.icon.replaceAll("_", "-").toLowerCase()
-              : "icon-minecraft icon-minecraft-oak-sign"
-          }
-        />
+        <div>
+          <i
+            className={
+              (props.server.icon != null
+                ? "icon-minecraft icon-minecraft-" +
+                  props.server.icon.replaceAll("_", "-").toLowerCase() +
+                  " "
+                : "icon-minecraft icon-minecraft-oak-sign ") + props.className
+            }
+          />
+        </div>
       </TooltipTrigger>
       <TooltipContent>
         <div className="font-mono">

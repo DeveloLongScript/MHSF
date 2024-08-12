@@ -1,4 +1,7 @@
-export const version = "b-0.7.2";
+import Image from "next/image";
+import Link from "next/link";
+
+export const version = "b-0.8.0";
 
 const User = ({ user }: { user: string }) => (
   <span className="cursor-pointer bg-[rgba(255,165,0,0.25);] rounded p-[2.5px]">
@@ -39,6 +42,16 @@ export const Changelog = () => (
         {process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_MESSAGE != undefined &&
           `| ${process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_MESSAGE.substring(0, 24)}`}
       </code>
+    </div>
+    <br />
+    <div>
+      <strong className="flex items-center">
+        Version b-0.8.0 (August 11th 2024)
+      </strong>
+      <ul>
+        <li>• Fixing up command bar</li>
+        <li>• Renaming "Short Term" to "Statistics"</li>
+      </ul>
     </div>
     <br />
     <div>
@@ -117,6 +130,12 @@ export const Changelog = () => (
       <ul>
         <li>• Inital release!</li>
       </ul>
+    </div>
+    <br />
+    <div className="w-full justify-center">
+      <Link href="https://dvelo.vercel.app">
+        <Image src="/imgs/badge1.png" alt="cool badge" width={88} height={31} />
+      </Link>
     </div>
   </>
 );

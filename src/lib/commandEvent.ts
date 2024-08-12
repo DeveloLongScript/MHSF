@@ -6,15 +6,15 @@ class CommandEvents {
   }
 
   // Method to emit events
-  emit(eventName: string) {
-    const event = new CustomEvent(eventName);
+  emit(eventName: string, info?: any) {
+    const event = new CustomEvent(eventName, { detail: info });
     this.eventTarget.dispatchEvent(event);
   }
 
   // Method to listen for events
-  on(eventName: string, callback: () => void) {
-    this.eventTarget.addEventListener(eventName, () => {
-      callback();
+  on(eventName: string, callback: (info?: any) => void) {
+    this.eventTarget.addEventListener(eventName, (infoF?: any) => {
+      callback(infoF.detail);
     });
   }
 }

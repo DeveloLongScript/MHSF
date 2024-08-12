@@ -699,7 +699,11 @@ export default function ServerList() {
   );
 }
 
-export function TagShower(props: { server: OnlineServer; className?: string }) {
+export function TagShower(props: {
+  server: OnlineServer;
+  className?: string;
+  unclickable?: boolean;
+}) {
   const [loading, setLoading] = useState(true);
   const [compatiableTags, setCompatiableTags] = useState<
     Array<{
@@ -757,38 +761,45 @@ export function TagShower(props: { server: OnlineServer; className?: string }) {
     <>
       {compatiableTags.map((t) => (
         <>
-          <Dialog key={t.name}>
-            <DialogTrigger>
-              <Tooltip>
-                <TooltipTrigger>
-                  <Badge variant={t.role} className={props.className}>
-                    {t.name}
-                  </Badge>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <div className="font-normal">
-                    {t.tooltip}
-                    <br />
-                    Click the tag to learn more about it.
-                  </div>
-                </TooltipContent>
-              </Tooltip>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>
-                  {'"'}
-                  {t.docsName == undefined ? t.name : t.docsName}
-                  {'"'} documentation
-                </DialogTitle>
-                <DialogDescription
-                  dangerouslySetInnerHTML={{
-                    __html: t.htmlDocs,
-                  }}
-                />
-              </DialogHeader>
-            </DialogContent>
-          </Dialog>
+          {props.unclickable && (
+            <Badge variant={t.role} className={props.className}>
+              {t.name}
+            </Badge>
+          )}
+          {!props.unclickable && (
+            <Dialog key={t.name}>
+              <DialogTrigger>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <Badge variant={t.role} className={props.className}>
+                      {t.name}
+                    </Badge>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <div className="font-normal">
+                      {t.tooltip}
+                      <br />
+                      Click the tag to learn more about it.
+                    </div>
+                  </TooltipContent>
+                </Tooltip>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>
+                    {'"'}
+                    {t.docsName == undefined ? t.name : t.docsName}
+                    {'"'} documentation
+                  </DialogTitle>
+                  <DialogDescription
+                    dangerouslySetInnerHTML={{
+                      __html: t.htmlDocs,
+                    }}
+                  />
+                </DialogHeader>
+              </DialogContent>
+            </Dialog>
+          )}
         </>
       ))}
     </>

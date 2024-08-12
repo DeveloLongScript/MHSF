@@ -9,15 +9,17 @@ import {
   CommandSeparator,
   CommandShortcut,
 } from "@/components/ui/command";
-import { TagShower } from "./ServerList";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { OnlineServer } from "@/lib/types/mh-server";
 import events from "@/lib/commandEvent";
 import { useHotkeys } from "react-hotkeys-hook";
 import {
   ArrowDown01,
   ArrowLeft,
+  Calendar,
+  CheckIcon,
   CommandIcon,
+  Database,
   LinkIcon,
   Server,
   Settings,
@@ -27,7 +29,10 @@ import { useEffectOnce } from "@/lib/useEffectOnce";
 import { useClerk, useUser } from "@clerk/nextjs";
 import { useRouter } from "@/lib/useRouter";
 import type { SVGProps } from "react";
-import { getAccountFavorites } from "@/lib/api";
+import { favoriteServer, getAccountFavorites } from "@/lib/api";
+import IconDisplay from "./IconDisplay";
+import ServerSingle from "@/lib/single";
+import toast from "react-hot-toast";
 
 export function SearchCommandBar() {
   const [serverList, setServerList] = useState<OnlineServer[]>([]);
@@ -58,23 +63,46 @@ export function SearchCommandBar() {
       <CommandInput
         placeholder="Search for a server (offline or online)"
         onValueChange={(c) => {
-          fetch("https://api.minehut.com/server/" + c + "?byName=true").then(
-            (l) => {
-              if (l.ok) {
-                console.log("found!");
-                l.json().then((m: any) => {
-                  setSearchRes(m.server);
-                  console.log(searchRes);
-                });
-              } else {
-                setSearchRes(undefined);
+          if (c != "") {
+            fetch("https://api.minehut.com/server/" + c + "?byName=true").then(
+              (l) => {
+                if (l.ok) {
+                  l.json().then((m: any) => {
+                    setSearchRes(m.server);
+                  });
+                } else {
+                  setSearchRes(undefined);
+                }
               }
-            }
-          );
+            );
+          }
         }}
       />
       <CommandList>
-        <CommandGroup heading="">
+        <CommandGroup heading="Popular Servers">
+          {serverList.map((b: OnlineServer) => (
+            <CommandItem
+              key={b.name}
+              onSelect={() => {
+                if (!backEnabled)
+                  events.emit("cmd-server", {
+                    serverName: b.name,
+                    serverObject: b,
+                  });
+                if (backEnabled)
+                  events.emit("cmd-server-vb", {
+                    serverName: b.name,
+                    serverObject: b,
+                  });
+                setOpen(false);
+              }}
+            >
+              <IconDisplay server={b} className="mr-2" />
+              {b.name}
+            </CommandItem>
+          ))}
+        </CommandGroup>
+        <CommandGroup heading="Hierarchy">
           <CommandItem
             onSelect={() => {
               setOpen(false);
@@ -86,49 +114,146 @@ export function SearchCommandBar() {
             <span>Go back</span>
           </CommandItem>
         </CommandGroup>
-        <CommandEmpty>
-          No results found. (Minehut deleted legacy servers)
-        </CommandEmpty>
-        {searchRes == undefined ? (
-          ""
-        ) : (
-          <CommandGroup heading="Search Results">
-            <CommandItem
-              onSelect={() => {
-                router.push("/server/" + searchRes.name);
-              }}
-            >
-              <div className="block">
-                <span className="font-medium">{searchRes.name}</span> <br />
-                <code className="text-gray-500 text-[14px]">
-                  {searchRes.joins} total joins •{" "}
-                  {searchRes.online ? "Online" : "Offline"}
-                </code>
-              </div>
-            </CommandItem>
-          </CommandGroup>
+      </CommandList>
+    </CommandDialog>
+  );
+}
+
+export function ServerCommandBar() {
+  const [open, setOpen] = useState(false);
+  const [serverName, setServerName] = useState("");
+  const [obj, setObj] = useState<OnlineServer | object>({});
+  const [vb, setVB] = useState(false);
+  const router = useRouter();
+  const [owned, setOwned] = useState(false);
+  const [serverSingle, setSingle] = useState<ServerSingle>(
+    new ServerSingle(serverName)
+  );
+
+  useEffect(() => {
+    events.on("cmd-server", (info) => {
+      serverSingle.setName(info.serverName);
+      if (serverSingle != undefined)
+        (serverSingle as ServerSingle).init(true).then(() => {
+          setServerName(info.serverName);
+          setObj(info.serverObject);
+          setOpen(true);
+          serverSingle.isCustomized().then((b) => setOwned(true));
+        });
+    });
+    events.on("cmd-server-vb", (info) => {
+      serverSingle.setName(info.serverName);
+      setVB(true);
+      if (serverSingle != undefined)
+        (serverSingle as ServerSingle).init(true).then(() => {
+          setServerName(info.serverName);
+          setObj(info.serverObject);
+          setOpen(true);
+        });
+    });
+  }, []);
+
+  return (
+    <CommandDialog open={open} onOpenChange={setOpen}>
+      <CommandInput placeholder="Type a command or search..." />
+      <CommandList>
+        {Object.keys(obj).length != 0 && (
+          <div className="m-4 dark:bg-ring min-h-[150px] rounded p-4 dark:text-white">
+            <h1 className="font-bold text-2xl">
+              <IconDisplay server={obj} />
+              {serverName}
+            </h1>
+            <h1 className="text-muted-foreground">
+              by {(obj as OnlineServer).author}
+            </h1>
+            <h2 className="flex items-center text-muted-foreground pt-[15px] pl-1.5">
+              <span className="relative flex h-[10px] w-[10px]">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-black dark:bg-[#0cce6b] opacity-75" />
+                <span className="relative inline-flex rounded-full h-[10px] w-[10px] bg-black dark:bg-[#0cce6b]" />
+              </span>{" "}
+              <span className="pl-1.5 text-[16px]">
+                {(obj as OnlineServer).playerData.playerCount} online currently
+              </span>
+            </h2>
+            <h2 className="flex items-center text-muted-foreground">
+              <Calendar />
+              <span className="pl-1.5 text-[16px]">
+                Created in{" "}
+                {timeConverter(
+                  (serverSingle as ServerSingle).grabOffline()?.creation
+                )}
+              </span>
+            </h2>
+
+            {owned && (
+              <h2 className="flex items-center text-muted-foreground">
+                <CheckIcon />
+                <span className="pl-1.5 text-[16px]">
+                  Is customized by a MHSF User
+                </span>
+              </h2>
+            )}
+          </div>
         )}
-        <CommandSeparator />
-        <CommandGroup heading="Popular Servers">
-          {serverList.map((b: OnlineServer) => (
+
+        <CommandGroup heading="Server Actions">
+          <CommandItem
+            onClick={() => router.push("/server/" + serverName + "/")}
+          >
+            <Server className="mr-2 h-4 w-4" />
+            Open Server Page
+          </CommandItem>
+          <CommandItem
+            onClick={() => {
+              favoriteServer(serverName).then(() => toast.success("Done!"));
+            }}
+          >
+            <Star className="mr-2 h-4 w-4" />
+            Favorite Server
+          </CommandItem>
+          <CommandItem
+            onClick={() => router.push("/server/" + serverName + "/statistics")}
+          >
+            <Database className="mr-2 h-4 w-4" />
+            See Statistics
+          </CommandItem>
+        </CommandGroup>
+        <CommandGroup heading="Hierarchy">
+          <CommandItem
+            onSelect={() => {
+              setOpen(false);
+              if (vb) events.emit("search-request-event-back");
+              if (!vb) events.emit("search-request-event");
+            }}
+          >
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Go back
+          </CommandItem>
+          {vb && (
             <CommandItem
-              key={b.name}
               onSelect={() => {
-                router.push("/server/" + b.name);
+                setOpen(false);
+                events.emit("cmd-event");
               }}
             >
-              <div className="block">
-                <span className="font-medium">{b.name}</span> <br />
-                <code className="text-gray-500 text-[14px]">
-                  <TagShower server={b} />
-                </code>
-              </div>
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Back to main
             </CommandItem>
-          ))}
+          )}
         </CommandGroup>
       </CommandList>
     </CommandDialog>
   );
+}
+
+function timeConverter(UNIX_timestamp: any) {
+  var a = new Date(UNIX_timestamp);
+  var months = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"];
+  var year = a.getFullYear();
+  var month = months[a.getMonth()];
+  var date = a.getDate();
+  var time = month + "/" + date + "/" + year;
+  return time;
 }
 
 export function CommandBar() {
@@ -327,6 +452,7 @@ export function CommandBarer() {
       <SubLinkCommandBar />
       <CommandBar />
       <SearchCommandBar />
+      <ServerCommandBar />
     </>
   );
 }

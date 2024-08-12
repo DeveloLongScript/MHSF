@@ -12,7 +12,6 @@ export default function TabServer({
   tabDef: string;
 }) {
   const [tab, setTab] = useState(tabDef);
-  const [tabLoading, setTabLoading] = useState(false);
   const router = useRouter();
 
   return (
@@ -21,9 +20,8 @@ export default function TabServer({
         value={tab}
         onValueChange={(tac) => {
           setTab(tac);
-          setTabLoading(true);
           if (tac == "customize") router.push(`/server/${server}/customize`);
-          if (tac == "historical") router.push(`/server/${server}/short-term`);
+          if (tac == "statistics") router.push(`/server/${server}/statistics`);
           if (tac == "general") router.push(`/server/${server}`);
         }}
         className="sm:w-[500px] max-sm:w-[200px]"
@@ -34,8 +32,8 @@ export default function TabServer({
             <div className="max-sm:hidden">General Information</div>
             <Home className="sm:hidden" size={18} />
           </TabsTrigger>
-          <TabsTrigger value="historical">
-            <div className="max-sm:hidden">Short Term</div>
+          <TabsTrigger value="statistics">
+            <div className="max-sm:hidden">Statistics</div>
             <Database className="sm:hidden" size={18} />
           </TabsTrigger>
           <TabsTrigger value="customize">
