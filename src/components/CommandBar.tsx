@@ -138,7 +138,7 @@ export function ServerCommandBar() {
           setServerName(info.serverName);
           setObj(info.serverObject);
           setOpen(true);
-          serverSingle.isCustomized().then((b) => setOwned(true));
+          serverSingle.isCustomized().then((b) => setOwned(b));
         });
     });
     events.on("cmd-server-vb", (info) => {
@@ -149,6 +149,7 @@ export function ServerCommandBar() {
           setServerName(info.serverName);
           setObj(info.serverObject);
           setOpen(true);
+          serverSingle.isCustomized().then((b) => setOwned(b));
         });
     });
   }, []);

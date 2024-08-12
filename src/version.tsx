@@ -114,7 +114,7 @@ export const Changelog = () => (
     <br />
     <div>
       <strong className="flex items-center">
-        Version b-0.3 (July 23th 2024):
+        Version b-0.3 (July 23rd 2024):
       </strong>
       <ul>
         <li>
@@ -125,7 +125,7 @@ export const Changelog = () => (
     <br />
     <div>
       <strong className="flex items-center">
-        Version b-0.2 (July 23th 2024):
+        Version b-0.2 (July 23rd 2024):
       </strong>
       <ul>
         <li>• Inital release!</li>
