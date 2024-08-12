@@ -48,7 +48,7 @@
     "@types/canvas-confetti": "^1.6.4",
     "@types/nprogress": "^0.2.3",
     "@types/react-twemoji": "^0.4.3",
-    "@clerk/themes": "^2.1.8",
+    "@clerk/themes": "^2.1.19",
     "@tailwindcss/typography": "^0.5.13",
     "@types/node": "^20",
     "@types/react": "^18",
