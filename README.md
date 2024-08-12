@@ -7,6 +7,7 @@ An open-source customizable server-list for Minehut built in React. Check it out
 > If you want more of a explanation what this is, please use the built-in info popover. This README is mostly for contributing. Thanks!
 
 ## Info
+
 ![Alt](https://repobeats.axiom.co/api/embed/0ee8fb5584604adac02f04cff49f1091af45c3a8.svg "Repobeats analytics image")
 
 ## Tech-stack
@@ -19,6 +20,7 @@ An open-source customizable server-list for Minehut built in React. Check it out
 And many other smaller libraries are in use to make sure MHSF is feature-packed.<br/>
 
 ## Contributing
+
 > [!NOTE]
 > Do you use Java and not JavaScript/TypeScript? You can also contribute to [MHSFPV (Minehut Server List Player Validator)](https://github.com/DeveloLongScript/MHSFPV), a player validator plugin to link accounts. It's relatively small, but can use commits.
 
@@ -41,12 +43,24 @@ First, you must supply the following services with API keys:
 > [!IMPORTANT]  
 > This project uses `yarn` as the main package manager. If `package-lock.json` is present (or any other package manager's lockfile), your pull request will be harder to sort out, please save some work by using `yarn` at the start.
 
-
 Second, run `yarn` and `yarn build`. To start the app, run `yarn start`.
 
 ### Dev
 
 Swap `yarn build` for `yarn dev`.
 
+### Make your mark
+
+If you'd like, you can add a 88x31 badge image to the end of the changelog, which can link to a website of your choice as long as the image and the website are PG13.
+Add your image to `/public/imgs` and name it one up from the highest badge so for example, if the badge thats the highest is `badge2.png`, name yours `badge3.png`. Here is a code example of how to add your badge.
+In `/src/version.tsx`:
+
+```tsx
+<Link href="<your website>">
+  <Image src="/imgs/badge3.png" alt="<your username>" width={88} height={31} />
+</Link>
+```
+
 ## Licensing
+
 MHSF (aka the Minehut Server List) is licensed under the [MIT License](https://github.com/DeveloLongScript/MHSF/blob/main/LICENSE). You are free to fork or modify this software _on your own terms_.
