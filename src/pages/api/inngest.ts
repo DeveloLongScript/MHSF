@@ -19,7 +19,7 @@ export default serve({
           const mh = await (
             await fetch("https://api.minehut.com/servers", {
               headers: {
-                accept: "*/*",
+                accept: "application/json",
                 "accept-language": Math.random().toString(),
                 priority: "u=1, i",
                 "sec-ch-ua": '"Not/A)Brand";v="8", "Chromium";v="126"',
@@ -28,6 +28,7 @@ export default serve({
                 "sec-fetch-dest": "empty",
                 "sec-fetch-mode": "cors",
                 "sec-fetch-site": "cross-site",
+                "Content-Type": "application/json",
                 Referer: "http://localhost:3000/",
                 "Referrer-Policy": "strict-origin-when-cross-origin",
               },
@@ -69,6 +70,7 @@ export default serve({
           };
         } catch (e) {
           await mongo.close();
+
           return { event, body: "Cloudflare.. aborting " + e };
         }
       }
