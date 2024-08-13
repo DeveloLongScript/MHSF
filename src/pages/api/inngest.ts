@@ -40,7 +40,7 @@ export default serve({
           const meta = mongo.db("mhsf").collection("meta");
           const dbl = mongo.db("mhsf").collection("history");
 
-          mha.insertOne({
+          await mha.insertOne({
             total_players: mh.total_players,
             total_servers: mh.total_servers,
             unix: Date.now(),
@@ -61,14 +61,14 @@ export default serve({
               date: new Date(),
             });
           });
-          mongo.close();
+          await mongo.close();
 
           return {
             event,
             body: "Finished adding " + mh.servers.length + " servers.",
           };
         } catch (e) {
-          mongo.close();
+          await mongo.close();
           return { event, body: "Cloudflare.. aborting " + e };
         }
       }
