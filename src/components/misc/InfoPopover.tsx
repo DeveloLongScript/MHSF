@@ -12,13 +12,12 @@ export default function InfoPopover() {
   return (
     <div className="grid w-full">
       <strong className="text-center">The future of Minehut lists</strong>
-      <small className="text-center">
+      <small className="text-center mb-3">
         Use filters, intuitive keyboard shortcuts and other features for
         completely free, and *open-source. <br /> Currently on version{" "}
         <code>{version}</code>.<br />{" "}
         <small>* Licensed under the MIT License</small>
       </small>
-      <br />
 
       <Button variant={"ghost"} onClick={() => setChangelog(true)}>
         <Calendar size={18} className="mr-2" /> Changelog
