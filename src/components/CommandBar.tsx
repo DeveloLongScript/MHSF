@@ -10,7 +10,6 @@ import {
   CommandShortcut,
 } from "@/components/ui/command";
 import { useEffect, useState } from "react";
-import { OnlineServer } from "@/lib/types/mh-server";
 import events from "@/lib/commandEvent";
 import { useHotkeys } from "react-hotkeys-hook";
 import {
@@ -22,33 +21,51 @@ import {
   Database,
   LinkIcon,
   Server,
+  ServerCog,
   Settings,
   Star,
+  XIcon,
 } from "lucide-react";
 import { useEffectOnce } from "@/lib/useEffectOnce";
 import { useClerk, useUser } from "@clerk/nextjs";
 import { useRouter } from "@/lib/useRouter";
 import type { SVGProps } from "react";
-import { favoriteServer, getAccountFavorites } from "@/lib/api";
+import { favoriteServer, getAccountFavorites, serverOwned } from "@/lib/api";
 import IconDisplay from "./IconDisplay";
 import ServerSingle from "@/lib/single";
 import toast from "react-hot-toast";
+import { ServerResponse, OnlineServer } from "@/lib/types/mh-server";
+import { m } from "framer-motion";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "./ui/dialog";
+import { TagShower } from "./ServerList";
+import { Button } from "./ui/button";
+import { useTheme } from "next-themes";
 
 export function SearchCommandBar() {
   const [serverList, setServerList] = useState<OnlineServer[]>([]);
   const [open, setOpen] = useState(false);
   const [backEnabled, setBackEnabled] = useState(false);
-  const [searchRes, setSearchRes] = useState<any>(undefined);
+  const [searchRes, setSearchRes] = useState<ServerResponse | undefined>(
+    undefined
+  );
   const router = useRouter();
   useHotkeys("mod+shift+k", () => setOpen(true), []);
 
   useEffectOnce(() => {
     events.on("search-request-event", () => {
       setOpen(true);
+      setSearchRes(undefined);
     });
     events.on("search-request-event-back", () => {
       setOpen(true);
       setBackEnabled(true);
+      setSearchRes(undefined);
     });
 
     fetch("https://api.minehut.com/servers").then((c) =>
@@ -59,49 +76,71 @@ export function SearchCommandBar() {
   });
 
   return (
-    <CommandDialog open={open} onOpenChange={setOpen}>
+    <CommandDialog
+      open={open}
+      onOpenChange={setOpen}
+      shouldFilter={searchRes == undefined}
+    >
       <CommandInput
         placeholder="Search for a server (offline or online)"
         onValueChange={(c) => {
           if (c != "") {
             fetch("https://api.minehut.com/server/" + c + "?byName=true").then(
               (l) => {
-                if (l.ok) {
-                  l.json().then((m: any) => {
+                l.json().then((m: any) => {
+                  if (m.server != null) {
+                    console.log(m);
                     setSearchRes(m.server);
-                  });
-                } else {
-                  setSearchRes(undefined);
-                }
+                  } else {
+                    setSearchRes(undefined);
+                  }
+                });
               }
             );
           }
         }}
       />
       <CommandList>
-        <CommandGroup heading="Popular Servers">
-          {serverList.map((b: OnlineServer) => (
+        {searchRes != undefined && (
+          <CommandGroup heading="Search Result">
             <CommandItem
-              key={b.name}
               onSelect={() => {
-                if (!backEnabled)
-                  events.emit("cmd-server", {
-                    serverName: b.name,
-                    serverObject: b,
-                  });
-                if (backEnabled)
-                  events.emit("cmd-server-vb", {
-                    serverName: b.name,
-                    serverObject: b,
-                  });
+                if (!backEnabled) events.emit("cmd-offline", searchRes);
+                if (backEnabled) events.emit("cmd-offline-vb", searchRes);
                 setOpen(false);
               }}
             >
-              <IconDisplay server={b} className="mr-2" />
-              {b.name}
+              {searchRes?.name}
             </CommandItem>
-          ))}
-        </CommandGroup>
+          </CommandGroup>
+        )}
+
+        {searchRes == undefined && (
+          <CommandGroup heading="Popular Servers">
+            {serverList.map((b: OnlineServer) => (
+              <CommandItem
+                key={b.name}
+                onSelect={() => {
+                  if (!backEnabled)
+                    events.emit("cmd-server", {
+                      serverName: b.name,
+                      serverObject: b,
+                    });
+                  if (backEnabled)
+                    events.emit("cmd-server-vb", {
+                      serverName: b.name,
+                      serverObject: b,
+                    });
+                  setOpen(false);
+                }}
+              >
+                <IconDisplay server={b} className="mr-2" />
+                {b.name}
+              </CommandItem>
+            ))}
+          </CommandGroup>
+        )}
+
         <CommandGroup heading="Hierarchy">
           <CommandItem
             onSelect={() => {
@@ -113,6 +152,153 @@ export function SearchCommandBar() {
             <ArrowLeft className="mr-2 h-4 w-4" />
             <span>Go back</span>
           </CommandItem>
+        </CommandGroup>
+      </CommandList>
+    </CommandDialog>
+  );
+}
+
+export function OfflineServerCB() {
+  const [open, setOpen] = useState(false);
+  const [customized, setCustomized] = useState(false);
+  const [obj, setObj] = useState<ServerResponse | object>({});
+  const [vb, setVB] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    events.on("cmd-offline", (info: ServerResponse) => {
+      if (info.online) {
+        fetch("https://api.minehut.com/servers").then((c) => {
+          c.json().then((b: { servers: OnlineServer[] }) => {
+            const filteredRes = b.servers.filter(
+              (value) => value.name == info.name
+            );
+            if (filteredRes.length != 0) {
+              events.emit("cmd-server", {
+                serverName: filteredRes[0].name,
+                serverObject: filteredRes[0],
+              });
+            } else {
+              toast.error("Couldn't find server");
+            }
+          });
+        });
+      } else {
+        setVB(false);
+        setOpen(true);
+        setObj(info);
+        serverOwned(info.name).then((b) => setCustomized(b));
+      }
+    });
+    events.on("cmd-offline-vb", (info: ServerResponse) => {
+      if (info.online) {
+        fetch("https://api.minehut.com/servers").then((c) => {
+          c.json().then((b: { servers: OnlineServer[] }) => {
+            const filteredRes = b.servers.filter(
+              (value) => value.name == info.name
+            );
+            if (filteredRes.length != 0) {
+              events.emit("cmd-server-vb", {
+                serverName: filteredRes[0].name,
+                serverObject: filteredRes[0],
+              });
+            } else {
+              toast.error("Couldn't find server");
+            }
+          });
+        });
+      } else {
+        setOpen(true);
+        setVB(true);
+        setObj(info);
+        serverOwned(info.name).then((b) => setCustomized(b));
+      }
+    });
+  }, []);
+  return (
+    <CommandDialog open={open} onOpenChange={setOpen}>
+      <CommandInput placeholder="Type a command or search..." />
+      <CommandList>
+        {Object.keys(obj).length != 0 && (
+          <div className="m-4 dark:bg-ring min-h-[150px] rounded p-4 dark:text-white">
+            <h1 className="font-bold text-2xl">
+              {(obj as ServerResponse).name}
+            </h1>
+            <h2 className="flex items-center text-muted-foreground">
+              <XIcon />
+              <span className="pl-1.5 text-[16px]">
+                Server offline currently
+              </span>
+            </h2>
+            <h2 className="flex items-center text-muted-foreground">
+              <Calendar />
+              <span className="pl-1.5 text-[16px]">
+                Created in {timeConverter((obj as ServerResponse).creation)}
+              </span>
+            </h2>
+
+            {customized && (
+              <h2 className="flex items-center text-muted-foreground">
+                <CheckIcon />
+                <span className="pl-1.5 text-[16px]">
+                  Is customized by a MHSF User
+                </span>
+              </h2>
+            )}
+          </div>
+        )}
+        <CommandGroup heading="Server Actions">
+          <CommandItem
+            onSelect={() =>
+              router.push("/server/" + (obj as ServerResponse).name + "/")
+            }
+          >
+            <Server className="mr-2 h-4 w-4" />
+            Open Server Page
+          </CommandItem>
+          <CommandItem
+            onSelect={() => {
+              favoriteServer((obj as ServerResponse).name).then(() =>
+                toast.success("Done!")
+              );
+            }}
+          >
+            <Star className="mr-2 h-4 w-4" />
+            Favorite Server
+          </CommandItem>
+          <CommandItem
+            onSelect={() =>
+              router.push(
+                "/server/" + (obj as ServerResponse).name + "/statistics"
+              )
+            }
+          >
+            <Database className="mr-2 h-4 w-4" />
+            See Statistics
+          </CommandItem>
+        </CommandGroup>
+        <CommandGroup heading="Hierarchy">
+          <CommandItem
+            onSelect={() => {
+              setOpen(false);
+              if (vb) events.emit("search-request-event-back");
+              if (!vb) events.emit("search-request-event");
+            }}
+          >
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Go back
+          </CommandItem>
+          {vb && (
+            <CommandItem
+              onSelect={() => {
+                setOpen(false);
+                events.emit("cmd-event");
+              }}
+            >
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Back to main
+            </CommandItem>
+          )}
         </CommandGroup>
       </CommandList>
     </CommandDialog>
@@ -213,7 +399,9 @@ export function ServerCommandBar() {
             Favorite Server
           </CommandItem>
           <CommandItem
-            onSelect={() => router.push("/server/" + serverName + "/statistics")}
+            onSelect={() =>
+              router.push("/server/" + serverName + "/statistics")
+            }
           >
             <Database className="mr-2 h-4 w-4" />
             See Statistics
@@ -274,7 +462,7 @@ export function CommandBar() {
       <CommandInput placeholder="Type a command or search..." />
       <CommandList>
         <CommandEmpty>No results found.</CommandEmpty>
-        <CommandGroup heading="Suggestions">
+        <CommandGroup heading="General">
           <CommandItem
             onSelect={() => {
               setOpen(false);
@@ -303,16 +491,29 @@ export function CommandBar() {
             <LinkIcon className="mr-2 h-4 w-4" />
             <span>Links</span>
           </CommandItem>
+          <CommandItem
+            onSelect={() => {
+              setOpen(false);
+              events.emit("cmd-ran-server");
+            }}
+          >
+            <ServerCog className="mr-2 h-4 w-4" />
+            <span>Pick Random Server</span>
+          </CommandItem>
         </CommandGroup>
         <CommandSeparator />
         <CommandGroup heading="Profile">
-          <CommandItem onSelect={() => events.emit("cmd-event-favorites")}>
+          <CommandItem
+            onSelect={() => {
+              events.emit("cmd-event-favorites");
+              setOpen(false);
+            }}
+          >
             <Star className="mr-2 h-4 w-4" />
             <span>Favorites</span>
           </CommandItem>
           <CommandItem
             onSelect={() => {
-              setOpen(false);
               try {
                 clerk.openUserProfile();
               } catch {
@@ -329,8 +530,118 @@ export function CommandBar() {
   );
 }
 
+export function RandomServerDialog() {
+  const [textCopied, setTextCopied] = useState(false);
+  const [randomData, setRandomData] = useState<OnlineServer | undefined>(
+    undefined
+  );
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    events.on("cmd-ran-server", () => {
+      setRandomData(undefined);
+      setTextCopied(false);
+      fetch("https://api.minehut.com/servers").then((c) =>
+        c.json().then((b: { servers: OnlineServer[] }) => {
+          setRandomData(
+            b.servers[Math.floor(Math.random() * b.servers.length)]
+          );
+          setOpen(true);
+        })
+      );
+    });
+  }, []);
+  const onChange = (state: boolean) => {
+    if (state == false) {
+      setOpen(false);
+      events.emit("cmd-event");
+    } else setOpen(state);
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={onChange}>
+      <DialogContent>
+        {randomData == undefined && <>No data to randomize</>}
+        {randomData != undefined && (
+          <DialogHeader>
+            <DialogTitle>
+              <IconDisplay server={randomData} /> {randomData.name}
+              {randomData.author != undefined ? (
+                <div className="text-sm text-muted-foreground">
+                  by {randomData.author}
+                </div>
+              ) : (
+                <br />
+              )}
+              <TagShower server={randomData} />
+            </DialogTitle>
+            <DialogDescription className="float-left inline">
+              <span className="flex items-center">
+                {randomData.playerData.playerCount == 0 ? (
+                  <div
+                    className="items-center border"
+                    style={{
+                      width: ".5rem",
+                      height: ".5rem",
+                      borderRadius: "9999px",
+                    }}
+                  />
+                ) : (
+                  <div
+                    className="items-center"
+                    style={{
+                      backgroundColor: "#0cce6b",
+                      width: ".5rem",
+                      height: ".5rem",
+                      borderRadius: "9999px",
+                    }}
+                  />
+                )}
+
+                <span className="pl-1">
+                  {randomData.playerData.playerCount}{" "}
+                  {randomData.playerData.playerCount == 1
+                    ? "player"
+                    : "players"}{" "}
+                  currently online
+                </span>
+              </span>
+              <br />
+              <strong>Server IP</strong>
+              <br />
+              <br />
+              <code className="border p-3 rounded">
+                {randomData.name}.mshf.minehut.gg{" "}
+                <Button
+                  size="icon"
+                  className="ml-1 h-[20px]"
+                  onClick={() => {
+                    setTextCopied(true);
+                    navigator.clipboard.writeText(
+                      randomData.name + ".mshf.minehut.gg"
+                    );
+                    toast.success("Copied!");
+                    setTimeout(() => setTextCopied(false), 1000);
+                  }}
+                >
+                  {textCopied ? (
+                    <CheckIcon size={16} className="flex items-center" />
+                  ) : (
+                    <p>Copy</p>
+                  )}
+                </Button>
+              </code>
+            </DialogDescription>
+          </DialogHeader>
+        )}
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 export function SubLinkCommandBar() {
   const [open, setOpen] = useState(false);
+  const { resolvedTheme } = useTheme();
 
   useEffectOnce(() => {
     events.on("cmd-event-link", () => {
@@ -343,15 +654,6 @@ export function SubLinkCommandBar() {
       <CommandInput placeholder="Type a command or search..." />
       <CommandList>
         <CommandEmpty>No results found.</CommandEmpty>
-        <CommandItem
-          onSelect={() => {
-            setOpen(false);
-            events.emit("cmd-event");
-          }}
-        >
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          <span>Go back</span>
-        </CommandItem>
 
         <CommandGroup heading="Suggestions">
           <CommandItem
@@ -361,7 +663,10 @@ export function SubLinkCommandBar() {
                 ?.focus();
             }}
           >
-            <Github className="mr-2 h-4 w-4" />
+            <Github
+              className="mr-2 h-4 w-4"
+              fill={resolvedTheme == "dark" ? "white" : "black"}
+            />
             <span>GitHub</span>
           </CommandItem>
 
@@ -374,6 +679,17 @@ export function SubLinkCommandBar() {
             <span>Status Page</span>
           </CommandItem>
         </CommandGroup>
+        <CommandGroup heading="Hierarchy">
+          <CommandItem
+            onSelect={() => {
+              setOpen(false);
+              events.emit("cmd-event");
+            }}
+          >
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Go back
+          </CommandItem>
+        </CommandGroup>
       </CommandList>
     </CommandDialog>
   );
@@ -383,7 +699,6 @@ const Github = (props: SVGProps<SVGSVGElement>) => (
     viewBox="0 0 256 250"
     width="1em"
     height="1em"
-    fill="#24292f"
     xmlns="http://www.w3.org/2000/svg"
     preserveAspectRatio="xMidYMid"
     {...props}
@@ -409,17 +724,6 @@ export function FavoriteBar() {
       <CommandInput placeholder="Type a command or search..." />
       <CommandList>
         <CommandEmpty>No results found.</CommandEmpty>
-        <CommandGroup heading="">
-          <CommandItem
-            onSelect={() => {
-              setOpen(false);
-              events.emit("cmd-event");
-            }}
-          >
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Go back
-          </CommandItem>
-        </CommandGroup>
 
         <CommandGroup heading="Favorites">
           {favorites == undefined && (
@@ -442,6 +746,17 @@ export function FavoriteBar() {
             </>
           )}
         </CommandGroup>
+        <CommandGroup heading="Hierarchy">
+          <CommandItem
+            onSelect={() => {
+              setOpen(false);
+              events.emit("cmd-event");
+            }}
+          >
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Go back
+          </CommandItem>
+        </CommandGroup>
       </CommandList>
     </CommandDialog>
   );
@@ -454,6 +769,8 @@ export function CommandBarer() {
       <CommandBar />
       <SearchCommandBar />
       <ServerCommandBar />
+      <OfflineServerCB />
+      <RandomServerDialog />
     </>
   );
 }
