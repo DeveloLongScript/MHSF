@@ -16,26 +16,28 @@ export default serve({
       async ({ event, step }) => {
         const mongo = new MongoClient(process.env.MONGO_DB as string);
         try {
-          const mh = await (
-            await fetch("https://api.minehut.com/servers", {
-              headers: {
-                accept: "application/json",
-                "accept-language": Math.random().toString(),
-                priority: "u=1, i",
-                "sec-ch-ua": '"Not/A)Brand";v="8", "Chromium";v="126"',
-                "sec-ch-ua-mobile": "?0",
-                "sec-ch-ua-platform": '"macOS"',
-                "sec-fetch-dest": "empty",
-                "sec-fetch-mode": "cors",
-                "sec-fetch-site": "cross-site",
-                "Content-Type": "application/json",
-                Referer: "http://localhost:3000/",
-                "Referrer-Policy": "strict-origin-when-cross-origin",
-              },
-              body: null,
-              method: "GET",
-            })
-          ).json();
+          const mh = await step.run("grab-servers-from-api", async () => {
+            return await (
+              await fetch("https://api.minehut.com/servers", {
+                headers: {
+                  accept: "application/json",
+                  "accept-language": Math.random().toString(),
+                  priority: "u=1, i",
+                  "sec-ch-ua": '"Not/A)Brand";v="8", "Chromium";v="126"',
+                  "sec-ch-ua-mobile": "?0",
+                  "sec-ch-ua-platform": '"macOS"',
+                  "sec-fetch-dest": "empty",
+                  "sec-fetch-mode": "cors",
+                  "sec-fetch-site": "cross-site",
+                  "Content-Type": "application/json",
+                  Referer: "http://localhost:3000/",
+                  "Referrer-Policy": "strict-origin-when-cross-origin",
+                },
+                body: null,
+                method: "GET",
+              })
+            ).json();
+          });
 
           const mha = mongo.db("mhsf").collection("mh");
           const meta = mongo.db("mhsf").collection("meta");
@@ -44,30 +46,31 @@ export default serve({
           await mha.insertOne({
             total_players: mh.total_players,
             total_servers: mh.total_servers,
-            unix: Date.now(),
+            date: new Date(),
           });
 
-          mh.servers.forEach(async (server: OnlineServer, i: number) => {
-            const serverFavoritesObject = await meta.findOne({
-              server: server.name,
-            });
-            let favorites = 0;
-            if (serverFavoritesObject != undefined)
-              favorites = serverFavoritesObject.favorites;
+          const completed = await step.run("listing-servers", async () => {
+            mh.servers.forEach(async (server: OnlineServer, i: number) => {
+              const serverFavoritesObject = await meta.findOne({
+                server: server.name,
+              });
+              let favorites = 0;
+              if (serverFavoritesObject != undefined)
+                favorites = serverFavoritesObject.favorites;
 
-            await dbl.insertOne({
-              player_count: server.playerData.playerCount,
-              favorites,
-              server: server.name,
-              date: new Date(),
+              await dbl.insertOne({
+                player_count: server.playerData.playerCount,
+                favorites,
+                server: server.name,
+                date: new Date(),
+              });
+              console.log(i, mh.servers.length);
             });
+            return true;
           });
-          await mongo.close();
-
-          return {
-            event,
-            body: "Finished adding " + mh.servers.length + " servers.",
-          };
+          if (completed == true) {
+            return { event, body: "Finished!" };
+          }
         } catch (e) {
           await mongo.close();
 
