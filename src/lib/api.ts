@@ -73,7 +73,7 @@ export async function isFavorited(server: string): Promise<boolean> {
       }
     );
 
-    return (await response.json()).data;
+    return (await response.json()).result;
   } catch {
     throw Error("Not authenticated with a user.");
   }
@@ -128,7 +128,7 @@ export async function getHistoricalData(
 
 export async function getShortTermData(
   server: string,
-  scopes: Array<"player_count" | "favorites" | "server" | "time">
+  scopes: Array<"player_count" | "favorites" | "server" | "date">
 ): Promise<
   Array<{
     player_count?: number;
@@ -152,7 +152,7 @@ export async function getShortTermData(
 }
 
 export async function getMetaShortTerm(
-  scopes: Array<"total_players" | "total_servers" | "unix">
+  scopes: Array<"total_players" | "total_servers" | "date">
 ): Promise<
   Array<{
     total_players?: number;
@@ -338,6 +338,30 @@ export async function getCustomization(server: string): Promise<any> {
   try {
     const response = await fetch(
       connector(`/customization/${server}/get`, { version: 0 }),
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (response.status == 400) {
+      return false;
+    }
+
+    return (await response.json()).results;
+  } catch {
+    throw Error("Error while running API");
+  }
+}
+
+export async function sortedFavorites(): Promise<
+  Array<{ server: string; favorites: number }> | boolean
+> {
+  try {
+    const response = await fetch(
+      connector(`/sorting/favorites`, { version: 0 }),
       {
         method: "POST",
         headers: {

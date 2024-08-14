@@ -30,12 +30,16 @@ import { useEffectOnce } from "@/lib/useEffectOnce";
 import { useClerk, useUser } from "@clerk/nextjs";
 import { useRouter } from "@/lib/useRouter";
 import type { SVGProps } from "react";
-import { favoriteServer, getAccountFavorites, serverOwned } from "@/lib/api";
+import {
+  favoriteServer,
+  getAccountFavorites,
+  isFavorited,
+  serverOwned,
+} from "@/lib/api";
 import IconDisplay from "./IconDisplay";
 import ServerSingle from "@/lib/single";
 import toast from "react-hot-toast";
 import { ServerResponse, OnlineServer } from "@/lib/types/mh-server";
-import { m } from "framer-motion";
 import {
   Dialog,
   DialogContent,
@@ -164,6 +168,8 @@ export function OfflineServerCB() {
   const [obj, setObj] = useState<ServerResponse | object>({});
   const [vb, setVB] = useState(false);
   const router = useRouter();
+  const [starred, setStarred] = useState(false);
+  const { resolvedTheme } = useTheme();
 
   useEffect(() => {
     events.on("cmd-offline", (info: ServerResponse) => {
@@ -184,6 +190,7 @@ export function OfflineServerCB() {
           });
         });
       } else {
+        isFavorited(info.name).then((b) => setStarred(b));
         setVB(false);
         setOpen(true);
         setObj(info);
@@ -208,6 +215,7 @@ export function OfflineServerCB() {
           });
         });
       } else {
+        isFavorited(info.name).then((b) => setStarred(b));
         setOpen(true);
         setVB(true);
         setObj(info);
@@ -258,13 +266,23 @@ export function OfflineServerCB() {
           </CommandItem>
           <CommandItem
             onSelect={() => {
-              favoriteServer((obj as ServerResponse).name).then(() =>
-                toast.success("Done!")
-              );
+              favoriteServer((obj as ServerResponse).name).then(() => {
+                setStarred(!starred);
+                toast.success("Done!");
+              });
             }}
           >
-            <Star className="mr-2 h-4 w-4" />
-            Favorite Server
+            <Star
+              className="mr-2 h-4 w-4"
+              fill={
+                starred == true
+                  ? resolvedTheme == "dark"
+                    ? "white"
+                    : "black"
+                  : "transparent"
+              }
+            />
+            {!starred ? "F" : "Unf"}avorite Server
           </CommandItem>
           <CommandItem
             onSelect={() =>
@@ -311,7 +329,9 @@ export function ServerCommandBar() {
   const [obj, setObj] = useState<OnlineServer | object>({});
   const [vb, setVB] = useState(false);
   const router = useRouter();
+  const { resolvedTheme } = useTheme();
   const [owned, setOwned] = useState(false);
+  const [starred, setStarred] = useState(false);
   const [serverSingle, setSingle] = useState<ServerSingle>(
     new ServerSingle(serverName)
   );
@@ -321,6 +341,7 @@ export function ServerCommandBar() {
       serverSingle.setName(info.serverName);
       if (serverSingle != undefined)
         (serverSingle as ServerSingle).init(true).then(() => {
+          isFavorited(info.serverName).then((b) => setStarred(b));
           setServerName(info.serverName);
           setObj(info.serverObject);
           setOpen(true);
@@ -392,11 +413,23 @@ export function ServerCommandBar() {
           </CommandItem>
           <CommandItem
             onSelect={() => {
-              favoriteServer(serverName).then(() => toast.success("Done!"));
+              favoriteServer(serverName).then(() => {
+                setStarred(!starred);
+                toast.success("Done!");
+              });
             }}
           >
-            <Star className="mr-2 h-4 w-4" />
-            Favorite Server
+            <Star
+              className="mr-2 h-4 w-4"
+              fill={
+                starred == true
+                  ? resolvedTheme == "dark"
+                    ? "white"
+                    : "black"
+                  : "transparent"
+              }
+            />
+            {!starred ? "F" : "Unf"}avorite Server
           </CommandItem>
           <CommandItem
             onSelect={() =>

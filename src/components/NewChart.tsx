@@ -41,7 +41,7 @@ export function NewChart({ server }: { server: string }) {
 
   const allNums = { player_count: joins, favorites };
   useEffectOnce(() => {
-    getShortTermData(server, ["player_count", "favorites", "time"]).then(
+    getShortTermData(server, ["player_count", "favorites", "date"]).then(
       (c) => {
         setChartData(c);
         getCommunityServerFavorites(server).then((b) => setFavorites(b));
@@ -101,14 +101,13 @@ export function NewChart({ server }: { server: string }) {
           >
             <CartesianGrid vertical={false} />
             <XAxis
-              dataKey="time"
+              dataKey="date"
               tickLine={false}
               axisLine={false}
               tickMargin={8}
               minTickGap={32}
               tickFormatter={(value) => {
-                const date = new Date(value);
-                return date.toLocaleTimeString("en-US", {
+                return new Date(value).toLocaleTimeString("en-US", {
                   timeStyle: "short",
                 });
               }}
