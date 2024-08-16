@@ -208,11 +208,16 @@ export default function FavoriteSortView() {
 
             if (online[v.server] != undefined)
               return (
-                <ServerCard mini b={online[v.server]} favs={v.favorites} />
+                <ServerCard
+                  mini
+                  b={online[v.server]}
+                  favs={v.favorites}
+                  key={v.server}
+                />
               );
             else
               return (
-                <Card className="h-[226px]">
+                <Card className="h-[226px]" key={v.server}>
                   <CardHeader>
                     <CardTitle>{v.server}</CardTitle>
                     <CardDescription>
