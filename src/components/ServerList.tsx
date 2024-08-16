@@ -37,6 +37,8 @@ import { useEffectOnce } from "@/lib/useEffectOnce";
 import ServerCard from "./ServerCard";
 import events from "@/lib/commandEvent";
 import { BorderBeam } from "@/components/effects/border-beam";
+import { Label } from "./ui/label";
+import { useRouter } from "@/lib/useRouter";
 
 export default function ServerList() {
   const [loading, setLoading]: any = useState(true);
@@ -59,6 +61,7 @@ export default function ServerList() {
   const [nameFilters, setNameFilters] = useState<any>({});
   const [inErrState, setErrState] = useState(false);
   const [servers, setServers] = useState<Array<OnlineServer>>([]);
+  const router = useRouter();
   const [filters, setFilters] = useState<
     Array<(server: OnlineServer) => Promise<boolean>>
   >([]);
@@ -125,7 +128,7 @@ export default function ServerList() {
           title="Players online"
           desc={serverList.getExtraData().total_players.toString()}
           icon={CircleUser}
-        ></Stat>
+        />
         <Stat
           title={
             <div
@@ -522,6 +525,28 @@ export default function ServerList() {
             ))}
           </PopoverContent>
         </Popover>
+        <Popover>
+          <PopoverTrigger>
+            <Button className="ml-2" variant="secondary">
+              Sort
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent>
+            <RadioGroup
+              defaultValue="option-one"
+              onValueChange={() => router.push("/sort/favorites")}
+            >
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="option-one" id="option-one" />
+                <Label htmlFor="option-one">Online Players</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="option-two" id="option-two" />
+                <Label htmlFor="option-two">Favorites</Label>
+              </div>
+            </RadioGroup>
+          </PopoverContent>
+        </Popover>
         <Button
           variant="secondary"
           className="md:ml-3 "
@@ -629,7 +654,7 @@ export default function ServerList() {
                   <br />
                   <br />
                   <code className="border p-3 rounded">
-                    {randomData.name}.mshf.minehut.gg{" "}
+                    {randomData.name}.minehut.gg{" "}
                     <Button
                       size="icon"
                       className="ml-1 h-[20px]"

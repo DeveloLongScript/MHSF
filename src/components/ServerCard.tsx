@@ -5,7 +5,7 @@ import {
   ContextMenuContent,
   ContextMenuSeparator,
 } from "@/components/ui/context-menu";
-import toast from "react-hot-toast";
+import toast, { LoaderIcon } from "react-hot-toast";
 import {
   CardHeader,
   CardTitle,
@@ -15,7 +15,7 @@ import {
 } from "./ui/card";
 import IconDisplay from "./IconDisplay";
 import { TagShower } from "./ServerList";
-import { Copy, EllipsisVertical, Layers } from "lucide-react";
+import { Copy, EllipsisVertical, Layers, Star } from "lucide-react";
 import { Button } from "./ui/button";
 import {
   Drawer,
@@ -29,15 +29,35 @@ import { Tooltip } from "@radix-ui/react-tooltip";
 import { TooltipContent, TooltipTrigger } from "./ui/tooltip";
 import { useRouter } from "@/lib/useRouter";
 import Link from "next/link";
+import { useState } from "react";
+import { favoriteServer, isFavorited } from "@/lib/api";
+import { useUser } from "@clerk/nextjs";
+import { useTheme } from "next-themes";
 
-export default function ServerCard({ b, motd }: any) {
+export default function ServerCard({ b, motd, mini, favs }: any) {
   const router = useRouter();
+  const [favoriteStar, setFavoriteStar] = useState(false);
+  const [favoriteLoading, setFavoriteLoading] = useState(true);
+  const { isSignedIn } = useUser();
+  const { resolvedTheme } = useTheme();
+
   return (
-    <ContextMenu>
+    <ContextMenu
+      onOpenChange={(open) => {
+        if (open && isSignedIn)
+          isFavorited(b.name).then((c) => {
+            setFavoriteStar(c);
+            setFavoriteLoading(false);
+          });
+      }}
+    >
       <ContextMenuTrigger>
         <Card
           key={b.name}
-          className="min-h-[450px] max-h-[450px] mb-4 flex items-start"
+          className={
+            (!mini ? "min-h-[450px] max-h-[450px]" : "") +
+            " mb-4 flex items-start"
+          }
         >
           <CardHeader>
             <CardTitle className="m-0">
@@ -115,7 +135,7 @@ export default function ServerCard({ b, motd }: any) {
                 <span className="pl-1">
                   {b.playerData.playerCount}{" "}
                   {b.playerData.playerCount == 1 ? "player" : "players"}{" "}
-                  currently online
+                  currently online {favs && <>• {favs} favorited</>}
                 </span>
               </span>
 
@@ -177,10 +197,12 @@ export default function ServerCard({ b, motd }: any) {
               </ContextMenu>
             </CardDescription>
             <CardContent>
-              <span
-                dangerouslySetInnerHTML={{ __html: motd }}
-                className="w-[30px] text-center break-all overflow-hidden"
-              />
+              {motd && (
+                <span
+                  dangerouslySetInnerHTML={{ __html: motd }}
+                  className="w-[30px] text-center break-all overflow-hidden"
+                />
+              )}
             </CardContent>
           </CardHeader>
         </Card>
@@ -193,9 +215,6 @@ export default function ServerCard({ b, motd }: any) {
           }}
         >
           Copy server IP
-          <div className="RightSlot">
-            <Copy size={18} />
-          </div>
         </ContextMenuItem>
         <ContextMenuSeparator />
         <ContextMenuItem
@@ -204,6 +223,40 @@ export default function ServerCard({ b, motd }: any) {
           }}
         >
           Open server page
+        </ContextMenuItem>
+        <ContextMenuItem
+          onClick={() => {
+            router.push("/server/" + b.name + "/statistics");
+          }}
+        >
+          Open statistics page
+        </ContextMenuItem>
+        <ContextMenuSeparator />
+        <ContextMenuItem
+          onClick={() => {
+            setFavoriteLoading(true);
+            favoriteServer(b.name).then(() => {
+              setFavoriteLoading(false);
+              setFavoriteStar(!favoriteStar);
+            });
+          }}
+          disabled={!isSignedIn || favoriteLoading}
+        >
+          {!favoriteLoading && (
+            <Star
+              size={16}
+              className="mr-2 text-white"
+              fill={
+                favoriteStar
+                  ? resolvedTheme == "dark"
+                    ? "white"
+                    : "black"
+                  : "transparent"
+              }
+            />
+          )}{" "}
+          {favoriteLoading && <LoaderIcon className="mr-2" />}
+          {favoriteStar && isSignedIn ? "Unf" : "F"}avorite Server
         </ContextMenuItem>
       </ContextMenuContent>
     </ContextMenu>

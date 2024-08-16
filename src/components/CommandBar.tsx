@@ -167,6 +167,7 @@ export function OfflineServerCB() {
   const [customized, setCustomized] = useState(false);
   const [obj, setObj] = useState<ServerResponse | object>({});
   const [vb, setVB] = useState(false);
+  const { isSignedIn } = useUser();
   const router = useRouter();
   const [starred, setStarred] = useState(false);
   const { resolvedTheme } = useTheme();
@@ -257,9 +258,10 @@ export function OfflineServerCB() {
         )}
         <CommandGroup heading="Server Actions">
           <CommandItem
-            onSelect={() =>
-              router.push("/server/" + (obj as ServerResponse).name + "/")
-            }
+            onSelect={() => {
+              router.push("/server/" + (obj as ServerResponse).name + "/");
+              setOpen(false);
+            }}
           >
             <Server className="mr-2 h-4 w-4" />
             Open Server Page
@@ -271,6 +273,7 @@ export function OfflineServerCB() {
                 toast.success("Done!");
               });
             }}
+            disabled={!isSignedIn}
           >
             <Star
               className="mr-2 h-4 w-4"
@@ -285,11 +288,12 @@ export function OfflineServerCB() {
             {!starred ? "F" : "Unf"}avorite Server
           </CommandItem>
           <CommandItem
-            onSelect={() =>
+            onSelect={() => {
               router.push(
                 "/server/" + (obj as ServerResponse).name + "/statistics"
-              )
-            }
+              );
+              setOpen(false);
+            }}
           >
             <Database className="mr-2 h-4 w-4" />
             See Statistics
@@ -330,6 +334,7 @@ export function ServerCommandBar() {
   const [vb, setVB] = useState(false);
   const router = useRouter();
   const { resolvedTheme } = useTheme();
+  const { isSignedIn } = useUser();
   const [owned, setOwned] = useState(false);
   const [starred, setStarred] = useState(false);
   const [serverSingle, setSingle] = useState<ServerSingle>(
@@ -406,7 +411,10 @@ export function ServerCommandBar() {
 
         <CommandGroup heading="Server Actions">
           <CommandItem
-            onSelect={() => router.push("/server/" + serverName + "/")}
+            onSelect={() => {
+              router.push("/server/" + serverName + "/");
+              setOpen(false);
+            }}
           >
             <Server className="mr-2 h-4 w-4" />
             Open Server Page
@@ -418,6 +426,7 @@ export function ServerCommandBar() {
                 toast.success("Done!");
               });
             }}
+            disabled={!isSignedIn}
           >
             <Star
               className="mr-2 h-4 w-4"
@@ -432,9 +441,10 @@ export function ServerCommandBar() {
             {!starred ? "F" : "Unf"}avorite Server
           </CommandItem>
           <CommandItem
-            onSelect={() =>
-              router.push("/server/" + serverName + "/statistics")
-            }
+            onSelect={() => {
+              router.push("/server/" + serverName + "/statistics");
+              setOpen(false);
+            }}
           >
             <Database className="mr-2 h-4 w-4" />
             See Statistics
@@ -509,11 +519,14 @@ export function CommandBar() {
               +Shift+K
             </CommandShortcut>
           </CommandItem>
-          <CommandItem disabled>
+          <CommandItem
+            onSelect={() => {
+              events.emit("cmd-event-sort");
+              setOpen(false);
+            }}
+          >
             <ArrowDown01 className="mr-2 h-4 w-4" />
-            <span>
-              Sort Servers - <i>coming soon</i>
-            </span>
+            Sort Servers
           </CommandItem>
           <CommandItem
             onSelect={() => {
@@ -672,6 +685,49 @@ export function RandomServerDialog() {
   );
 }
 
+export function SubSortCommandBar() {
+  const [open, setOpen] = useState(false);
+  const router = useRouter();
+
+  useEffectOnce(() => {
+    events.on("cmd-event-sort", () => {
+      setOpen(true);
+    });
+  });
+
+  return (
+    <CommandDialog open={open} onOpenChange={setOpen}>
+      <CommandInput placeholder="Type a command or search..." />
+      <CommandList>
+        <CommandEmpty>No results found.</CommandEmpty>
+
+        <CommandGroup heading="Sorts">
+          <CommandItem
+            onSelect={() => {
+              router.push("/sort/favorites");
+              setOpen(false);
+            }}
+          >
+            <Star className="mr-2 h-4 w-4" />
+            <span>Favorites</span>
+          </CommandItem>
+        </CommandGroup>
+        <CommandGroup heading="Hierarchy">
+          <CommandItem
+            onSelect={() => {
+              setOpen(false);
+              events.emit("cmd-event");
+            }}
+          >
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Go back
+          </CommandItem>
+        </CommandGroup>
+      </CommandList>
+    </CommandDialog>
+  );
+}
+
 export function SubLinkCommandBar() {
   const [open, setOpen] = useState(false);
   const { resolvedTheme } = useTheme();
@@ -771,6 +827,7 @@ export function FavoriteBar() {
                   key={c}
                   onSelect={() => {
                     router.push("/server/" + c);
+                    setOpen(false);
                   }}
                 >
                   {c}
@@ -802,6 +859,7 @@ export function CommandBarer() {
       <CommandBar />
       <SearchCommandBar />
       <ServerCommandBar />
+      <SubSortCommandBar />
       <OfflineServerCB />
       <RandomServerDialog />
     </>

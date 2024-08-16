@@ -30,12 +30,12 @@ export async function increaseNum(client: MongoClient, server: string) {
   const find = await collection.find({ server: server }).toArray();
 
   if (find.length == 0) {
-    collection.insertOne({ server: server, favorites: 1 });
+    collection.insertOne({ server: server, favorites: 1, date: new Date() });
   } else {
     const entry = find[0];
     collection.findOneAndReplace(
       { server: server },
-      { server: server, favorites: entry.favorites + 1 }
+      { server: server, favorites: entry.favorites + 1, date: new Date() }
     );
   }
 }

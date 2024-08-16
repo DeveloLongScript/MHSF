@@ -84,6 +84,16 @@ export default function TextFromPathname() {
           </BreadcrumbItem>
         </>
       )}
+      {pathname == "/sort/favorites" && (
+        <>
+          <BreadcrumbSeparator className="max-sm:hidden" />
+          <BreadcrumbItem>Sort</BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>Favorites</BreadcrumbPage>
+          </BreadcrumbItem>
+        </>
+      )}
     </>
   );
 }

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-export const version = "b-0.8.0";
+export const version = "b-0.9.0";
 
 const User = ({ user }: { user: string }) => (
   <span className="cursor-pointer bg-[rgba(255,165,0,0.25);] rounded p-[2.5px]">
@@ -42,6 +42,25 @@ export const Changelog = () => (
         {process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_MESSAGE != undefined &&
           `| ${process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_MESSAGE.substring(0, 24)}`}
       </code>
+    </div>
+    <br />
+    <div>
+      <strong className="flex items-center">
+        Version b-0.9.0 (August 15th 2024)
+      </strong>
+      <ul>
+        <li>• Adding favorites sorting option</li>
+        <li>• Fixed right-click context menu on the server list</li>
+        <li>• Fixed metadata bugs</li>
+      </ul>
+      <br />
+      <i>
+        Hey! Update on statistics. Recently, we have figured out the Minehut API
+        is blocked to Vercel servers (atleast the <code>/servers</code>{" "}
+        endpoint). I'm actively trying to find a loop-hole so that statistics
+        works correctly. Thank you {":)"}
+      </i>
+      <br />
     </div>
     <br />
     <div>
@@ -135,7 +154,13 @@ export const Changelog = () => (
     <div>
       <strong>All developers that helped out:</strong>
       <Link href="https://dvelo.vercel.app">
-        <Image src="/imgs/badge1.png" alt="cool badge" width={88} height={31} />
+        <Image
+          src="/imgs/badge1.png"
+          alt="cool badge"
+          width={88}
+          height={31}
+          className="w-[88px] h-[31px]"
+        />
       </Link>
     </div>
   </>
