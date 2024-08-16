@@ -376,9 +376,12 @@ export function ServerCommandBar() {
               <IconDisplay server={obj} />
               {serverName}
             </h1>
-            <h1 className="text-muted-foreground">
-              by {(obj as OnlineServer).author}
-            </h1>
+            {(obj as OnlineServer).author != undefined && (
+              <h1 className="text-muted-foreground">
+                by {(obj as OnlineServer).author}
+              </h1>
+            )}
+
             <h2 className="flex items-center text-muted-foreground pt-[15px] pl-1.5">
               <span className="relative flex h-[10px] w-[10px]">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-black dark:bg-[#0cce6b] opacity-75" />
