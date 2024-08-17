@@ -1,20 +1,20 @@
 // rendering engine for MOTDs (aka Minehut)
 
 const divList: any = {
-  black: "000000",
-  dark_blue: "002bff",
-  dark_green: "text-green-800",
-  dark_red: "text-red-800",
-  dark_purple: "text-purple-800",
-  gold: "text-yellow-400",
-  gray: "text-gray-600",
-  dark_gray: "text-gray-800",
-  blue: "text-blue-400",
-  green: "text-green-400",
-  aqua: "text-cyan-400",
-  red: "text-red-400",
-  light_purple: "text-purple-300",
-  yellow: "text-yellow-400",
+  black: "black",
+  dark_blue: "text-[#1D4ED8]",
+  dark_green: "text-[#166634]",
+  dark_red: "text-[#991b1b]",
+  dark_purple: "text-[#6b21a8]",
+  gold: "text-[#facc15]",
+  gray: "text-[#4b5563]",
+  dark_gray: "text-[#1f2937]",
+  blue: "text-[#60a5fa]",
+  green: "text-[#4ade80]",
+  aqua: "text-[#22d3ee]",
+  red: "text-[#f87171]",
+  light_purple: "text-[#d8b4fe]",
+  yellow: "text-[#facc15]",
   white: "text-white",
   strikethrough: "line-through",
   st: "line-through",
@@ -188,7 +188,7 @@ function colorConvert(className: string) {
   const classes = className.split(" ");
   let result = "";
   classes.forEach((classUnique) => {
-    if (classUnique.startsWith("text-")) {
+    if (classUnique.startsWith("text-") && classUnique != "text-white") {
       if (classUnique.startsWith("text-[")) {
         result +=
           "color: " + classUnique.substring(6, classUnique.length - 1) + "; ";
