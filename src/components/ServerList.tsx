@@ -503,6 +503,7 @@ export default function ServerList() {
             {allCategories.map((categorie) => (
               <MenubarCheckboxItem
                 id={categorie.name}
+                key={categorie.name}
                 onCheckedChange={async (b) => {
                   var filt = nameFilters;
                   filt["c-" + categorie.name] = b;
