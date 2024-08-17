@@ -19,6 +19,7 @@ import TextFromPathname from "@/components/TextFromPathname";
 import { Inter as interFont } from "next/font/google";
 import { CommandBarer } from "@/components/CommandBar";
 import ThemedToaster from "@/components/misc/ThemedToaster";
+import UnofficalDialog from "@/components/misc/UnofficalDialog";
 
 const inter = interFont({ variable: "--font-inter", subsets: ["latin"] });
 export default async function RootLayout({
@@ -68,6 +69,7 @@ export default async function RootLayout({
           <CommandBarer />
           <SpeedInsights />
           <Analytics />
+          <UnofficalDialog />
         </TooltipProvider>
       </ThemeProvider>
     </ClerkThemeProvider>

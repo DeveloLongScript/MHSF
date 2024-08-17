@@ -23,22 +23,29 @@ import toast from "react-hot-toast";
 import { allTags, allCategories } from "@/allTags";
 import IconDisplay from "./IconDisplay";
 import InfiniteScroll from "react-infinite-scroll-component";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Spinner } from "./ui/spinner";
 import { CommandIcon } from "lucide-react";
 import { OnlineServer } from "@/lib/types/mh-server";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useEffectOnce } from "@/lib/useEffectOnce";
 import ServerCard from "./ServerCard";
 import events from "@/lib/commandEvent";
 import { BorderBeam } from "@/components/effects/border-beam";
-import { Label } from "./ui/label";
 import { useRouter } from "@/lib/useRouter";
+import {
+  Menubar,
+  MenubarCheckboxItem,
+  MenubarContent,
+  MenubarItem,
+  MenubarMenu,
+  MenubarRadioGroup,
+  MenubarRadioItem,
+  MenubarSeparator,
+  MenubarShortcut,
+  MenubarSub,
+  MenubarSubContent,
+  MenubarSubTrigger,
+  MenubarTrigger,
+} from "@/components/ui/menubar";
 
 export default function ServerList() {
   const [loading, setLoading]: any = useState(true);
@@ -62,6 +69,7 @@ export default function ServerList() {
   const [inErrState, setErrState] = useState(false);
   const [servers, setServers] = useState<Array<OnlineServer>>([]);
   const router = useRouter();
+  const [ipr, setIPR] = useState("4");
   const [filters, setFilters] = useState<
     Array<(server: OnlineServer) => Promise<boolean>>
   >([]);
@@ -200,27 +208,77 @@ export default function ServerList() {
       </div>
       <br />
       <Separator />
-      <div className="mt-3 ml-3">
-        <Button
-          onClick={() => events.emit("search-request-event")}
-          variant="secondary"
-          className="max-lg:mb-3"
-        >
-          Search{" "}
-          <code className="ml-2 flex items-center">
-            <CommandIcon size={14} />
-            +Shift+K
-          </code>
-        </Button>
-        <Popover>
-          <PopoverTrigger>
-            <Button className="ml-3" variant="secondary">
-              Filter
-              <code className="ml-2">{filters.length}</code>
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-[390px] z-3">
-            <RadioGroup
+      <Menubar className="mt-3 ml-2 border rounded p-2">
+        <MenubarMenu>
+          <MenubarTrigger>Servers</MenubarTrigger>
+          <MenubarContent>
+            <MenubarItem onSelect={() => events.emit("search-request-event")}>
+              Search Servers
+              <MenubarShortcut className="flex items-center ml-3">
+                <CommandIcon size={14} />
+                +Shift+K
+              </MenubarShortcut>
+            </MenubarItem>
+            <MenubarItem
+              onSelect={() => {
+                setRandomData(serverList.getRandomServer());
+                setRandom(true);
+              }}
+            >
+              Pick Random Server
+            </MenubarItem>
+            <MenubarSeparator />
+            <MenubarItem
+              onSelect={() => {
+                toast.promise(
+                  new Promise((s, e) => {
+                    setLoading(true);
+                    serverList
+                      .fetchDataAndFilter()
+                      .then(() => {
+                        serverList.moveListDown();
+
+                        let stringList: Array<{
+                          server: string;
+                          motd: string;
+                        }> = [];
+                        let obj: any = {};
+
+                        serverList.currentServers.forEach((b) => {
+                          stringList.push({ motd: b.motd, server: b.name });
+                        });
+
+                        serverList.getMOTDs(stringList).then((c) => {
+                          var updatedSL = motdList;
+                          c.forEach((b: { server: string; motd: string }) => {
+                            updatedSL[b.server] = b.motd;
+                          });
+                          setMotdList(updatedSL);
+                          setServers(serverList.currentServers);
+                          setLoading(false);
+                          s(false);
+                        });
+                      })
+                      .catch(() => {
+                        e();
+                      });
+                  }),
+                  {
+                    success: "Succesfully refreshed servers",
+                    loading: "Refreshing...",
+                    error: "Error while refreshing",
+                  }
+                );
+              }}
+            >
+              Refresh
+            </MenubarItem>
+          </MenubarContent>
+        </MenubarMenu>
+        <MenubarMenu>
+          <MenubarTrigger>Filter</MenubarTrigger>
+          <MenubarContent className="max-h-[400px] overflow-auto">
+            <MenubarRadioGroup
               onValueChange={(v) => {
                 toast.promise(
                   new Promise((g, b) => {
@@ -344,7 +402,7 @@ export default function ServerList() {
                   }
                 );
               }}
-              defaultValue={(() => {
+              value={(() => {
                 if (nameFilters["smaller-tf"]) {
                   return "smaller";
                 } else if (nameFilters["bigger-tf"]) {
@@ -354,219 +412,112 @@ export default function ServerList() {
                 }
               })()}
             >
-              <div className="items-top flex space-x-2">
-                <RadioGroupItem id="smaller" value="smaller" />
-                <div className="grid gap-1.5 leading-none">
-                  <label
-                    htmlFor="smaller"
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                  >
-                    Only allow smaller servers
-                  </label>
-                  <p className="text-sm text-muted-foreground">
-                    Server have 15-7 players, cannot be{" "}
-                    <Badge variant="secondary">Always Online</Badge>
-                  </p>
+              <MenubarRadioItem value="smaller">
+                <div className="block">
+                  Only allow smaller servers
+                  <br />
+                  <span className="text-sm text-muted-foreground">
+                    Only allow servers that have the player range 7-15, and
+                    cannot <br />
+                    be Always Online.
+                  </span>
                 </div>
-              </div>
-              <div className="items-top flex space-x-2">
-                <RadioGroupItem id="bigger" value="bigger" />
-                <div className="grid gap-1.5 leading-none">
-                  <label
-                    htmlFor="bigger"
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                  >
-                    Only allow bigger servers
-                  </label>
-                  <p className="text-sm text-muted-foreground">
-                    Server has 16 players or more
-                  </p>
+              </MenubarRadioItem>
+              <MenubarRadioItem value="bigger">
+                <div className="block">
+                  Only allow bigger servers
+                  <br />
+                  <span className="text-sm text-muted-foreground">
+                    Only allow servers with more than 15 players.
+                  </span>
                 </div>
-              </div>
-              <div className="items-top flex space-x-2">
-                <RadioGroupItem id="none" value="none" />
-                <div className="grid gap-1.5 leading-none">
-                  <label
-                    htmlFor="none"
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                  >
-                    Custom/no requirements
-                  </label>
-                </div>
-              </div>
-            </RadioGroup>
-            <br />
-            <br />
-            <strong className="pb-2">Tags</strong>
-            <br />
-
+              </MenubarRadioItem>
+              <MenubarRadioItem value="none">
+                No/custom requirements
+              </MenubarRadioItem>
+            </MenubarRadioGroup>
+            <MenubarSeparator />
+            <MenubarSub>
+              <span className="text-sm text-muted-foreground ml-2">Tags</span>
+            </MenubarSub>
             {allTags.map((tag) => (
               <div key={tag.docsName}>
                 {tag.docsName && tag.__filter == undefined && (
-                  <div className="items-top flex space-x-2 pb-1">
-                    <Checkbox
-                      disabled={templateFilter && tag.__disab != undefined}
-                      id={tag.docsName}
-                      checked={(() => {
-                        return nameFilters["t-" + tag.docsName];
-                      })()}
-                      onCheckedChange={async (b) => {
-                        var filt = nameFilters;
-                        filt["t-" + tag.docsName] = b;
-                        setNameFilters(filt);
-                        if (b) {
-                          var filt2 = filters;
-                          filt2.push(tag.condition);
-                          setFilters(filt2);
-                        } else {
-                          var filt2 = filters;
-                          filt2.splice(filt2.indexOf(tag.condition), 1);
-                          setFilters(filt2);
-                        }
-                        serverList.editFilters(filters);
-                        serverList.fetchDataAndFilter().then(() => {
-                          serverList.moveListDown();
+                  <MenubarCheckboxItem
+                    disabled={templateFilter && tag.__disab != undefined}
+                    id={tag.docsName}
+                    checked={(() => {
+                      return nameFilters["t-" + tag.docsName];
+                    })()}
+                    onCheckedChange={async (b) => {
+                      var filt = nameFilters;
+                      filt["t-" + tag.docsName] = b;
+                      setNameFilters(filt);
+                      if (b) {
+                        var filt2 = filters;
+                        filt2.push(tag.condition);
+                        setFilters(filt2);
+                      } else {
+                        var filt2 = filters;
+                        filt2.splice(filt2.indexOf(tag.condition), 1);
+                        setFilters(filt2);
+                      }
+                      serverList.editFilters(filters);
+                      serverList.fetchDataAndFilter().then(() => {
+                        serverList.moveListDown();
 
-                          let stringList: Array<{
-                            server: string;
-                            motd: string;
-                          }> = [];
-                          let obj: any = {};
+                        let stringList: Array<{
+                          server: string;
+                          motd: string;
+                        }> = [];
+                        let obj: any = {};
 
-                          serverList.currentServers.forEach((b) => {
-                            stringList.push({ motd: b.motd, server: b.name });
-                          });
-
-                          serverList.getMOTDs(stringList).then((c) => {
-                            var updatedSL = motdList;
-                            c.forEach((b: { server: string; motd: string }) => {
-                              updatedSL[b.server] = b.motd;
-                            });
-                            setMotdList(updatedSL);
-                            setServers(serverList.currentServers);
-                          });
+                        serverList.currentServers.forEach((b) => {
+                          stringList.push({ motd: b.motd, server: b.name });
                         });
-                      }}
-                    />
-                    <div className="grid gap-1.5 leading-none">
-                      <label
-                        htmlFor={tag.docsName}
-                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                      >
-                        <Badge variant={tag.role} className="mr-1">
-                          {tag.docsName}
-                        </Badge>
-                      </label>
-                    </div>
-                  </div>
+
+                        serverList.getMOTDs(stringList).then((c) => {
+                          var updatedSL = motdList;
+                          c.forEach((b: { server: string; motd: string }) => {
+                            updatedSL[b.server] = b.motd;
+                          });
+                          setMotdList(updatedSL);
+                          setServers(serverList.currentServers);
+                        });
+                      });
+                    }}
+                  >
+                    <Badge variant={tag.role} className="mr-1">
+                      {tag.docsName}
+                    </Badge>
+                  </MenubarCheckboxItem>
                 )}
               </div>
             ))}
-            <br />
-            <strong>Categories</strong>
-            <br />
+            <MenubarSeparator />
+            <MenubarSub>
+              <span className="text-sm text-muted-foreground ml-2">
+                Categories
+              </span>
+            </MenubarSub>
             {allCategories.map((categorie) => (
-              <div
-                className="items-top flex space-x-2 pb-1"
-                key={categorie.name}
-              >
-                <Checkbox
-                  id={categorie.name}
-                  onCheckedChange={async (b) => {
-                    var filt = nameFilters;
-                    filt["c-" + categorie.name] = b;
-                    setNameFilters(filt);
-                    if (b) {
-                      var filt2 = filters;
-                      filt2.push(categorie.condition);
-                      setFilters(filt2);
-                    } else {
-                      var filt2 = filters;
-                      filt2.splice(filt2.indexOf(categorie.condition), 1);
-                      setFilters(filt2);
-                    }
-                    serverList.editFilters(filters);
-                    serverList.fetchDataAndFilter().then(() => {
-                      serverList.moveListDown();
-
-                      let stringList: Array<{ server: string; motd: string }> =
-                        [];
-                      let obj: any = {};
-
-                      serverList.currentServers.forEach((b) => {
-                        stringList.push({ motd: b.motd, server: b.name });
-                      });
-
-                      serverList.getMOTDs(stringList).then((c) => {
-                        var updatedSL = motdList;
-                        c.forEach((b: { server: string; motd: string }) => {
-                          updatedSL[b.server] = b.motd;
-                        });
-                        setMotdList(updatedSL);
-                        setServers(serverList.currentServers);
-                      });
-                    });
-                  }}
-                  checked={(() => {
-                    return nameFilters["c-" + categorie.name];
-                  })()}
-                />
-                <div className="grid gap-1.5 leading-none">
-                  <label
-                    htmlFor={categorie.name}
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                  >
-                    <Badge variant={categorie.role} className="mr-1">
-                      {categorie.name}
-                    </Badge>
-                  </label>
-                </div>
-              </div>
-            ))}
-          </PopoverContent>
-        </Popover>
-        <Popover>
-          <PopoverTrigger>
-            <Button className="ml-2" variant="secondary">
-              Sort
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent>
-            <RadioGroup
-              defaultValue="option-one"
-              onValueChange={() => router.push("/sort/favorites")}
-            >
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="option-one" id="option-one" />
-                <Label htmlFor="option-one">Online Players</Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="option-two" id="option-two" />
-                <Label htmlFor="option-two">Favorites</Label>
-              </div>
-            </RadioGroup>
-          </PopoverContent>
-        </Popover>
-        <Button
-          variant="secondary"
-          className="md:ml-3 "
-          onClick={() => {
-            setRandomData(serverList.getRandomServer());
-            setRandom(true);
-          }}
-        >
-          Pick Random Server
-        </Button>
-        <Button
-          variant="secondary"
-          className="ml-3"
-          onClick={() => {
-            toast.promise(
-              new Promise((s, e) => {
-                setLoading(true);
-                serverList
-                  .fetchDataAndFilter()
-                  .then(() => {
+              <MenubarCheckboxItem
+                id={categorie.name}
+                onCheckedChange={async (b) => {
+                  var filt = nameFilters;
+                  filt["c-" + categorie.name] = b;
+                  setNameFilters(filt);
+                  if (b) {
+                    var filt2 = filters;
+                    filt2.push(categorie.condition);
+                    setFilters(filt2);
+                  } else {
+                    var filt2 = filters;
+                    filt2.splice(filt2.indexOf(categorie.condition), 1);
+                    setFilters(filt2);
+                  }
+                  serverList.editFilters(filters);
+                  serverList.fetchDataAndFilter().then(() => {
                     serverList.moveListDown();
 
                     let stringList: Array<{ server: string; motd: string }> =
@@ -584,102 +535,133 @@ export default function ServerList() {
                       });
                       setMotdList(updatedSL);
                       setServers(serverList.currentServers);
-                      setLoading(false);
-                      s(false);
                     });
-                  })
-                  .catch(() => {
-                    e();
                   });
-              }),
-              {
-                success: "Succesfully refreshed servers",
-                loading: "Refreshing...",
-                error: "Error while refreshing",
-              }
-            );
-          }}
-        >
-          Refresh
-        </Button>
-        <Dialog open={random} onOpenChange={setRandom}>
-          <DialogContent>
-            {randomData == undefined && <>No data to randomize</>}
-            {randomData != undefined && (
-              <DialogHeader>
-                <DialogTitle>
-                  <IconDisplay server={randomData} /> {randomData.name}
-                  {randomData.author != undefined ? (
-                    <div className="text-sm text-muted-foreground">
-                      by {randomData.author}
-                    </div>
-                  ) : (
-                    <br />
-                  )}
-                  <TagShower server={randomData} />
-                </DialogTitle>
-                <DialogDescription className="float-left inline">
-                  <span className="flex items-center">
-                    {randomData.playerData.playerCount == 0 ? (
-                      <div
-                        className="items-center border"
-                        style={{
-                          width: ".5rem",
-                          height: ".5rem",
-                          borderRadius: "9999px",
-                        }}
-                      />
-                    ) : (
-                      <div
-                        className="items-center"
-                        style={{
-                          backgroundColor: "#0cce6b",
-                          width: ".5rem",
-                          height: ".5rem",
-                          borderRadius: "9999px",
-                        }}
-                      />
-                    )}
+                }}
+                checked={(() => {
+                  return nameFilters["c-" + categorie.name];
+                })()}
+              >
+                <Badge variant={categorie.role} className="mr-1">
+                  {categorie.name}
+                </Badge>
+              </MenubarCheckboxItem>
+            ))}
+          </MenubarContent>
+        </MenubarMenu>
+        <MenubarMenu>
+          <MenubarTrigger>View</MenubarTrigger>
+          <MenubarContent>
+            <MenubarSub>
+              <MenubarSubTrigger>Grid</MenubarSubTrigger>
+              <MenubarSubContent>
+                <MenubarRadioGroup value={ipr} onValueChange={setIPR}>
+                  <MenubarRadioItem value="4">4 items per row</MenubarRadioItem>
+                  <MenubarRadioItem value="5">5 items per row</MenubarRadioItem>
+                  <MenubarRadioItem value="6">6 items per row</MenubarRadioItem>
+                </MenubarRadioGroup>
+              </MenubarSubContent>
+            </MenubarSub>
+            <MenubarSub>
+              <MenubarSubTrigger>Sort</MenubarSubTrigger>
+              <MenubarSubContent>
+                <MenubarRadioGroup
+                  value="joins"
+                  onValueChange={(c) =>
+                    c == "favorites" && router.push("/sort/favorites")
+                  }
+                >
+                  <MenubarRadioItem value="joins">
+                    Players Online
+                  </MenubarRadioItem>
+                  <MenubarRadioItem value="favorites">
+                    Favorites
+                  </MenubarRadioItem>
+                </MenubarRadioGroup>
+              </MenubarSubContent>
+            </MenubarSub>
+          </MenubarContent>
+        </MenubarMenu>
+      </Menubar>
 
-                    <span className="pl-1">
-                      {randomData.playerData.playerCount}{" "}
-                      {randomData.playerData.playerCount == 1
-                        ? "player"
-                        : "players"}{" "}
-                      currently online
-                    </span>
-                  </span>
+      <Dialog open={random} onOpenChange={setRandom}>
+        <DialogContent>
+          {randomData == undefined && <>No data to randomize</>}
+          {randomData != undefined && (
+            <DialogHeader>
+              <DialogTitle>
+                <IconDisplay server={randomData} /> {randomData.name}
+                {randomData.author != undefined ? (
+                  <div className="text-sm text-muted-foreground">
+                    by {randomData.author}
+                  </div>
+                ) : (
                   <br />
-                  <strong>Server IP</strong>
-                  <br />
-                  <br />
-                  <code className="border p-3 rounded">
-                    {randomData.name}.minehut.gg{" "}
-                    <Button
-                      size="icon"
-                      className="ml-1 h-[20px]"
-                      onClick={() => {
-                        setTextCopied(true);
-                        navigator.clipboard.writeText(
-                          randomData.name + ".mshf.minehut.gg"
-                        );
-                        toast.success("Copied!");
-                        setTimeout(() => setTextCopied(false), 1000);
+                )}
+                <TagShower server={randomData} />
+              </DialogTitle>
+              <DialogDescription className="float-left inline">
+                <span className="flex items-center">
+                  {randomData.playerData.playerCount == 0 ? (
+                    <div
+                      className="items-center border"
+                      style={{
+                        width: ".5rem",
+                        height: ".5rem",
+                        borderRadius: "9999px",
                       }}
-                    >
-                      {textCopied ? (
-                        <Check size={16} className="flex items-center" />
-                      ) : (
-                        <p>Copy</p>
-                      )}
-                    </Button>
-                  </code>
-                </DialogDescription>
-              </DialogHeader>
-            )}
-          </DialogContent>
-        </Dialog>
-      </div>
+                    />
+                  ) : (
+                    <div
+                      className="items-center"
+                      style={{
+                        backgroundColor: "#0cce6b",
+                        width: ".5rem",
+                        height: ".5rem",
+                        borderRadius: "9999px",
+                      }}
+                    />
+                  )}
+
+                  <span className="pl-1">
+                    {randomData.playerData.playerCount}{" "}
+                    {randomData.playerData.playerCount == 1
+                      ? "player"
+                      : "players"}{" "}
+                    currently online
+                  </span>
+                </span>
+                <br />
+                <strong>Server IP</strong>
+                <br />
+                <br />
+                <code className="border p-3 rounded">
+                  {randomData.name}.minehut.gg{" "}
+                  <Button
+                    size="icon"
+                    className="ml-1 h-[20px]"
+                    onClick={() => {
+                      setTextCopied(true);
+                      navigator.clipboard.writeText(
+                        randomData.name + ".mshf.minehut.gg"
+                      );
+                      toast.success("Copied!");
+                      setTimeout(() => setTextCopied(false), 1000);
+                    }}
+                  >
+                    {textCopied ? (
+                      <Check size={16} className="flex items-center" />
+                    ) : (
+                      <p>Copy</p>
+                    )}
+                  </Button>
+                </code>
+              </DialogDescription>
+            </DialogHeader>
+          )}
+        </DialogContent>
+      </Dialog>
+
       <br />
       <InfiniteScroll
         dataLength={serverList.currentServers.length}
@@ -712,7 +694,7 @@ export default function ServerList() {
         }
         style={{ overflow: "hidden !important", paddingLeft: 6 }}
       >
-        <div className=" grid sm:grid-cols-4 gap-4">
+        <div className={" grid " + "grid-cols-" + ipr + " gap-4"}>
           {servers.map((b: any) => (
             <>
               <ServerCard b={b} motd={motdList[b.name]} />

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-export const version = "b-0.9.0";
+export const version = "b-0.10.0";
 
 const User = ({ user }: { user: string }) => (
   <span className="cursor-pointer bg-[rgba(255,165,0,0.25);] rounded p-[2.5px]">
@@ -43,6 +43,28 @@ export const Changelog = () => (
           `| ${process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_MESSAGE.substring(0, 24)}`}
       </code>
     </div>
+    <br />
+    <div>
+      <strong className="flex items-center">
+        Version b-0.10.0 (August 17th 2024)
+      </strong>
+      <ul>
+        <li>• Revamped server list button list</li>
+        <li>• Added welcome dialog when first launching</li>
+        <li>
+          • Fixed an issue where servers were still able to be favorited
+          client-side when logged out
+        </li>
+        <li>• Improved MOTD engine</li>
+      </ul>
+      <br />
+      <i>👀</i>
+      {/** Ensure Tailwind pre-renders all grid column types */}
+      <span className="grid-cols-6" />
+      <span className="grid-cols-5" />
+      <span className="grid-cols-4" />
+    </div>
+    <br />
     <br />
     <div>
       <strong className="flex items-center">

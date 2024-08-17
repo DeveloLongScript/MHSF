@@ -115,7 +115,10 @@ export default function parseToHTML(m: string, tw?: boolean): Promise<string> {
   });
 }
 
-function objToHTML(i: Element): string {
+function objToHTML(i: Element | string): string {
+  if (typeof i == "string") {
+    return i;
+  }
   var curClass = "";
   var contents = "";
   if (i.extra != undefined) {
@@ -152,7 +155,7 @@ function createHTML(
 ) {
   if (className == undefined) className = "";
   if (contents == undefined) contents = "";
-  if (contents == "undefined") contents = "<br/>";
+  if (contents == "\n") contents = "<br>";
 
   if (tw == false || tw == undefined) {
     return (
@@ -189,6 +192,9 @@ function colorConvert(className: string) {
       if (classUnique.startsWith("text-[")) {
         result +=
           "color: " + classUnique.substring(6, classUnique.length - 1) + "; ";
+      } else {
+        result +=
+          "color: " + classUnique.substring(5, classUnique.length) + "; ";
       }
     }
     if (classUnique.startsWith("font-bold")) {
