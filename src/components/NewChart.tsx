@@ -150,8 +150,6 @@ export function NewChart({ server }: { server: string }) {
                     }}
                   />
                 }
-                cursor={false}
-                defaultIndex={1}
               />
               <Line
                 dataKey={activeChart}
