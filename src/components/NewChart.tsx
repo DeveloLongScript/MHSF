@@ -144,10 +144,8 @@ export function NewChart({ server }: { server: string }) {
                     nameKey={activeChart}
                     indicator="line"
                     labelFormatter={(value) => {
-                      return new Date(value).toLocaleDateString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                        year: "numeric",
+                      return new Date(value).toLocaleTimeString("en-US", {
+                        timeStyle: "short",
                       });
                     }}
                   />
