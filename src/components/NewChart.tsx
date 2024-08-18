@@ -142,9 +142,18 @@ export function NewChart({ server }: { server: string }) {
                   <ChartTooltipContent
                     className="w-[150px]"
                     nameKey={activeChart}
-                    hideLabel
+                    indicator="line"
+                    labelFormatter={(value) => {
+                      return new Date(value).toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                      });
+                    }}
                   />
                 }
+                cursor={false}
+                defaultIndex={1}
               />
               <Line
                 dataKey={activeChart}
