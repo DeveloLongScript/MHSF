@@ -20,6 +20,7 @@ import { Inter as interFont } from "next/font/google";
 import { CommandBarer } from "@/components/CommandBar";
 import ThemedToaster from "@/components/misc/ThemedToaster";
 import UnofficalDialog from "@/components/misc/UnofficalDialog";
+import ClientFadeIn from "@/components/ClientFadeIn";
 
 const inter = interFont({ variable: "--font-inter", subsets: ["latin"] });
 export default async function RootLayout({
@@ -63,7 +64,7 @@ export default async function RootLayout({
           </div>
           <div>
             <NextTopLoader />
-            {children}
+            <ClientFadeIn>{children}</ClientFadeIn>
           </div>{" "}
           <ThemedToaster />
           <CommandBarer />

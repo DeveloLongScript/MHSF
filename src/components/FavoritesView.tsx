@@ -10,6 +10,8 @@ import toast from "react-hot-toast";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 import { getAccountFavorites } from "@/lib/api";
 import { useRouter } from "@/lib/useRouter";
+import { Skeleton } from "./ui/skeleton";
+import FadeIn from "react-fade-in/lib/FadeIn";
 
 export default function FavoritesView() {
   const [apiFavorites, setApiFavorites] = useState<any>([]);
@@ -40,8 +42,20 @@ export default function FavoritesView() {
   if (loading) {
     return (
       <>
-        <Spinner className="flex items-center" />
-        <br />
+        <div className="grid grid-cols-4 gap-4">
+          <Skeleton className="h-[147px] rounded-xl" />
+          <Skeleton className="h-[147px] rounded-xl" />
+          <Skeleton className="h-[147px] rounded-xl" />
+          <Skeleton className="h-[147px] rounded-xl" />
+          <Skeleton className="h-[147px] rounded-xl" />
+          <Skeleton className="h-[147px] rounded-xl" />
+          <Skeleton className="h-[147px] rounded-xl" />
+          <Skeleton className="h-[147px] rounded-xl" />
+          <Skeleton className="h-[147px] rounded-xl" />
+          <Skeleton className="h-[147px] rounded-xl" />
+          <Skeleton className="h-[147px] rounded-xl" />
+          <Skeleton className="h-[147px] rounded-xl" />
+        </div>
       </>
     );
   }
@@ -54,53 +68,55 @@ export default function FavoritesView() {
           Your favorites are empty. Maybe favorite a server!
         </div>
       )}
-      <div className="grid sm:grid-cols-4 gap-4">
-        {apiFavorites.map((server: ServerResponse) => (
-          <Card key={server.name}>
-            <CardHeader>
-              <CardTitle>{server.name}</CardTitle>
-              <div>
-                <Button
-                  size="icon"
-                  variant="secondary"
-                  className="min-w-[128px] max-w-[328px] mb-2 h-[32px] max-md:hidden"
-                  onClick={() => {
-                    navigator.clipboard.writeText(
-                      server.name + ".mshf.minehut.gg"
-                    );
-                    toast.success("Copied IP to clipboard");
-                  }}
-                >
-                  <Copy size={18} />
-                  <code className="ml-2">{server.name}</code>
-                </Button>
-                <Tooltip>
-                  <TooltipTrigger>
-                    <Button
-                      size="icon"
-                      variant="secondary"
-                      className="w-[32px] h-[32px] mb-2 ml-2 max-md:hidden"
-                      onClick={() => {
-                        router.push("/server/" + server.name);
-                      }}
-                    >
-                      <Layers size={18} />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    Open up the server page to see more information about the
-                    server
-                  </TooltipContent>
-                </Tooltip>
-              </div>
-              <code className="text-[14px]">
-                {convert(server.joins)} total joins •{" "}
-                {server.online ? "Online" : "Offline"}
-              </code>
-            </CardHeader>
-          </Card>
-        ))}
-      </div>
+      <FadeIn>
+        <div className="grid sm:grid-cols-4 gap-4">
+          {apiFavorites.map((server: ServerResponse) => (
+            <Card key={server.name}>
+              <CardHeader>
+                <CardTitle>{server.name}</CardTitle>
+                <div>
+                  <Button
+                    size="icon"
+                    variant="secondary"
+                    className="min-w-[128px] max-w-[328px] mb-2 h-[32px] max-md:hidden"
+                    onClick={() => {
+                      navigator.clipboard.writeText(
+                        server.name + ".mshf.minehut.gg"
+                      );
+                      toast.success("Copied IP to clipboard");
+                    }}
+                  >
+                    <Copy size={18} />
+                    <code className="ml-2">{server.name}</code>
+                  </Button>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <Button
+                        size="icon"
+                        variant="secondary"
+                        className="w-[32px] h-[32px] mb-2 ml-2 max-md:hidden"
+                        onClick={() => {
+                          router.push("/server/" + server.name);
+                        }}
+                      >
+                        <Layers size={18} />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      Open up the server page to see more information about the
+                      server
+                    </TooltipContent>
+                  </Tooltip>
+                </div>
+                <code className="text-[14px]">
+                  {convert(server.joins)} total joins •{" "}
+                  {server.online ? "Online" : "Offline"}
+                </code>
+              </CardHeader>
+            </Card>
+          ))}
+        </div>
+      </FadeIn>
     </>
   );
 }

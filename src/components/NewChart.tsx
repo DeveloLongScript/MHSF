@@ -19,6 +19,8 @@ import {
 import { useEffectOnce } from "@/lib/useEffectOnce";
 import { ServerResponse } from "@/lib/types/mh-server";
 import { getCommunityServerFavorites, getShortTermData } from "@/lib/api";
+import { Skeleton } from "./ui/skeleton";
+import FadeIn from "react-fade-in/lib/FadeIn";
 
 const chartConfig = {
   player_count: {
@@ -37,6 +39,7 @@ export function NewChart({ server }: { server: string }) {
 
   const [chartData, setChartData] = React.useState<any>([]);
   const [joins, setJoins] = React.useState<any>(0);
+  const [loading, setLoading] = React.useState(true);
   const [favorites, setFavorites] = React.useState<any>(0);
 
   const allNums = { player_count: joins, favorites };
@@ -52,99 +55,109 @@ export function NewChart({ server }: { server: string }) {
             });
           }
         );
+        setLoading(false);
       }
     );
   });
 
+  if (loading)
+    return (
+      <>
+        <Skeleton className="w-full h-[437px]" />
+      </>
+    );
+
   return (
-    <Card className="w-full">
-      <CardHeader className="flex flex-col items-stretch space-y-0 border-b p-0 sm:flex-row">
-        <div className="flex flex-1 flex-col justify-center gap-1 px-6 py-5 sm:py-6">
-          <CardTitle>
-            {chartConfig[activeChart].label} Chart for {server}
-          </CardTitle>
-          <CardDescription>Showing the past 30 entries.</CardDescription>
-        </div>
-        <div className="flex">
-          {["player_count", "favorites"].map((key) => {
-            const chart = key as keyof typeof chartConfig;
-            return (
-              <button
-                key={chart}
-                data-active={activeChart === chart}
-                className="flex flex-1 flex-col justify-center gap-1 border-t px-6 py-4 text-left even:border-l data-[active=true]:bg-muted/50 sm:border-l sm:border-t-0 sm:px-8 sm:py-6"
-                onClick={() => setActiveChart(chart)}
-              >
-                <span className="text-xs text-muted-foreground">
-                  {chartConfig[chart].label}
-                </span>
-                <span className="text-lg font-bold leading-none sm:text-3xl">
-                  {convert(allNums[chart])}
-                </span>
-              </button>
-            );
-          })}
-        </div>
-      </CardHeader>
-      <CardContent className="px-2 sm:p-6">
-        <ChartContainer
-          config={chartConfig}
-          className="aspect-auto h-[250px] w-full"
-        >
-          <LineChart
-            accessibilityLayer
-            data={chartData}
-            margin={{
-              left: 12,
-              right: 12,
-            }}
+    <FadeIn>
+      <Card className="w-full">
+        <CardHeader className="flex flex-col items-stretch space-y-0 border-b p-0 sm:flex-row">
+          <div className="flex flex-1 flex-col justify-center gap-1 px-6 py-5 sm:py-6">
+            <CardTitle>
+              {chartConfig[activeChart].label} Chart for {server}
+            </CardTitle>
+            <CardDescription>Showing the past 30 entries.</CardDescription>
+          </div>
+          <div className="flex">
+            {["player_count", "favorites"].map((key) => {
+              const chart = key as keyof typeof chartConfig;
+              return (
+                <button
+                  key={chart}
+                  data-active={activeChart === chart}
+                  className="flex flex-1 flex-col justify-center gap-1 border-t px-6 py-4 text-left even:border-l data-[active=true]:bg-muted/50 sm:border-l sm:border-t-0 sm:px-8 sm:py-6"
+                  onClick={() => setActiveChart(chart)}
+                >
+                  <span className="text-xs text-muted-foreground">
+                    {chartConfig[chart].label}
+                  </span>
+                  <span className="text-lg font-bold leading-none sm:text-3xl">
+                    {convert(allNums[chart])}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </CardHeader>
+        <CardContent className="px-2 sm:p-6">
+          <ChartContainer
+            config={chartConfig}
+            className="aspect-auto h-[250px] w-full"
           >
-            <CartesianGrid vertical={false} />
-            <XAxis
-              dataKey="date"
-              tickLine={false}
-              axisLine={false}
-              tickMargin={8}
-              minTickGap={32}
-              tickFormatter={(value) => {
-                return new Date(value).toLocaleTimeString("en-US", {
-                  timeStyle: "short",
-                });
+            <LineChart
+              accessibilityLayer
+              data={chartData}
+              margin={{
+                left: 12,
+                right: 12,
               }}
-            />
-            <YAxis
-              dataKey={activeChart}
-              tickLine={false}
-              axisLine={false}
-              tickFormatter={(value) => {
-                return (
-                  value +
-                  (activeChart == "player_count"
-                    ? ` plyr${value != 1 ? "s" : ""}.`
-                    : ` ${value == 1 ? "favorite" : "favrts."}`)
-                );
-              }}
-            />
-            <ChartTooltip
-              content={
-                <ChartTooltipContent
-                  className="w-[150px]"
-                  nameKey={activeChart}
-                  hideLabel
-                />
-              }
-            />
-            <Line
-              dataKey={activeChart}
-              type="monotone"
-              stroke={`var(--color-${activeChart})`}
-              strokeWidth={2}
-              dot={false}
-            />
-          </LineChart>
-        </ChartContainer>
-      </CardContent>
-    </Card>
+            >
+              <CartesianGrid vertical={false} />
+              <XAxis
+                dataKey="date"
+                tickLine={false}
+                axisLine={false}
+                tickMargin={8}
+                minTickGap={32}
+                tickFormatter={(value) => {
+                  return new Date(value).toLocaleTimeString("en-US", {
+                    timeStyle: "short",
+                  });
+                }}
+              />
+              <YAxis
+                dataKey={activeChart}
+                tickLine={false}
+                axisLine={false}
+                tickFormatter={(value) => {
+                  return (
+                    value +
+                    (activeChart == "player_count"
+                      ? ` plyr${value != 1 ? "s" : ""}.`
+                      : ` ${value == 1 ? "favorite" : "favrts."}`)
+                  );
+                }}
+              />
+              <ChartTooltip
+                content={
+                  <ChartTooltipContent
+                    className="w-[150px]"
+                    nameKey={activeChart}
+                    hideLabel
+                  />
+                }
+              />
+              <Line
+                dataKey={activeChart}
+                type="monotone"
+                stroke={`var(--color-${activeChart})`}
+                strokeWidth={2}
+                dot={false}
+              />
+            </LineChart>
+          </ChartContainer>
+        </CardContent>
+      </Card>
+    </FadeIn>
   );
 }
 

@@ -18,6 +18,8 @@ import { Separator } from "./ui/separator";
 import { Card, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import Link from "next/link";
 import toast from "react-hot-toast";
+import { Skeleton } from "./ui/skeleton";
+import FadeIn from "react-fade-in/lib/FadeIn";
 
 export default function FavoriteSortView() {
   const [loading, setLoading] = useState(true);
@@ -55,7 +57,23 @@ export default function FavoriteSortView() {
   }, []);
 
   if (loading) {
-    return <Spinner className="flex items-center" />;
+    return (
+      <>
+        <div className="grid grid-cols-2 gap-4">
+          <Skeleton className="h-[112px] rounded-xl" />
+          <Skeleton className="h-[112px] rounded-xl" />
+        </div>
+        <br />
+        <Separator />
+        <br />
+        <div className="grid grid-cols-4 gap-4">
+          <Skeleton className="h-[450px] rounded-xl" />
+          <Skeleton className="h-[450px] rounded-xl" />
+          <Skeleton className="h-[450px] rounded-xl" />
+          <Skeleton className="h-[450px] rounded-xl" />
+        </div>
+      </>
+    );
   }
 
   return (
@@ -200,66 +218,68 @@ export default function FavoriteSortView() {
         }
         style={{ overflow: "hidden", paddingLeft: 6 }}
       >
-        <div className="grid sm:grid-cols-4 gap-4">
-          {allItems.map((v) => {
-            if (v.favorites == 0) {
-              return <></>;
-            }
+        <FadeIn>
+          <div className="grid sm:grid-cols-4 gap-4">
+            {allItems.map((v) => {
+              if (v.favorites == 0) {
+                return <></>;
+              }
 
-            if (online[v.server] != undefined)
-              return (
-                <ServerCard
-                  mini
-                  b={online[v.server]}
-                  favs={v.favorites}
-                  key={v.server}
-                />
-              );
-            else
-              return (
-                <Card className="h-[226px]" key={v.server}>
-                  <CardHeader>
-                    <CardTitle>{v.server}</CardTitle>
-                    <CardDescription>
-                      {v.favorites} favorited
-                      <br />
-                      <Button
-                        size="icon"
-                        variant="secondary"
-                        className="min-w-[128px] max-w-[328px] h-[32px] mt-2 ml-2 max-md:hidden"
-                        onClick={() => {
-                          navigator.clipboard.writeText(
-                            v.server + ".mshf.minehut.gg"
-                          );
-                          toast.success("Copied IP to clipboard");
-                        }}
-                      >
-                        <Copy size={18} />
-                        <code className="ml-2">{v.server}</code>
-                      </Button>
-                      <Tooltip>
-                        <TooltipTrigger>
-                          <Link href={"/server/" + v.server}>
-                            <Button
-                              size="icon"
-                              variant="secondary"
-                              className="w-[32px] h-[32px] mt-2 ml-2 max-md:hidden"
-                            >
-                              <Layers size={18} />
-                            </Button>
-                          </Link>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          Open up the server page to see more information about
-                          the server
-                        </TooltipContent>
-                      </Tooltip>
-                    </CardDescription>
-                  </CardHeader>
-                </Card>
-              );
-          })}
-        </div>
+              if (online[v.server] != undefined)
+                return (
+                  <ServerCard
+                    mini
+                    b={online[v.server]}
+                    favs={v.favorites}
+                    key={v.server}
+                  />
+                );
+              else
+                return (
+                  <Card className="h-[226px]" key={v.server}>
+                    <CardHeader>
+                      <CardTitle>{v.server}</CardTitle>
+                      <CardDescription>
+                        {v.favorites} favorited
+                        <br />
+                        <Button
+                          size="icon"
+                          variant="secondary"
+                          className="min-w-[128px] max-w-[328px] h-[32px] mt-2 ml-2 max-md:hidden"
+                          onClick={() => {
+                            navigator.clipboard.writeText(
+                              v.server + ".mshf.minehut.gg"
+                            );
+                            toast.success("Copied IP to clipboard");
+                          }}
+                        >
+                          <Copy size={18} />
+                          <code className="ml-2">{v.server}</code>
+                        </Button>
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <Link href={"/server/" + v.server}>
+                              <Button
+                                size="icon"
+                                variant="secondary"
+                                className="w-[32px] h-[32px] mt-2 ml-2 max-md:hidden"
+                              >
+                                <Layers size={18} />
+                              </Button>
+                            </Link>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            Open up the server page to see more information
+                            about the server
+                          </TooltipContent>
+                        </Tooltip>
+                      </CardDescription>
+                    </CardHeader>
+                  </Card>
+                );
+            })}
+          </div>
+        </FadeIn>
       </InfiniteScroll>
     </div>
   );

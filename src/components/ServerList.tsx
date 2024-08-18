@@ -46,6 +46,8 @@ import {
   MenubarSubTrigger,
   MenubarTrigger,
 } from "@/components/ui/menubar";
+import ClientFadeIn from "./ClientFadeIn";
+import { Skeleton } from "./ui/skeleton";
 
 export default function ServerList() {
   const [loading, setLoading]: any = useState(true);
@@ -119,471 +121,489 @@ export default function ServerList() {
   if (loading) {
     return (
       <>
-        <Spinner className="flex items-center" />
+        <div className="grid grid-cols-3 gap-4 max-lg:grid-cols-2">
+          <Skeleton className="h-[112px] rounded-xl" />
+          <Skeleton className="h-[112px] rounded-xl" />
+          <Skeleton className="h-[112px] rounded-xl" />
+        </div>
         <br />
-        <div
-          className="flex justify-center"
-          dangerouslySetInnerHTML={{ __html: randomText }}
-        ></div>
+        <Separator />
+        <br />
+        <div className="grid grid-cols-4 gap-4">
+          <Skeleton className="h-[450px] rounded-xl" />
+          <Skeleton className="h-[450px] rounded-xl" />
+          <Skeleton className="h-[450px] rounded-xl" />
+          <Skeleton className="h-[450px] rounded-xl" />
+        </div>
       </>
     );
   }
 
   return (
     <>
-      <div className="max-lg:grid-cols-2 grid grid-cols-3 gap-4 ">
-        <Stat
-          title="Players online"
-          desc={serverList.getExtraData().total_players.toString()}
-          icon={CircleUser}
-        />
-        <Stat
-          title={
-            <div
-              className={
-                serverList.getExtraData().total_servers >= 3200
-                  ? "bg-clip-text text-transparent bg-gradient-to-r from-cyan-500 to-blue-500"
-                  : ""
-              }
-            >
-              Servers online{" "}
-            </div>
-          }
-          className="relative z-0"
-          desc={
-            <div className="flex items-center">
+      <ClientFadeIn>
+        <div className="max-lg:grid-cols-2 grid grid-cols-3 gap-4 ">
+          <Stat
+            title="Players online"
+            desc={serverList.getExtraData().total_players.toString()}
+            icon={CircleUser}
+          />
+          <Stat
+            title={
               <div
                 className={
                   serverList.getExtraData().total_servers >= 3200
-                    ? "bg-clip-text text-transparent bg-gradient-to-r from-cyan-500 to-blue-500 "
+                    ? "bg-clip-text text-transparent bg-gradient-to-r from-cyan-500 to-blue-500"
                     : ""
                 }
               >
-                {serverList.getExtraData().total_servers.toString()}
+                Servers online{" "}
               </div>
-              {serverList.getExtraData().total_servers >= 3200 && (
-                <Tooltip>
-                  <TooltipTrigger>
-                    <Info size={16} className="ml-2" />
-                  </TooltipTrigger>
-                  <TooltipContent className="font-normal">
-                    The server amount is over 3.2k, meaning that new servers
-                    have to go into a queue before being able to be online.{" "}
-                    <br />
-                    (the server count isn't entirely accurate, so sometimes you
-                    might not go into a queue even when the server count is at
-                    3.2k)
-                  </TooltipContent>
-                </Tooltip>
-              )}
-            </div>
-          }
-          icon={Network}
-        >
-          {serverList.getExtraData().total_servers >= 3200 && (
-            <BorderBeam
-              size={135}
-              duration={12}
-              delay={9}
-              colorFrom="rgb(6 182 212)"
-              colorTo="rgb(59 130 246)"
-            />
-          )}
-        </Stat>
-        <Stat
-          title="Current most popular server (in filter)"
-          className="max-lg:col-span-2"
-          desc={
-            <>
-              {serverList.currentServers[0] != undefined
-                ? serverList.currentServers[0].name
-                : "None"}{" "}
-              {serverList.currentServers[0] != undefined && (
-                <IconDisplay server={serverList.currentServers[0]} />
-              )}
-            </>
-          }
-          icon={Sun}
-        />
-      </div>
-      <br />
-      <Separator />
-      <Menubar className="mt-3 ml-2 border rounded p-2">
-        <MenubarMenu>
-          <MenubarTrigger>Servers</MenubarTrigger>
-          <MenubarContent>
-            <MenubarItem onSelect={() => events.emit("search-request-event")}>
-              Search Servers
-              <MenubarShortcut className="flex items-center ml-3">
-                <CommandIcon size={14} />
-                +Shift+K
-              </MenubarShortcut>
-            </MenubarItem>
-            <MenubarItem
-              onSelect={() => {
-                setRandomData(serverList.getRandomServer());
-                setRandom(true);
-              }}
-            >
-              Pick Random Server
-            </MenubarItem>
-            <MenubarSeparator />
-            <MenubarItem
-              onSelect={() => {
-                toast.promise(
-                  new Promise((s, e) => {
-                    setLoading(true);
-                    serverList
-                      .fetchDataAndFilter()
-                      .then(() => {
-                        serverList.moveListDown();
-
-                        let stringList: Array<{
-                          server: string;
-                          motd: string;
-                        }> = [];
-                        let obj: any = {};
-
-                        serverList.currentServers.forEach((b) => {
-                          stringList.push({ motd: b.motd, server: b.name });
-                        });
-
-                        serverList.getMOTDs(stringList).then((c) => {
-                          var updatedSL = motdList;
-                          c.forEach((b: { server: string; motd: string }) => {
-                            updatedSL[b.server] = b.motd;
-                          });
-                          setMotdList(updatedSL);
-                          setServers(serverList.currentServers);
-                          setLoading(false);
-                          s(false);
-                        });
-                      })
-                      .catch(() => {
-                        e();
-                      });
-                  }),
-                  {
-                    success: "Succesfully refreshed servers",
-                    loading: "Refreshing...",
-                    error: "Error while refreshing",
-                  }
-                );
-              }}
-            >
-              Refresh
-            </MenubarItem>
-          </MenubarContent>
-        </MenubarMenu>
-        <MenubarMenu>
-          <MenubarTrigger>Filter</MenubarTrigger>
-          <MenubarContent className="max-h-[400px] overflow-auto">
-            <MenubarRadioGroup
-              onValueChange={(v) => {
-                toast.promise(
-                  new Promise((g, b) => {
-                    if (v == "smaller") {
-                      setTemplateFilter(true);
-                      var filt = nameFilters;
-                      filt["smaller-tf"] = true;
-                      filt["bigger-tf"] = false;
-                      setNameFilters(filt);
-
-                      var filt2 = filters;
-                      filt2.push(smaller);
-                      if (filt2.includes(bigger)) {
-                        filt2.splice(filt2.indexOf(bigger), 1);
-                      }
-                      setFilters(filt2);
-                      serverList.editFilters(filters);
-                      serverList.fetchDataAndFilter().then(() => {
-                        serverList.moveListDown();
-
-                        let stringList: Array<{
-                          server: string;
-                          motd: string;
-                        }> = [];
-                        let obj: any = {};
-
-                        serverList.currentServers.forEach((b) => {
-                          stringList.push({ motd: b.motd, server: b.name });
-                        });
-
-                        serverList.getMOTDs(stringList).then((c) => {
-                          var updatedSL = motdList;
-                          c.forEach((b: { server: string; motd: string }) => {
-                            updatedSL[b.server] = b.motd;
-                          });
-                          setMotdList(updatedSL);
-                          setServers(serverList.currentServers);
-                          g(undefined);
-                        });
-                      });
-                    } else if (v == "bigger") {
-                      setTemplateFilter(true);
-                      var filt = nameFilters;
-                      filt["smaller-tf"] = false;
-                      filt["bigger-tf"] = true;
-                      setNameFilters(filt);
-                      var filt2 = filters;
-                      filt2.push(bigger);
-
-                      filt2.splice(filt2.indexOf(smaller), 1);
-
-                      setFilters(filt2);
-                      serverList.editFilters(filters);
-
-                      serverList.fetchDataAndFilter().then(() => {
-                        serverList.moveListDown();
-
-                        let stringList: Array<{
-                          server: string;
-                          motd: string;
-                        }> = [];
-                        let obj: any = {};
-
-                        serverList.currentServers.forEach((b) => {
-                          stringList.push({ motd: b.motd, server: b.name });
-                        });
-
-                        serverList.getMOTDs(stringList).then((c) => {
-                          var updatedSL = motdList;
-                          c.forEach((b: { server: string; motd: string }) => {
-                            updatedSL[b.server] = b.motd;
-                          });
-                          setMotdList(updatedSL);
-                          setServers(serverList.currentServers);
-                          g(undefined);
-                        });
-                      });
-                    } else {
-                      var filt = nameFilters;
-                      filt["smaller-tf"] = false;
-                      filt["bigger-tf"] = false;
-                      setNameFilters(filt);
-                      setTemplateFilter(false);
-
-                      var filt2 = filters;
-                      filt2.splice(filt2.indexOf(smaller), 1);
-                      filt2.splice(filt2.indexOf(bigger), 1);
-                      setFilters(filt2);
-                      console.log(filters, filters.includes(smaller));
-                      serverList.editFilters(filters);
-
-                      serverList.fetchDataAndFilter().then(() => {
-                        serverList.moveListDown();
-
-                        let stringList: Array<{
-                          server: string;
-                          motd: string;
-                        }> = [];
-                        let obj: any = {};
-
-                        serverList.currentServers.forEach((b) => {
-                          stringList.push({ motd: b.motd, server: b.name });
-                        });
-
-                        serverList.getMOTDs(stringList).then((c) => {
-                          var updatedSL = motdList;
-                          c.forEach((b: { server: string; motd: string }) => {
-                            updatedSL[b.server] = b.motd;
-                          });
-                          setMotdList(updatedSL);
-                          setServers(serverList.currentServers);
-                          g(undefined);
-                        });
-                      });
-                    }
-                  }),
-                  {
-                    error: "Error while changing filters",
-                    loading: "Changing filters...",
-                    success: "Changed filters!",
-                  }
-                );
-              }}
-              value={(() => {
-                if (nameFilters["smaller-tf"]) {
-                  return "smaller";
-                } else if (nameFilters["bigger-tf"]) {
-                  return "bigger";
-                } else {
-                  return "none";
-                }
-              })()}
-            >
-              <MenubarRadioItem value="smaller">
-                <div className="block">
-                  Only allow smaller servers
-                  <br />
-                  <span className="text-sm text-muted-foreground">
-                    Only allow servers that have the player range 7-15, and
-                    cannot <br />
-                    be Always Online.
-                  </span>
-                </div>
-              </MenubarRadioItem>
-              <MenubarRadioItem value="bigger">
-                <div className="block">
-                  Only allow bigger servers
-                  <br />
-                  <span className="text-sm text-muted-foreground">
-                    Only allow servers with more than 15 players.
-                  </span>
-                </div>
-              </MenubarRadioItem>
-              <MenubarRadioItem value="none">
-                No/custom requirements
-              </MenubarRadioItem>
-            </MenubarRadioGroup>
-            <MenubarSeparator />
-            <MenubarSub>
-              <span className="text-sm text-muted-foreground ml-2">Tags</span>
-            </MenubarSub>
-            {allTags.map((tag) => (
-              <div key={tag.docsName}>
-                {tag.docsName && tag.__filter == undefined && (
-                  <MenubarCheckboxItem
-                    disabled={templateFilter && tag.__disab != undefined}
-                    id={tag.docsName}
-                    checked={(() => {
-                      return nameFilters["t-" + tag.docsName];
-                    })()}
-                    onCheckedChange={async (b) => {
-                      var filt = nameFilters;
-                      filt["t-" + tag.docsName] = b;
-                      setNameFilters(filt);
-                      if (b) {
-                        var filt2 = filters;
-                        filt2.push(tag.condition);
-                        setFilters(filt2);
-                      } else {
-                        var filt2 = filters;
-                        filt2.splice(filt2.indexOf(tag.condition), 1);
-                        setFilters(filt2);
-                      }
-                      serverList.editFilters(filters);
-                      serverList.fetchDataAndFilter().then(() => {
-                        serverList.moveListDown();
-
-                        let stringList: Array<{
-                          server: string;
-                          motd: string;
-                        }> = [];
-                        let obj: any = {};
-
-                        serverList.currentServers.forEach((b) => {
-                          stringList.push({ motd: b.motd, server: b.name });
-                        });
-
-                        serverList.getMOTDs(stringList).then((c) => {
-                          var updatedSL = motdList;
-                          c.forEach((b: { server: string; motd: string }) => {
-                            updatedSL[b.server] = b.motd;
-                          });
-                          setMotdList(updatedSL);
-                          setServers(serverList.currentServers);
-                        });
-                      });
-                    }}
-                  >
-                    <Badge variant={tag.role} className="mr-1">
-                      {tag.docsName}
-                    </Badge>
-                  </MenubarCheckboxItem>
-                )}
-              </div>
-            ))}
-            <MenubarSeparator />
-            <MenubarSub>
-              <span className="text-sm text-muted-foreground ml-2">
-                Categories
-              </span>
-            </MenubarSub>
-            {allCategories.map((categorie) => (
-              <MenubarCheckboxItem
-                id={categorie.name}
-                key={categorie.name}
-                onCheckedChange={async (b) => {
-                  var filt = nameFilters;
-                  filt["c-" + categorie.name] = b;
-                  setNameFilters(filt);
-                  if (b) {
-                    var filt2 = filters;
-                    filt2.push(categorie.condition);
-                    setFilters(filt2);
-                  } else {
-                    var filt2 = filters;
-                    filt2.splice(filt2.indexOf(categorie.condition), 1);
-                    setFilters(filt2);
-                  }
-                  serverList.editFilters(filters);
-                  serverList.fetchDataAndFilter().then(() => {
-                    serverList.moveListDown();
-
-                    let stringList: Array<{ server: string; motd: string }> =
-                      [];
-                    let obj: any = {};
-
-                    serverList.currentServers.forEach((b) => {
-                      stringList.push({ motd: b.motd, server: b.name });
-                    });
-
-                    serverList.getMOTDs(stringList).then((c) => {
-                      var updatedSL = motdList;
-                      c.forEach((b: { server: string; motd: string }) => {
-                        updatedSL[b.server] = b.motd;
-                      });
-                      setMotdList(updatedSL);
-                      setServers(serverList.currentServers);
-                    });
-                  });
-                }}
-                checked={(() => {
-                  return nameFilters["c-" + categorie.name];
-                })()}
-              >
-                <Badge variant={categorie.role} className="mr-1">
-                  {categorie.name}
-                </Badge>
-              </MenubarCheckboxItem>
-            ))}
-          </MenubarContent>
-        </MenubarMenu>
-        <MenubarMenu>
-          <MenubarTrigger>View</MenubarTrigger>
-          <MenubarContent>
-            <MenubarSub>
-              <MenubarSubTrigger>Grid</MenubarSubTrigger>
-              <MenubarSubContent>
-                <MenubarRadioGroup value={ipr} onValueChange={setIPR}>
-                  <MenubarRadioItem value="4">4 items per row</MenubarRadioItem>
-                  <MenubarRadioItem value="5">5 items per row</MenubarRadioItem>
-                  <MenubarRadioItem value="6">6 items per row</MenubarRadioItem>
-                </MenubarRadioGroup>
-              </MenubarSubContent>
-            </MenubarSub>
-            <MenubarSub>
-              <MenubarSubTrigger>Sort</MenubarSubTrigger>
-              <MenubarSubContent>
-                <MenubarRadioGroup
-                  value="joins"
-                  onValueChange={(c) =>
-                    c == "favorites" && router.push("/sort/favorites")
+            }
+            className="relative z-0"
+            desc={
+              <div className="flex items-center">
+                <div
+                  className={
+                    serverList.getExtraData().total_servers >= 3200
+                      ? "bg-clip-text text-transparent bg-gradient-to-r from-cyan-500 to-blue-500 "
+                      : ""
                   }
                 >
-                  <MenubarRadioItem value="joins">
-                    Players Online
-                  </MenubarRadioItem>
-                  <MenubarRadioItem value="favorites">
-                    Favorites
-                  </MenubarRadioItem>
-                </MenubarRadioGroup>
-              </MenubarSubContent>
-            </MenubarSub>
-          </MenubarContent>
-        </MenubarMenu>
-      </Menubar>
+                  {serverList.getExtraData().total_servers.toString()}
+                </div>
+                {serverList.getExtraData().total_servers >= 3200 && (
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <Info size={16} className="ml-2" />
+                    </TooltipTrigger>
+                    <TooltipContent className="font-normal">
+                      The server amount is over 3.2k, meaning that new servers
+                      have to go into a queue before being able to be online.{" "}
+                      <br />
+                      (the server count isn't entirely accurate, so sometimes
+                      you might not go into a queue even when the server count
+                      is at 3.2k)
+                    </TooltipContent>
+                  </Tooltip>
+                )}
+              </div>
+            }
+            icon={Network}
+          >
+            {serverList.getExtraData().total_servers >= 3200 && (
+              <BorderBeam
+                size={135}
+                duration={12}
+                delay={9}
+                colorFrom="rgb(6 182 212)"
+                colorTo="rgb(59 130 246)"
+              />
+            )}
+          </Stat>
+          <Stat
+            title="Current most popular server (in filter)"
+            className="max-lg:col-span-2"
+            desc={
+              <>
+                {serverList.currentServers[0] != undefined
+                  ? serverList.currentServers[0].name
+                  : "None"}{" "}
+                {serverList.currentServers[0] != undefined && (
+                  <IconDisplay server={serverList.currentServers[0]} />
+                )}
+              </>
+            }
+            icon={Sun}
+          />
+        </div>
+      </ClientFadeIn>
+      <br />
+      <Separator />
+      <ClientFadeIn delay={100}>
+        <Menubar className="mt-3 ml-2 border rounded p-2">
+          <MenubarMenu>
+            <MenubarTrigger>Servers</MenubarTrigger>
+            <MenubarContent>
+              <MenubarItem onSelect={() => events.emit("search-request-event")}>
+                Search Servers
+                <MenubarShortcut className="flex items-center ml-3">
+                  <CommandIcon size={14} />
+                  +Shift+K
+                </MenubarShortcut>
+              </MenubarItem>
+              <MenubarItem
+                onSelect={() => {
+                  setRandomData(serverList.getRandomServer());
+                  setRandom(true);
+                }}
+              >
+                Pick Random Server
+              </MenubarItem>
+              <MenubarSeparator />
+              <MenubarItem
+                onSelect={() => {
+                  toast.promise(
+                    new Promise((s, e) => {
+                      setLoading(true);
+                      serverList
+                        .fetchDataAndFilter()
+                        .then(() => {
+                          serverList.moveListDown();
+
+                          let stringList: Array<{
+                            server: string;
+                            motd: string;
+                          }> = [];
+                          let obj: any = {};
+
+                          serverList.currentServers.forEach((b) => {
+                            stringList.push({ motd: b.motd, server: b.name });
+                          });
+
+                          serverList.getMOTDs(stringList).then((c) => {
+                            var updatedSL = motdList;
+                            c.forEach((b: { server: string; motd: string }) => {
+                              updatedSL[b.server] = b.motd;
+                            });
+                            setMotdList(updatedSL);
+                            setServers(serverList.currentServers);
+                            setLoading(false);
+                            s(false);
+                          });
+                        })
+                        .catch(() => {
+                          e();
+                        });
+                    }),
+                    {
+                      success: "Succesfully refreshed servers",
+                      loading: "Refreshing...",
+                      error: "Error while refreshing",
+                    }
+                  );
+                }}
+              >
+                Refresh
+              </MenubarItem>
+            </MenubarContent>
+          </MenubarMenu>
+          <MenubarMenu>
+            <MenubarTrigger>Filter</MenubarTrigger>
+            <MenubarContent className="max-h-[400px] overflow-auto">
+              <MenubarRadioGroup
+                onValueChange={(v) => {
+                  toast.promise(
+                    new Promise((g, b) => {
+                      if (v == "smaller") {
+                        setTemplateFilter(true);
+                        var filt = nameFilters;
+                        filt["smaller-tf"] = true;
+                        filt["bigger-tf"] = false;
+                        setNameFilters(filt);
+
+                        var filt2 = filters;
+                        filt2.push(smaller);
+                        if (filt2.includes(bigger)) {
+                          filt2.splice(filt2.indexOf(bigger), 1);
+                        }
+                        setFilters(filt2);
+                        serverList.editFilters(filters);
+                        serverList.fetchDataAndFilter().then(() => {
+                          serverList.moveListDown();
+
+                          let stringList: Array<{
+                            server: string;
+                            motd: string;
+                          }> = [];
+                          let obj: any = {};
+
+                          serverList.currentServers.forEach((b) => {
+                            stringList.push({ motd: b.motd, server: b.name });
+                          });
+
+                          serverList.getMOTDs(stringList).then((c) => {
+                            var updatedSL = motdList;
+                            c.forEach((b: { server: string; motd: string }) => {
+                              updatedSL[b.server] = b.motd;
+                            });
+                            setMotdList(updatedSL);
+                            setServers(serverList.currentServers);
+                            g(undefined);
+                          });
+                        });
+                      } else if (v == "bigger") {
+                        setTemplateFilter(true);
+                        var filt = nameFilters;
+                        filt["smaller-tf"] = false;
+                        filt["bigger-tf"] = true;
+                        setNameFilters(filt);
+                        var filt2 = filters;
+                        filt2.push(bigger);
+
+                        filt2.splice(filt2.indexOf(smaller), 1);
+
+                        setFilters(filt2);
+                        serverList.editFilters(filters);
+
+                        serverList.fetchDataAndFilter().then(() => {
+                          serverList.moveListDown();
+
+                          let stringList: Array<{
+                            server: string;
+                            motd: string;
+                          }> = [];
+                          let obj: any = {};
+
+                          serverList.currentServers.forEach((b) => {
+                            stringList.push({ motd: b.motd, server: b.name });
+                          });
+
+                          serverList.getMOTDs(stringList).then((c) => {
+                            var updatedSL = motdList;
+                            c.forEach((b: { server: string; motd: string }) => {
+                              updatedSL[b.server] = b.motd;
+                            });
+                            setMotdList(updatedSL);
+                            setServers(serverList.currentServers);
+                            g(undefined);
+                          });
+                        });
+                      } else {
+                        var filt = nameFilters;
+                        filt["smaller-tf"] = false;
+                        filt["bigger-tf"] = false;
+                        setNameFilters(filt);
+                        setTemplateFilter(false);
+
+                        var filt2 = filters;
+                        filt2.splice(filt2.indexOf(smaller), 1);
+                        filt2.splice(filt2.indexOf(bigger), 1);
+                        setFilters(filt2);
+                        console.log(filters, filters.includes(smaller));
+                        serverList.editFilters(filters);
+
+                        serverList.fetchDataAndFilter().then(() => {
+                          serverList.moveListDown();
+
+                          let stringList: Array<{
+                            server: string;
+                            motd: string;
+                          }> = [];
+                          let obj: any = {};
+
+                          serverList.currentServers.forEach((b) => {
+                            stringList.push({ motd: b.motd, server: b.name });
+                          });
+
+                          serverList.getMOTDs(stringList).then((c) => {
+                            var updatedSL = motdList;
+                            c.forEach((b: { server: string; motd: string }) => {
+                              updatedSL[b.server] = b.motd;
+                            });
+                            setMotdList(updatedSL);
+                            setServers(serverList.currentServers);
+                            g(undefined);
+                          });
+                        });
+                      }
+                    }),
+                    {
+                      error: "Error while changing filters",
+                      loading: "Changing filters...",
+                      success: "Changed filters!",
+                    }
+                  );
+                }}
+                value={(() => {
+                  if (nameFilters["smaller-tf"]) {
+                    return "smaller";
+                  } else if (nameFilters["bigger-tf"]) {
+                    return "bigger";
+                  } else {
+                    return "none";
+                  }
+                })()}
+              >
+                <MenubarRadioItem value="smaller">
+                  <div className="block">
+                    Only allow smaller servers
+                    <br />
+                    <span className="text-sm text-muted-foreground">
+                      Only allow servers that have the player range 7-15, and
+                      cannot <br />
+                      be Always Online.
+                    </span>
+                  </div>
+                </MenubarRadioItem>
+                <MenubarRadioItem value="bigger">
+                  <div className="block">
+                    Only allow bigger servers
+                    <br />
+                    <span className="text-sm text-muted-foreground">
+                      Only allow servers with more than 15 players.
+                    </span>
+                  </div>
+                </MenubarRadioItem>
+                <MenubarRadioItem value="none">
+                  No/custom requirements
+                </MenubarRadioItem>
+              </MenubarRadioGroup>
+              <MenubarSeparator />
+              <MenubarSub>
+                <span className="text-sm text-muted-foreground ml-2">Tags</span>
+              </MenubarSub>
+              {allTags.map((tag) => (
+                <div key={tag.docsName}>
+                  {tag.docsName && tag.__filter == undefined && (
+                    <MenubarCheckboxItem
+                      disabled={templateFilter && tag.__disab != undefined}
+                      id={tag.docsName}
+                      checked={(() => {
+                        return nameFilters["t-" + tag.docsName];
+                      })()}
+                      onCheckedChange={async (b) => {
+                        var filt = nameFilters;
+                        filt["t-" + tag.docsName] = b;
+                        setNameFilters(filt);
+                        if (b) {
+                          var filt2 = filters;
+                          filt2.push(tag.condition);
+                          setFilters(filt2);
+                        } else {
+                          var filt2 = filters;
+                          filt2.splice(filt2.indexOf(tag.condition), 1);
+                          setFilters(filt2);
+                        }
+                        serverList.editFilters(filters);
+                        serverList.fetchDataAndFilter().then(() => {
+                          serverList.moveListDown();
+
+                          let stringList: Array<{
+                            server: string;
+                            motd: string;
+                          }> = [];
+                          let obj: any = {};
+
+                          serverList.currentServers.forEach((b) => {
+                            stringList.push({ motd: b.motd, server: b.name });
+                          });
+
+                          serverList.getMOTDs(stringList).then((c) => {
+                            var updatedSL = motdList;
+                            c.forEach((b: { server: string; motd: string }) => {
+                              updatedSL[b.server] = b.motd;
+                            });
+                            setMotdList(updatedSL);
+                            setServers(serverList.currentServers);
+                          });
+                        });
+                      }}
+                    >
+                      <Badge variant={tag.role} className="mr-1">
+                        {tag.docsName}
+                      </Badge>
+                    </MenubarCheckboxItem>
+                  )}
+                </div>
+              ))}
+              <MenubarSeparator />
+              <MenubarSub>
+                <span className="text-sm text-muted-foreground ml-2">
+                  Categories
+                </span>
+              </MenubarSub>
+              {allCategories.map((categorie) => (
+                <MenubarCheckboxItem
+                  id={categorie.name}
+                  key={categorie.name}
+                  onCheckedChange={async (b) => {
+                    var filt = nameFilters;
+                    filt["c-" + categorie.name] = b;
+                    setNameFilters(filt);
+                    if (b) {
+                      var filt2 = filters;
+                      filt2.push(categorie.condition);
+                      setFilters(filt2);
+                    } else {
+                      var filt2 = filters;
+                      filt2.splice(filt2.indexOf(categorie.condition), 1);
+                      setFilters(filt2);
+                    }
+                    serverList.editFilters(filters);
+                    serverList.fetchDataAndFilter().then(() => {
+                      serverList.moveListDown();
+
+                      let stringList: Array<{ server: string; motd: string }> =
+                        [];
+                      let obj: any = {};
+
+                      serverList.currentServers.forEach((b) => {
+                        stringList.push({ motd: b.motd, server: b.name });
+                      });
+
+                      serverList.getMOTDs(stringList).then((c) => {
+                        var updatedSL = motdList;
+                        c.forEach((b: { server: string; motd: string }) => {
+                          updatedSL[b.server] = b.motd;
+                        });
+                        setMotdList(updatedSL);
+                        setServers(serverList.currentServers);
+                      });
+                    });
+                  }}
+                  checked={(() => {
+                    return nameFilters["c-" + categorie.name];
+                  })()}
+                >
+                  <Badge variant={categorie.role} className="mr-1">
+                    {categorie.name}
+                  </Badge>
+                </MenubarCheckboxItem>
+              ))}
+            </MenubarContent>
+          </MenubarMenu>
+          <MenubarMenu>
+            <MenubarTrigger>View</MenubarTrigger>
+            <MenubarContent>
+              <MenubarSub>
+                <MenubarSubTrigger>Grid</MenubarSubTrigger>
+                <MenubarSubContent>
+                  <MenubarRadioGroup value={ipr} onValueChange={setIPR}>
+                    <MenubarRadioItem value="4">
+                      4 items per row
+                    </MenubarRadioItem>
+                    <MenubarRadioItem value="5">
+                      5 items per row
+                    </MenubarRadioItem>
+                    <MenubarRadioItem value="6">
+                      6 items per row
+                    </MenubarRadioItem>
+                  </MenubarRadioGroup>
+                </MenubarSubContent>
+              </MenubarSub>
+              <MenubarSub>
+                <MenubarSubTrigger>Sort</MenubarSubTrigger>
+                <MenubarSubContent>
+                  <MenubarRadioGroup
+                    value="joins"
+                    onValueChange={(c) =>
+                      c == "favorites" && router.push("/sort/favorites")
+                    }
+                  >
+                    <MenubarRadioItem value="joins">
+                      Players Online
+                    </MenubarRadioItem>
+                    <MenubarRadioItem value="favorites">
+                      Favorites
+                    </MenubarRadioItem>
+                  </MenubarRadioGroup>
+                </MenubarSubContent>
+              </MenubarSub>
+            </MenubarContent>
+          </MenubarMenu>
+        </Menubar>
+      </ClientFadeIn>
 
       <Dialog open={random} onOpenChange={setRandom}>
         <DialogContent>
@@ -695,13 +715,15 @@ export default function ServerList() {
         }
         style={{ overflow: "hidden !important", paddingLeft: 6 }}
       >
-        <div className={" grid " + "grid-cols-" + ipr + " gap-4"}>
-          {servers.map((b: any) => (
-            <>
-              <ServerCard b={b} motd={motdList[b.name]} />
-            </>
-          ))}
-        </div>
+        <ClientFadeIn delay={200}>
+          <div className={" grid " + "grid-cols-" + ipr + " gap-4"}>
+            {servers.map((b: any) => (
+              <>
+                <ServerCard b={b} motd={motdList[b.name]} />
+              </>
+            ))}
+          </div>
+        </ClientFadeIn>
       </InfiniteScroll>
     </>
   );
