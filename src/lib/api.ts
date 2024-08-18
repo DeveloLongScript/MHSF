@@ -272,7 +272,7 @@ export async function ownServer(server: string): Promise<boolean> {
       }
     );
 
-    if (response.status == 400) {
+    if (response.status >= 400) {
       return false;
     }
 

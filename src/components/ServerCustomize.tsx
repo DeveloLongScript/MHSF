@@ -88,7 +88,7 @@ export default function ServerCustomize({
               c.servers.forEach((v) => {
                 setAuthor(v.author);
                 if (v.name == server && isSignedIn) {
-                  if (user?.publicMetadata.player == v.author) {
+                  if (user?.publicMetadata.player === v.author) {
                     setMinehutOwned(true);
                   }
                 }
