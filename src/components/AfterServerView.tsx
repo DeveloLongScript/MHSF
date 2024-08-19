@@ -119,7 +119,7 @@ export default function AfterServerView({ server }: { server: string }) {
               </Card>
             )}{" "}
             {((description == "" && discord == "") || view == "extra") && (
-              <div className="grid grid-cols-3 col-span-4">
+              <div className="sm:grid sm:grid-cols-3 col-span-4 gap-4">
                 <Card>
                   <CardHeader>
                     <CardTitle>Plan Details</CardTitle>
@@ -181,6 +181,7 @@ export default function AfterServerView({ server }: { server: string }) {
                     </table>{" "}
                   </CardContent>
                 </Card>
+                <br className="sm:hidden" />
                 <Card>
                   <CardHeader>
                     <CardTitle>Additional Info</CardTitle>
@@ -231,6 +232,7 @@ export default function AfterServerView({ server }: { server: string }) {
                     </table>
                   </CardContent>
                 </Card>
+                <br className="sm:hidden" />
                 <Card>
                   <CardHeader>
                     <CardTitle>
