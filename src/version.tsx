@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-export const version = "b-0.10.2";
+export const version = "b-0.10.7";
 
 const User = ({ user }: { user: string }) => (
   <span className="cursor-pointer bg-[rgba(255,165,0,0.25);] rounded p-[2.5px]">
@@ -46,6 +46,15 @@ export const Changelog = () => (
     <br />
     <div>
       <strong className="flex items-center">
+        Version b-0.10.7 (August 18th 2024)
+      </strong>
+      <ul>
+        <li>• New server information tab on server pages</li>
+      </ul>
+    </div>
+    <br />
+    <div>
+      <strong className="flex items-center">
         Version b-0.10.2 (August 18th 2024)
       </strong>
       <ul>
@@ -53,7 +62,6 @@ export const Changelog = () => (
         <li>• Instead of using spinners, now we are using Skeletons</li>
       </ul>
     </div>
-    <br />
     <br />
     <div>
       <strong className="flex items-center">
