@@ -716,7 +716,7 @@ export default function ServerList() {
         style={{ overflow: "hidden !important", paddingLeft: 6 }}
       >
         <ClientFadeIn delay={200}>
-          <div className={" grid " + "grid-cols-" + ipr + " gap-4"}>
+          <div className={" sm:grid " + "sm:grid-cols-" + ipr + " gap-4"}>
             {servers.map((b: any) => (
               <>
                 <ServerCard b={b} motd={motdList[b.name]} />

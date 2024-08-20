@@ -13,7 +13,7 @@ import { useTheme } from "next-themes";
 import FadeIn from "react-fade-in/lib/FadeIn";
 import { Button } from "./ui/button";
 import { ServerResponse } from "@/lib/types/mh-server";
-import { Copy } from "lucide-react";
+import { Copy, Info } from "lucide-react";
 import toast, { CheckmarkIcon } from "react-hot-toast";
 import { MHSF } from "@/lib/mhsf";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
@@ -138,7 +138,21 @@ export default function AfterServerView({ server }: { server: string }) {
                         <th className="border p-2">Server plan</th>
                         <td className="border p-2">
                           {serverObject?.expired == undefined ? (
-                            "? (unknown)"
+                            <div className="flex items-center">
+                              Free{" "}
+                              <Tooltip>
+                                <TooltipTrigger>
+                                  <div>
+                                    <Info size={16} className="ml-2" />
+                                  </div>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  The plan is really unknown, but in most
+                                  scenarios, the Minehut API returns{" "}
+                                  <code>undefined</code> if the server is free.
+                                </TooltipContent>
+                              </Tooltip>
+                            </div>
                           ) : (
                             <>{serverObject?.activeServerPlan}</>
                           )}
@@ -195,7 +209,9 @@ export default function AfterServerView({ server }: { server: string }) {
                         <th className="border p-2">Icon</th>
                         <td className="border p-2">
                           {serverObject?.icon == undefined ? (
-                            "? (unknown)"
+                            <>
+                              Default (<code>OAK_SIGN</code>)
+                            </>
                           ) : (
                             <code>{serverObject?.icon}</code>
                           )}
