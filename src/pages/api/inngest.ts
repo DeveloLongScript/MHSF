@@ -132,7 +132,7 @@ export default serve({
         if (!initalizedYet) {
           await init();
           initalizedYet = true;
-          client.login(process.env.DISCORD_TOKEN);
+          await client.login(process.env.DISCORD_TOKEN);
 
           console.log(`[REPORTING] Waiting for bot to be ready`);
 

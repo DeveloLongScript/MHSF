@@ -85,7 +85,7 @@ export default function parseToHTML(m: string, tw?: boolean): Promise<string> {
                       curClass == ""
                         ? "text-[" + i.color + "]"
                         : " text-[" + i.color + "]";
-                  } else {
+                  } else {    
                     curClass +=
                       curClass == ""
                         ? divList[i.color]
