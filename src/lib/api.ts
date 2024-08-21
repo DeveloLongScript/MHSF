@@ -379,3 +379,26 @@ export async function sortedFavorites(): Promise<
     throw Error("Error while running API");
   }
 }
+
+export async function reportServer(
+  server: string,
+  reason: string
+): Promise<boolean> {
+  try {
+    const response = await fetch(connector(`/report-server`, { version: 1 }), {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ server, reason }),
+    });
+
+    if (response.status == 400) {
+      return false;
+    }
+
+    return true;
+  } catch {
+    throw Error("Error while running API");
+  }
+}

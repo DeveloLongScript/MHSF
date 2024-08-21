@@ -6,6 +6,7 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import {
   getCustomization,
   ownServer,
+  reportServer,
   setCustomization,
   serverOwned as sOFunc,
   unownServer,
@@ -43,6 +44,14 @@ import { useTheme } from "next-themes";
 import { DiscordPopover } from "./misc/DiscordPopover";
 import { Spinner } from "./ui/spinner";
 import { BannerPopover } from "./misc/BannerPopover";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "./ui/dialog";
 
 const formSchema = z.object({
   description: z
@@ -67,6 +76,7 @@ export default function ServerCustomize({
   const [serverOwned, setServerOwned] = useState(false);
   const [userOwned, setUserOwned] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [reason, setReason] = useState("");
   const [description, setDescription] = useState("");
   const [get, setGet] = useState<any>({});
   const [author, setAuthor] = useState<string | undefined>("");
@@ -132,6 +142,74 @@ export default function ServerCustomize({
             <div className="font-bold">Do you own this server? </div>
             Create an account and link it to the owner of the server to
             customize it.
+          </div>
+        )}
+        {serverOwned && !userOwned && (
+          <div>
+            <div className="font-bold">
+              Is this server in violation of the ECA?
+            </div>
+            Is this server in violation of the{" "}
+            <Link href="/legal/external-content-agreement">
+              External Content Agreement (aka ECA)
+            </Link>
+            ? You can report the server to remove the customizations from the
+            server.
+            <Dialog>
+              <DialogTrigger>
+                <Button className="h-[30px] ml-2">Report</Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Report Server</DialogTitle>
+                  <DialogDescription>
+                    This will send a notification to MHSF maintainers. This
+                    server must be in violation of the{" "}
+                    <Link href="/legal/external-content-agreement">ECA</Link> to
+                    be a valid report. Typical response times include 1 hour to
+                    1 day, and you will not be notified if your report is
+                    successful or not.{" "}
+                    <b>
+                      Please do not spam this form with mindless reports. If you
+                      do, your account will be banned. We are not Minehut
+                      support, we cannot help you with a problem within the
+                      Minehut platform or within the server, we can only
+                      moderate the customization of the server.
+                    </b>{" "}
+                    (if the problem is within the server,{" "}
+                    <Link href="https://support.minehut.com/hc/en-us/requests/new?tf_subject=Reporting%20Server&tf_27062997154195=reports_appeals&tf_27063229498259=report_server">
+                      report it on Minehut
+                    </Link>
+                    )<br />
+                    <br />
+                    <b>Reason:</b>
+                  </DialogDescription>
+                </DialogHeader>
+                <Textarea
+                  value={reason}
+                  onChange={(e) => setReason(e.target.value)}
+                />
+                <div className="grid grid-flow-row gap-2">
+                  <Button
+                    onClick={async () => {
+                      await toast.promise(
+                        new Promise(async (g, b) => {
+                          (await reportServer(server, reason)) ? g("") : b();
+                        }),
+                        {
+                          success: "Report sent!",
+                          loading: "Sending report...",
+                          error: "Error while sending report",
+                        }
+                      );
+                    }}
+                  >
+                    Report Server
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
+            <br />
           </div>
         )}
       </SignedIn>
