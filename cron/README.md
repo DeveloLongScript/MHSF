@@ -10,7 +10,7 @@ When running Inngest, on Vercel's servers, when doing the `/servers` Minehut API
 
 If you're on a Unix based machine, just type the following:
 
-```
+```bash
 # Make sure you already cloned the repo and are in the /cron directory.
 # This project uses NPM instead of Yarn for the website
 npm install
