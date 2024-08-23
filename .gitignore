@@ -7,6 +7,10 @@
 .yarn/install-state.gz
 .turbo
 
+# cron
+/cron/dist
+/cron/node_modules
+
 # testing
 /coverage
 

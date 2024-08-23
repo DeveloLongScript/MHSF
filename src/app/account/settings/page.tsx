@@ -60,7 +60,15 @@ export default function Settings() {
             <br />
             <strong className="font-bold">Link Account</strong>
             <div className="flex items-center">
-              <p>Link a Minecraft account to customize a server you own.</p>
+              <p>
+                Link a Minecraft account to customize a server you own.
+                <br />{" "}
+                {user?.publicMetadata.player != undefined && linked && (
+                  <>
+                    Currently linked to {user?.publicMetadata.player as string}
+                  </>
+                )}
+              </p>
 
               <Dialog>
                 <DialogTrigger>

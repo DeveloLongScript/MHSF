@@ -48,6 +48,7 @@ import {
 } from "@/components/ui/menubar";
 import ClientFadeIn from "./ClientFadeIn";
 import { Skeleton } from "./ui/skeleton";
+import useClipboard from "@/lib/useClipboard";
 
 export default function ServerList() {
   const [loading, setLoading]: any = useState(true);
@@ -70,6 +71,7 @@ export default function ServerList() {
   const [nameFilters, setNameFilters] = useState<any>({});
   const [inErrState, setErrState] = useState(false);
   const [servers, setServers] = useState<Array<OnlineServer>>([]);
+  const clipboard = useClipboard();
   const router = useRouter();
   const [ipr, setIPR] = useState("4");
   const [filters, setFilters] = useState<
@@ -121,7 +123,7 @@ export default function ServerList() {
   if (loading) {
     return (
       <>
-        <div className="grid grid-cols-3 gap-4 max-lg:grid-cols-2">
+        <div className="md:grid md:grid-cols-3 gap-4 max-lg:grid-cols-2">
           <Skeleton className="h-[112px] rounded-xl" />
           <Skeleton className="h-[112px] rounded-xl" />
           <Skeleton className="h-[112px] rounded-xl" />
@@ -129,7 +131,7 @@ export default function ServerList() {
         <br />
         <Separator />
         <br />
-        <div className="grid grid-cols-4 gap-4">
+        <div className="md:grid md:grid-cols-4 gap-4">
           <Skeleton className="h-[450px] rounded-xl" />
           <Skeleton className="h-[450px] rounded-xl" />
           <Skeleton className="h-[450px] rounded-xl" />
@@ -663,9 +665,7 @@ export default function ServerList() {
                     className="ml-1 h-[20px]"
                     onClick={() => {
                       setTextCopied(true);
-                      navigator.clipboard.writeText(
-                        randomData.name + ".mshf.minehut.gg"
-                      );
+                      clipboard.writeText(randomData.name + ".mshf.minehut.gg");
                       toast.success("Copied!");
                       setTimeout(() => setTextCopied(false), 1000);
                     }}
@@ -716,7 +716,11 @@ export default function ServerList() {
         style={{ overflow: "hidden !important", paddingLeft: 6 }}
       >
         <ClientFadeIn delay={200}>
-          <div className={" sm:grid " + "sm:grid-cols-" + ipr + " gap-4"}>
+          <div
+            className={
+              " sm:grid " + "lg:grid-cols-" + ipr + " gap-4 sm:grid-cols-2"
+            }
+          >
             {servers.map((b: any) => (
               <>
                 <ServerCard b={b} motd={motdList[b.name]} />
@@ -788,7 +792,7 @@ export function TagShower(props: {
   }
 
   return (
-    <>
+    <div className="font-normal tracking-normal">
       {compatiableTags.map((t) => (
         <>
           {props.unclickable && (
@@ -832,6 +836,6 @@ export function TagShower(props: {
           )}
         </>
       ))}
-    </>
+    </div>
   );
 }

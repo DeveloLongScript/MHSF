@@ -33,7 +33,7 @@ export default function SignInPopoverButton({
       <PopoverContent className="w-full">
         <div className=" grid w-[200px]">
           <strong className="text-center">Login</strong>
-          <small className="text-center">
+          <small className="text-center pb-6">
             Make comments about servers and favorite servers. Secured by Clerk
           </small>
           <br />

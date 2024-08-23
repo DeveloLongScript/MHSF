@@ -3,9 +3,11 @@ import { useState } from "react";
 import { Button } from "../ui/button";
 import toast from "react-hot-toast";
 import { Check } from "lucide-react";
+import useClipboard from "@/lib/useClipboard";
 
 export function TextCopyComp() {
   "use client";
+  const clipboard = useClipboard();
   const [textCopied, setTextCopied] = useState(false);
 
   return (
@@ -16,7 +18,7 @@ export function TextCopyComp() {
         className="ml-1 h-[20px]"
         onClick={() => {
           setTextCopied(true);
-          navigator.clipboard.writeText("MHSFPV.minehut.gg");
+          clipboard.writeText("MHSFPV.minehut.gg");
           toast.success("Copied!");
           setTimeout(() => setTextCopied(false), 1000);
         }}

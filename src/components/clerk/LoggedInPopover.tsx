@@ -11,7 +11,7 @@ export default function LoggedInPopover() {
   return (
     <div className="grid w-full">
       <strong className="text-center">Logged in as {user?.username}</strong>
-      <small className="text-center">
+      <small className="text-center pb-6">
         Make comments about servers and favorite servers. Secured by Clerk
       </small>
       <br />

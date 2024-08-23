@@ -15,7 +15,14 @@ import {
 } from "./ui/card";
 import IconDisplay from "./IconDisplay";
 import { TagShower } from "./ServerList";
-import { Copy, EllipsisVertical, Layers, Star } from "lucide-react";
+import {
+  ArrowRight,
+  ChartArea,
+  Copy,
+  EllipsisVertical,
+  Layers,
+  Star,
+} from "lucide-react";
 import { Button } from "./ui/button";
 import {
   Drawer,
@@ -33,9 +40,16 @@ import { useState } from "react";
 import { favoriteServer, isFavorited } from "@/lib/api";
 import { useUser } from "@clerk/nextjs";
 import { useTheme } from "next-themes";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
+import useClipboard from "@/lib/useClipboard";
 
 export default function ServerCard({ b, motd, mini, favs }: any) {
   const router = useRouter();
+  const clipboard = useClipboard();
   const [favoriteStar, setFavoriteStar] = useState(false);
   const [favoriteLoading, setFavoriteLoading] = useState(true);
   const { isSignedIn } = useUser();
@@ -61,7 +75,51 @@ export default function ServerCard({ b, motd, mini, favs }: any) {
         >
           <CardHeader>
             <CardTitle className="m-0">
-              <IconDisplay server={b} /> {b.name}{" "}
+              <span>
+                <IconDisplay server={b} />
+                <HoverCard>
+                  <HoverCardTrigger asChild>
+                    <Link href={"/server/" + b.name}>
+                      <Button
+                        variant={"link"}
+                        className="text-2xl px-0 pl-1 font-semibold"
+                      >
+                        {b.name}
+                      </Button>
+                    </Link>
+                  </HoverCardTrigger>
+                  <HoverCardContent className="w-80 font-normal tracking-normal">
+                    <div className="flex justify-between space-x-4">
+                      <div className="space-y-1">
+                        <h4 className="text-sm font-semibold">{b.name}</h4>
+                        <p className="text-sm">
+                          {motd && (
+                            <span
+                              dangerouslySetInnerHTML={{ __html: motd }}
+                              className="w-[30px] text-center break-all overflow-hidden"
+                            />
+                          )}
+                        </p>
+                        <div className="flex items-center pt-2">
+                          <span className="text-xs text-muted-foreground flex items-center">
+                            <ArrowRight size={16} className="mr-2" />
+                            Open Server Page
+                          </span>
+                        </div>
+                        <div className="flex items-center pt-2">
+                          <span className="text-xs text-muted-foreground flex items-center">
+                            <ChartArea size={16} className="mr-2" />
+                            Running on{" "}
+                            {b.staticInfo.serverPlan == undefined
+                              ? "Free Plan"
+                              : b.staticInfo.serverPlan}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </HoverCardContent>
+                </HoverCard>
+              </span>
               <Drawer>
                 <DrawerTrigger>
                   <Button
@@ -80,9 +138,7 @@ export default function ServerCard({ b, motd, mini, favs }: any) {
                     <Button
                       variant="ghost"
                       onClick={() => {
-                        navigator.clipboard.writeText(
-                          b.name + ".mshf.minehut.gg"
-                        );
+                        clipboard.writeText(b.name + ".mshf.minehut.gg");
                         toast.success("Copied IP to clipboard");
                       }}
                     >
@@ -101,7 +157,7 @@ export default function ServerCard({ b, motd, mini, favs }: any) {
                 </DrawerContent>
               </Drawer>
               {b.author != undefined ? (
-                <div className="text-sm text-muted-foreground">
+                <div className="text-sm text-muted-foreground font-normal tracking-normal">
                   by {b.author}
                 </div>
               ) : (
@@ -109,7 +165,7 @@ export default function ServerCard({ b, motd, mini, favs }: any) {
               )}
               <TagShower server={b} />
             </CardTitle>
-            <CardDescription className="float-left inline">
+            <CardDescription className="float-left inline ">
               <span className="flex items-center">
                 {b.playerData.playerCount == 0 ? (
                   <div
@@ -147,9 +203,7 @@ export default function ServerCard({ b, motd, mini, favs }: any) {
                       variant="secondary"
                       className="min-w-[128px] max-w-[328px] h-[32px] mt-2 ml-2 max-md:hidden"
                       onClick={() => {
-                        navigator.clipboard.writeText(
-                          b.name + ".mshf.minehut.gg"
-                        );
+                        clipboard.writeText(b.name + ".mshf.minehut.gg");
                         toast.success("Copied IP to clipboard");
                       }}
                     >
@@ -178,9 +232,7 @@ export default function ServerCard({ b, motd, mini, favs }: any) {
                 <ContextMenuContent>
                   <ContextMenuItem
                     onClick={() => {
-                      navigator.clipboard.writeText(
-                        b.name + ".mshf.minehut.gg"
-                      );
+                      clipboard.writeText(b.name + ".mshf.minehut.gg");
                       toast.success("Copied IP to clipboard");
                     }}
                   >
@@ -210,7 +262,7 @@ export default function ServerCard({ b, motd, mini, favs }: any) {
       <ContextMenuContent>
         <ContextMenuItem
           onClick={() => {
-            navigator.clipboard.writeText(b.name + ".mshf.minehut.gg");
+            clipboard.writeText(b.name + ".mshf.minehut.gg");
             toast.success("Copied IP to clipboard");
           }}
         >

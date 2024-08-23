@@ -19,7 +19,7 @@ export function ShowInfo() {
       {open == true && (
         <>
           <p>
-            By claiming your account, you can add markdown descriptions and{" "}
+            By claiming your account, you can add Markdown descriptions and{" "}
             custom color schemes to your server (and more), making it stand out.
             To get started, join the server below on your Minecraft account.
             Enter the code in chat in the website, and you will link your

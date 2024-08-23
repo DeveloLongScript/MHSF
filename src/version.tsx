@@ -1,13 +1,47 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Separator } from "./components/ui/separator";
+import { Button } from "./components/ui/button";
+import Confetti, { ConfettiButton } from "./components/effects/confetti";
 
-export const version = "b-0.10.7";
+export const version = "1.0";
 
 const User = ({ user }: { user: string }) => (
   <span className="cursor-pointer bg-[rgba(255,165,0,0.25);] rounded p-[2.5px]">
     {user}
   </span>
 );
+import confetti from "canvas-confetti";
+const handleClick = () => {
+  const duration = 5 * 1000;
+  const animationEnd = Date.now() + duration;
+  const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+  const randomInRange = (min: number, max: number) =>
+    Math.random() * (max - min) + min;
+
+  const interval = window.setInterval(() => {
+    const timeLeft = animationEnd - Date.now();
+
+    if (timeLeft <= 0) {
+      return clearInterval(interval);
+    }
+
+    const particleCount = 50 * (timeLeft / duration);
+    confetti({
+      ...defaults,
+      particleCount,
+      zIndex: 60,
+      origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
+    });
+    confetti({
+      ...defaults,
+      particleCount,
+      zIndex: 60,
+      origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
+    });
+  }, 250);
+};
 
 export const Changelog = () => (
   <>
@@ -43,6 +77,26 @@ export const Changelog = () => (
           `| ${process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_MESSAGE.substring(0, 24)}`}
       </code>
     </div>
+    <br />
+    <div>
+      <strong className="flex items-center">
+        Version 1.0.0 (August 22nd 2024)
+      </strong>
+      <ul>
+        <li>
+          • 1.0!{" "}
+          <Button className="h-[25px] w-[50px] ml-2" onClick={handleClick}>
+            woah!
+          </Button>
+        </li>
+        <li>• New hover card on server title hover</li>
+        <li>• Moving to self-hosted cron jobs</li>
+        <li>• Fixing some mobile issues</li>
+      </ul>
+    </div>
+    <br />
+    <Separator />
+
     <br />
     <div>
       <strong className="flex items-center">
