@@ -1,5 +1,4 @@
 import { GeistSans } from "geist/font/sans";
-import { Server } from "lucide-react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
@@ -21,7 +20,7 @@ import { CommandBarer } from "@/components/CommandBar";
 import ThemedToaster from "@/components/misc/ThemedToaster";
 import UnofficalDialog from "@/components/misc/UnofficalDialog";
 import ClientFadeIn from "@/components/ClientFadeIn";
-import toast from "react-hot-toast";
+import { BrandingGenericIcon } from "@/components/Icon";
 
 const inter = interFont({ variable: "--font-inter", subsets: ["latin"] });
 export default async function RootLayout({
@@ -45,16 +44,16 @@ export default async function RootLayout({
           )}
           <div
             className={
-              "w-screen h-12 border-b fixed backdrop-blur flex z-10 " +
+              "w-screen h-[3rem] border-b fixed backdrop-blur flex z-10 " +
               (banner.isBanner == true ? "mt-8" : "")
             }
           >
-            <div className="items-center me-auto mt-3 pl-7">
+            <div className="items-center me-auto mt-2 pl-7">
               <Breadcrumb>
                 <BreadcrumbList>
                   <Link href="/">
                     <BreadcrumbPage className="max-sm:hidden">
-                      <Server />
+                      <BrandingGenericIcon className="max-w-[32px] max-h-[32px] " />
                     </BreadcrumbPage>
                   </Link>
                   <TextFromPathname />

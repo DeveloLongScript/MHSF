@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <main>
-      <div className="  pt-[60px] p-4">
+      <div className="pt-[60px]">
         <ServerList />
       </div>
     </main>

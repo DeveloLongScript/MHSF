@@ -39,6 +39,10 @@
     --chart-3: 216 92% 60%;
     --chart-4: 210 98% 78%;
     --chart-5: 212 97% 87%;
+
+    --color-one: #37ecba;
+    --color-two: #72afd3;
+    --color-three: #ff2e63;
   }
 
   .dark {
