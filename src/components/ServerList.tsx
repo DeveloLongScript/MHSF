@@ -224,15 +224,6 @@ export default function ServerList() {
                 staticity={40}
                 color={color}
               />
-              <div
-                style={{
-                  backgroundImage:
-                    "radial-gradient(at 27% 37%,#3a8bfd 0,transparent 0),radial-gradient(at 97% 21%,#ff6 0,transparent 50%),radial-gradient(at 52% 99%,#6ff 0,transparent 50%),radial-gradient(at 10% 29%,#f6f 0,transparent 50%),radial-gradient(at 97% 96%,#f96 0,transparent 50%),radial-gradient(at 33% 50%,#69f 0,transparent 50%),radial-gradient(at 79% 53%,#f69 0,transparent 50%)",
-                  opacity: 0.3,
-                  filter: "blur(100px) saturate(150%)",
-                  top: 80,
-                }}
-              />
               <SparklesText className="animate-fade-in -translate-y-4 text-balance bg-gradient-to-br from-black from-30% to-black/40 bg-clip-text pb-6 text-5xl font-semibold leading-none tracking-tighter text-transparent opacity-0 [--animation-delay:200ms] sm:text-6xl md:text-7xl lg:text-8xl dark:from-white dark:to-white/40">
                 <>
                   Meet MHSF, <br className="hidden md:block" /> the modern
