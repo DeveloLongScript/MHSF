@@ -311,6 +311,7 @@ export default function ServerList() {
                 <Marquee className="[--duration:30s]">
                   {serverList.currentServers.slice(0, 20).map((server) => (
                     <div
+                      key={server.name}
                       className={cn(
                         "relative w-64 cursor-pointer overflow-hidden rounded-xl border no-underline " +
                           "border-gray-950/[.1] bg-gray-950/[.01] hover:bg-gray-950/[.05] " +
@@ -342,6 +343,7 @@ export default function ServerList() {
                 <Marquee reverse className="[--duration:30s]">
                   {serverList.currentServers.slice(0, 20).map((server) => (
                     <div
+                      key={server.name}
                       className={cn(
                         "relative w-64 cursor-pointer overflow-hidden rounded-xl border no-underline " +
                           "border-gray-950/[.1] bg-gray-950/[.01] hover:bg-gray-950/[.05] " +
