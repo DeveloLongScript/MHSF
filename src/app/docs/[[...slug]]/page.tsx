@@ -45,7 +45,7 @@ const PostLayout = ({ params }: { params: { slug: string[] } }) => {
                 <p className="font-medium">On This Page</p>
                 {doc.toc.map(
                   (c: { level: number; text: string; slug: string }) => (
-                    <TableOfContent toc={c} doc={doc} />
+                    <TableOfContent toc={c} doc={doc} key={c.slug} />
                   )
                 )}
                 <br />
