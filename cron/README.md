@@ -8,6 +8,8 @@ When running Inngest, on Vercel's servers, when doing the `/servers` Minehut API
 
 ## How do you run this?
 
+
+
 If you're on a Unix based machine, just type the following:
 
 ```bash
