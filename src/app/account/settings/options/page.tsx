@@ -145,7 +145,7 @@ const FormSchemaGrid = z.object({
   }),
 });
 
-export function RowRadioForm() {
+function RowRadioForm() {
   const { user } = useUser();
   const form = useForm<z.infer<typeof FormSchemaGrid>>({
     resolver: zodResolver(FormSchemaGrid),
@@ -213,7 +213,7 @@ export function RowRadioForm() {
   );
 }
 
-export function PaddingRadioForm() {
+function PaddingRadioForm() {
   const { user } = useUser();
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -312,7 +312,7 @@ const FormSchemaCB = z.object({
   padding: z.boolean().default(false).optional(),
 });
 
-export function ServerPaddingForm() {
+function ServerPaddingForm() {
   const { user } = useUser();
   const srv = user?.publicMetadata.srv as boolean | undefined;
   const form = useForm<z.infer<typeof FormSchemaCB>>({
