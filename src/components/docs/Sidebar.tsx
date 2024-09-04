@@ -73,7 +73,7 @@ function Subdocs({ docs }: { docs: (Docs | DocsFolder)[] }) {
     <>
       {docs.map((doc) => {
         if ("docs" in doc) {
-          return <Subdocs docs={doc.docs} />;
+          return <Subdocs docs={doc.docs} key={doc.name} />;
         }
         return (
           <>

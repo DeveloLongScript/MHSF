@@ -69,19 +69,19 @@ _Note: Skip this step if you're using [TCPShield](https://tcpshield.com/) for DD
 Enable proxy protocol in your proxy's configuration file: 
 ### Velocity
 
-In velocity.toml under advanced, set
+In `velocity.toml` under advanced, set
 ```
 haproxy-protocol = true
 ```
 ### Waterfall
 
-In config.yml under listeners, set
+In `config.yml` under listeners, set
 ```
 proxy_protocol: true
 ```
 ### Paper
 
-In config/paper-global.yml under proxies, set
+In `config/paper-global.yml` under proxies, set
 ```
 proxy-protocol: true
 ```
