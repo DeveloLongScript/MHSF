@@ -6,7 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { ClerkThemeProvider } from "@/components/clerk/ClerkThemeProvider";
 import NextTopLoader from "@/lib/top-loader";
-import { banner } from "@/banner";
+import { banner } from "@/config/banner";
 import {
   Breadcrumb,
   BreadcrumbList,
@@ -48,7 +48,7 @@ export default async function RootLayout({
               (banner.isBanner == true ? "mt-8" : "")
             }
           >
-            <div className="items-center me-auto mt-2 pl-7">
+            <div className="items-center me-auto mt-2 pl-7 max-sm:mt-3">
               <Breadcrumb>
                 <BreadcrumbList>
                   <Link href="/">

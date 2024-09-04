@@ -1,13 +1,15 @@
 import { Button } from "../ui/button";
-import { Calendar, Star, TerminalIcon } from "lucide-react";
+import { Book, Calendar, Star, TerminalIcon } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import { useState } from "react";
-import { Changelog, version } from "@/version";
+import { Changelog, version } from "@/config/version";
 import events from "@/lib/commandEvent";
 import { ScrollArea } from "../ui/scroll-area";
+import { useRouter } from "@/lib/useRouter";
 
 export default function InfoPopover() {
   const [changeLog, setChangelog] = useState(false);
+  const router = useRouter();
 
   return (
     <div className="grid w-full">
@@ -42,6 +44,9 @@ export default function InfoPopover() {
         }
       >
         <Star size={18} className="mr-2" /> Star on GitHub
+      </Button>
+      <Button variant={"ghost"} onClick={() => router.push("/docs")}>
+        <Book size={18} className="mr-2" /> See the docs
       </Button>
       <Button variant="ghost" onClick={() => events.emit("cmd-event")}>
         <TerminalIcon size={18} className="mr-2" /> Open commands

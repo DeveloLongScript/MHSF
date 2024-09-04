@@ -1,3 +1,5 @@
+import { withContentlayer } from "next-contentlayer";
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
@@ -8,6 +10,16 @@ const nextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      // Basic redirect
+      {
+        source: '/docs',
+        destination: '/docs/getting-started',
+        permanent: true,
+      },
+    ]
+  },
 };
 
-export default nextConfig;
+export default withContentlayer(nextConfig);

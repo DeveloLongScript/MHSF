@@ -1,11 +1,11 @@
 "use client";
-
 import { usePathname } from "next/navigation";
 import {
   BreadcrumbItem,
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "./ui/breadcrumb";
+import { allDocs } from "contentlayer/generated";
 
 export default function TextFromPathname() {
   const pathname = usePathname();
@@ -72,6 +72,18 @@ export default function TextFromPathname() {
           </BreadcrumbItem>
         </>
       )}
+      {pathname == "/account/settings/options" && (
+        <>
+          <BreadcrumbSeparator className="max-sm:hidden" />
+          <BreadcrumbItem>
+            <BreadcrumbPage>Settings</BreadcrumbPage>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>Preferences</BreadcrumbPage>
+          </BreadcrumbItem>
+        </>
+      )}
       {pathname == "/legal/external-content-agreement" && (
         <>
           <BreadcrumbSeparator className="max-sm:hidden" />
@@ -91,6 +103,27 @@ export default function TextFromPathname() {
           <BreadcrumbSeparator />
           <BreadcrumbItem>
             <BreadcrumbPage>Favorites</BreadcrumbPage>
+          </BreadcrumbItem>
+        </>
+      )}
+      {pathname?.startsWith("/docs/") && (
+        <>
+          <BreadcrumbSeparator className="max-sm:hidden" />
+          <BreadcrumbItem>Docs</BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>
+              {
+                allDocs.find(
+                  (c) =>
+                    c._raw.flattenedPath ===
+                    pathname
+                      ?.split("/")
+                      .splice(2, pathname?.split("/").length)
+                      .join("/")
+                )?.title
+              }
+            </BreadcrumbPage>
           </BreadcrumbItem>
         </>
       )}

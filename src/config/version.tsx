@@ -1,10 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Separator } from "./components/ui/separator";
-import { Button } from "./components/ui/button";
+import { Separator } from "../components/ui/separator";
+import { Button } from "../components/ui/button";
 import confetti from "canvas-confetti";
 
-export const version = "1.1.0";
+export const version = "1.2.0";
 
 const User = ({ user }: { user: string }) => (
   <span className="cursor-pointer bg-[rgba(255,165,0,0.25);] rounded p-[2.5px]">
@@ -75,6 +75,18 @@ export const Changelog = () => (
         {process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_MESSAGE != undefined &&
           `| ${process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_MESSAGE.substring(0, 24)}`}
       </code>
+    </div>
+    <br />
+    <div>
+      <strong className="flex items-center">
+        Version 1.2.0 (September 3rd 2024)
+      </strong>
+      <ul>
+        <li>• Added documentation</li>
+        <li>• Brand new linking of padding and server options</li>
+        <li>• New system to ensure automatic Cron actions!</li>
+        <li>• and alot more!</li>
+      </ul>
     </div>
     <br />
     <div>

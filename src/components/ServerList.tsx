@@ -30,7 +30,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import toast from "react-hot-toast";
-import { allTags, allCategories } from "@/allTags";
+import { allTags, allCategories } from "@/config/tags";
 import IconDisplay from "./IconDisplay";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Spinner } from "./ui/spinner";
@@ -77,7 +77,7 @@ const features = [
     name: "Add a Discord widget",
     description:
       "Show where your players talk to each-other, including an online users count.",
-    href: "/help/how-to-customize",
+    href: "/docs/guides/customization",
     cta: "Learn more",
     background: <span />,
     className: "lg:row-start-1 lg:row-end-2 lg:col-start-2 lg:col-end-3",
@@ -85,7 +85,7 @@ const features = [
   {
     Icon: InputIcon,
     name: "Descriptions",
-    href: "/help/how-to-customize",
+    href: "/docs/guides/customization",
     cta: "Learn more",
     description:
       "Format your descriptions using Markdown to show what your server has to offer.",
@@ -95,7 +95,7 @@ const features = [
   {
     Icon: ImageIcon,
     name: "Banners",
-    href: "/help/how-to-customize",
+    href: "/docs/guides/customization",
     cta: "Learn more",
     description:
       "Show a banner with can contain images that show on your server page.",
@@ -116,7 +116,7 @@ export default function ServerList() {
   const [random, setRandom] = useState(false);
   const [serverList, setServerList] = useState(new ServersList([]));
   const [textCopied, setTextCopied] = useState(false);
-  const [padding, setPadding] = useState(0);
+  const [padding, setPadding] = useState<string>("0");
   const bigger = async (server: OnlineServer) =>
     server.playerData.playerCount > 15;
   const smaller = async (server: OnlineServer) =>
@@ -128,8 +128,10 @@ export default function ServerList() {
   const [servers, setServers] = useState<Array<OnlineServer>>([]);
   const clipboard = useClipboard();
   const router = useRouter();
+  const { user, isSignedIn } = useUser();
   const [pOS, setpOS] = useState(false);
-  const [ipr, setIPR] = useState("4");
+  const [ipr, setIPR] = useState<string>("4");
+  const [am, setAM] = useState<boolean>(false);
   const [filters, setFilters] = useState<
     Array<(server: OnlineServer) => Promise<boolean>>
   >([]);
@@ -142,6 +144,16 @@ export default function ServerList() {
   useEffect(() => {
     setColor(resolvedTheme === "dark" ? "#ffffff" : "#000000");
   }, [resolvedTheme]);
+
+  useEffect(() => {
+    if (isSignedIn) {
+      console.log(user.publicMetadata);
+      setIPR((user.publicMetadata.ipr as string | undefined) || "4");
+      setPadding((user.publicMetadata.pad as string | undefined) || "0");
+      setpOS((user.publicMetadata.srv as boolean | undefined) || false);
+      setAM(pOS != false || padding != "0" || ipr != "4");
+    }
+  }, [isSignedIn, user]);
 
   useEffectOnce(() => {
     setRandomText(getRandomText());
@@ -172,7 +184,6 @@ export default function ServerList() {
   const ref = useRef(null);
   const [clickedPage, setClickedPage] = useState("banners");
   const [hero, setHero] = useState(false);
-  const { isSignedIn } = useUser();
   if (inErrState) {
     return (
       <>
@@ -211,11 +222,11 @@ export default function ServerList() {
   }
 
   return (
-    <div style={!pOS ? { padding } : undefined}>
+    <div style={!pOS ? { padding: `${padding}px` } : undefined}>
       <div className="p-0 branding-hero">
         <>
           {(!isSignedIn || hero) && (
-            <div className=" py-2 h-[300vh] relative mx-auto mt-20 max-w-7xl px-6 text-center md:px-8 ">
+            <div className=" py-2 max-lg:h-[370vh] lg:h-[300vh] relative mx-auto mt-20 max-w-7xl px-6 text-center md:px-8 ">
               <Particles
                 className="absolute inset-0 -z-10 block"
                 quantity={100}
@@ -474,7 +485,7 @@ export default function ServerList() {
         <br id="serverlist" className="pb-14" />
         <Separator />
         <ClientFadeIn delay={100}>
-          <Menubar className="mt-3 ml-2 border rounded p-2">
+          <Menubar className="mt-3 ml-2 border rounded p-2 shadow">
             <MenubarMenu>
               <MenubarTrigger>Servers</MenubarTrigger>
               <MenubarContent>
@@ -856,7 +867,7 @@ export default function ServerList() {
                   <MenubarSubContent>
                     <MenubarRadioGroup
                       value={padding.toString()}
-                      onValueChange={(v) => setPadding(Number(v))}
+                      onValueChange={(v) => setPadding(v)}
                     >
                       <MenubarRadioItem value="0">Default</MenubarRadioItem>
                       <MenubarSeparator />
@@ -891,12 +902,20 @@ export default function ServerList() {
                     </MenubarRadioGroup>
                   </MenubarSubContent>
                 </MenubarSub>
+                <MenubarSeparator />
                 <SignedIn>
-                  <MenubarSeparator />
                   <MenubarCheckboxItem checked={hero} onCheckedChange={setHero}>
                     Show Hero
                   </MenubarCheckboxItem>
                 </SignedIn>
+                <MenubarItem onClick={() => router.push("/docs")}>
+                  View the docs
+                </MenubarItem>
+                {am && (
+                  <MenubarItem onClick={() => router.push("/account/settings")}>
+                    Currently using settings in your preferences
+                  </MenubarItem>
+                )}
               </MenubarContent>
             </MenubarMenu>
           </Menubar>
@@ -1013,8 +1032,8 @@ export default function ServerList() {
           }
           style={{
             overflow: "hidden !important",
-            paddingLeft: pOS ? padding : 6,
-            paddingRight: pOS ? padding : 6,
+            paddingLeft: pOS ? `${padding}px` : 6,
+            paddingRight: pOS ? `${padding}px` : 6,
           }}
         >
           <ClientFadeIn delay={200}>

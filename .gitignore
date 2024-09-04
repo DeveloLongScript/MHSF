@@ -7,6 +7,9 @@
 .yarn/install-state.gz
 .turbo
 
+# contentlayer
+.contentlayer
+
 # cron
 /cron/dist
 /cron/node_modules
@@ -41,3 +44,5 @@ yarn-error.log*
 next-env.d.ts
 
 css-obfuscator
+
+*.sync-conflict*

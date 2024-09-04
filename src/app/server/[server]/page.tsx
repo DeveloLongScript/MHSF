@@ -4,6 +4,9 @@ import TabServer from "@/components/misc/TabServer";
 import ColorProvider from "@/components/ColorProvider";
 import AfterServerView from "@/components/AfterServerView";
 import Banner from "@/components/Banner";
+import { Button } from "@/components/ui/button";
+import { CornerDownLeft } from "lucide-react";
+import Link from "next/link";
 
 type Props = {
   params: { server: string };
@@ -69,6 +72,12 @@ export default function ServerPage({ params }: { params: { server: string } }) {
       <ColorProvider server={params.server}>
         <div className={"pt-16"}>
           <Banner server={params.server} />
+          <Link href="/">
+            <Button variant="link" className="text-muted-foreground text-sm">
+              <CornerDownLeft size={16} className="mr-2" /> Go back to the
+              server list
+            </Button>
+          </Link>
           <TabServer server={params.server} tabDef="general" />
           <div className="pt-8">
             <ServerView server={params.server} />
