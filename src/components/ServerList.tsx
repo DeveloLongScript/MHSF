@@ -131,7 +131,7 @@ export default function ServerList() {
   const { user, isSignedIn } = useUser();
   const [pOS, setpOS] = useState(false);
   const [ipr, setIPR] = useState<string>("4");
-  const [am, setAM] = useState<boolean>(false);
+  const [am, setAM] = useState(false);
   const [filters, setFilters] = useState<
     Array<(server: OnlineServer) => Promise<boolean>>
   >([]);
@@ -147,11 +147,12 @@ export default function ServerList() {
 
   useEffect(() => {
     if (isSignedIn) {
+      setAM(true);
       console.log(user.publicMetadata);
+
       setIPR((user.publicMetadata.ipr as string | undefined) || "4");
       setPadding((user.publicMetadata.pad as string | undefined) || "0");
       setpOS((user.publicMetadata.srv as boolean | undefined) || false);
-      setAM(pOS != false || padding != "0" || ipr != "4");
     }
   }, [isSignedIn, user]);
 
@@ -200,7 +201,7 @@ export default function ServerList() {
 
   if (loading) {
     return (
-      <>
+      <div className="p-4">
         <SignedIn>
           <div className="md:grid md:grid-cols-3 gap-4 max-lg:grid-cols-2">
             <Skeleton className="h-[112px] rounded-xl" />
@@ -217,7 +218,7 @@ export default function ServerList() {
             <Skeleton className="h-[450px] rounded-xl" />
           </div>
         </SignedIn>
-      </>
+      </div>
     );
   }
 
@@ -397,10 +398,10 @@ export default function ServerList() {
                   <BentoCard key={idx} {...feature} />
                 ))}
               </BentoGrid>
+
+              <Separator />
             </div>
           )}
-
-          <Separator />
           <br />
         </>
       </div>
@@ -867,7 +868,26 @@ export default function ServerList() {
                   <MenubarSubContent>
                     <MenubarRadioGroup
                       value={padding.toString()}
-                      onValueChange={(v) => setPadding(v)}
+                      onValueChange={(v) => {
+                        if (am)
+                          toast(
+                            <span>
+                              These settings will not change over reloads
+                              because you have account specific options enabled
+                              <Button
+                                variant="link"
+                                className="p-0 m-0"
+                                onClick={() =>
+                                  router.push("/account/settings/options")
+                                }
+                              >
+                                Change your preferences
+                              </Button>
+                            </span>,
+                            { icon: "⚠️" }
+                          );
+                        setPadding(v);
+                      }}
                     >
                       <MenubarRadioItem value="0">Default</MenubarRadioItem>
                       <MenubarSeparator />
@@ -889,9 +909,9 @@ export default function ServerList() {
                   <MenubarSubContent>
                     <MenubarRadioGroup
                       value="joins"
-                      onValueChange={(c) =>
-                        c == "favorites" && router.push("/sort/favorites")
-                      }
+                      onValueChange={(c) => {
+                        if (c === "favorites") router.push("/sort/favorites");
+                      }}
                     >
                       <MenubarRadioItem value="joins">
                         Players Online
@@ -912,8 +932,16 @@ export default function ServerList() {
                   View the docs
                 </MenubarItem>
                 {am && (
-                  <MenubarItem onClick={() => router.push("/account/settings")}>
-                    Currently using settings in your preferences
+                  <MenubarItem
+                    onClick={() => router.push("/account/settings")}
+                    className="block"
+                  >
+                    Using saved settings in Preferences
+                    <br />
+                    <span className="text-muted-foreground text-xs">
+                      Your using settings stored on your account, that are not
+                      temporary.
+                    </span>
                   </MenubarItem>
                 )}
               </MenubarContent>

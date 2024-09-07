@@ -21,6 +21,17 @@ import ThemedToaster from "@/components/misc/ThemedToaster";
 import UnofficalDialog from "@/components/misc/UnofficalDialog";
 import ClientFadeIn from "@/components/ClientFadeIn";
 import { BrandingGenericIcon } from "@/components/Icon";
+import type { Metadata } from "next";
+
+export const metadata = {
+  openGraph: {
+    images: [
+      {
+        url: "/branding/meta-banner.png",
+      },
+    ],
+  },
+} satisfies Metadata;
 
 const inter = interFont({ variable: "--font-inter", subsets: ["latin"] });
 export default async function RootLayout({
