@@ -49,7 +49,7 @@ export default async function RootLayout({
       >
         <TooltipProvider>
           {banner.isBanner && (
-            <div className="bg-orange-600 w-screen h-8 border-b fixed text-black flex items-center text-center font-medium pl-2">
+            <div className="bg-orange-600 z-10 w-screen h-8 border-b fixed text-black flex items-center text-center font-medium pl-2">
               {banner.bannerText}
             </div>
           )}
@@ -73,7 +73,7 @@ export default async function RootLayout({
             </div>
             <TopBar inter={inter.className} />
           </div>
-          <div>
+          <div className={banner.isBanner ? "pt-8" : undefined}>
             <NextTopLoader />
             <ClientFadeIn>{children}</ClientFadeIn>
           </div>{" "}

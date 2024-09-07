@@ -45,18 +45,20 @@ export async function generateMetadata(
     icons:
       json.server == null
         ? undefined
-        : "https://mcapi.marveldc.me/item/" +
+        : "https://minehut-server-icons-live.s3.us-west-2.amazonaws.com/" +
           (json.server.icon == undefined ? "OAK_SIGN" : json.server.icon) +
-          "?width=64&height=64",
+          ".png",
+    twitter: {},
     openGraph: {
       type: "profile",
       siteName: "MHSF (Minehut Server Finder)",
+
       images: [
         {
           url:
-            "https://mcapi.marveldc.me/item/" +
+            "https://minehut-server-icons-live.s3.us-west-2.amazonaws.com/" +
             json.server.icon +
-            "?width=64&height=64",
+            ".png",
         },
         {
           url: "/favicon.ico",
