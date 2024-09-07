@@ -227,7 +227,7 @@ export default function ServerList() {
       <div className="p-0 branding-hero">
         <>
           {(!isSignedIn || hero) && (
-            <div className=" py-2 max-lg:h-[370vh] lg:h-[300vh] relative mx-auto mt-20 max-w-7xl px-6 text-center md:px-8 ">
+            <div className=" py-[300px] relative mx-auto mt-20 max-w-7xl px-6 text-center md:px-8 ">
               <Particles
                 className="absolute inset-0 -z-10 block"
                 quantity={100}

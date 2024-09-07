@@ -4,11 +4,13 @@
   "description": "In version 1.0, MHSF moved from using Inngest to collect statistics to a self-hosted `crontab` Node.js script.",
   "main": "dist/index.js",
   "scripts": {
-    "start": "tsc --build && node ./dist/index.js"
+    "dev": "npx tsx src/index.ts",
+    "build": "npx tsc -p ./tsconfig.json"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "arguments-parser": "^3.2.1",
     "chalk": "^5.3.0",
     "dotenv": "^16.4.5",
     "mongodb": "^6.8.0"

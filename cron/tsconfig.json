@@ -4,8 +4,8 @@
     "noEmitOnError": true,
     "removeComments": false,
     "sourceMap": true,
-    "target": "ES6",
-    "module": "NodeNext",
+    "moduleResolution": "Node",
+    "target": "es6",
     "outDir": "dist"
   },
   "include": ["src/**/*"]

@@ -1,0 +1,12 @@
+# This is configuration a Home Assistant addon.
+name: "DB refresh"
+description: "MHSF Cron DB Refresh"
+version: "1.0.0"
+slug: "mhsf_db_ref"
+init: true
+arch:
+  - aarch64
+  - amd64
+  - armhf
+  - armv7
+  - i386

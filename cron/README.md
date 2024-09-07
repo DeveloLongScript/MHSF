@@ -8,20 +8,20 @@ When running Inngest, on Vercel's servers, when doing the `/servers` Minehut API
 
 ## How do you run this?
 
+Make sure you have a MongoDB database set-up and ready with a file **in the previous directory (..)** named `.env.local` with the key `MONGO_DB` as the database URL. You can also just set an environment variable.
+Simply run the following to test:
 
-
-If you're on a Unix based machine, just type the following:
-
-```bash
-# Make sure you already cloned the repo and are in the /cron directory.
-# This project uses NPM instead of Yarn for the website
+```
 npm install
-
-crontab -e
+npm run dev
 ```
 
-and in `vi` go into insert mode (type `i`) and type the following:
+and to deploy using Docker:
 
 ```
-*/30 * * * * cd "<INSERT_REPO_DIR_HERE>/cron/" && npm start
+npm run build
+docker build -t mhsf-dbref .
+
+# run the container
+docker run --name mhsf-dbref <name for container>
 ```
