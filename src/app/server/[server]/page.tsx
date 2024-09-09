@@ -48,7 +48,36 @@ export async function generateMetadata(
         : "https://minehut-server-icons-live.s3.us-west-2.amazonaws.com/" +
           (json.server.icon == undefined ? "OAK_SIGN" : json.server.icon) +
           ".png",
-    twitter: {},
+    twitter: {
+      title:
+        json.server == null
+          ? "Server doesn't exist | MHSF"
+          : json.server.name +
+            ", " +
+            (json.server.online
+              ? json.server.playerCount +
+                (json.server.maxPlayers != 10
+                  ? "/" + json.server.maxPlayers
+                  : "") +
+                " online"
+              : "Offline") +
+            " | MHSF",
+      description:
+        json.server == null
+          ? `The server ${server} doesn't exist.`
+          : `View ${server} on Minehut Server Finder!`,
+      images: [
+        {
+          url:
+            "https://minehut-server-icons-live.s3.us-west-2.amazonaws.com/" +
+            json.server.icon +
+            ".png",
+        },
+        {
+          url: "/public/imgs/icon-cf.png",
+        },
+      ],
+    },
     openGraph: {
       type: "profile",
       siteName: "MHSF (Minehut Server Finder)",
@@ -61,7 +90,7 @@ export async function generateMetadata(
             ".png",
         },
         {
-          url: "/favicon.ico",
+          url: "/public/imgs/icon-cf.png",
         },
       ],
     },

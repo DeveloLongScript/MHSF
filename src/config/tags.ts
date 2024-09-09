@@ -15,62 +15,62 @@ const serverCache: any = {};
 // __filter: if your name isn't static, set this to true
 //
 // You may also use `requestServer()` to grab the offline version of the server from the API, which may get you more information about the server (ServerResponse)
-export var allTags: Array<{
-  name: (server: OnlineServer) => Promise<string>;
-  condition: (server: OnlineServer) => Promise<boolean>;
-  listCondition?: (server: ServerResponse) => Promise<boolean>;
-  tooltipDesc: string;
-  htmlDocs: string;
-  docsName: string;
-  primary: boolean;
-  role?:
-    | "default"
-    | "destructive"
-    | "outline"
-    | "secondary"
-    | "red"
-    | "orange"
-    | "yellow"
-    | "green"
-    | "lime"
-    | "blue"
-    | "teal"
-    | "cyan"
-    | "violet"
-    | "indigo"
-    | "purple"
-    | "fuchsia"
-    | "pink";
-  __disab?: boolean;
-  __filter?: boolean;
+export const allTags: Array<{
+	name: (server: OnlineServer) => Promise<string>;
+	condition: (server: OnlineServer) => Promise<boolean>;
+	listCondition?: (server: ServerResponse) => Promise<boolean>;
+	tooltipDesc: string;
+	htmlDocs: string;
+	docsName: string;
+	primary: boolean;
+	role?:
+		| "default"
+		| "destructive"
+		| "outline"
+		| "secondary"
+		| "red"
+		| "orange"
+		| "yellow"
+		| "green"
+		| "lime"
+		| "blue"
+		| "teal"
+		| "cyan"
+		| "violet"
+		| "indigo"
+		| "purple"
+		| "fuchsia"
+		| "pink";
+	__disab?: boolean;
+	__filter?: boolean;
 }> = [
-  {
-    name: async () => "Always Online",
-    condition: async (b: any) => b.staticInfo.alwaysOnline,
-    tooltipDesc:
-      '"Always online" means that the server will not shut down until the plan associated with it expires.',
-    htmlDocs: `
+	{
+		name: async () => "Always Online",
+		condition: async (b: any) => b.staticInfo.alwaysOnline,
+		tooltipDesc:
+			'"Always online" means that the server will not shut down until the plan associated with it expires.',
+		htmlDocs: `
     This tag appears on servers where the plan they are under allows the server to be always online. However, if the plan associated with the tag expires, the server will no longer be Always Online. <em>This is in servers with one of the more expensive plans, or just a server that is external.</em>
     `,
-    primary: true,
-    docsName: "Always Online",
-    role: "secondary",
-    __disab: true,
-  },
-  {
-    name: async (s) => s.staticInfo.planMaxPlayers + " max players",
-    condition: async (s) => s.staticInfo.planMaxPlayers != null,
-    tooltipDesc:
-      "This tag represents the maximum amount of players the server can have at one time.",
-    docsName: "Max Players",
-    htmlDocs:
-      "This tag represents the maximum amount of players the server can have at one time. This doesn't mean the amount of players before the server crashes, it means the amount Minehut said the server can handle or the plan the server is on. <em>However, sometimes it might not appear because the server is external.</em>",
-    primary: true,
-    role: "secondary",
-    __filter: true,
-  },
-  // deprecated
-  /**{
+		primary: true,
+		docsName: "Always Online",
+		role: "secondary",
+		__disab: true,
+	},
+	{
+		name: async (s) => s.staticInfo.planMaxPlayers + " max players",
+		condition: async (s) => s.staticInfo.planMaxPlayers != null,
+		tooltipDesc:
+			"This tag represents the maximum amount of players the server can have at one time.",
+		docsName: "Max Players",
+		htmlDocs:
+			"This tag represents the maximum amount of players the server can have at one time. This doesn't mean the amount of players before the server crashes, it means the amount Minehut said the server can handle or the plan the server is on. <em>However, sometimes it might not appear because the server is external.</em>",
+		primary: true,
+		role: "secondary",
+		__filter: true,
+	},
+	// deprecated
+	/**{
     name: async () => "Velocity",
     condition: async (s) => {
       var type = await requestServer(s);
@@ -86,176 +86,176 @@ export var allTags: Array<{
   }, */
 ];
 
-export var allCategories: Array<{
-  name: string;
-  condition: (server: OnlineServer) => Promise<boolean>;
-  primary: boolean;
-  role?:
-    | "default"
-    | "destructive"
-    | "outline"
-    | "secondary"
-    | "red"
-    | "orange"
-    | "yellow"
-    | "green"
-    | "lime"
-    | "blue"
-    | "teal"
-    | "cyan"
-    | "violet"
-    | "indigo"
-    | "purple"
-    | "fuchsia"
-    | "pink";
+export const allCategories: Array<{
+	name: string;
+	condition: (server: OnlineServer) => Promise<boolean>;
+	primary: boolean;
+	role?:
+		| "default"
+		| "destructive"
+		| "outline"
+		| "secondary"
+		| "red"
+		| "orange"
+		| "yellow"
+		| "green"
+		| "lime"
+		| "blue"
+		| "teal"
+		| "cyan"
+		| "violet"
+		| "indigo"
+		| "purple"
+		| "fuchsia"
+		| "pink";
 }> = [
-  {
-    name: "Farming",
-    condition: async (b: any) => {
-      return b.allCategories.includes("farming");
-    },
-    primary: true,
-    role: "secondary",
-  },
-  {
-    name: "SMP",
-    condition: async (b: any) => {
-      return b.allCategories.includes("smp");
-    },
-    primary: true,
-    role: "secondary",
-  },
-  {
-    name: "Factions",
-    condition: async (b: any) => {
-      return b.allCategories.includes("factions");
-    },
-    primary: true,
-    role: "secondary",
-  },
-  {
-    name: "Meme",
-    condition: async (b: any) => {
-      return b.allCategories.includes("meme");
-    },
-    primary: true,
-    role: "secondary",
-  },
-  {
-    name: "Puzzle",
-    condition: async (b: any) => {
-      return b.allCategories.includes("puzzle");
-    },
-    primary: true,
-    role: "secondary",
-  },
-  {
-    name: "Box",
-    condition: async (b: any) => {
-      return b.allCategories.includes("box");
-    },
-    primary: true,
-    role: "secondary",
-  },
-  {
-    name: "Minigames",
-    condition: async (b: any) => {
-      return b.allCategories.includes("minigames");
-    },
-    primary: true,
-    role: "secondary",
-  },
-  {
-    name: "RPG",
-    condition: async (b: any) => {
-      return b.allCategories.includes("rpg");
-    },
-    primary: true,
-    role: "secondary",
-  },
-  {
-    name: "Parkour",
-    condition: async (b: any) => {
-      return b.allCategories.includes("parkour");
-    },
-    primary: true,
-    role: "secondary",
-  },
-  {
-    name: "Lifesteal",
-    condition: async (b: any) => {
-      return b.allCategories.includes("lifesteal");
-    },
-    primary: true,
-    role: "secondary",
-  },
-  {
-    name: "Prison",
-    condition: async (b: any) => {
-      return b.allCategories.includes("prison");
-    },
-    primary: true,
-    role: "secondary",
-  },
-  {
-    name: "Gens",
-    condition: async (b: any) => {
-      return b.allCategories.includes("gens");
-    },
-    primary: true,
-    role: "secondary",
-  },
-  {
-    name: "Skyblock",
-    condition: async (b: any) => {
-      return b.allCategories.includes("skyblock");
-    },
-    primary: true,
-    role: "secondary",
-  },
-  {
-    name: "Roleplay",
-    condition: async (b: any) => {
-      return b.allCategories.includes("roleplay");
-    },
-    primary: true,
-    role: "secondary",
-  },
-  {
-    name: "PvP",
-    condition: async (b: any) => {
-      return b.allCategories.includes("pvp");
-    },
-    primary: true,
-    role: "secondary",
-  },
-  {
-    name: "Modded",
-    condition: async (b: any) => {
-      return b.allCategories.includes("modded");
-    },
-    primary: true,
-    role: "secondary",
-  },
-  {
-    name: "Creative",
-    condition: async (b: any) => {
-      return b.allCategories.includes("creative");
-    },
-    primary: true,
-    role: "secondary",
-  },
+	{
+		name: "Farming",
+		condition: async (b: any) => {
+			return b.allCategories.includes("farming");
+		},
+		primary: true,
+		role: "secondary",
+	},
+	{
+		name: "SMP",
+		condition: async (b: any) => {
+			return b.allCategories.includes("smp");
+		},
+		primary: true,
+		role: "secondary",
+	},
+	{
+		name: "Factions",
+		condition: async (b: any) => {
+			return b.allCategories.includes("factions");
+		},
+		primary: true,
+		role: "secondary",
+	},
+	{
+		name: "Meme",
+		condition: async (b: any) => {
+			return b.allCategories.includes("meme");
+		},
+		primary: true,
+		role: "secondary",
+	},
+	{
+		name: "Puzzle",
+		condition: async (b: any) => {
+			return b.allCategories.includes("puzzle");
+		},
+		primary: true,
+		role: "secondary",
+	},
+	{
+		name: "Box",
+		condition: async (b: any) => {
+			return b.allCategories.includes("box");
+		},
+		primary: true,
+		role: "secondary",
+	},
+	{
+		name: "Minigames",
+		condition: async (b: any) => {
+			return b.allCategories.includes("minigames");
+		},
+		primary: true,
+		role: "secondary",
+	},
+	{
+		name: "RPG",
+		condition: async (b: any) => {
+			return b.allCategories.includes("rpg");
+		},
+		primary: true,
+		role: "secondary",
+	},
+	{
+		name: "Parkour",
+		condition: async (b: any) => {
+			return b.allCategories.includes("parkour");
+		},
+		primary: true,
+		role: "secondary",
+	},
+	{
+		name: "Lifesteal",
+		condition: async (b: any) => {
+			return b.allCategories.includes("lifesteal");
+		},
+		primary: true,
+		role: "secondary",
+	},
+	{
+		name: "Prison",
+		condition: async (b: any) => {
+			return b.allCategories.includes("prison");
+		},
+		primary: true,
+		role: "secondary",
+	},
+	{
+		name: "Gens",
+		condition: async (b: any) => {
+			return b.allCategories.includes("gens");
+		},
+		primary: true,
+		role: "secondary",
+	},
+	{
+		name: "Skyblock",
+		condition: async (b: any) => {
+			return b.allCategories.includes("skyblock");
+		},
+		primary: true,
+		role: "secondary",
+	},
+	{
+		name: "Roleplay",
+		condition: async (b: any) => {
+			return b.allCategories.includes("roleplay");
+		},
+		primary: true,
+		role: "secondary",
+	},
+	{
+		name: "PvP",
+		condition: async (b: any) => {
+			return b.allCategories.includes("pvp");
+		},
+		primary: true,
+		role: "secondary",
+	},
+	{
+		name: "Modded",
+		condition: async (b: any) => {
+			return b.allCategories.includes("modded");
+		},
+		primary: true,
+		role: "secondary",
+	},
+	{
+		name: "Creative",
+		condition: async (b: any) => {
+			return b.allCategories.includes("creative");
+		},
+		primary: true,
+		role: "secondary",
+	},
 ];
 
 async function requestServer(s: OnlineServer): Promise<ServerResponse> {
-  if (serverCache[s.name] == undefined) {
-    const re = await fetch(
-      "https://api.minehut.com/server/" + s.name + "?byName=true"
-    );
-    const json = await re.json();
-    serverCache[s.name] = json.server;
-    return json.server;
-  } else {
-    return serverCache[s.name];
-  }
+	if (serverCache[s.name] == undefined) {
+		const re = await fetch(
+			"https://api.minehut.com/server/" + s.name + "?byName=true",
+		);
+		const json = await re.json();
+		serverCache[s.name] = json.server;
+		return json.server;
+	} else {
+		return serverCache[s.name];
+	}
 }

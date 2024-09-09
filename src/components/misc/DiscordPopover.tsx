@@ -43,8 +43,8 @@ export function DiscordPopover({ server, get }: { server: string; get: any }) {
   }
 
   useEffect(() => {
-    setValue(get.discord == null ? "" : get.discord);
-    form.reset({ id: get.discord == null ? "" : get.discord });
+    setValue(get.discord === undefined ? "" : get.discord);
+    form.reset({ id: get.discord === undefined ? "" : get.discord });
   }, [get]);
 
   return (

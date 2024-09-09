@@ -70,6 +70,7 @@ import { cn } from "@/lib/utils";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { SignInPopover } from "./clerk/SignInPopoverButton";
 import { BentoCard, BentoGrid } from "./effects/bento-grid";
+import { pageFind } from "./misc/Link";
 
 const features = [
   {
@@ -227,7 +228,7 @@ export default function ServerList() {
       <div className="p-0 branding-hero">
         <>
           {(!isSignedIn || hero) && (
-            <div className=" py-[300px] relative mx-auto mt-20 max-w-7xl px-6 text-center md:px-8 ">
+            <div className=" pb-[300px] relative mx-auto mt-20 max-w-7xl px-6 text-center md:px-8 ">
               <Particles
                 className="absolute inset-0 -z-10 block"
                 quantity={100}
@@ -320,7 +321,9 @@ export default function ServerList() {
                           "border-gray-950/[.1] bg-gray-950/[.01] hover:bg-gray-950/[.05] " +
                           "dark:border-gray-50/[.1] dark:bg-gray-50/[.10] dark:hover:bg-gray-50/[.15]"
                       )}
-                      onClick={() => router.push(`/server/${server.name}`)}
+                      onClick={() =>
+                        router.push(pageFind(`Server:${server.name}`))
+                      }
                     >
                       <div className="items-center gap-2 p-4">
                         <div>

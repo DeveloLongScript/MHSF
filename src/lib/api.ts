@@ -5,12 +5,30 @@
  */
 //
 
+import { Achievement } from "./types/achievement";
+
 const connector = (
 	endpoint: string,
 	options: { version: number; starting?: string },
 ) =>
 	`${options.starting == undefined ? "/" : `${options.starting}/`}api/v${options.version}${endpoint}`;
 
+async function apiConstructor<K>(
+	connector: string,
+	requestInit: RequestInit,
+	modifier: (data: any) => K,
+): Promise<K> {
+	try {
+		const response = await fetch(connector, requestInit);
+
+		if (response.status >= 400) {
+			throw Error("Error while running API");
+		}
+		return modifier(await response.json());
+	} catch {
+		throw Error("Error while running API");
+	}
+}
 export async function getMOTDFromServer(
 	list: Array<{ server: string; motd: string }>,
 ): Promise<Array<{ server: string; motd: string }>> {
@@ -428,3 +446,10 @@ export async function setAccountSL(
 		throw Error("Error while running API");
 	}
 }
+
+export const getAchievements = async (server: string) =>
+	apiConstructor<{ _id: string; name: string; achievements: Achievement[] }[]>(
+		connector(`/achievements/${server}`, { version: 0 }),
+		{},
+		(data) => data.result,
+	);

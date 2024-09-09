@@ -24,10 +24,17 @@ import { BrandingGenericIcon } from "@/components/Icon";
 import type { Metadata } from "next";
 
 export const metadata = {
+  twitter: {
+    images: [
+      {
+        url: "/public/imgs/icon-cf.png",
+      },
+    ],
+  },
   openGraph: {
     images: [
       {
-        url: "/branding/meta-banner.png",
+        url: "/public/imgs/icon-cf.png",
       },
     ],
   },

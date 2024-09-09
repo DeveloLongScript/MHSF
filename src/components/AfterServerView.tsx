@@ -17,6 +17,7 @@ import { Copy, Info } from "lucide-react";
 import toast, { CheckmarkIcon } from "react-hot-toast";
 import { MHSF } from "@/lib/mhsf";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
+import AchievementList from "./feat/AchievementList";
 
 export default function AfterServerView({ server }: { server: string }) {
   const [description, setDescription] = useState("");
@@ -24,7 +25,9 @@ export default function AfterServerView({ server }: { server: string }) {
   const [mhsf, setMHSF] = useState(new MHSF());
   const { resolvedTheme } = useTheme();
   const [loading, setLoading] = useState(true);
-  const [view, setView] = useState("desc");
+  const [view, setView] = useState(
+    description !== "" || discord !== "" ? "desc" : "extra"
+  );
   const [serverObject, setServerObject] = useState<ServerResponse | undefined>(
     undefined
   );
@@ -51,20 +54,16 @@ export default function AfterServerView({ server }: { server: string }) {
   return (
     <>
       <FadeIn>
-        <div
-          className={
-            description != "" || discord != ""
-              ? "grid sm:grid-cols-6 h-full pl-4 pr-4"
-              : ""
-          }
-        >
+        <div className="grid sm:grid-cols-6 h-full pl-4 pr-4">
           <div className="ml-5 mb-2 flex items-center sm:hidden">
-            <Button
-              variant={view == "desc" ? undefined : "ghost"}
-              onClick={() => setView("desc")}
-            >
-              Description
-            </Button>
+            {(description != "" || discord != "") && (
+              <Button
+                variant={view == "desc" ? undefined : "ghost"}
+                onClick={() => setView("desc")}
+              >
+                Description
+              </Button>
+            )}
             <Button
               variant={view == "extra" ? undefined : "ghost"}
               onClick={() => setView("extra")}
@@ -72,25 +71,38 @@ export default function AfterServerView({ server }: { server: string }) {
             >
               Server Information
             </Button>
+            <Button
+              variant={view == "achievements" ? undefined : "ghost"}
+              onClick={() => setView("achievements")}
+              className="ml-2"
+            >
+              Achievements
+            </Button>
           </div>
-          {(description != "" || discord != "") && (
-            <div className="max-sm:hidden">
-              <div className="grid">
+          <div className="max-sm:hidden">
+            <div className="grid">
+              {(description != "" || discord != "") && (
                 <Button
                   variant={view == "desc" ? undefined : "ghost"}
                   onClick={() => setView("desc")}
                 >
                   Description
                 </Button>
-                <Button
-                  variant={view == "extra" ? undefined : "ghost"}
-                  onClick={() => setView("extra")}
-                >
-                  Server Information
-                </Button>
-              </div>
+              )}
+              <Button
+                variant={view == "extra" ? undefined : "ghost"}
+                onClick={() => setView("extra")}
+              >
+                Server Information
+              </Button>
+              <Button
+                variant={view == "achievements" ? undefined : "ghost"}
+                onClick={() => setView("achievements")}
+              >
+                Achievements
+              </Button>
             </div>
-          )}
+          </div>
 
           <div className="grid lg:grid-cols-4 pl-4 pr-4 gap-3.5 col-span-5">
             {description != "" && view == "desc" && (
@@ -118,7 +130,12 @@ export default function AfterServerView({ server }: { server: string }) {
                 </CardHeader>
               </Card>
             )}{" "}
-            {((description == "" && discord == "") || view == "extra") && (
+            {view == "achievements" && (
+              <div className="col-span-4">
+                <AchievementList server={server} />
+              </div>
+            )}
+            {view == "extra" && (
               <div className="sm:grid sm:grid-cols-3 col-span-4 gap-4">
                 <Card>
                   <CardHeader>
