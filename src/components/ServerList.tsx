@@ -853,7 +853,29 @@ export default function ServerList() {
                 <MenubarSub>
                   <MenubarSubTrigger>Grid</MenubarSubTrigger>
                   <MenubarSubContent>
-                    <MenubarRadioGroup value={ipr} onValueChange={setIPR}>
+                    <MenubarRadioGroup
+                      value={ipr}
+                      onValueChange={(v) => {
+                        if (am)
+                          toast(
+                            <span>
+                              These settings will not change over reloads
+                              because you have account specific options enabled
+                              <Button
+                                variant="link"
+                                className="p-0 m-0"
+                                onClick={() =>
+                                  router.push("/account/settings/options")
+                                }
+                              >
+                                Change your preferences
+                              </Button>
+                            </span>,
+                            { icon: "⚠️" }
+                          );
+                        setIPR(v);
+                      }}
+                    >
                       <MenubarRadioItem value="4">
                         4 items per row
                       </MenubarRadioItem>

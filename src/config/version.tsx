@@ -5,7 +5,7 @@ import { Separator } from "../components/ui/separator";
 import { Button } from "../components/ui/button";
 import confetti from "canvas-confetti";
 
-export const version = "1.2.5";
+export const version = "1.3";
 
 const User = ({ user }: { user: string }) => (
   <span className="cursor-pointer bg-[rgba(255,165,0,0.25);] rounded p-[2.5px]">
@@ -130,15 +130,20 @@ export const Changelog = () => {
       <br />
       <div>
         <strong className="flex items-center">
-          Version 1.2.0 (September 4th 2024)
+          Version 1.3.0 (September 9th 2024)
         </strong>
         <ul>
           <li>
-            • Removed sorting system in-favor of leaderboards coming soon :eyes:
+            • <A alt="New documentation linking">Docs:Reading</A>
           </li>
+          <li>
+            • Achievements are here! See more at{" "}
+            <A alt="here">Docs:Advanced/Achievements</A>
+          </li>
+          <li>• Finally fixed Cron actions for the final time™</li>
+          <li>• Overhauled account preferences</li>
         </ul>
       </div>
-      <br />
       <br />
       <div>
         <strong className="flex items-center">
@@ -365,6 +370,7 @@ import type { SVGProps } from "react";
 import Marquee from "@/components/effects/marquee";
 import { useRouter } from "@/lib/useRouter";
 import { BookIcon } from "lucide-react";
+import A from "@/components/misc/Link";
 const Discord = (props: SVGProps<SVGSVGElement>) => (
   <svg
     viewBox="0 0 256 199"

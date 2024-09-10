@@ -31,7 +31,11 @@ export function SLCustomize() {
     setUsePaddingOnSides(
       (user?.publicMetadata.srv as boolean | undefined) || false
     );
-  });
+  }, [
+    user?.publicMetadata.srv,
+    user?.publicMetadata.pad,
+    user?.publicMetadata.ipr,
+  ]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -105,7 +109,20 @@ export function SLCustomize() {
                   </Label>
                 </div>
                 <p className="text-sm text-muted-foreground ml-6">
-                  Better for larger screens.
+                  Better for larger screens, can look more stylish.
+                </p>
+                <div className="flex items-center space-x-2 mt-2">
+                  <RadioGroupItem value="120" id="padding-comfortable" />
+                  <Label htmlFor="padding-comfortable">
+                    Very Spacious{" "}
+                    {advanced && (
+                      <span className="text-muted-foreground">(120px)</span>
+                    )}
+                  </Label>
+                </div>
+                <p className="text-sm text-muted-foreground ml-6">
+                  When information needs to be crunched in-between, recommended
+                  for larger screens only.
                 </p>
               </RadioGroup>
             </div>

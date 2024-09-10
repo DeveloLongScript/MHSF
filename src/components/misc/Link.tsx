@@ -10,9 +10,21 @@ export default function A({
   alt: string | ReactNode;
 }) {
   return (
-    <NextLink href={pageFind(children)}>
-      {children.startsWith("Docs:") && <Book />}
+    <NextLink
+      href={pageFind(children || "")}
+      className="no-underline transition duration-300 hover:underline "
+      title={children}
+    >
+      {(children || "").startsWith("Docs:") && (
+        <Book size={16} className="mr-[2px] inline-flex" />
+      )}
+      {(children || "").startsWith("Wiki:") && (
+        <NotebookText size={14} className="mr-[2px] mb-[3px] inline-flex" />
+      )}
       {alt}
+      {(children || "").startsWith("https") && (
+        <ExternalLink size={12} className="ml-[2px] mb-[3px] inline-flex" />
+      )}
     </NextLink>
   );
 }
@@ -28,6 +40,7 @@ export function ALegacy({
     <NextLink
       href={pageFind(href || "")}
       className="no-underline transition duration-300 hover:underline "
+      title={href}
     >
       {(href || "").startsWith("Docs:") && (
         <Book size={16} className="mr-[2px] inline-flex" />
@@ -45,7 +58,7 @@ export function ALegacy({
 
 export const pageFind = (text: string) => {
   if (text.startsWith("Docs:")) {
-    return "/docs/" + text.substring(5);
+    return "/docs/" + text.substring(5).toLowerCase();
   }
   if (text === "Special:Root") return "/";
   if (text === "Special:Preferences") return "/account/settings";

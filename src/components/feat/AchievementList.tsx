@@ -38,7 +38,7 @@ export default function AchievementList({ server }: { server: string }) {
     <div>
       <span>
         Achievements are earned automatically when the server is online. See{" "}
-        <A alt="Achievement collection">Special:Root</A>
+        <A alt="Achievement collection">Docs:Advanced/Achievements</A>
       </span>
       {achievements
         .filter(
