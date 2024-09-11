@@ -21,7 +21,7 @@ import ThemedToaster from "@/components/misc/ThemedToaster";
 import UnofficalDialog from "@/components/misc/UnofficalDialog";
 import ClientFadeIn from "@/components/ClientFadeIn";
 import { BrandingGenericIcon } from "@/components/Icon";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 
 export const extraMetadata = {
   twitter: {
@@ -40,6 +40,10 @@ export const extraMetadata = {
     ],
   },
 } satisfies Metadata;
+export const viewport: Viewport = {
+  themeColor: "black",
+  colorScheme: "dark",
+};
 
 const inter = interFont({ variable: "--font-inter", subsets: ["latin"] });
 export default async function RootLayout({
