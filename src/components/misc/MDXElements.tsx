@@ -1,5 +1,7 @@
 import { Book, ExternalLink, NotebookText } from "lucide-react";
 import type { SVGProps } from "react";
+import { Card, CardContent } from "../ui/card";
+import { formalNames } from "@/config/achievements";
 
 type MDXElementType = {
   [key: string]: (props: any) => JSX.Element;
@@ -21,9 +23,40 @@ const Discord = (props: SVGProps<SVGSVGElement>) => (
     />
   </svg>
 );
+function AchievementPreview({ title }: { title: string }) {
+  const Icon = formalNames[title].icon;
+  return (
+    <div>
+      <Card>
+        <CardContent className="pt-4">
+          <span
+            className="flex items-center"
+            style={{ color: formalNames[title].color }}
+          >
+            <Icon size={16} className="mr-2" />
+            <span
+              dangerouslySetInnerHTML={{
+                __html: formalNames[title].title,
+              }}
+            />
+          </span>
+          <p>{formalNames[title].description}</p>
+          <span className="text-sm text-muted-foreground">
+            Achieved on {new Date().getMonth()}/{new Date().getDate()}/
+            {new Date().getFullYear()}{" "}
+            <span className="text-muted-foreground/70">
+              {new Date().toLocaleTimeString()}
+            </span>
+          </span>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
 
 export const MDXElements: MDXElementType = {
   Discord,
+  AchievementPreview,
   Book: (props) => <Book {...props} />,
   Notebook: (props) => <NotebookText {...props} />,
   ExternalLink: (props) => <ExternalLink {...props} />,

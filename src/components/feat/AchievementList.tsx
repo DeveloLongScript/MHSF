@@ -3,9 +3,9 @@ import type { Achievement } from "@/lib/types/achievement";
 import { useEffectOnce } from "@/lib/useEffectOnce";
 import { useState } from "react";
 import { Card, CardContent } from "../ui/card";
-import { Medal, Sparkle, Sparkles, Users } from "lucide-react";
 import { Skeleton } from "../ui/skeleton";
 import A from "../misc/Link";
+import { formalNames } from "@/config/achievements";
 
 export default function AchievementList({ server }: { server: string }) {
   const [achievements, setAchievements] = useState<
@@ -79,44 +79,7 @@ export default function AchievementList({ server }: { server: string }) {
   );
 }
 
-const formalNames = {
-  mostJoined: {
-    title:
-      "At one time, <b>this server had the most players on the platform!</b>",
-    description:
-      "This is awarded to servers that had the number 1 permission at the time of the achievements getting resolved.",
-    color: "#9aedff",
-    icon: Medal,
-  },
-  has1kFavorites: {
-    title: "This server has more than <b>1,000 favorites on MHSF!</b>",
-    description:
-      "This is awarded to servers that had 1,000 favorites at the time of the achievements getting resolved.",
-    color: "#d064ff",
-    icon: Sparkle,
-  },
-  has1kTotalJoins: {
-    title: "This server has more than <b>1,000 total joins on Minehut!</b>",
-    description:
-      "This is awarded to servers that had 1,000 total joins at the time of the achievements getting resolved.",
-    color: "#aefa1f",
-    icon: Users,
-  },
-  has100kFavorites: {
-    title: "This server has more than <b>100,000 favorites on MHSF!</b>",
-    description:
-      "This is awarded to servers that had 100,000 favorites at the time of the achievements getting resolved.",
-    color: "#fa5b07",
-    icon: Sparkles,
-  },
-  has100kTotalJoins: {
-    title: "This server has more than <b>100,000 total joins on Minehut!</b>",
-    description:
-      "This is awarded to servers that had 100,000 total joins at the time of the achievements getting resolved.",
-    color: "#bdcffa",
-    icon: Users,
-  },
-};
+
 
 type WithInterval<K> = K & {
   interval: number;

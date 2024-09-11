@@ -36,6 +36,8 @@ const PostLayout = ({ params }: { params: { slug: string[] } }) => {
     <main className="relative py-6 lg:gap-10 lg:py-8 xl:grid xl:grid-cols-[1fr_300px]">
       <div className="mx-auto w-full min-w-0">
         <div className="pb-12 pt-8 prose dark:prose-invert">
+          {doc.folder && <span>{doc.folder}</span>}{" "}
+          {doc.lastUpdated && <span> - last updated {doc.lastUpdated}</span>}{" "}
           <MDXContent
             components={{
               Separator,
