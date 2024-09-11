@@ -20,7 +20,7 @@ export const generateMetadata = ({
     (post) => post._raw.flattenedPath === params.slug.join("/")
   );
   if (!post) notFound();
-  return { title: post.title + " | MHSF Docs" };
+  return { title: post.title + " | MHSF Docs", themeColor: "#000000" };
 };
 
 const PostLayout = ({ params }: { params: { slug: string[] } }) => {

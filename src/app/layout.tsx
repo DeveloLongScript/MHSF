@@ -23,7 +23,7 @@ import ClientFadeIn from "@/components/ClientFadeIn";
 import { BrandingGenericIcon } from "@/components/Icon";
 import type { Metadata } from "next";
 
-export const metadata = {
+export const extraMetadata = {
   twitter: {
     images: [
       {
@@ -31,6 +31,7 @@ export const metadata = {
       },
     ],
   },
+  themeColor: "#000000",
   openGraph: {
     images: [
       {

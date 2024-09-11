@@ -23,6 +23,7 @@ export async function generateMetadata(
   ).json();
 
   return {
+    themeColor: "#000000",
     title:
       json.server == null
         ? "Server doesn't exist | MHSF"
