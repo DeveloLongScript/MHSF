@@ -28,4 +28,4 @@ The contributing guide is [here](https://github.com/DeveloLongScript/MHSF/blob/m
 
 ## Licensing
 
-MHSF (aka the Minehut Server List) is licensed under the [MIT License](https://github.com/DeveloLongScript/MHSF/blob/main/LICENSE). You are free to fork or modify this software _on your own terms_.
+MHSF (aka the Minehut Server List) is licensed under the [MIT License](https://github.com/DeveloLongScript/MHSF/blob/main/LICENSE). You are free to fork or modify this software *on your own terms*.
