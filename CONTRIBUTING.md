@@ -4,7 +4,7 @@ This project has many parts, and as so, it's not as easy to get it running as yo
 but sometimes it might not be possible to not include a dependency that we are using in the project. 
 
 ## Node.js
-Make sure you have [Node.js](nodejs.org) installed, perferably a version above 20. This allows MHSF to run tasks that use modern Node standards like async functions
+Make sure you have [Node.js](https://nodejs.org) installed, perferably a version above 20. This allows MHSF to run tasks that use modern Node standards like async functions
 and other functions that are ran in MHSF. *Make sure you also have NPM installed.*
 
 ## Getting Started
@@ -28,7 +28,7 @@ The primary stack for MHSF is Next.js, a React framework, which you can start by
 [You can also opt out of telemetry if you'd like.](https://nextjs.org/telemetry)
 
 ## Clerk
-If you want to test out accounts, [you must create an Clerk key from their website.](clerk.com)
+If you want to test out accounts, [you must create an Clerk key from their website.](https://clerk.com)
 Set the following variables in the .env.local file:
 ```env
 # Clerk
