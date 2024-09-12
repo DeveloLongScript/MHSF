@@ -24,42 +24,7 @@ And many other smaller libraries are in use to make sure MHSF is feature-packed.
 > [!NOTE]
 > Do you use Java and not JavaScript/TypeScript? You can also contribute to [MHSFPV (Minehut Server List Player Validator)](https://github.com/DeveloLongScript/MHSFPV), a player validator plugin to link accounts. It's relatively small, but can use commits.
 
-If you'd like to contribute, you must follow the guidelines below:
-
-- Make sure to lint (`yarn lint`) every time you finish lines of code
-- Use common sense! Don't make comments that could offend someone, or just seems like a bad ideaa
-- Be respectful when making your PR. We would love to take your code, but if you argue, it doesn't help.
-
-## Building
-
-Clone the repo!
-
-First, you must supply the following services with API keys:
-
-- [Clerk](https://clerk.com): Create an app and put the respective keys in `.env.local`
-- MongoDB: Create a database, can be anywhere, and put the location to connect in `.env.local` for the key `MONGO_DB` (this isn't required by any means, but if you want to store any short term or historical data, use this.)
-- Inngest: Inngest is a smaller library, but runs the `cron` jobs which will make servers automaticly get added to the database.
-
-> [!IMPORTANT]  
-> This project uses `yarn` as the main package manager. If `package-lock.json` is present (or any other package manager's lockfile), your pull request will be harder to sort out, please save some work by using `yarn` at the start.
-
-Second, run `yarn` and `yarn build`. To start the app, run `yarn start`.
-
-### Dev
-
-Swap `yarn build` for `yarn dev`.
-
-### Make your mark
-
-If you'd like, you can add a 88x31 badge image to the end of the changelog, which can link to a website of your choice as long as the image and the website are PG13.
-Add your image to `/public/imgs` and name it one up from the highest badge so for example, if the badge thats the highest is `badge2.png`, name yours `badge3.png`. Here is a code example of how to add your badge.
-In `/src/version.tsx`:
-
-```tsx
-<Link href="<your website>">
-  <Image src="/imgs/badge3.png" alt="<your username>" width={88} height={31} />
-</Link>
-```
+The contributing guide is [here](https://github.com/DeveloLongScript/MHSF/blob/main/CONTRIBUTING.md).
 
 ## Licensing
 
