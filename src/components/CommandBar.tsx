@@ -524,15 +524,6 @@ export function CommandBar() {
           </CommandItem>
           <CommandItem
             onSelect={() => {
-              events.emit("cmd-event-sort");
-              setOpen(false);
-            }}
-          >
-            <ArrowDown01 className="mr-2 h-4 w-4" />
-            Sort Servers
-          </CommandItem>
-          <CommandItem
-            onSelect={() => {
               setOpen(false);
               events.emit("cmd-event-link");
             }}
@@ -688,49 +679,6 @@ export function RandomServerDialog() {
   );
 }
 
-export function SubSortCommandBar() {
-  const [open, setOpen] = useState(false);
-  const router = useRouter();
-
-  useEffectOnce(() => {
-    events.on("cmd-event-sort", () => {
-      setOpen(true);
-    });
-  });
-
-  return (
-    <CommandDialog open={open} onOpenChange={setOpen}>
-      <CommandInput placeholder="Type a command or search..." />
-      <CommandList>
-        <CommandEmpty>No results found.</CommandEmpty>
-
-        <CommandGroup heading="Sorts">
-          <CommandItem
-            onSelect={() => {
-              router.push("/sort/favorites");
-              setOpen(false);
-            }}
-          >
-            <Star className="mr-2 h-4 w-4" />
-            <span>Favorites</span>
-          </CommandItem>
-        </CommandGroup>
-        <CommandGroup heading="Hierarchy">
-          <CommandItem
-            onSelect={() => {
-              setOpen(false);
-              events.emit("cmd-event");
-            }}
-          >
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Go back
-          </CommandItem>
-        </CommandGroup>
-      </CommandList>
-    </CommandDialog>
-  );
-}
-
 export function SubLinkCommandBar() {
   const [open, setOpen] = useState(false);
   const { resolvedTheme } = useTheme();
@@ -862,7 +810,6 @@ export function CommandBarer() {
       <CommandBar />
       <SearchCommandBar />
       <ServerCommandBar />
-      <SubSortCommandBar />
       <OfflineServerCB />
       <RandomServerDialog />
     </>

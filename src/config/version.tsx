@@ -103,7 +103,7 @@ export const Changelog = () => {
           }
         >
           <span className="group-hover:underline flex items-center">
-            <Github className="mr-2" /> Star on GitHub
+            <Github className="mr-2" fill={useDepTheme()} /> Star on GitHub
           </span>
           <Marquee
             className="hidden group-hover:flex font-normal"
@@ -371,6 +371,7 @@ import Marquee from "@/components/effects/marquee";
 import { useRouter } from "@/lib/useRouter";
 import { BookIcon } from "lucide-react";
 import A from "@/components/misc/Link";
+import { useDepTheme } from "@/lib/getDependentTheming";
 const Discord = (props: SVGProps<SVGSVGElement>) => (
   <svg
     viewBox="0 0 256 199"

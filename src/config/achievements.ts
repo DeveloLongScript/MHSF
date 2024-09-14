@@ -12,7 +12,7 @@ export const formalNames: FormalNames = {
 		title:
 			"At one time, <b>this server had the most players on the platform!</b>",
 		description:
-			"This is awarded to servers that had the number 1 permission at the time of the achievements getting resolved.",
+			"This is awarded to servers that had the most players at the time of the achievements getting resolved.",
 		color: "#9aedff",
 		icon: Medal,
 	},
