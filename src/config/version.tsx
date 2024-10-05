@@ -35,7 +35,7 @@ import { Separator } from "../components/ui/separator";
 import { Button } from "../components/ui/button";
 import confetti from "canvas-confetti";
 
-export const version = "1.3";
+export const version = "1.3.2";
 
 const User = ({ user }: { user: string }) => (
   <span className="cursor-pointer bg-[rgba(255,165,0,0.25);] rounded p-[2.5px]">
@@ -384,7 +384,7 @@ export const Changelog = () => {
           <strong>All developers that helped out:</strong>
           <Link href="https://dvelo.vercel.app">
             <Image
-                src="/imgs/badge1.png"
+                src="/imgs/badge1.gif"
                 alt="cool badge"
                 width={88}
                 height={31}
@@ -395,6 +395,7 @@ export const Changelog = () => {
       </>
   );
 };
+
 
 const Github = (props: SVGProps<SVGSVGElement>) => (
     <svg
