@@ -7,7 +7,7 @@ import { ChevronRight } from "lucide-react";
 import { useRouter } from "@/lib/useRouter";
 import { AnimatePresence, motion } from "framer-motion";
 
-export function sSidebar() {
+export function Sidebar() {
   return (
     <>
       {allFolders.map((docs) => (
