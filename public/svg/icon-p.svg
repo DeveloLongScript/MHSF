@@ -1,3 +1,33 @@
+<!--
+  - MHSF, Minehut Server List
+  - All external content is rather licensed under the ECA Agreement
+  - located here: https://list.mlnehut.com/docs/legal/external-content-agreement
+  -
+  - All code under MHSF is licensed under the MIT License
+  - by open source contributors
+  -
+  - Copyright (c) 2024 dvelo
+  -
+  - Permission is hereby granted, free of charge, to any person obtaining a copy
+  - of this software and associated documentation files (the "Software"), to
+  - deal in the Software without restriction, including without limitation the
+  - rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  - sell copies of the Software, and to permit persons to whom the Software is
+  - furnished to do so, subject to the following conditions:
+  -
+  - The above copyright notice and this permission notice shall be included in all
+  - copies or substantial portions of the Software.
+  -
+  - THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+  - EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+  - OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+  - NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+  - HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+  - WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  - FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+  - OTHER DEALINGS IN THE SOFTWARE.
+  -->
+
 <svg width="265" height="265" viewBox="0 0 265 265" fill="none" xmlns="http://www.w3.org/2000/svg">
 <rect width="264.939" height="264.939" rx="66" fill="url(#paint0_linear_1_30)"/>
 <path d="M103.988 123.27H94.3476C91.7907 123.27 89.3385 122.254 87.5305 120.446C85.7225 118.638 84.7068 116.186 84.7068 113.629V94.3476C84.7068 91.7907 85.7225 89.3385 87.5305 87.5305C89.3385 85.7225 91.7907 84.7068 94.3476 84.7068H171.474C174.031 84.7068 176.483 85.7225 178.291 87.5305C180.099 89.3385 181.115 91.7907 181.115 94.3476V113.629C181.115 116.186 180.099 118.638 178.291 120.446C176.483 122.254 174.031 123.27 171.474 123.27H161.833M103.988 142.552H94.3476C91.7907 142.552 89.3385 143.567 87.5305 145.376C85.7225 147.184 84.7068 149.636 84.7068 152.193V171.474C84.7068 174.031 85.7225 176.483 87.5305 178.291C89.3385 180.099 91.7907 181.115 94.3476 181.115H171.474C174.031 181.115 176.483 180.099 178.291 178.291C180.099 176.483 181.115 174.031 181.115 171.474V152.193C181.115 149.636 180.099 147.184 178.291 145.376C176.483 143.567 174.031 142.552 171.474 142.552H161.833M103.988 103.988H104.037M103.988 161.833H104.037M137.731 103.988L118.45 132.911H147.372L128.091 161.833" stroke="white" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
