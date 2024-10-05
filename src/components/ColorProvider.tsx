@@ -20,7 +20,7 @@ export default function ColorProvider({
       getCustomization(server).then((v) =>
         setColor(v != null ? v.colorScheme : "zinc")
       );
-    else setColor(fetch != null ? fetch.colorScheme : "zinc");
+    else setColor(fetch.colorScheme);
   }, []);
 
   return <div className={`theme-${color}`}>{children}</div>;

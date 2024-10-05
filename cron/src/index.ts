@@ -7,33 +7,32 @@ console.log(chalk.yellow(chalk.bold("MHSF crontab scripts")));
 console.log(chalk.yellow(chalk.bold("by dvelo - licensed under MIT license")));
 console.log();
 
-import { MongoClient, WithId } from "mongodb";
+import { MongoClient, type WithId } from "mongodb";
 import { config } from "dotenv";
-import {
+import type {
 	OnlineServer,
 	OnlineServerExtended,
 	ServerResponse,
 } from "./types/mh-server.js";
 import { CronJob } from "cron";
-import { Achievement } from "./types/achievement.js";
+import type { Achievement } from "./types/achievement.js";
 
 // set-up config
 config({
 	path: process.env.MHC_DOCKER != "true" ? "../.env.local" : "./.env.local",
 });
 
-let mongo = new MongoClient(process.env.MONGO_DB as string);
+const mongo = new MongoClient(process.env.MONGO_DB as string);
 
 const SUCCESS = chalk.green("SUCCESS");
 const ERROR = chalk.red("ERROR");
-const WARN = chalk.red("WARN");
 const INFO = chalk.blueBright("INFO");
 
 console.log(INFO, "Starting cron job #1");
 
 CronJob.from({
 	cronTime: "*/30 * * * *",
-	onTick: function () {
+	onTick: () => {
 		periodicCronJob().catch((e) => {
 			console.log(chalk.red("[CRON] " + ERROR + " Error while running: "));
 			console.error(e);
@@ -46,7 +45,7 @@ CronJob.from({
 console.log(INFO, "Starting cron job #2");
 CronJob.from({
 	cronTime: "0 */12 * * *",
-	onTick: function () {
+	onTick: () => {
 		achievementTask().catch((e) => {
 			console.log(chalk.red("[CRON] " + ERROR + " Error while running: "));
 			console.error(e);

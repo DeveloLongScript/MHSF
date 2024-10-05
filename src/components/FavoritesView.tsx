@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Spinner } from "./ui/spinner";
 import { Card, CardHeader, CardTitle } from "./ui/card";
-import { ServerResponse } from "@/lib/types/mh-server";
+import type { ServerResponse } from "@/lib/types/mh-server";
 import { useEffectOnce } from "@/lib/useEffectOnce";
 import { Button } from "./ui/button";
 import { Copy, Layers, XIcon } from "lucide-react";
@@ -26,16 +26,16 @@ export default function FavoritesView() {
           (b) =>
             b.json().then((c) => {
               num++;
-              var apiClone = apiFavorites;
+              const apiClone = apiFavorites;
               apiClone.push(c.server);
               setApiFavorites(apiClone);
-              if (num == d.length) {
+              if (num === d.length) {
                 setLoading(false);
               }
             })
         );
       });
-      if (d.length == 0) setLoading(false);
+      if (d.length === 0) setLoading(false);
     });
   });
 
@@ -62,7 +62,7 @@ export default function FavoritesView() {
 
   return (
     <>
-      {apiFavorites.length == 0 && (
+      {apiFavorites.length === 0 && (
         <div className="flex items-center justify-center">
           <XIcon />
           Your favorites are empty. Maybe favorite a server!

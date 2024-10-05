@@ -30,17 +30,17 @@ The primary stack for MHSF is Next.js, a React framework, which you can start by
 ## Clerk
 If you want to test out accounts, [you must create an Clerk key from their website.](https://clerk.com)
 Set the following variables in the .env.local file:
-```env
+```dotenv
 # Clerk
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=<the token you saw>
-CLERK_SECRET_KEY=<the token you saw>
-IS_AUTH=true
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY="pk_..."
+CLERK_SECRET_KEY="sk_..."
+IS_AUTH="true"
 ```
 
 ## MongoDB
 We use [Atlas](https://www.mongodb.com/atlas) to host our MongoDB database, but you do need one. Add the following to your .env.local with your database:
-```env
-MONGO_DB=
+```dotenv
+MONGO_DB="mongodb+srv://..."
 ```
 
 ## Smaller things (for production-ready servers)
@@ -62,6 +62,18 @@ yarn run build
 > [!NOTE]
 > You must have a `.env.local` with a MongoDB database (same `MONGO_DB` key) in the previous directory (for monorepo like management) running without Docker, and
 > the same `.env.local` *but in the same directory when* using Docker.
+
+### Reporting
+Reporting inside MHSF uses [Linear](https://linear.app). Create an API key inside a team, and add it to the `LINEAR`
+key inside of `.env.local`
+```dotenv
+LINEAR="ln_api_..."
+```
+MHSF will start adding issues automatically, displaying all information
+about a server & the user reporting.
+
+For more information about Linear's authentication, refer to the [API
+documentation](https://developers.linear.app/docs/graphql/working-with-the-graphql-api#personal-api-keys).
 
 ### Inngest
 Inngest also runs periodic tasks like Cron, but has less important tasks that may occur. Create an account on Inngest, or just use the dev server.

@@ -12,7 +12,6 @@ const nextConfig = {
   },
   async redirects() {
     return [
-      // Basic redirect
       {
         source: '/docs',
         destination: '/docs/getting-started',

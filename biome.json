@@ -4,6 +4,10 @@
 		"rules": {
 			"style": {
 				"useTemplate": "off"
+			},
+			"suspicious": {
+				"noExplicitAny": "off",
+				"noDoubleEquals": "warn"
 			}
 		}
 	}
