@@ -61,6 +61,7 @@ export function Changelog({
 }) {
 	const [inTab, setInTab] = useState(false);
 	const [tab, setTab] = useState("");
+	const iconTheme = useDepTheme();
 
 	return (
 		<Dialog>
@@ -143,7 +144,7 @@ export function Changelog({
 											}
 										>
 											<span className="group-hover:underline flex items-center">
-												<Github className="mr-2" fill={useDepTheme()} /> Star on
+												<Github className="mr-2" fill={iconTheme} /> Star on
 												GitHub
 											</span>
 											<Marquee
