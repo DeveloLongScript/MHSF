@@ -28,32 +28,15 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import { NewChart } from "@/components/NewChart";
+import { MiniJoinsChart } from "@/components/misc/MiniJoinsChart";
 import {
 	ContextMenu,
-	ContextMenuTrigger,
-	ContextMenuItem,
 	ContextMenuContent,
+	ContextMenuItem,
 	ContextMenuSeparator,
+	ContextMenuTrigger,
 } from "@/components/ui/context-menu";
-import toast, { LoaderIcon } from "react-hot-toast";
-import {
-	CardHeader,
-	CardTitle,
-	CardDescription,
-	Card,
-	CardContent,
-} from "./ui/card";
-import IconDisplay from "./IconDisplay";
-import { TagShower } from "./ServerList";
-import {
-	ArrowRight,
-	ChartArea,
-	Copy,
-	EllipsisVertical,
-	Layers,
-	Star,
-} from "lucide-react";
-import { Button } from "./ui/button";
 import {
 	Drawer,
 	DrawerContent,
@@ -62,20 +45,39 @@ import {
 	DrawerTitle,
 	DrawerTrigger,
 } from "@/components/ui/drawer";
-import { Tooltip } from "@radix-ui/react-tooltip";
-import { TooltipContent, TooltipTrigger } from "./ui/tooltip";
-import { useRouter } from "@/lib/useRouter";
-import Link from "next/link";
-import { useState } from "react";
-import { favoriteServer, isFavorited } from "@/lib/api";
-import { useUser } from "@clerk/nextjs";
-import { useTheme } from "next-themes";
 import {
 	HoverCard,
 	HoverCardContent,
 	HoverCardTrigger,
 } from "@/components/ui/hover-card";
+import { favoriteServer, isFavorited } from "@/lib/api";
 import useClipboard from "@/lib/useClipboard";
+import { useRouter } from "@/lib/useRouter";
+import { useUser } from "@clerk/nextjs";
+import { Tooltip } from "@radix-ui/react-tooltip";
+import {
+	ArrowRight,
+	ChartArea,
+	Copy,
+	EllipsisVertical,
+	Layers,
+	Star,
+} from "lucide-react";
+import { useTheme } from "next-themes";
+import Link from "next/link";
+import { useState } from "react";
+import toast, { LoaderIcon } from "react-hot-toast";
+import IconDisplay from "./IconDisplay";
+import { TagShower } from "./ServerList";
+import { Button } from "./ui/button";
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardHeader,
+	CardTitle,
+} from "./ui/card";
+import { TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
 export default function ServerCard({ b, motd, mini, favs }: any) {
 	const router = useRouter();
@@ -130,6 +132,13 @@ export default function ServerCard({ b, motd, mini, favs }: any) {
 														/>
 													)}
 												</p>
+												<br />
+												<br />
+												<strong className="text-sm font-semibold text-center">
+													Joins Chart
+												</strong>
+												<MiniJoinsChart server={b.name} />
+
 												<div className="flex items-center pt-2">
 													<span className="text-xs text-muted-foreground flex items-center">
 														<ArrowRight size={16} className="mr-2" />
@@ -272,7 +281,7 @@ export default function ServerCard({ b, motd, mini, favs }: any) {
 										</div>
 									</ContextMenuItem>
 									<ContextMenuSeparator />
-									<Link href={"/server/" + b.name}>
+									<Link href={"/src/app/(main)/server/" + b.name}>
 										<ContextMenuItem>Open server page</ContextMenuItem>
 									</Link>
 								</ContextMenuContent>

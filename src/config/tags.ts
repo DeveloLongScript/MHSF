@@ -278,7 +278,7 @@ export const allCategories: Array<{
 ];
 
 async function requestServer(s: OnlineServer): Promise<ServerResponse> {
-	if (serverCache[s.name] == undefined) {
+	if (serverCache[s.name] === undefined) {
 		const re = await fetch(
 			"https://api.minehut.com/server/" + s.name + "?byName=true",
 		);

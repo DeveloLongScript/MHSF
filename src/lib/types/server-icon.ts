@@ -28,19 +28,31 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import Link from "next/link";
-
-export default function NotFound() {
-  return (
-    <main>
-      <div className="pt-[60px] p-4">
-        <strong>404 - Page not found</strong>
-        <br />
-        <p>
-          We couldn't find the page you were looking for.{" "}
-          <Link href="/">Go home</Link>
-        </p>
-      </div>
-    </main>
-  );
+export async function getMinehutIcons(): Promise<MinehutIcon[] | undefined> {
+	const icons = await fetch("https://api.minehut.com/servers/icons");
+	console.log(icons);
+	if (!icons.ok) return undefined;
+	return await icons.json();
 }
+
+export type MinehutIcon = {
+	_id: string;
+	display_name: string;
+	icon_name: string;
+	price: number;
+	rank: string;
+	available: boolean;
+	disabled: boolean;
+	created: number;
+	last_updated: number;
+	__v: number;
+	salePrice: any;
+};
+
+export const rarityIndex = {
+	common: { bg: "#40464d", text: "#b7bfc5" },
+	uncommon: { bg: "#184f02", text: "#61bf01" },
+	rare: { bg: "#15448a", text: "#41afff" },
+	epic: { bg: "#4c1a7b", text: "#ce59ff" },
+	legendary: { bg: "#de6e0d", text: "#fce8cf" },
+};

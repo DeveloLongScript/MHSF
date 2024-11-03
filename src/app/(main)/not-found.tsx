@@ -28,28 +28,19 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-"use client";
-import { Separator } from "@/components/ui/separator";
-import { useState } from "react";
-import Banner from "./Banner";
-import ServerCustomize from "./ServerCustomize";
-import TabServer from "./misc/TabServer";
+import Link from "next/link";
 
-export default function CustomizeRoot({
-	params,
-}: {
-	params: { server: string };
-}) {
-	const [color, setColor] = useState("");
+export default function NotFound() {
 	return (
-		<div className={"pt-16 theme-" + color}>
-			<Banner server={params.server} />
-			<TabServer server={params.server} tabDef="customize" />
-			<Separator />
-			<br />
-			<div className="pl-[40px] pr-[40px]">
-				<ServerCustomize server={params.server} cs={color} setCS={setColor} />
+		<main>
+			<div className="pt-[60px] p-4">
+				<strong>404 - Page not found</strong>
+				<br />
+				<p>
+					We couldn't find the page you were looking for.{" "}
+					<Link href="/public">Go home</Link>
+				</p>
 			</div>
-		</div>
+		</main>
 	);
 }

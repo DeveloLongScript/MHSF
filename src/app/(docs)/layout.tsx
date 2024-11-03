@@ -28,47 +28,75 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
+"use client";
+
 import { Sidebar } from "@/components/docs/Sidebar";
 import { Button } from "@/components/ui/button";
 import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+	SidebarInset,
+	SidebarProvider,
+	SidebarTrigger,
+} from "@/components/ui/sidebar";
 import { version } from "@/config/version";
 import { HamburgerMenuIcon } from "@radix-ui/react-icons";
+import { GeistMono } from "geist/font/mono";
+import { GeistSans } from "geist/font/sans";
+import "../globals.css";
+import "../../themes.css";
+import { ThemeProvider } from "@/components/ThemeProvider";
+import { ClerkThemeProvider } from "@/components/clerk/ClerkThemeProvider";
+import {
+	Breadcrumb,
+	BreadcrumbItem,
+	BreadcrumbLink,
+	BreadcrumbList,
+	BreadcrumbPage,
+	BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import { Separator } from "@/components/ui/separator";
+import NextTopLoader from "@/lib/top-loader";
+import { useRouter } from "@/lib/useRouter";
+import { allDocs } from "contentlayer/generated";
+import { GetServerSideProps } from "next";
+import { usePathname } from "next/navigation";
+
+interface Props {
+	pathname: string;
+}
 
 export default async function RootLayout({
-  children,
+	children,
 }: Readonly<{
-  children: React.ReactNode;
+	children: React.ReactNode;
 }>) {
-  return (
-    <div className="border-b pt-[40px]">
-      <div className="container flex-1 items-start md:grid md:grid-cols-[220px_minmax(0,1fr)] md:gap-6 lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-10">
-        <aside className="fixed top-14 z-30 hidden h-[calc(100vh-3.5rem)] w-full shrink-0 md:sticky md:block">
-          <ScrollArea className="h-full py-6 pr-6 lg:py-8">
-            <div className="bg-muted w-full rounded justify-center p-4 flex items-center">
-              MHSF Docs <small className="ml-2">Version {version}</small>
-            </div>
-            <br />
-            <Sidebar />
-          </ScrollArea>
-        </aside>
-        <br className="md:hidden" />
-
-        <div className="bg-muted w-full rounded justify-center p-4 flex items-center md:hidden">
-          MHSF Docs <small className="ml-2">Version {version}</small>
-          <Drawer>
-            <DrawerTrigger>
-              <Button className="ml-2">
-                <HamburgerMenuIcon />
-              </Button>
-            </DrawerTrigger>
-            <DrawerContent className="p-4">
-              <Sidebar />
-            </DrawerContent>
-          </Drawer>
-        </div>
-        {children}
-      </div>
-    </div>
-  );
+	const pathname = usePathname();
+	return (
+		<ClerkThemeProvider className="">
+			<div className="theme-zinc">
+				<NextTopLoader />
+				<SidebarProvider>
+					<Sidebar />
+					<SidebarInset>
+						<div className="fixed backdrop-blur w-full flex h-16 z-10 items-center gap-2 px-4 ">
+							<SidebarTrigger />
+							<Separator orientation="vertical" className="mr-2 h-4" />
+							{
+								allDocs.find(
+									(c) =>
+										c._raw.flattenedPath ===
+										pathname
+											?.split("/")
+											.splice(2, pathname?.split("/").length)
+											.join("/"),
+								)?.title
+							}
+						</div>
+						<div className="px-[100px] pt-[50px]">{children}</div>
+					</SidebarInset>
+				</SidebarProvider>
+			</div>
+		</ClerkThemeProvider>
+	);
 }

@@ -181,7 +181,7 @@ export default function ServerCustomize({
 							Is this server in violation of the ECA?
 						</div>
 						Is this server in violation of the{" "}
-						<Link href="/docs/legal/external-content-agreement">
+						<Link href="/src/app/(main)/docs/legal/external-content-agreement">
 							External Content Agreement (aka ECA)
 						</Link>
 						? You can report the server to remove the customizations from the
@@ -196,7 +196,7 @@ export default function ServerCustomize({
 									<DialogDescription>
 										This will send a notification to MHSF maintainers. This
 										server must be in violation of the{" "}
-										<Link href="/docs/legal/external-content-agreement">
+										<Link href="/src/app/(main)/docs/legal/external-content-agreement">
 											ECA
 										</Link>{" "}
 										to be a valid report. Typical response times include 1 hour
@@ -329,7 +329,7 @@ export default function ServerCustomize({
 															Minehuts Terms of Service
 														</Link>{" "}
 														& the{" "}
-														<Link href="/docs/legal/external-content-agreement">
+														<Link href="/src/app/(main)/docs/legal/external-content-agreement">
 															External Content Agreement
 														</Link>
 														.
@@ -436,7 +436,7 @@ export default function ServerCustomize({
 										Imgurs Terms of Service
 									</Link>{" "}
 									& the{" "}
-									<Link href="/docs/legal/external-content-agreement">
+									<Link href="/src/app/(main)/docs/legal/external-content-agreement">
 										External Content Agreement
 									</Link>
 									.
@@ -468,7 +468,7 @@ export default function ServerCustomize({
 										Discords Terms of Service
 									</Link>{" "}
 									& the{" "}
-									<Link href="/docs/legal/external-content-agreement">
+									<Link href="/src/app/(main)/docs/legal/external-content-agreement">
 										External Content Agreement
 									</Link>
 									.
