@@ -28,7 +28,7 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { Changelog } from "@/components/changelog";
+import { Changelog } from "@/components/Changelog";
 import { changelog, version } from "@/config/version";
 import events from "@/lib/commandEvent";
 import { useRouter } from "@/lib/useRouter";
