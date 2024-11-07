@@ -55,6 +55,20 @@ const FeatureList = ({
 export const version = "1.4.0";
 export const changelog: { name: string; id: string; changelog: ReactNode }[] = [
 	{
+		id: "ywvhtcs4k9rqjfp57x",
+		name: "v1.4.5",
+		changelog: (
+			<FeatureList
+				features={["Add server icons"]}
+				title={
+					<strong className="flex items-center">
+						Version 1.4.5 (November 6th 2024)
+					</strong>
+				}
+			/>
+		),
+	},
+	{
 		id: "amq4suhgcfwrb7y5j6",
 		name: "v1.4.0",
 		changelog: (

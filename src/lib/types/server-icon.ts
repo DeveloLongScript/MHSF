@@ -56,3 +56,12 @@ export const rarityIndex = {
 	epic: { bg: "#4c1a7b", text: "#ce59ff" },
 	legendary: { bg: "#de6e0d", text: "#fce8cf" },
 };
+
+export const getIndexFromRarity = (rank: string | undefined) => {
+	if (rank === undefined) {
+		return rarityIndex.common;
+	}
+	return rarityIndex[
+		rank as "common" | "uncommon" | "rare" | "epic" | "legendary"
+	];
+};

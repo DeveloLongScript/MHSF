@@ -32,13 +32,19 @@
 import { getCommunityServerFavorites, getCustomization } from "@/lib/api";
 import { MHSF } from "@/lib/mhsf";
 import { ServerResponse } from "@/lib/types/mh-server";
-import { MinehutIcon, getMinehutIcons } from "@/lib/types/server-icon";
+import {
+	MinehutIcon,
+	getIndexFromRarity,
+	getMinehutIcons,
+	rarityIndex,
+} from "@/lib/types/server-icon";
 import { Copy, Info } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import FadeIn from "react-fade-in/lib/FadeIn";
 import toast, { CheckmarkIcon } from "react-hot-toast";
 import Markdown from "react-markdown";
+import IconDisplay from "./IconDisplay";
 import AchievementList from "./feat/AchievementList";
 import { Button } from "./ui/button";
 import {
@@ -74,13 +80,13 @@ export default function AfterServerView({ server }: { server: string }) {
 				getCommunityServerFavorites(server).then((c) => {
 					mhsf.setFavorites(c);
 				});
-				getMinehutIcons().then((i) => {
-					setIcons(i);
-				});
 			}
 			fetch("https://api.minehut.com/server/" + server + "?byName=true").then(
 				(c) => c.json().then((n) => setServerObject(n.server)),
 			);
+			getMinehutIcons().then((i) => {
+				setIcons(i);
+			});
 			setLoading(false);
 		});
 	}, []);
@@ -411,16 +417,47 @@ export default function AfterServerView({ server }: { server: string }) {
 							</div>
 						)}
 						{view == "icons" && (
-							<div>
+							<div className="col-span-4">
 								<p>
 									Purchased Icons are icons that are under the server's
 									ownership, they may or may not available at that certain
 									moment either.
 								</p>
 								{serverObject?.purchased_icons.map((icon) => (
-									<div key={icon}>
-										{icons?.find((c) => c._id === icon)?.icon_name}
-									</div>
+									<Card key={icon} className="my-4">
+										<CardContent
+											className="pt-4"
+											style={{
+												color: getIndexFromRarity(
+													icons
+														?.find((c) => c._id === icon)
+														?.rank.toLowerCase(),
+												).text,
+											}}
+										>
+											<IconDisplay
+												server={{
+													icon: icons?.find((c) => c._id === icon)?.icon_name,
+												}}
+												className="mr-2"
+											/>
+											{icons?.find((c) => c._id === icon)?.display_name}
+											<span
+												className="mx-2 p-1 pr-2 rounded italic font-bold"
+												style={{
+													backgroundColor: getIndexFromRarity(
+														icons
+															?.find((c) => c._id === icon)
+															?.rank.toLowerCase(),
+													).bg,
+												}}
+											>
+												{icons
+													?.find((c) => c._id === icon)
+													?.rank.toLocaleUpperCase()}
+											</span>
+										</CardContent>
+									</Card>
 								))}
 							</div>
 						)}
