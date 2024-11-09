@@ -39,6 +39,7 @@ import TextFromPathname from "@/components/TextFromPathname";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { ClerkThemeProvider } from "@/components/clerk/ClerkThemeProvider";
 import TopBar from "@/components/clerk/Topbar";
+import NewDomainDialog from "@/components/misc/NewDomainDialog";
 import ThemedToaster from "@/components/misc/ThemedToaster";
 import UnofficalDialog from "@/components/misc/UnofficalDialog";
 import {
@@ -123,6 +124,7 @@ export default async function RootLayout({
 					<CommandBarer />
 					<SpeedInsights />
 					<Analytics />
+					<NewDomainDialog />
 					<UnofficalDialog />
 				</TooltipProvider>
 			</ThemeProvider>
