@@ -54,10 +54,7 @@ export function Sidebar({
 		>
 			<ResizablePanel className="max-md:hidden min-w-[285px] max-w-[285px] w-[285px]">
 				<div className="w-[300px] ml-[10px]">
-					<NextLink
-						href="/src/app/(main)/account/settings"
-						className="text-inherit"
-					>
+					<NextLink href="/account/settings" className="text-inherit">
 						<Button
 							className="mb-[2px] w-[250px]"
 							variant={curPage !== "/account/settings" ? "ghost" : "default"}
@@ -65,10 +62,7 @@ export function Sidebar({
 							<Link size={16} className="mr-2" /> Linking
 						</Button>
 					</NextLink>
-					<NextLink
-						href="/src/app/(main)/account/settings/options"
-						className="text-inherit"
-					>
+					<NextLink href="/account/settings/options" className="text-inherit">
 						<Button
 							className="mb-[2px] w-[250px] "
 							variant={
@@ -99,10 +93,7 @@ export function Sidebar({
 			<ResizableHandle className="max-md:hidden" />
 			<ResizablePanel>
 				<div className="md:hidden ml-2">
-					<NextLink
-						href="/src/app/(main)/account/settings"
-						className="text-inherit"
-					>
+					<NextLink href="/account/settings" className="text-inherit">
 						<Button
 							className="mr-[2px]"
 							variant={curPage !== "/account/settings" ? "ghost" : "default"}
@@ -110,10 +101,7 @@ export function Sidebar({
 							<Link size={16} className="mr-2" /> Linking
 						</Button>
 					</NextLink>
-					<NextLink
-						href="/src/app/(main)/account/settings/options"
-						className="text-inherit"
-					>
+					<NextLink href="/account/settings/options" className="text-inherit">
 						<Button
 							className="mr-[2px]"
 							variant={
