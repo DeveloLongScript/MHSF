@@ -1,7 +1,7 @@
 <img src="https://i.imgur.com/H7GhfNM.png" align="center">
 <h1 align="center">MHSF</h1>
 
-An open-source customizable server-list for Minehut built in React. Check it out at [list.mlnehut.com](https://list.mlnehut.com), and maybe give this repo a star! :)
+An open-source customizable server-list for Minehut built in React. Check it out at [list.mlnehut.com](https://mhsf.app), and maybe give this repo a star! :)
 
 > [!WARNING]
 > If you want more of a explanation what this is, please use the built-in info popover. This README is mostly for contributing. Thanks!
