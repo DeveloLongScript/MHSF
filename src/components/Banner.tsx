@@ -33,37 +33,42 @@ import { getCustomization } from "@/lib/api";
 import { useEffect, useState } from "react";
 
 export default function Banner({ server }: { server: string }) {
-  const [bannerURL, setBannerURL] = useState("");
-  const [loading, setLoading] = useState(true);
+	const [bannerURL, setBannerURL] = useState("");
+	const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    getCustomization(server).then((c) => {
-      if (c != null) {
-        setLoading(false);
-        setBannerURL(c.banner == undefined ? "" : c.banner);
-      } else {
-        setLoading(false);
-      }
-    });
-  }, [server]);
+	useEffect(() => {
+		getCustomization(server).then((c) => {
+			if (c != null) {
+				setLoading(false);
+				setBannerURL(c.banner == undefined ? "" : c.banner);
+			} else {
+				setLoading(false);
+			}
+		});
+	}, [server]);
 
-  if (loading) {
-    return (
-      <>
-        <br />
-      </>
-    );
-  }
+	if (loading) {
+		return (
+			<>
+				<br />
+			</>
+		);
+	}
 
-  return (
-    <>
-      {bannerURL != "" && (
-        <img
-          src={"https://i.imgur.com/" + bannerURL}
-          className="rounded align-middle block ml-auto mr-auto w-[50%] max-h-[150px]"
-        />
-      )}
-      <br />
-    </>
-  );
+	return (
+		<>
+			{bannerURL != "" && (
+				<img
+					src={
+						bannerURL.startsWith("https://i.imgur.com")
+							? bannerURL
+							: "wsrv.nl/?url=" + encodeURIComponent(bannerURL) + "?n=-1"
+					}
+					className="rounded align-middle block ml-auto mr-auto w-[50%] max-h-[150px]"
+					alt="User-provided banner for this server."
+				/>
+			)}
+			<br />
+		</>
+	);
 }

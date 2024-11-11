@@ -63,12 +63,6 @@ export default async function handler(
     return res.status(400).send({ message: "Description is incorrect length" });
 
   if (
-    customization.banner != undefined &&
-    !(Array.from(customization.banner).length > 5)
-  )
-    return res.status(400).send({ message: "Banner is incorrect length" });
-
-  if (
     customization.discord != undefined &&
     !/^\d*\.?\d*$/.test(customization.discord)
   )

@@ -161,7 +161,16 @@ export default function AfterServerView({ server }: { server: string }) {
 						{description != "" && view == "desc" && (
 							<Card className="sm:col-span-3">
 								<CardDescription className="p-4 prose dark:prose-invert">
-									<Markdown disallowedElements={["img"]}>
+									<Markdown
+										components={{
+											img(props) {
+												// wsrv.nl caches images for us AND protects the IP's of users
+												return (
+													<img src={`//wsrv.nl/?url=${props.src}`} {...props} />
+												);
+											},
+										}}
+									>
 										{description}
 									</Markdown>
 								</CardDescription>
