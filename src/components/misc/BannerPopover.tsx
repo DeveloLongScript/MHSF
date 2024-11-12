@@ -37,7 +37,7 @@ export function BannerPopover({ server, get }: { server: string; get: any }) {
 	});
 
 	async function onSubmit(data: z.infer<typeof FormSchema>) {
-		toast.promise(setCustomization(server, { banner: imageId }), {
+		toast.promise(setCustomization(server, { banner: data.website }), {
 			loading: "Setting banner..",
 			success: "Set banner!",
 			error: "Error while setting banner",
