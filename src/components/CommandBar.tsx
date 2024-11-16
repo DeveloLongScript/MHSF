@@ -430,7 +430,6 @@ export function ServerCommandBar() {
                 )}
               </span>
             </h2>
-
             {owned && (
               <h2 className="flex items-center text-muted-foreground">
                 <CheckIcon />

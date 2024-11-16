@@ -60,6 +60,9 @@ export default class ServerSingle {
               if (this.online == true && skipOnline != true) {
                 fetch("https://api.minehut.com/servers").then((l) =>
                   l.json().then((o) => {
+                    if (o.servers.find((j: OnlineServer) => j.name == this.name) == undefined) {
+                      g(true);
+                    }
                     o.servers.forEach((j: OnlineServer) => {
                       if (j.name == this.name) {
                         this.onlineObj = j;

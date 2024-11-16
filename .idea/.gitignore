@@ -1,0 +1,8 @@
+# Ignore everything for IntelliJ except for project essential code-styles
+*
+
+!copyright/*
+!codeStyles/*
+!.gitignore
+
+!*/

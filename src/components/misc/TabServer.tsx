@@ -32,7 +32,7 @@
 import { useState } from "react";
 import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
 import { useRouter } from "@/lib/useRouter";
-import { Database, Home, Paintbrush } from "lucide-react";
+import { CornerDownLeft, Database, Home, Paintbrush } from "lucide-react";
 
 export default function TabServer({
   server,
@@ -45,7 +45,7 @@ export default function TabServer({
   const router = useRouter();
 
   return (
-    <div className="w-full flex justify-center">
+    <div className="w-full px-4">
       <Tabs
         value={tab}
         onValueChange={(tac) => {
@@ -53,22 +53,39 @@ export default function TabServer({
           if (tac == "customize") router.push(`/server/${server}/customize`);
           if (tac == "statistics") router.push(`/server/${server}/statistics`);
           if (tac == "general") router.push(`/server/${server}`);
+          if (tac == "server-list") router.push("/");
         }}
-        className="sm:w-[500px] max-sm:w-[200px]"
       >
-        <TabsList className="grid w-full grid-cols-3 max-sm:min-h-[50px]">
-          <TabsTrigger value="general" className="">
+        <TabsList className="border-b bg-transparent p-0 rounded-none w-full justify-start">
+          <TabsTrigger
+            value="general"
+            className="relative h-9 rounded-none border-b-2 border-b-transparent bg-transparent px-4 pb-3 pt-2 font-semibold text-muted-foreground shadow-none transition-none data-[state=active]:border-b-primary data-[state=active]:text-foreground data-[state=active]:shadow-none"
+          >
             {" "}
             <div className="max-sm:hidden">General Information</div>
             <Home className="sm:hidden" size={18} />
           </TabsTrigger>
-          <TabsTrigger value="statistics">
+          <TabsTrigger
+            value="statistics"
+            className="relative h-9 rounded-none border-b-2 border-b-transparent bg-transparent px-4 pb-3 pt-2 font-semibold text-muted-foreground shadow-none transition-none data-[state=active]:border-b-primary data-[state=active]:text-foreground data-[state=active]:shadow-none"
+          >
             <div className="max-sm:hidden">Statistics</div>
             <Database className="sm:hidden" size={18} />
           </TabsTrigger>
-          <TabsTrigger value="customize">
+          <TabsTrigger
+            value="customize"
+            className="relative h-9 rounded-none border-b-2 border-b-transparent bg-transparent px-4 pb-3 pt-2 font-semibold text-muted-foreground shadow-none transition-none data-[state=active]:border-b-primary data-[state=active]:text-foreground data-[state=active]:shadow-none"
+          >
             <div className="max-sm:hidden">Customization</div>
             <Paintbrush className="sm:hidden" size={18} />
+          </TabsTrigger>
+
+          <TabsTrigger
+            value="server-list"
+            className="relative h-9 rounded-none border-b-2 border-b-transparent bg-transparent px-4 pb-3 pt-2 font-semibold text-muted-foreground shadow-none transition-none data-[state=active]:border-b-primary data-[state=active]:text-foreground data-[state=active]:shadow-none"
+          >
+            <CornerDownLeft size={16} className="mr-2" />
+            <div className="max-sm:hidden">Back to server list</div>
           </TabsTrigger>
         </TabsList>
       </Tabs>

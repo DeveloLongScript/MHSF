@@ -1,0 +1,6 @@
+# Ignore everything for VSCode except for project essential code-styles
+*
+
+!extensions.json
+!settings.json
+!.gitignore

@@ -30,7 +30,6 @@
 
 "use client";
 import { useState, useEffect } from "react";
-import { Spinner } from "./ui/spinner";
 import {
   Card,
   CardContent,
@@ -108,7 +107,7 @@ export default function ServerView(props: { server: string }) {
   }
   return (
     <>
-      {single.grabOnline() == undefined && (
+      {single.grabOnline() == undefined && !single.grabOffline()?.online && (
         <div className="grid pl-4 pr-4">
           <div
             className=" rounded p-2"
@@ -130,7 +129,8 @@ export default function ServerView(props: { server: string }) {
           <Card className="sm:col-span-2">
             <BetterHeader>
               <CardTitle className="flex items-center">
-                {single.grabOnline() == undefined ? (
+                {single.grabOnline() == undefined &&
+                !single.grabOffline()?.online ? (
                   <div
                     className="items-center mr-1"
                     style={{

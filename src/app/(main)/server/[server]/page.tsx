@@ -33,123 +33,114 @@ import Banner from "@/components/Banner";
 import ColorProvider from "@/components/ColorProvider";
 import ServerView from "@/components/ServerView";
 import TabServer from "@/components/misc/TabServer";
-import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { CornerDownLeft } from "lucide-react";
 import type { Metadata, ResolvingMetadata } from "next";
-import Link from "next/link";
 
 type Props = {
-	params: { server: string };
+  params: { server: string };
 };
 
 export async function generateMetadata(
-	{ params }: Props,
-	parent: ResolvingMetadata,
+  { params }: Props,
+  parent: ResolvingMetadata
 ): Promise<Metadata> {
-	// read route params
-	const { server } = params;
-	const json = await (
-		await fetch("https://api.minehut.com/server/" + server + "?byName=true")
-	).json();
+  // read route params
+  const { server } = params;
+  const json = await (
+    await fetch("https://api.minehut.com/server/" + server + "?byName=true")
+  ).json();
 
-	return {
-		themeColor: "#000000",
-		title:
-			json.server == null
-				? "Server doesn't exist | MHSF"
-				: json.server.name +
-					", " +
-					(json.server.online
-						? json.server.playerCount +
-							(json.server.maxPlayers != 10
-								? "/" + json.server.maxPlayers
-								: "") +
-							" online"
-						: "Offline") +
-					" | MHSF",
-		description:
-			json.server == null
-				? `The server ${server} doesn't exist.`
-				: `View ${server} on Minehut Server Finder!`,
-		authors: json.server == null ? undefined : { name: json.server.owner },
-		applicationName: "MHSF (Minehut Server Finder)",
-		icons:
-			json.server == null
-				? undefined
-				: "https://minehut-server-icons-live.s3.us-west-2.amazonaws.com/" +
-					(json.server.icon == undefined ? "OAK_SIGN" : json.server.icon) +
-					".png",
-		twitter: {
-			title:
-				json.server == null
-					? "Server doesn't exist | MHSF"
-					: json.server.name +
-						", " +
-						(json.server.online
-							? json.server.playerCount +
-								(json.server.maxPlayers != 10
-									? "/" + json.server.maxPlayers
-									: "") +
-								" online"
-							: "Offline") +
-						" | MHSF",
-			description:
-				json.server == null
-					? `The server ${server} doesn't exist.`
-					: `View ${server} on Minehut Server Finder!`,
-			images: [
-				{
-					url:
-						"https://minehut-server-icons-live.s3.us-west-2.amazonaws.com/" +
-						json.server.icon +
-						".png",
-				},
-				{
-					url: "/public/imgs/icon-cf.png",
-				},
-			],
-		},
-		openGraph: {
-			type: "profile",
-			siteName: "MHSF (Minehut Server Finder)",
+  return {
+    themeColor: "#000000",
+    title:
+      json.server == null
+        ? "Server doesn't exist | MHSF"
+        : json.server.name +
+          ", " +
+          (json.server.online
+            ? json.server.playerCount +
+              (json.server.maxPlayers != 10
+                ? "/" + json.server.maxPlayers
+                : "") +
+              " online"
+            : "Offline") +
+          " | MHSF",
+    description:
+      json.server == null
+        ? `The server ${server} doesn't exist.`
+        : `View ${server} on Minehut Server Finder!`,
+    authors: json.server == null ? undefined : { name: json.server.owner },
+    applicationName: "MHSF (Minehut Server Finder)",
+    icons:
+      json.server == null
+        ? undefined
+        : "https://minehut-server-icons-live.s3.us-west-2.amazonaws.com/" +
+          (json.server.icon == undefined ? "OAK_SIGN" : json.server.icon) +
+          ".png",
+    twitter: {
+      title:
+        json.server == null
+          ? "Server doesn't exist | MHSF"
+          : json.server.name +
+            ", " +
+            (json.server.online
+              ? json.server.playerCount +
+                (json.server.maxPlayers != 10
+                  ? "/" + json.server.maxPlayers
+                  : "") +
+                " online"
+              : "Offline") +
+            " | MHSF",
+      description:
+        json.server == null
+          ? `The server ${server} doesn't exist.`
+          : `View ${server} on Minehut Server Finder!`,
+      images: [
+        {
+          url:
+            "https://minehut-server-icons-live.s3.us-west-2.amazonaws.com/" +
+            json.server.icon +
+            ".png",
+        },
+        {
+          url: "/public/imgs/icon-cf.png",
+        },
+      ],
+    },
+    openGraph: {
+      type: "profile",
+      siteName: "MHSF (Minehut Server Finder)",
 
-			images: [
-				{
-					url:
-						"https://minehut-server-icons-live.s3.us-west-2.amazonaws.com/" +
-						json.server.icon +
-						".png",
-				},
-				{
-					url: "/public/imgs/icon-cf.png",
-				},
-			],
-		},
-	};
+      images: [
+        {
+          url:
+            "https://minehut-server-icons-live.s3.us-west-2.amazonaws.com/" +
+            json.server.icon +
+            ".png",
+        },
+        {
+          url: "/public/imgs/icon-cf.png",
+        },
+      ],
+    },
+  };
 }
 
 export default function ServerPage({ params }: { params: { server: string } }) {
-	return (
-		<main>
-			<ColorProvider server={params.server}>
-				<div className={"pt-16"}>
-					<Banner server={params.server} />
-					<Link href="/">
-						<Button variant="link" className="text-muted-foreground text-sm">
-							<CornerDownLeft size={16} className="mr-2" /> Go back to the
-							server list
-						</Button>
-					</Link>
-					<TabServer server={params.server} tabDef="general" />
-					<div className="pt-8">
-						<ServerView server={params.server} />
-					</div>
-					<Separator />
-					<br />
-					<AfterServerView server={params.server} />
-				</div>
-			</ColorProvider>
-		</main>
-	);
+  return (
+    <main>
+      <ColorProvider server={params.server}>
+        <div className={"pt-16"}>
+          <Banner server={params.server} />
+          <TabServer server={params.server} tabDef="general" />
+          <div className="pt-8">
+            <ServerView server={params.server} />
+          </div>
+          <Separator />
+          <br />
+          <AfterServerView server={params.server} />
+        </div>
+      </ColorProvider>
+    </main>
+  );
 }
