@@ -64,7 +64,7 @@ export default function EmbedSelector({ server }: { server: string }) {
     src="${url}"
     width={390}
     height={145}
-    style={{ borderRadius: 0.25 }}
+    style={{ borderRadius: "0.25rem" }}
     allow="clipboard-write"
     frameBorder={0}
     sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"
@@ -93,7 +93,7 @@ export default function EmbedSelector({ server }: { server: string }) {
     src="${url}"
     width={390}
     height={145}
-    style={{ borderRadius: 0.25 }}
+    style={{ borderRadius: "0.25rem" }}
     allow="clipboard-write"
     frameBorder={0}
     sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"
