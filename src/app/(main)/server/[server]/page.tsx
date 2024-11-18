@@ -130,7 +130,7 @@ export default function ServerPage({ params }: { params: { server: string } }) {
   return (
     <main>
       <ColorProvider server={params.server}>
-        <div className={"pt-16"}>
+        <div className={"pt-16 xl:px-[100px]"}>
           <Banner server={params.server} />
           <TabServer server={params.server} tabDef="general" />
           <div className="pt-8">

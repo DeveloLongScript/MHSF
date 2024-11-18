@@ -147,6 +147,37 @@
 /*  }*/
 /*}*/
 
+
+@layer base {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
+  }
+
+  ::view-transition-old(root) {
+    z-index: 1;
+  }
+
+  ::view-transition-new(root) {
+    z-index: 2;
+  }
+
+  @keyframes clip-down {
+    from {
+      clip-path: inset(0 0 100% 0);
+    }
+    to {
+      clip-path: inset(0 0 0 0);
+    }
+  }
+
+  .dark::view-transition-new(root),
+  .light::view-transition-new(root) {
+    animation: 0.7s clip-down;
+  }
+}
+
 .backdrop-blur {
   -webkit-backdrop-filter: blur(8px) !important;
   backdrop-filter: blur(8px) !important;

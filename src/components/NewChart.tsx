@@ -196,7 +196,7 @@ export function NewChart({ server }: { server: string }) {
   );
 }
 
-function convert(value: number) {
+export function convert(value: number) {
   var result: string = value.toString();
   if (value >= 1000000) {
     result = Math.floor(value / 1000000) + "m";

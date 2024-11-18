@@ -53,6 +53,7 @@
 		"react-dom": "^18",
 		"react-fade-in": "^2.0.1",
 		"react-fast-marquee": "^1.6.5",
+		"react-qr-code": "^2.0.15",
 		"rehype-slug": "^6.0.0",
 		"remark-gfm": "^4.0.0",
 		"tailwind-merge": "^2.3.0",

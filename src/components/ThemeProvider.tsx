@@ -31,7 +31,7 @@
 "use client";
 
 import * as React from "react";
-import { ThemeProvider as NextThemesProvider } from "next-themes";
+import { ThemeProvider as NextThemesProvider, useTheme } from "next-themes";
 import { type ThemeProviderProps } from "next-themes/dist/types";
 
 export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
@@ -44,4 +44,58 @@ export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
   if (!mounted) return null;
 
   return <NextThemesProvider {...props}>{children}</NextThemesProvider>;
+}
+
+interface UseThemeTransitionResult {
+  theme: string | undefined;
+  changeTheme: (changeTheme: string) => () => void;
+  mounted: boolean;
+}
+
+export function useThemeTransition(): UseThemeTransitionResult {
+  const { theme, setTheme, systemTheme } = useTheme();
+  const [mounted, setMounted] = React.useState<boolean>(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const changeTheme = (changeTheme: string) => {
+    if (!mounted) return;
+
+    const resolvedTheme = theme === "system" ? systemTheme : changeTheme;
+
+    if (document.startViewTransition) {
+      document.startViewTransition(() => {
+        const root = document.documentElement;
+        root.style.setProperty(
+          "--current-background",
+          `var(--${resolvedTheme}-background)`
+        );
+        root.style.setProperty(
+          "--current-foreground",
+          `var(--${resolvedTheme}-foreground)`
+        );
+        setTheme(changeTheme);
+      });
+    } else {
+      setTheme(changeTheme);
+    }
+  };
+
+  React.useEffect(() => {
+    if (mounted && theme) {
+      const root = document.documentElement;
+      root.style.setProperty(
+        "--current-background",
+        `var(--${theme}-background)`
+      );
+      root.style.setProperty(
+        "--current-foreground",
+        `var(--${theme}-foreground)`
+      );
+    }
+  }, [mounted, theme]);
+
+  return { theme, changeTheme, mounted };
 }

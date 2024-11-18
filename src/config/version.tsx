@@ -55,8 +55,30 @@ const FeatureList = ({
   );
 };
 
-export const version = "1.4.0";
+export const version = "1.6.0";
 export const changelog: { name: string; id: string; changelog: ReactNode }[] = [
+  {
+    id: "h9jr2cbxn7qwfvt5uypsdg",
+    name: "v1.6.0",
+    changelog: (
+      <FeatureList
+        features={[
+          "Completely redid top of server view",
+          "Favorite counts are now prominent on the server view",
+          "New theme transition (smooth)",
+          "New favorite button",
+          "Added more padding in the server view",
+          "Separated the tabs on the side for sharing actions",
+          "Added new QR code generator",
+        ]}
+        title={
+          <strong className="flex items-center">
+            Version 1.6.0 (November 17th 2024)
+          </strong>
+        }
+      />
+    ),
+  },
   {
     id: "r9swempc7kaqd2j84nutv5",
     name: "v1.5.0",

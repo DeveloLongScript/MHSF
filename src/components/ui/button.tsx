@@ -50,6 +50,8 @@ const buttonVariants = cva(
         ghost:
           "hover:bg-accent hover:text-accent-foreground focus:ring-4 focus:ring-neutral-100 focus:ring-offset-current dark:focus:ring-neutral-900 duration-150 ease-in-out transition-all",
         link: "text-primary underline-offset-4 hover:underline",
+        favorite:
+          "text-black rounded-lg hover:bg-primary/90 focus:ring-4 focus:ring-yellow-400/60 focus:ring-offset-current dark:focus:ring-yellow-400/60 duration-150 ease-in-out transition-all bg-gradient-to-bl from-yellow-300 via-yellow-500 to-yellow-100",
       },
       size: {
         default: "h-10 px-4 py-2",

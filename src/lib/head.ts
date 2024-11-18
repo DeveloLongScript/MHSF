@@ -1,7 +1,7 @@
 /*
  * MHSF, Minehut Server List
  * All external content is rather licensed under the ECA Agreement
- * located here: https://list.mlnehut.com/docs/legal/external-content-agreement
+ * located here: https://mhsf.app/docs/legal/external-content-agreement
  *
  * All code under MHSF is licensed under the MIT License
  * by open source contributors
@@ -28,26 +28,9 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-"use client";
-import { useState } from "react";
-import Banner from "./Banner";
-import ServerCustomize from "./ServerCustomize";
-import TabServer from "./misc/TabServer";
+export async function getMinecraftHead(username: string) {
+    const uuidRequest = await fetch("https://api.mojang.com/users/profiles/minecraft/" + username);
+    const uuid = (await uuidRequest.json()).id;
 
-export default function CustomizeRoot({
-  params,
-}: {
-  params: { server: string };
-}) {
-  const [color, setColor] = useState("");
-  return (
-    <div className={"pt-16 xl:px-[100px] theme-" + color}>
-      <Banner server={params.server} />
-      <TabServer server={params.server} tabDef="customize" />
-      <br />
-      <div className="pl-[40px] pr-[40px]">
-        <ServerCustomize server={params.server} cs={color} setCS={setColor} />
-      </div>
-    </div>
-  );
-}
+    return `https://crafatar.com/avatars/${uuid}`;
+}   

@@ -1,7 +1,7 @@
 /*
  * MHSF, Minehut Server List
  * All external content is rather licensed under the ECA Agreement
- * located here: https://list.mlnehut.com/docs/legal/external-content-agreement
+ * located here: https://mhsf.app/docs/legal/external-content-agreement
  *
  * All code under MHSF is licensed under the MIT License
  * by open source contributors
@@ -27,42 +27,22 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  * OTHER DEALINGS IN THE SOFTWARE.
  */
-
 "use client";
-import { Moon, Sun } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { useThemeTransition } from "./ThemeProvider";
+import { DatabaseZap } from "lucide-react";
 
-export function ModeToggle() {
-  const { changeTheme } = useThemeTransition();
-
+export default function NoItems() {
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon">
-          <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-          <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-          <span className="sr-only">Toggle theme</span>
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => changeTheme("light")}>
-          Light
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => changeTheme("dark")}>
-          Dark
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => changeTheme("system")}>
-          System
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <>
+      <div className="flex flex-col items-center justify-center p-4 pt-10">
+        <DatabaseZap
+          className="text-2xl font-semibold text-gray-600"
+          size={32}
+        />
+        <p className="text-xl text-gray-600 mt-2">
+          Huh, we tried to find something, but nothing was found.
+        </p>
+      </div>
+    </>
   );
 }

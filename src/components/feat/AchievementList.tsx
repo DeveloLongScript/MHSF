@@ -36,6 +36,7 @@ import { Card, CardContent } from "../ui/card";
 import { Skeleton } from "../ui/skeleton";
 import A from "../misc/Link";
 import { formalNames } from "@/config/achievements";
+import NoItems from "../misc/NoItems";
 
 export default function AchievementList({ server }: { server: string }) {
   const [achievements, setAchievements] = useState<
@@ -70,6 +71,7 @@ export default function AchievementList({ server }: { server: string }) {
         Achievements are earned automatically when the server is online. See{" "}
         <A alt="Achievement collection">Docs:Advanced/Achievements</A>
       </span>
+      {achievements.length === 0 && <NoItems />}
       {achievements
         .filter(
           (value, index) => listify(achievements).indexOf(value.type) === index
@@ -108,8 +110,6 @@ export default function AchievementList({ server }: { server: string }) {
     </div>
   );
 }
-
-
 
 type WithInterval<K> = K & {
   interval: number;

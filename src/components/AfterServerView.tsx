@@ -37,7 +37,7 @@ import {
   getIndexFromRarity,
   getMinehutIcons,
 } from "@/lib/types/server-icon";
-import { Copy, ExternalLink, Info } from "lucide-react";
+import { Copy, Info, QrCode, Share2 } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import FadeIn from "react-fade-in/lib/FadeIn";
@@ -56,6 +56,9 @@ import {
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "./ui/drawer";
 import EmbedSelector from "./feat/EmbedSelector";
+import { Separator } from "./ui/separator";
+import QRCodeGenerator from "./feat/QRCodeGen";
+import NoItems from "./misc/NoItems";
 
 export default function AfterServerView({ server }: { server: string }) {
   const [description, setDescription] = useState("");
@@ -64,6 +67,7 @@ export default function AfterServerView({ server }: { server: string }) {
   const [icons, setIcons] = useState<MinehutIcon[]>();
   const { resolvedTheme } = useTheme();
   const [loading, setLoading] = useState(true);
+  const [qrCodeOpen, setQrCodeOpen] = useState(false);
   const [view, setView] = useState(
     description !== "" || discord !== "" ? "desc" : "extra"
   );
@@ -104,6 +108,14 @@ export default function AfterServerView({ server }: { server: string }) {
           <EmbedSelector server={server} />
         </DrawerContent>
       </Drawer>
+      <Drawer open={qrCodeOpen} onOpenChange={setQrCodeOpen}>
+        <DrawerContent className="max-w-md w-full mx-auto rounded-t-[10px]">
+          <DrawerHeader>
+            <DrawerTitle>QR Code generator</DrawerTitle>
+          </DrawerHeader>
+          <QRCodeGenerator server={server} />
+        </DrawerContent>
+      </Drawer>
       <FadeIn>
         <div className="grid sm:grid-cols-6 h-full pl-4 pr-4 ">
           <div className="ml-5 mb-2 flex items-center sm:hidden overflow-auto w-[calc(100vw-5rem)]">
@@ -135,9 +147,10 @@ export default function AfterServerView({ server }: { server: string }) {
             >
               Purchased Icons
             </Button>
+            <Separator orientation="vertical" />
             <Button variant="ghost" onClick={() => setEmbedOpened(true)}>
-              Embed Creator
-              <ExternalLink className="h-[1.2rem] w-[1.2rem] ml-1" />
+              <Share2 className="h-[1rem] w-[1rem] mr-2" />
+              Embeds
             </Button>
           </div>
           <div className="max-sm:hidden">
@@ -168,9 +181,16 @@ export default function AfterServerView({ server }: { server: string }) {
               >
                 Purchased Icons
               </Button>
+              <br />
+              <Separator />
+              <br />
               <Button variant="ghost" onClick={() => setEmbedOpened(true)}>
-                Embed Creator
-                <ExternalLink className="h-[1.2rem] w-[1.2rem] ml-1" />
+                <Share2 className="h-[1rem] w-[1rem] mr-2" />
+                Embeds
+              </Button>
+              <Button variant="ghost" onClick={() => setQrCodeOpen(true)}>
+                <QrCode className="h-[1rem] w-[1rem] mr-2" />
+                QR Code
               </Button>
             </div>
           </div>
@@ -450,6 +470,7 @@ export default function AfterServerView({ server }: { server: string }) {
                   ownership, they may or may not available at that certain
                   moment either.
                 </p>
+                {serverObject?.purchased_icons.length == 0 && <NoItems />}
                 {serverObject?.purchased_icons.map((icon) => (
                   <Card key={icon} className="my-4">
                     <CardContent
