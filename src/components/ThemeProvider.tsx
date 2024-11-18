@@ -34,6 +34,18 @@ import * as React from "react";
 import { ThemeProvider as NextThemesProvider, useTheme } from "next-themes";
 import { type ThemeProviderProps } from "next-themes/dist/types";
 
+declare global {
+  interface Document {
+    startViewTransition(updateCallback: () => void):
+      | {
+          finished: Promise<void>;
+          ready: Promise<void>;
+          updateCallbackDone: Promise<void>;
+        }
+      | undefined;
+  }
+}
+
 export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
   const [mounted, setMounted] = React.useState(false);
 
@@ -48,7 +60,7 @@ export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
 
 interface UseThemeTransitionResult {
   theme: string | undefined;
-  changeTheme: (changeTheme: string) => () => void;
+  changeTheme: (changeTheme: string) => void;
   mounted: boolean;
 }
 
