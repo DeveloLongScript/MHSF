@@ -80,6 +80,7 @@ import {
 import { TagShower } from "./ServerList";
 import { Button } from "./ui/button";
 import { useTheme } from "next-themes";
+import { CheckmarkIcon } from "react-hot-toast";
 
 export function SearchCommandBar() {
   const [serverList, setServerList] = useState<OnlineServer[]>([]);
@@ -278,7 +279,7 @@ export function OfflineServerCB() {
 
             {customized && (
               <h2 className="flex items-center text-muted-foreground">
-                <Check />
+                <CheckmarkIcon />
                 <span className="pl-1.5 text-[16px]">
                   Is customized by a MHSF User
                 </span>

@@ -1177,7 +1177,10 @@ export default function ServerList() {
                       {affiliates
                         .filter((a) => a.mode.includes("server-list"))
                         .map((a) => (
-                          <div className="border rounded p-4 col-span-2">
+                          <div
+                            className="border rounded p-4 col-span-2"
+                            key={a.name}
+                          >
                             {a.name}
                           </div>
                         ))}
