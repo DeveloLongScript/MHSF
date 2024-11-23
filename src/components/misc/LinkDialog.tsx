@@ -49,7 +49,7 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { linkMCAccount } from "@/lib/api";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import {
   Dialog,
   DialogContent,

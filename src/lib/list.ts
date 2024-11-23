@@ -29,7 +29,7 @@
  */
 
 import { OnlineServer } from "./types/mh-server";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import { getMOTDFromServer } from "./api";
 
 var numberOfItemsInView = 20;

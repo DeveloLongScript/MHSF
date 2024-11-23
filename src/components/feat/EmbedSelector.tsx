@@ -39,7 +39,7 @@ import { codeToHtml } from "shiki";
 import { useTheme } from "next-themes";
 import { Asterisk, Copy } from "lucide-react";
 import useClipboard from "@/lib/useClipboard";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import { Checkbox } from "../ui/checkbox";
 import {
   Select,

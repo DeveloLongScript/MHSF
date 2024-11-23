@@ -68,7 +68,7 @@ import {
 } from "@/lib/api";
 import IconDisplay from "./IconDisplay";
 import ServerSingle from "@/lib/single";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import { ServerResponse, OnlineServer } from "@/lib/types/mh-server";
 import {
   Dialog,
@@ -278,7 +278,7 @@ export function OfflineServerCB() {
 
             {customized && (
               <h2 className="flex items-center text-muted-foreground">
-                <CheckIcon />
+                <Check />
                 <span className="pl-1.5 text-[16px]">
                   Is customized by a MHSF User
                 </span>

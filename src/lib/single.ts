@@ -30,7 +30,7 @@
 
 import { serverOwned } from "./api";
 import { OnlineServer, ServerResponse } from "./types/mh-server";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 
 export default class ServerSingle {
   private name = "";
