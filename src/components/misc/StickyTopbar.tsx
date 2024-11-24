@@ -30,6 +30,7 @@
 
 "use client";
 
+import { banner } from "@/config/banner";
 import { useEffect, useState, ReactNode } from "react";
 
 export default function StickyTopbar({
@@ -60,7 +61,7 @@ export default function StickyTopbar({
 
   return (
     <div
-      className={`transition-all duration-300 ${isSticky ? "fixed top-[70px] left-0 w-full backdrop-blur shadow-lg " + className : "block w-full bg-transparent"}`}
+      className={`transition-all duration-300 ${isSticky ? "fixed left-0 w-full backdrop-blur shadow-lg " + (banner.isBanner == true ? "top-[70px] " : "top-[38px] ") + className : "block w-full bg-transparent"}`}
     >
       {children}
     </div>
