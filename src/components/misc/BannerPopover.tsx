@@ -1,5 +1,4 @@
-"use client";
-
+"use client";;
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -15,8 +14,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { setCustomization } from "@/lib/api";
-import { useEffect } from "react";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import ColorProvider from "../ColorProvider";
 
 const FormSchema = z.object({

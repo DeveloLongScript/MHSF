@@ -31,7 +31,6 @@
 "use client";
 import IconDisplay from "@/components/IconDisplay";
 import { Badge } from "@/components/ui/badge";
-import { Spinner } from "@/components/ui/spinner";
 import type { ServerResponse } from "@/lib/types/mh-server";
 import { Copy, ExternalLink, ServerCrash } from "lucide-react";
 import { notFound, useSearchParams } from "next/navigation";
@@ -40,6 +39,7 @@ import { Button } from "../ui/button";
 import { CheckmarkIcon } from "react-hot-toast";
 import useClipboard from "@/lib/useClipboard";
 import { Tooltip, TooltipTrigger, TooltipContent } from "../ui/tooltip";
+import { LoadingSpinner } from "../ui/loading-spinner";
 
 export default function Embed({ params }: { params: { server: string } }) {
   const [serverFound, setServerFound] = useState(true);
@@ -65,7 +65,7 @@ export default function Embed({ params }: { params: { server: string } }) {
   }, [params]);
 
   if (loading) {
-    return <Spinner />;
+    return <LoadingSpinner />;
   }
 
   if (!serverFound) {

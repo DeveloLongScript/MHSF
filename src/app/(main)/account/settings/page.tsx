@@ -31,7 +31,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { useClerk, useUser } from "@clerk/nextjs";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import { unlinkMCAccount } from "@/lib/api";
 import { useEffect, useState } from "react";
 import { Dialog } from "@/components/ui/dialog";

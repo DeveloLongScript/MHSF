@@ -32,6 +32,7 @@ import AfterServerView from "@/components/AfterServerView";
 import Banner from "@/components/Banner";
 import ColorProvider from "@/components/ColorProvider";
 import ServerView from "@/components/ServerView";
+import StickyTopbar from "@/components/misc/StickyTopbar";
 import TabServer from "@/components/misc/TabServer";
 import { Separator } from "@/components/ui/separator";
 import type { Metadata, ResolvingMetadata } from "next";
@@ -132,7 +133,9 @@ export default function ServerPage({ params }: { params: { server: string } }) {
       <ColorProvider server={params.server}>
         <div className={"pt-16 xl:px-[100px]"}>
           <Banner server={params.server} />
-          <TabServer server={params.server} tabDef="general" />
+          <StickyTopbar scrollElevation={100} className="pt-4">
+            <TabServer server={params.server} tabDef="general" />
+          </StickyTopbar>
           <div className="pt-8">
             <ServerView server={params.server} />
           </div>

@@ -47,7 +47,7 @@ import { Input } from "@/components/ui/input";
 import { setCustomization } from "@/lib/api";
 import { useEffect, useState } from "react";
 import ColorProvider from "../ColorProvider";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 
 const FormSchema = z.object({
   id: z.string().min(2, {

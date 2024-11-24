@@ -59,6 +59,7 @@ import { useClerk, useUser } from "@clerk/nextjs";
 import { LoaderIcon } from "react-hot-toast";
 import { Separator } from "./ui/separator";
 import { convert } from "@/components/NewChart";
+import { LoadingSpinner } from "./ui/loading-spinner";
 
 export default function ServerView(props: { server: string }) {
   const [single, setSingle] = useState(new ServerSingle(props.server));
@@ -210,7 +211,9 @@ export default function ServerView(props: { server: string }) {
                       }}
                       disabled={loadingFavorite}
                     >
-                      {loadingFavorite && <LoaderIcon className="mr-2" />}
+                      {loadingFavorite && (
+                        <LoadingSpinner className="mr-2 h-4 w-4" />
+                      )}
                       {!favorited && !loadingFavorite && (
                         <motion.div
                           animate={{ opacity: 1, scale: 1 }}

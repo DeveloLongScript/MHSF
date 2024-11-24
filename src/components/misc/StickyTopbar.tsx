@@ -1,7 +1,7 @@
 /*
  * MHSF, Minehut Server List
  * All external content is rather licensed under the ECA Agreement
- * located here: https://list.mlnehut.com/docs/legal/external-content-agreement
+ * located here: https://mhsf.app/docs/legal/external-content-agreement
  *
  * All code under MHSF is licensed under the MIT License
  * by open source contributors
@@ -28,24 +28,41 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { toast } from "sonner";
+"use client";
 
-/** A hook to properly write text to the clipboard without triggering a client-side error
- * @version 1.0
- */
-export default function useClipboard() {
+import { useEffect, useState, ReactNode } from "react";
 
-    const writeText = (text: string) => {
-        if (navigator.clipboard == undefined)
-            return toast.error("Clipboard doesn't exist");
+export default function StickyTopbar({
+  children,
+  scrollElevation,
+  className,
+}: {
+  children: ReactNode;
+  scrollElevation: number;
+  className?: string;
+}) {
+  const [isSticky, setIsSticky] = useState(false);
 
-        navigator.clipboard.writeText(text);
+  const handleScroll = () => {
+    if (window.scrollY > scrollElevation) {
+      setIsSticky(true);
+    } else {
+      setIsSticky(false);
     }
-    const write = (text: ClipboardItems) => {
-        if (navigator.clipboard == undefined)
-            return toast.error("Clipboard doesn't exist")
+  };
 
-        navigator.clipboard.write(text);
-    }
-    return { writeText, write };
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  return (
+    <div
+      className={`transition-all duration-300 ${isSticky ? "fixed top-[70px] left-0 w-full backdrop-blur shadow-lg " + className : "block w-full bg-transparent"}`}
+    >
+      {children}
+    </div>
+  );
 }
