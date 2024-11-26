@@ -37,7 +37,7 @@ import {
   getIndexFromRarity,
   getMinehutIcons,
 } from "@/lib/types/server-icon";
-import { Copy, Info, QrCode, Share2 } from "lucide-react";
+import { Banknote, Copy, Info, QrCode, Share2 } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import FadeIn from "react-fade-in/lib/FadeIn";
@@ -287,8 +287,9 @@ export default function AfterServerView({ server }: { server: string }) {
                         </td>
                       </tr>
                       <tr>
-                        <th className="border p-2">Credits per day</th>
-                        <td className="border p-2">
+                        <th className="border p-2">Credits p/ day</th>
+                        <td className="border p-2 flex items-center">
+                          <Banknote className="mr-1" />
                           {serverObject?.credits_per_day == undefined
                             ? "? (unknown)"
                             : Math.floor(serverObject?.credits_per_day)}
@@ -475,7 +476,7 @@ export default function AfterServerView({ server }: { server: string }) {
                 {serverObject?.purchased_icons.map((icon) => (
                   <Card key={icon} className="my-4">
                     <CardContent
-                      className="pt-4"
+                      className="pt-4 flex items-center"
                       style={{
                         color: getIndexFromRarity(
                           icons?.find((c) => c._id === icon)?.rank.toLowerCase()
@@ -489,6 +490,37 @@ export default function AfterServerView({ server }: { server: string }) {
                         className="mr-2"
                       />
                       {icons?.find((c) => c._id === icon)?.display_name}
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <Info size={18} className="ml-2" />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          Just because an item is available, it doesn't directly{" "}
+                          <br />
+                          mean that it can be bought immediately, it just means
+                          its in the <br />
+                          pool of icons that are in the weekly rotation.
+                          <br />
+                          <br />
+                          <span className="flex items-center">
+                            <span className="mr-1">Available currently:</span>
+                            {toJSX(
+                              icons?.find((c) => c._id === icon)?.available
+                            )}
+                          </span>
+                          <span className="flex items-center">
+                            <span className="mr-1">Disabled currently:</span>
+                            {toJSX(
+                              icons?.find((c) => c._id === icon)?.disabled
+                            )}
+                          </span>
+                          <span className="flex items-center">
+                            <span className="mr-1">Price:</span>
+                            <Banknote size={16} className="mr-1" />
+                            {icons?.find((c) => c._id === icon)?.price} credits
+                          </span>
+                        </TooltipContent>
+                      </Tooltip>
                       <span
                         className="mx-2 p-1 pr-2 rounded italic font-bold"
                         style={{
@@ -517,9 +549,13 @@ export default function AfterServerView({ server }: { server: string }) {
   );
 }
 
-function toJSX(boolean: boolean) {
+function toJSX(boolean?: boolean) {
   if (boolean) {
     return <div className="text-green-400">True</div>;
+  }
+
+  if (boolean == undefined) {
+    return <div className="text-gray-400">N/A</div>;
   }
 
   return <div className="text-red-400">False</div>;
