@@ -58,7 +58,7 @@
 		"rehype-slug": "^6.0.0",
 		"remark-gfm": "^4.0.0",
 		"sonner": "^1.7.0",
-		"tailwind-merge": "^2.3.0",
+		"tailwind-merge": "^2.5.5",
 		"tailwindcss-animate": "^1.0.7",
 		"tailwindcss-patch": "^4.0.0",
 		"turbo": "^2.0.9",
