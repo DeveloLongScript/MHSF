@@ -35,7 +35,7 @@ const isProtectedRoute = createRouteMatcher(["/account(.*)"]);
 
 export default process.env.IS_AUTH == "true"
   ? clerkMiddleware((auth, req) => {
-      if (isProtectedRoute(req)) auth().protect();
+      if (isProtectedRoute(req)) auth.protect();
     })
   : (request: NextRequest) => {};
 
