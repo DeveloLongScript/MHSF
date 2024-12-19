@@ -62,7 +62,7 @@ export default async function handler(
   const users = db.collection("claimed-users");
   await users.insertOne({ player: entry.player, userId });
 
-  await clerkClient.users.updateUserMetadata(userId, {
+  (await clerkClient()).users.updateUserMetadata(userId, {
     publicMetadata: {
       player: entry.player,
     },

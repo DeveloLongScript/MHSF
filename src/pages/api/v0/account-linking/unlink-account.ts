@@ -46,14 +46,16 @@ export default async function handler(
 
   const db = client.db("mhsf");
   const users = db.collection("claimed-users");
-  const user = await clerkClient.users.getUser(userId);
+  const user = await (await clerkClient()).users.getUser(userId);
 
   if (user.publicMetadata.player == undefined) {
     res.status(400).send({ result: "Hasn't linked yet!" });
     return;
   }
   await users.findOneAndDelete({ player: user.publicMetadata.player });
-  await clerkClient.users.updateUserMetadata(userId, {
+  await (
+    await clerkClient()
+  ).users.updateUserMetadata(userId, {
     publicMetadata: { player: null },
   });
 

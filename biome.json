@@ -1,17 +1,18 @@
 {
-	"$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
-	"linter": {
-		"rules": {
-			"style": {
-				"useTemplate": "off"
-			},
-			"suspicious": {
-				"noExplicitAny": "off",
-				"noDoubleEquals": "warn"
-			},
-			"complexity": {
-				"noForEach": "off"
-			}
-		}
-	}
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "linter": {
+    "rules": {
+      "style": {
+        "useTemplate": "off",
+        "useImportType": "warn"
+      },
+      "suspicious": {
+        "noExplicitAny": "off",
+        "noDoubleEquals": "warn"
+      },
+      "complexity": {
+        "noForEach": "off"
+      }
+    }
+  }
 }
