@@ -49,7 +49,8 @@ export default async function handler(
     return res.status(401).json({ error: "Unauthorized" });
   }
   if (
-    (await clerkClient.users.getUser(userId)).publicMetadata.player == undefined
+    (await (await clerkClient()).users.getUser(userId)).publicMetadata.player ==
+    undefined
   ) {
     return res.status(401).json({ error: "Account not linked" });
   }
@@ -81,7 +82,7 @@ export default async function handler(
 
     servers.forEach(async (c, i) => {
       if (c.name == server) {
-        const MCUsername = (await clerkClient.users.getUser(userId))
+        const MCUsername = (await (await clerkClient()).users.getUser(userId))
           .publicMetadata.player;
 
         if (MCUsername == c.author) {
