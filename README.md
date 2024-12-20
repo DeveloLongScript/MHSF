@@ -1,10 +1,10 @@
-<img src="https://i.imgur.com/H7GhfNM.png" align="center">
+<div align="center"><img src="https://github.com/user-attachments/assets/3864f785-7a68-47fd-ac9f-0632ad440264" align="center"></div>
 <h1 align="center">MHSF</h1>
 
-An open-source customizable server-list for Minehut built in React. Check it out at [list.mlnehut.com](https://mhsf.app), and maybe give this repo a star! :)
+<div align="center"><img alt="nextjs" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy-minimal/built-with/nextjs_64h.png" /> <a href="https://mhsf.app/docs"><img alt="docs" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/documentation/generic_64h.png" />&nbsp;<a href="https://mhsf.app/"><img alt="mhsf.app" height="56" src="https://github.com/user-attachments/assets/9e0d0a39-1a88-4683-8567-a0b59a6cdb66" /></a></div>
 
-> [!WARNING]
-> If you want more of a explanation what this is, please use the built-in info popover. This README is mostly for contributing. Thanks!
+
+An open-source customizable server-list for Minehut built in React. Check it out at [mhsf.app](https://mhsf.app), and maybe give this repo a star!
 
 ## Info
 
@@ -29,3 +29,4 @@ The contributing guide is [here](https://github.com/DeveloLongScript/MHSF/blob/m
 ## Licensing
 
 MHSF (aka the Minehut Server List) is licensed under the [MIT License](https://github.com/DeveloLongScript/MHSF/blob/main/LICENSE). You are free to fork or modify this software *on your own terms*.
+
