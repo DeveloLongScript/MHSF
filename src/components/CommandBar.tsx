@@ -512,12 +512,25 @@ export function ServerCommandBar() {
 }
 
 function timeConverter(UNIX_timestamp: any) {
-  var a = new Date(UNIX_timestamp);
-  var months = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"];
-  var year = a.getFullYear();
-  var month = months[a.getMonth()];
-  var date = a.getDate();
-  var time = month + "/" + date + "/" + year;
+  const a = new Date(UNIX_timestamp);
+  const months = [
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9",
+    "10",
+    "11",
+    "12",
+  ];
+  const year = a.getFullYear();
+  const month = months[a.getMonth()];
+  const date = a.getDate();
+  const time = month + "/" + date + "/" + year;
   return time;
 }
 
@@ -842,6 +855,7 @@ export function CommandBarer() {
       <ServerCommandBar />
       <OfflineServerCB />
       <RandomServerDialog />
+      <SnowfallController />
     </>
   );
 }

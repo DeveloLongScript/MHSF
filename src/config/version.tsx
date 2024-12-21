@@ -55,8 +55,26 @@ const FeatureList = ({
   );
 };
 
-export const version = "1.6.0";
+export const version = "1.6.50";
 export const changelog: { name: string; id: string; changelog: ReactNode }[] = [
+  {
+    id: "dut6hx3f2paswzjve4yg9r",
+    name: "v1.6.5",
+    changelog: (
+      <FeatureList
+        features={[
+          "New MOTD engine that is over 3,000% faster, runs client-side, and doesn't need any requests to run.",
+          "Fixed issue where GitHub link was broken if you were signed-out",
+          "",
+        ]}
+        title={
+          <strong className="flex items-center">
+            Version 1.6.5 (December 20th 2024)
+          </strong>
+        }
+      />
+    ),
+  },
   {
     id: "h9jr2cbxn7qwfvt5uypsdg",
     name: "v1.6.0",

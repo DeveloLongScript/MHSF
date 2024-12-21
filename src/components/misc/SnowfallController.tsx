@@ -1,7 +1,7 @@
 /*
  * MHSF, Minehut Server List
  * All external content is rather licensed under the ECA Agreement
- * located here: https://list.mlnehut.com/docs/legal/external-content-agreement
+ * located here: https://mhsf.app/docs/legal/external-content-agreement
  *
  * All code under MHSF is licensed under the MIT License
  * by open source contributors
@@ -28,26 +28,32 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export class CommandEvents {
-  eventTarget;
+"use client";
 
-  constructor() {
-    this.eventTarget = new EventTarget();
-  }
+import { CommandEvents } from "@/lib/commandEvent";
+import { useEffectOnce } from "@/lib/useEffectOnce";
+import { useState } from "react";
+import Snowfall from "react-snowfall";
 
-  // Method to emit events
-  emit(eventName: string, info?: any) {
-    const event = new CustomEvent(eventName, { detail: info });
-    this.eventTarget.dispatchEvent(event);
-  }
+export const snowfallEvents = new CommandEvents();
+export default function SnowfallController() {
+  const [visible, setVisible] = useState(true);
 
-  // Method to listen for events
-  on(eventName: string, callback: (info?: any) => void) {
-    this.eventTarget.addEventListener(eventName, (infoF?: any) => {
-      callback(infoF.detail);
-    });
-  }
+  useEffectOnce(() => {
+    snowfallEvents.on("toggle", () => setVisible(!visible));
+  });
+
+  return (
+    <>
+      {visible && (
+        <Snowfall
+          style={{
+            position: "fixed",
+            width: "100vw",
+            height: "100vh",
+          }}
+        />
+      )}
+    </>
+  );
 }
-
-const events = new CommandEvents();
-export default events;
