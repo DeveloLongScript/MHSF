@@ -29,19 +29,19 @@
  */
 
 "use client";
-
 import { CommandEvents } from "@/lib/commandEvent";
-import { useEffectOnce } from "@/lib/useEffectOnce";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Snowfall from "react-snowfall";
 
 export const snowfallEvents = new CommandEvents();
 export default function SnowfallController() {
   const [visible, setVisible] = useState(true);
 
-  useEffectOnce(() => {
-    snowfallEvents.on("toggle", () => setVisible(!visible));
-  });
+  useEffect(() => {
+    snowfallEvents.on("toggle", () => {
+      setVisible(!visible);
+    });
+  }, [visible]);
 
   return (
     <>
