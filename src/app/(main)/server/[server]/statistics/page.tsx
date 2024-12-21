@@ -35,6 +35,7 @@ import ServerView from "@/components/ServerView";
 import TabServer from "@/components/misc/TabServer";
 import { Separator } from "@/components/ui/separator";
 import type { Metadata, ResolvingMetadata } from "next";
+import StickyTopbar from "@/components/misc/StickyTopbar";
 
 type Props = {
   params: { server: string };
@@ -98,16 +99,19 @@ export default function ServerPage({ params }: { params: { server: string } }) {
   return (
     <main>
       <ColorProvider server={params.server}>
-        <div className={"pt-16 xl:px-[100px]"}>
+        <div className={"pt-[300px] xl:px-[100px]"}>
           <Banner server={params.server} />
-          <TabServer server={params.server} tabDef="statistics" />
-          <div className="pt-8">
+          <div className="pt-8 z-10 relative">
             <ServerView server={params.server} />
-            <Separator />
-            <br />
-            <div className="p-4 gap-4">
-              <NewChart server={params.server} />
-            </div>
+          </div>
+
+          <StickyTopbar scrollElevation={100} className="pt-4">
+            <TabServer server={params.server} tabDef="statistics" />
+          </StickyTopbar>
+          <Separator />
+          <br />
+          <div className="p-4 gap-4">
+            <NewChart server={params.server} />
           </div>
         </div>
       </ColorProvider>

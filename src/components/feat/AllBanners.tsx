@@ -1,7 +1,7 @@
 /*
  * MHSF, Minehut Server List
  * All external content is rather licensed under the ECA Agreement
- * located here: https://list.mlnehut.com/docs/legal/external-content-agreement
+ * located here: https://mhsf.app/docs/legal/external-content-agreement
  *
  * All code under MHSF is licensed under the MIT License
  * by open source contributors
@@ -28,26 +28,16 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
+"use client";
 
-/** used when there is a outage */
-export const banner = {
-  isBanner:
-    process.env.NEXT_PUBLIC_VERCEL_ENV !== "production"
-      ? true
-      : /** Set this to true when outage --->*/ false,
-  bannerText:
-    process.env.NEXT_PUBLIC_VERCEL_ENV !== "production" ? (
-      <>
-        Your not in production!{" "}
-        <Link href="https://list.mlnehut.com">
-          <Button variant="link" className="dark:text-black">
-            Go to production
-          </Button>
-        </Link>
-      </>
-    ) : (
-      <>{/** Set this to an explanation! */}</>
-    ),
-};
+import { useBanners } from "@/lib/hooks/use-banners";
+
+export default function AllBanners() {
+  const { banners } = useBanners();
+
+  return (
+    <div className="fixed grid grid-cols-1 z-10">
+      {banners.map((banner) => banner.bannerContent)}
+    </div>
+  );
+}

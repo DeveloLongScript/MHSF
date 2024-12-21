@@ -62,13 +62,17 @@ async function apiConstructor<K>(
 export async function getMOTDFromServer(
 	list: Array<{ server: string; motd: string }>,
 ): Promise<Array<{ server: string; motd: string }>> {
-	const result = await fetch(connector("/motd", { version: 1 }), {
-		body: JSON.stringify({ motd: list }),
-		method: "POST",
-		headers: {
-			"Content-Type": "application/json",
+	const result = await fetch(
+		process.env.NEXT_PUBLIC_ALTERNATE_MOTD_ENDPOINT ??
+			connector("/motd", { version: 1 }),
+		{
+			body: JSON.stringify({ motd: list }),
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
 		},
-	});
+	);
 
 	let json = await result.json();
 	return json.result;

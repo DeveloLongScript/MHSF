@@ -65,7 +65,7 @@ export const changelog: { name: string; id: string; changelog: ReactNode }[] = [
         features={[
           "New MOTD engine that is over 3,000% faster, runs client-side, and doesn't need any requests to run.",
           "Fixed issue where GitHub link was broken if you were signed-out",
-          "",
+          "Adding snowfall finally (better late then ever)",
         ]}
         title={
           <strong className="flex items-center">

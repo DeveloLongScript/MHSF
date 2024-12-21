@@ -1,7 +1,7 @@
 /*
  * MHSF, Minehut Server List
  * All external content is rather licensed under the ECA Agreement
- * located here: https://list.mlnehut.com/docs/legal/external-content-agreement
+ * located here: https://mhsf.app/docs/legal/external-content-agreement
  *
  * All code under MHSF is licensed under the MIT License
  * by open source contributors
@@ -28,23 +28,20 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-"use client";
-import { useState } from "react";
-import ServerCustomize from "./ServerCustomize";
-import TabServer from "./misc/TabServer";
+import SignUpPage from "@/components/clerk/SignInForm";
+import { ServerCrash } from "lucide-react";
 
-export default function CustomizeRoot({
-  params,
-}: {
-  params: { server: string };
-}) {
-  const [color, setColor] = useState("");
+export default function Page() {
   return (
-    <div className={"pt-16 xl:px-[100px] theme-" + color}>
-      <TabServer server={params.server} tabDef="customize" />
-      <br />
-      <div className="pl-[40px] pr-[40px]">
-        <ServerCustomize server={params.server} cs={color} setCS={setColor} />
+    <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-[rgb(244,_244,_245)] p-6 md:p-10">
+      <div className="flex w-full max-w-sm flex-col gap-6">
+        <a href="/" className="flex items-center gap-2 self-center font-medium">
+          <div className="flex h-6 w-6 items-center justify-center rounded-md bg-primary text-primary-foreground">
+            <ServerCrash className="size-4" />
+          </div>
+          MHSF
+        </a>
+        <SignUpPage />
       </div>
     </div>
   );

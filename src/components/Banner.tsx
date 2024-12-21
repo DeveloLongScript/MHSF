@@ -31,44 +31,54 @@
 "use client";
 import { getCustomization } from "@/lib/api";
 import { useEffect, useState } from "react";
+import useTotalBannerSize from "@/lib/hooks/use-total-banner-size";
 
 export default function Banner({ server }: { server: string }) {
-	const [bannerURL, setBannerURL] = useState("");
-	const [loading, setLoading] = useState(true);
+  const [bannerURL, setBannerURL] = useState("");
+  const [loading, setLoading] = useState(true);
+  const { bannerSize } = useTotalBannerSize();
 
-	useEffect(() => {
-		getCustomization(server).then((c) => {
-			if (c != null) {
-				setLoading(false);
-				setBannerURL(c.banner == undefined ? "" : c.banner);
-			} else {
-				setLoading(false);
-			}
-		});
-	}, [server]);
+  useEffect(() => {
+    getCustomization(server).then((c) => {
+      if (c != null) {
+        setLoading(false);
+        setBannerURL(c.banner == undefined ? "" : c.banner);
+      } else {
+        setLoading(false);
+      }
+    });
+  }, [server]);
 
-	if (loading) {
-		return (
-			<>
-				<br />
-			</>
-		);
-	}
+  if (loading) {
+    return (
+      <>
+        <br />
+      </>
+    );
+  }
 
-	return (
-		<>
-			{bannerURL != "" && (
-				<img
-					src={
-						bannerURL.startsWith("https://i.imgur.com")
-							? bannerURL
-							: "wsrv.nl/?url=" + encodeURIComponent(bannerURL) + "?n=-1"
-					}
-					className="rounded align-middle block ml-auto mr-auto w-[50%] max-h-[150px]"
-					alt="User-provided banner for this server."
-				/>
-			)}
-			<br />
-		</>
-	);
+  return (
+    <>
+      {bannerURL != "" && (
+        <img
+          src={
+            bannerURL.startsWith("https://i.imgur.com")
+              ? bannerURL
+              : "wsrv.nl/?url=" + encodeURIComponent(bannerURL) + "?n=-1"
+          }
+          className="rounded align-middle block ml-auto mr-auto absolute left-0 z-0 max-h-[400px] w-full object-fill"
+          alt="User-provided banner for this server."
+          style={
+            {
+              "-webkit-mask-image":
+                "linear-gradient(to top, transparent, black)",
+              maskImage: "linear-gradient(to top, transparent, black)",
+              top: `${bannerSize * 32 + 36}px`,
+            } as React.CSSProperties
+          }
+        />
+      )}
+      <br />
+    </>
+  );
 }

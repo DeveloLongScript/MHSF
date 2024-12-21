@@ -28,24 +28,56 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-"use client";
-import { useState } from "react";
-import ServerCustomize from "./ServerCustomize";
-import TabServer from "./misc/TabServer";
+import { SignedIn } from "@clerk/clerk-react";
+import { useUser } from "@clerk/nextjs";
+import {
+	KnockProvider,
+	KnockFeedProvider,
+	NotificationIconButton,
+	NotificationFeedPopover,
+	NotificationCell,
+} from "@knocklabs/react";
+import { useRef, useState } from "react";
 
-export default function CustomizeRoot({
-  params,
-}: {
-  params: { server: string };
-}) {
-  const [color, setColor] = useState("");
-  return (
-    <div className={"pt-16 xl:px-[100px] theme-" + color}>
-      <TabServer server={params.server} tabDef="customize" />
-      <br />
-      <div className="pl-[40px] pr-[40px]">
-        <ServerCustomize server={params.server} cs={color} setCS={setColor} />
-      </div>
-    </div>
-  );
+import "@knocklabs/react/dist/index.css";
+import { Button } from "../ui/button";
+import { Bell } from "lucide-react";
+import { useTheme } from "next-themes";
+
+export default function KnockNotification() {
+	const [isVisible, setIsVisible] = useState(false);
+	const notifButtonRef = useRef(null);
+	const { user } = useUser();
+	const { resolvedTheme } = useTheme();
+
+	return (
+		<SignedIn>
+			<KnockProvider
+				apiKey={process.env.NEXT_PUBLIC_KNOCK_KEY as string}
+				userId={user?.id as string}
+			>
+				<KnockFeedProvider
+					feedId={process.env.NEXT_PUBLIC_CHANNEL_ID as string}
+					colorMode={resolvedTheme}
+				>
+					<>
+						<Button
+							size="icon"
+							variant="ghost"
+							className="mb-1"
+							ref={notifButtonRef}
+							onClick={() => setIsVisible(!isVisible)}
+						>
+							<Bell className="h-[1.2rem] w-[1.2rem]" />
+						</Button>
+						<NotificationFeedPopover
+							buttonRef={notifButtonRef}
+							isVisible={isVisible}
+							onClose={() => setIsVisible(false)}
+						/>
+					</>
+				</KnockFeedProvider>
+			</KnockProvider>
+		</SignedIn>
+	);
 }

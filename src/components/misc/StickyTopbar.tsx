@@ -29,8 +29,7 @@
  */
 
 "use client";
-
-import { banner } from "@/config/banner";
+import useTotalBannerSize from "@/lib/hooks/use-total-banner-size";
 import { useEffect, useState, ReactNode } from "react";
 
 export default function StickyTopbar({
@@ -43,6 +42,7 @@ export default function StickyTopbar({
   className?: string;
 }) {
   const [isSticky, setIsSticky] = useState(false);
+  const { bannerSize } = useTotalBannerSize();
 
   const handleScroll = () => {
     if (window.scrollY > scrollElevation) {
@@ -61,7 +61,10 @@ export default function StickyTopbar({
 
   return (
     <div
-      className={`transition-all duration-300 ${isSticky ? "fixed left-0 w-full backdrop-blur shadow-lg " + (banner.isBanner == true ? "top-[70px] " : "top-[38px] ") + className : "block w-full bg-transparent"}`}
+      className={`transition-all duration-300 ${isSticky ? "fixed left-0 w-full backdrop-blur shadow-lg " + className : "block w-full bg-transparent"}`}
+      style={{
+        top: isSticky ? `${bannerSize * 32 + 38}px` : undefined,
+      }}
     >
       {children}
     </div>
