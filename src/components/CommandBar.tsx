@@ -68,6 +68,7 @@ import {
 } from "@/lib/api";
 import IconDisplay from "./IconDisplay";
 import ServerSingle from "@/lib/single";
+import SnowfallController from "./misc/SnowfallController";
 import { toast } from "sonner";
 import { ServerResponse, OnlineServer } from "@/lib/types/mh-server";
 import {
