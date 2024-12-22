@@ -44,6 +44,13 @@ export function ClerkThemeProvider({
 }) {
   const [theme, setTheme] = useState<string | undefined>("");
 
+  if (process.env.NEXT_PUBLIC_IS_AUTH !== "true")
+    return (
+      <html lang="en" className={className}>
+        <body>{children}</body>
+      </html>
+    );
+
   return (
     <ClerkProvider
       appearance={{ baseTheme: theme == "dark" ? dark : undefined }}
