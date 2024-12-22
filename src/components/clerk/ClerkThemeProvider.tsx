@@ -47,7 +47,9 @@ export function ClerkThemeProvider({
   if (process.env.NEXT_PUBLIC_IS_AUTH !== "true")
     return (
       <html lang="en" className={className}>
-        <body>{children}</body>
+        <body>
+          Non-authenticated environments are disallowed on this origin.
+        </body>
       </html>
     );
 

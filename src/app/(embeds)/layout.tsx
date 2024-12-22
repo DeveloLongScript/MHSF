@@ -29,12 +29,10 @@
  */
 
 "use client";
-
 import { TooltipProvider } from "@/components/ui/tooltip";
 import "../globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { useSearchParams } from "next/navigation";
-import { ClerkThemeProvider } from "@/components/clerk/ClerkThemeProvider";
 
 export default function RootLayout({
   children,
@@ -44,14 +42,16 @@ export default function RootLayout({
   const searchParams = useSearchParams();
   const search = searchParams?.get("theme") || "light";
   return (
-    <ClerkThemeProvider>
-      <ThemeProvider
-        attribute="class"
-        disableTransitionOnChange
-        forcedTheme={search}
-      >
-        <TooltipProvider>{children}</TooltipProvider>
-      </ThemeProvider>
-    </ClerkThemeProvider>
+    <html lang="en">
+      <body>
+        <ThemeProvider
+          attribute="class"
+          disableTransitionOnChange
+          forcedTheme={search}
+        >
+          <TooltipProvider>{children}</TooltipProvider>
+        </ThemeProvider>
+      </body>
+    </html>
   );
 }
