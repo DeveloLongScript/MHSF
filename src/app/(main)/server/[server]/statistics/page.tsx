@@ -97,7 +97,7 @@ export async function generateMetadata(
 
 export default function ServerPage({ params }: { params: { server: string } }) {
   return (
-    <main>
+    <main style={{ "color-scheme": "dark" } as React.CSSProperties}>
       <ColorProvider server={params.server}>
         <div className={"pt-[300px] xl:px-[100px]"}>
           <Banner server={params.server} />

@@ -66,7 +66,7 @@ export default function Banner({ server }: { server: string }) {
               ? bannerURL
               : "wsrv.nl/?url=" + encodeURIComponent(bannerURL) + "?n=-1"
           }
-          className="rounded align-middle block ml-auto mr-auto absolute left-0 z-0 max-h-[400px] w-full object-fill"
+          className="rounded align-middle block ml-auto mr-auto absolute left-0 z-0 w-full object-fill"
           alt="User-provided banner for this server."
           style={
             {
