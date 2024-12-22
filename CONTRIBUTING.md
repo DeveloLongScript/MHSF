@@ -34,7 +34,7 @@ Set the following variables in the .env.local file:
 # Clerk
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY="pk_..."
 CLERK_SECRET_KEY="sk_..."
-IS_AUTH="true"
+NEXT_PUBLIC_IS_AUTH="true"
 ```
 
 ## MongoDB
