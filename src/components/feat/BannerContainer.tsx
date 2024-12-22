@@ -1,7 +1,7 @@
 /*
  * MHSF, Minehut Server List
  * All external content is rather licensed under the ECA Agreement
- * located here: https://list.mlnehut.com/docs/legal/external-content-agreement
+ * located here: https://mhsf.app/docs/legal/external-content-agreement
  *
  * All code under MHSF is licensed under the MIT License
  * by open source contributors
@@ -29,23 +29,23 @@
  */
 
 "use client";
-import { useState } from "react";
-import ServerCustomize from "./ServerCustomize";
-import TabServer from "./misc/TabServer";
 
-export default function CustomizeRoot({
-  params,
+import useTotalBannerSize from "@/lib/hooks/use-total-banner-size";
+
+export default function BannerContainer({
+  children,
+  className,
+  style,
 }: {
-  params: { server: string };
+  children: React.ReactNode;
+  className?: string;
+  style: (size: number) => React.CSSProperties;
 }) {
-  const [color, setColor] = useState("");
+  const { bannerSize } = useTotalBannerSize();
+
   return (
-    <div className={"pt-16 xl:px-[100px] theme-" + color}>
-      <TabServer server={params.server} tabDef="customize" />
-      <br />
-      <div className="pl-[40px] pr-[40px]">
-        <ServerCustomize server={params.server} cs={color} setCS={setColor} />
-      </div>
+    <div className={className} style={style(bannerSize)}>
+      {children}
     </div>
   );
 }

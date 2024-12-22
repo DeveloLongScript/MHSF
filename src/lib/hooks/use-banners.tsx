@@ -1,7 +1,7 @@
 /*
  * MHSF, Minehut Server List
  * All external content is rather licensed under the ECA Agreement
- * located here: https://list.mlnehut.com/docs/legal/external-content-agreement
+ * located here: https://mhsf.app/docs/legal/external-content-agreement
  *
  * All code under MHSF is licensed under the MIT License
  * by open source contributors
@@ -28,24 +28,30 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-"use client";
-import { useState } from "react";
-import ServerCustomize from "./ServerCustomize";
-import TabServer from "./misc/TabServer";
+import { bannerHooks, defaultBanners } from "@/config/banners";
+import { useEffect, useState } from "react";
+import { useIsMobile } from "./use-mobile";
 
-export default function CustomizeRoot({
-  params,
-}: {
-  params: { server: string };
-}) {
-  const [color, setColor] = useState("");
-  return (
-    <div className={"pt-16 xl:px-[100px] theme-" + color}>
-      <TabServer server={params.server} tabDef="customize" />
-      <br />
-      <div className="pl-[40px] pr-[40px]">
-        <ServerCustomize server={params.server} cs={color} setCS={setColor} />
-      </div>
-    </div>
-  );
+export function useBanners() {
+  const [banners, setBanners] = useState<
+    {
+      bannerSpace: number;
+      bannerContent: React.ReactNode;
+    }[]
+  >(defaultBanners);
+  const isOnMobile = useIsMobile();
+
+  useEffect(() => {
+    if (isOnMobile) {
+      setBanners([]);
+      return;
+    }
+    setBanners(defaultBanners);
+    bannerHooks.forEach((hook) => {
+      const run = hook();
+      if (run !== undefined) setBanners((oldBanners) => [...oldBanners, run]);
+    });
+  }, [isOnMobile]);
+
+  return { banners };
 }

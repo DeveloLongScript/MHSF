@@ -1,7 +1,7 @@
 /*
  * MHSF, Minehut Server List
  * All external content is rather licensed under the ECA Agreement
- * located here: https://list.mlnehut.com/docs/legal/external-content-agreement
+ * located here: https://mhsf.app/docs/legal/external-content-agreement
  *
  * All code under MHSF is licensed under the MIT License
  * by open source contributors
@@ -29,22 +29,44 @@
  */
 
 "use client";
-import { useState } from "react";
-import ServerCustomize from "./ServerCustomize";
-import TabServer from "./misc/TabServer";
 
-export default function CustomizeRoot({
-  params,
+import React, { useEffect, useState } from "react";
+import { Gradient } from "stripe-gradient";
+
+export default function GradientBanner({
+  children,
 }: {
-  params: { server: string };
+  children?: React.ReactNode;
 }) {
-  const [color, setColor] = useState("");
+  const [gradientId, setGradientId] = useState("gradient-banner");
+
+  useEffect(() => {
+    setGradientId("gradient-banner");
+    const gradient = new Gradient();
+    gradient.initGradient("#" + gradientId);
+  }, [gradientId]);
+
   return (
-    <div className={"pt-16 xl:px-[100px] theme-" + color}>
-      <TabServer server={params.server} tabDef="customize" />
-      <br />
-      <div className="pl-[40px] pr-[40px]">
-        <ServerCustomize server={params.server} cs={color} setCS={setColor} />
+    <div className="fixed top-0 left-0 backdrop-blur">
+      <canvas
+        id={gradientId}
+        data-js-darken-top
+        className="w-screen blur-sm h-[4rem] border-b z-1"
+        style={
+          {
+            "--gradient-color-1": "#6ec3f4",
+            "--gradient-color-2": "#3a3aff",
+            "--gradient-color-3": "#ff61ab",
+            "--gradient-color-4": "#E63946",
+            webKitMaskImage: "linear-gradient(to top, transparent, black)",
+            maskImage: "linear-gradient(to top, transparent, black)",
+          } as React.CSSProperties
+        }
+        height="64"
+        width={window.screen.width}
+      />{" "}
+      <div className="fixed top-0 left-0 z-2 p-2 text-left text-black dark:text-white">
+        {children}
       </div>
     </div>
   );
