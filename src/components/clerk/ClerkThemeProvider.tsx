@@ -34,6 +34,7 @@ import { dark } from "@clerk/themes";
 import { useTheme } from "next-themes";
 import { type ReactNode, useEffect, useState } from "react";
 import { ThemeProvider } from "../ThemeProvider";
+import Link from "next/link";
 
 export function ClerkThemeProvider({
   children,
@@ -48,7 +49,8 @@ export function ClerkThemeProvider({
     return (
       <html lang="en" className={className}>
         <body>
-          Non-authenticated environments are disallowed on this origin.
+          Non-authenticated environments are disallowed on this origin. <br />
+          <Link href="https://mhsf.app">Go to production</Link>
         </body>
       </html>
     );
