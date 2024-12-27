@@ -26,7 +26,7 @@ jobs:
 
       - name: Access cloned repository content
         run: |
-            cd MHSF
+            cd MHSF.
         
       - name: Run Biome
         run: biome format --write ./src
