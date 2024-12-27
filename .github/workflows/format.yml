@@ -21,7 +21,7 @@ jobs:
         uses: biomejs/setup-biome@v2
         
       - name: Run Biome
-        run: biome format --write./src
+        run: biome format --write ./src
         
       - name: Push to GitHub
         uses: stefanzweifel/git-auto-commit-action@v5
