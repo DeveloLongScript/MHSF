@@ -1,6 +1,9 @@
 name: Format MHSF using Biomejs
 
-on: [pull_request_target, issues]
+# Trigger on new commits
+on: 
+  push:
+    branches: '**'
 
 jobs:
   format:
