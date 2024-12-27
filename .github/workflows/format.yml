@@ -20,21 +20,12 @@ jobs:
       - name: Setup Biome CLI
         uses: biomejs/setup-biome@v2
         
-      - name: Clone MHSF
-        uses: GuillaumeFalourd/clone-github-repo-action@v2.3
-        with:
-          depth: 1
-          branch: 'main'
-          owner: 'DeveloLongScript'
-          repository: 'MHSF'
-        
       - name: Run Biome
-        run: biome format --write MHSF/src
+        run: biome format --write./src
         
       - name: Push to GitHub
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          repository: ./MHSF
           commit_message: Automatically format code commited
           commit_user_name: Format Bot
           commit_author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
