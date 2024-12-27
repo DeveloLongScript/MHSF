@@ -46,8 +46,14 @@ MONGO_DB="mongodb+srv://..."
 ## Smaller things (for production-ready servers)
 
 ### Cron
+The Cron tasks used in MHSF are used to gather statistics on both online servers and Minehut as a whole. It works internally by pinging the `/servers` endpoint every 30 minutes from Minehut and pulling the data into the MongoDB database.
+
 Cron can run in either a docker container or just be run in the background. To run it through Docker, use the following:
 ```bash
+# Clone Cron tasks
+git clone https://github.com/DeveloLongScript/MHSF
+cd cron
+
 # Install dependencies and build script on your local machine
 yarn
 yarn run build
@@ -56,11 +62,15 @@ docker build .
 ```
 To run it without Docker, use the following:
 ```bash
+# Clone Cron tasks
+git clone https://github.com/DeveloLongScript/MHSF
+cd cron
+
 yarn run build
 ```
 
 > [!NOTE]
-> You must have a `.env.local` with a MongoDB database (same `MONGO_DB` key) in the previous directory (for monorepo like management) running without Docker, and
+> You must have a `.env.local` with a MongoDB database (same `MONGO_DB` key) **in the previous directory** (for monorepo-like management) running without Docker, and
 > the same `.env.local` *but in the same directory when* using Docker.
 
 ### Reporting
