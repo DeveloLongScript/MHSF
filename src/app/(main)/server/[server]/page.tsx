@@ -37,112 +37,112 @@ import TabServer from "@/components/misc/TabServer";
 import type { Metadata, ResolvingMetadata } from "next";
 
 type Props = {
-  params: { server: string };
+	params: { server: string };
 };
 
 export async function generateMetadata(
-  { params }: Props,
-  parent: ResolvingMetadata
+	{ params }: Props,
+	parent: ResolvingMetadata,
 ): Promise<Metadata> {
-  // read route params
-  const { server } = params;
-  const json = await (
-    await fetch("https://api.minehut.com/server/" + server + "?byName=true")
-  ).json();
+	// read route params
+	const { server } = params;
+	const json = await (
+		await fetch("https://api.minehut.com/server/" + server + "?byName=true")
+	).json();
 
-  return {
-    themeColor: "#000000",
-    title:
-      json.server == null
-        ? "Server doesn't exist | MHSF"
-        : json.server.name +
-          ", " +
-          (json.server.online
-            ? json.server.playerCount +
-              (json.server.maxPlayers != 10
-                ? "/" + json.server.maxPlayers
-                : "") +
-              " online"
-            : "Offline") +
-          " | MHSF",
-    description:
-      json.server == null
-        ? `The server ${server} doesn't exist.`
-        : `View ${server} on Minehut Server Finder!`,
-    authors: json.server == null ? undefined : { name: json.server.owner },
-    applicationName: "MHSF (Minehut Server Finder)",
-    icons:
-      json.server == null
-        ? undefined
-        : "https://minehut-server-icons-live.s3.us-west-2.amazonaws.com/" +
-          (json.server.icon == undefined ? "OAK_SIGN" : json.server.icon) +
-          ".png",
-    twitter: {
-      title:
-        json.server == null
-          ? "Server doesn't exist | MHSF"
-          : json.server.name +
-            ", " +
-            (json.server.online
-              ? json.server.playerCount +
-                (json.server.maxPlayers != 10
-                  ? "/" + json.server.maxPlayers
-                  : "") +
-                " online"
-              : "Offline") +
-            " | MHSF",
-      description:
-        json.server == null
-          ? `The server ${server} doesn't exist.`
-          : `View ${server} on Minehut Server Finder!`,
-      images: [
-        {
-          url:
-            "https://minehut-server-icons-live.s3.us-west-2.amazonaws.com/" +
-            json.server.icon +
-            ".png",
-        },
-        {
-          url: "/public/imgs/icon-cf.png",
-        },
-      ],
-    },
-    openGraph: {
-      type: "profile",
-      siteName: "MHSF (Minehut Server Finder)",
+	return {
+		themeColor: "#000000",
+		title:
+			json.server == null
+				? "Server doesn't exist | MHSF"
+				: json.server.name +
+					", " +
+					(json.server.online
+						? json.server.playerCount +
+							(json.server.maxPlayers != 10
+								? "/" + json.server.maxPlayers
+								: "") +
+							" online"
+						: "Offline") +
+					" | MHSF",
+		description:
+			json.server == null
+				? `The server ${server} doesn't exist.`
+				: `View ${server} on Minehut Server Finder!`,
+		authors: json.server == null ? undefined : { name: json.server.owner },
+		applicationName: "MHSF (Minehut Server Finder)",
+		icons:
+			json.server == null
+				? undefined
+				: "https://minehut-server-icons-live.s3.us-west-2.amazonaws.com/" +
+					(json.server.icon == undefined ? "OAK_SIGN" : json.server.icon) +
+					".png",
+		twitter: {
+			title:
+				json.server == null
+					? "Server doesn't exist | MHSF"
+					: json.server.name +
+						", " +
+						(json.server.online
+							? json.server.playerCount +
+								(json.server.maxPlayers != 10
+									? "/" + json.server.maxPlayers
+									: "") +
+								" online"
+							: "Offline") +
+						" | MHSF",
+			description:
+				json.server == null
+					? `The server ${server} doesn't exist.`
+					: `View ${server} on Minehut Server Finder!`,
+			images: [
+				{
+					url:
+						"https://minehut-server-icons-live.s3.us-west-2.amazonaws.com/" +
+						json.server.icon +
+						".png",
+				},
+				{
+					url: "/public/imgs/icon-cf.png",
+				},
+			],
+		},
+		openGraph: {
+			type: "profile",
+			siteName: "MHSF (Minehut Server Finder)",
 
-      images: [
-        {
-          url:
-            "https://minehut-server-icons-live.s3.us-west-2.amazonaws.com/" +
-            json.server.icon +
-            ".png",
-        },
-        {
-          url: "/public/imgs/icon-cf.png",
-        },
-      ],
-    },
-  };
+			images: [
+				{
+					url:
+						"https://minehut-server-icons-live.s3.us-west-2.amazonaws.com/" +
+						json.server.icon +
+						".png",
+				},
+				{
+					url: "/public/imgs/icon-cf.png",
+				},
+			],
+		},
+	};
 }
 
 export default function ServerPage({ params }: { params: { server: string } }) {
-  return (
-    <main style={{ "color-scheme": "dark" } as React.CSSProperties}>
-      <ColorProvider server={params.server}>
-        <div className={"pt-[300px] xl:px-[100px]"}>
-          <Banner server={params.server} />
-          <div className="pt-8 z-10 relative">
-            <ServerView server={params.server} />
-          </div>
+	return (
+		<main style={{ "color-scheme": "dark" } as React.CSSProperties}>
+			<ColorProvider server={params.server}>
+				<div className={"pt-[300px] xl:px-[100px]"}>
+					<Banner server={params.server} />
+					<div className="pt-8 z-10 relative">
+						<ServerView server={params.server} />
+					</div>
 
-          <StickyTopbar scrollElevation={100} className="pt-4">
-            <TabServer server={params.server} tabDef="general" />
-          </StickyTopbar>
-          <br />
-          <AfterServerView server={params.server} />
-        </div>
-      </ColorProvider>
-    </main>
-  );
+					<StickyTopbar scrollElevation={100} className="pt-4">
+						<TabServer server={params.server} tabDef="general" />
+					</StickyTopbar>
+					<br />
+					<AfterServerView server={params.server} />
+				</div>
+			</ColorProvider>
+		</main>
+	);
 }

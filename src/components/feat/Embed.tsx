@@ -42,127 +42,127 @@ import { Tooltip, TooltipTrigger, TooltipContent } from "../ui/tooltip";
 import { LoadingSpinner } from "../ui/loading-spinner";
 
 export default function Embed({ params }: { params: { server: string } }) {
-  const [serverFound, setServerFound] = useState(true);
-  const [loading, setLoading] = useState(true);
-  const [copied, setCopied] = useState(false);
-  const [serverObject, setServerObject] = useState<ServerResponse | null>(null);
-  const searchParams = useSearchParams();
-  const staticMode = searchParams?.get("static") === "true";
-  const noShowBranding = searchParams?.get("branding") === "false";
-  const clipboard = useClipboard();
+	const [serverFound, setServerFound] = useState(true);
+	const [loading, setLoading] = useState(true);
+	const [copied, setCopied] = useState(false);
+	const [serverObject, setServerObject] = useState<ServerResponse | null>(null);
+	const searchParams = useSearchParams();
+	const staticMode = searchParams?.get("static") === "true";
+	const noShowBranding = searchParams?.get("branding") === "false";
+	const clipboard = useClipboard();
 
-  useEffect(() => {
-    (async () => {
-      const serverFoundResponse = await fetch(
-        "https://api.minehut.com/server/" + params.server + "?byName=true"
-      );
-      const stream = await serverFoundResponse.json();
+	useEffect(() => {
+		(async () => {
+			const serverFoundResponse = await fetch(
+				"https://api.minehut.com/server/" + params.server + "?byName=true",
+			);
+			const stream = await serverFoundResponse.json();
 
-      if (stream.server == null) setServerFound(false);
-      else setServerObject(stream.server);
-      setLoading(false);
-    })();
-  }, [params]);
+			if (stream.server == null) setServerFound(false);
+			else setServerObject(stream.server);
+			setLoading(false);
+		})();
+	}, [params]);
 
-  if (loading) {
-    return <LoadingSpinner />;
-  }
+	if (loading) {
+		return <LoadingSpinner />;
+	}
 
-  if (!serverFound) {
-    notFound();
-  }
+	if (!serverFound) {
+		notFound();
+	}
 
-  return (
-    <div className="rounded w-[390px] h-[145px] bg-muted">
-      <div
-        className={
-          "flex items-center text-sm cursor-pointer border-b p-2" +
-          (staticMode ? "" : " group")
-        }
-        onClick={() =>
-          window.open("/server/" + params.server, "_blank")?.focus()
-        }
-      >
-        <ServerCrash
-          size={16}
-          className="group-hover:text-white p-[4px] group-hover:p-[3px] w-[24px] h-[24px] transition-all bg-gradient-to-r group-hover:from-blue-600 group-hover:to-purple-500 group-hover:rounded"
-        />
-        <span className="transition-colors ml-2 group-hover:bg-clip-text group-hover:text-transparent bg-gradient-to-r group-hover:from-blue-600 group-hover:to-purple-500">
-          Powered by MHSF
-        </span>
-      </div>
-      <div className="px-4 pt-2 flex items-center group overflow-hidden">
-        <div className={staticMode ? "block" : "group-hover:block hidden"}>
-          <Tooltip>
-            <TooltipTrigger>
-              <Button
-                variant="outline"
-                size="sm"
-                className="mb-1"
-                onClick={() => {
-                  setCopied(true);
-                  clipboard.writeText(params.server + ".mhsf.minehut.gg");
-                  setTimeout(() => setCopied(false), 1000);
-                }}
-              >
-                {copied ? <CheckmarkIcon /> : <Copy size={16} />}
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>Copy this server IP</TooltipContent>
-          </Tooltip>{" "}
-          <br />
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              window.open("/server/" + params.server, "_blank")?.focus();
-            }}
-          >
-            <ExternalLink size={16} />
-          </Button>
-        </div>
-        <IconDisplay
-          server={serverObject}
-          className={
-            "flex items-center mr-2" +
-            (staticMode ? " mb-1 ml-1" : " group-hover:mb-1 group-hover:ml-1")
-          }
-        />
-        <div className={"block" + (staticMode ? " mb-1" : " group-hover:mb-1")}>
-          <strong className="text-lg">{params.server}</strong>{" "}
-          {!noShowBranding && <Badge variant="blue">on Minehut</Badge>}
-          <br />
-          <span className="text-sm">Joined {serverObject?.joins} times</span>
-          <br />
-          {serverObject?.online && (
-            <span className="flex items-center">
-              {serverObject.playerCount === 0 ? (
-                <div
-                  className="items-center border"
-                  style={{
-                    width: ".5rem",
-                    height: ".5rem",
-                    borderRadius: "9999px",
-                  }}
-                />
-              ) : (
-                <div
-                  className="items-center"
-                  style={{
-                    backgroundColor: "#0cce6b",
-                    width: ".5rem",
-                    height: ".5rem",
-                    borderRadius: "9999px",
-                  }}
-                />
-              )}
-              <span className="text-sm ml-1">
-                {serverObject.playerCount} player(s) online
-              </span>
-            </span>
-          )}
-        </div>
-      </div>
-    </div>
-  );
+	return (
+		<div className="rounded w-[390px] h-[145px] bg-muted">
+			<div
+				className={
+					"flex items-center text-sm cursor-pointer border-b p-2" +
+					(staticMode ? "" : " group")
+				}
+				onClick={() =>
+					window.open("/server/" + params.server, "_blank")?.focus()
+				}
+			>
+				<ServerCrash
+					size={16}
+					className="group-hover:text-white p-[4px] group-hover:p-[3px] w-[24px] h-[24px] transition-all bg-gradient-to-r group-hover:from-blue-600 group-hover:to-purple-500 group-hover:rounded"
+				/>
+				<span className="transition-colors ml-2 group-hover:bg-clip-text group-hover:text-transparent bg-gradient-to-r group-hover:from-blue-600 group-hover:to-purple-500">
+					Powered by MHSF
+				</span>
+			</div>
+			<div className="px-4 pt-2 flex items-center group overflow-hidden">
+				<div className={staticMode ? "block" : "group-hover:block hidden"}>
+					<Tooltip>
+						<TooltipTrigger>
+							<Button
+								variant="outline"
+								size="sm"
+								className="mb-1"
+								onClick={() => {
+									setCopied(true);
+									clipboard.writeText(params.server + ".mhsf.minehut.gg");
+									setTimeout(() => setCopied(false), 1000);
+								}}
+							>
+								{copied ? <CheckmarkIcon /> : <Copy size={16} />}
+							</Button>
+						</TooltipTrigger>
+						<TooltipContent>Copy this server IP</TooltipContent>
+					</Tooltip>{" "}
+					<br />
+					<Button
+						variant="outline"
+						size="sm"
+						onClick={() => {
+							window.open("/server/" + params.server, "_blank")?.focus();
+						}}
+					>
+						<ExternalLink size={16} />
+					</Button>
+				</div>
+				<IconDisplay
+					server={serverObject}
+					className={
+						"flex items-center mr-2" +
+						(staticMode ? " mb-1 ml-1" : " group-hover:mb-1 group-hover:ml-1")
+					}
+				/>
+				<div className={"block" + (staticMode ? " mb-1" : " group-hover:mb-1")}>
+					<strong className="text-lg">{params.server}</strong>{" "}
+					{!noShowBranding && <Badge variant="blue">on Minehut</Badge>}
+					<br />
+					<span className="text-sm">Joined {serverObject?.joins} times</span>
+					<br />
+					{serverObject?.online && (
+						<span className="flex items-center">
+							{serverObject.playerCount === 0 ? (
+								<div
+									className="items-center border"
+									style={{
+										width: ".5rem",
+										height: ".5rem",
+										borderRadius: "9999px",
+									}}
+								/>
+							) : (
+								<div
+									className="items-center"
+									style={{
+										backgroundColor: "#0cce6b",
+										width: ".5rem",
+										height: ".5rem",
+										borderRadius: "9999px",
+									}}
+								/>
+							)}
+							<span className="text-sm ml-1">
+								{serverObject.playerCount} player(s) online
+							</span>
+						</span>
+					)}
+				</div>
+			</div>
+		</div>
+	);
 }

@@ -29,22 +29,22 @@
  */
 
 export default function MainBanner({
-  className,
-  size = 1,
-  children,
+	className,
+	size = 1,
+	children,
 }: {
-  className?: string;
-  size?: number;
-  children?: React.ReactNode;
+	className?: string;
+	size?: number;
+	children?: React.ReactNode;
 }) {
-  return (
-    <div
-      className={`w-screen border-b text-black flex items-center text-center font-medium pl-2 ${className}`}
-      style={{
-        height: `${size * 2}rem`,
-      }}
-    >
-      {children}
-    </div>
-  );
+	return (
+		<div
+			className={`w-screen border-b text-black flex items-center text-center font-medium pl-2 ${className}`}
+			style={{
+				height: `${size * 2}rem`,
+			}}
+		>
+			{children}
+		</div>
+	);
 }

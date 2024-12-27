@@ -39,86 +39,86 @@ import { formalNames } from "@/config/achievements";
 import NoItems from "../misc/NoItems";
 
 export default function AchievementList({ server }: { server: string }) {
-  const [achievements, setAchievements] = useState<
-    Array<WithInterval<Achievement>>
-  >([]);
-  const [loading, setLoading] = useState(true);
+	const [achievements, setAchievements] = useState<
+		Array<WithInterval<Achievement>>
+	>([]);
+	const [loading, setLoading] = useState(true);
 
-  useEffectOnce(() => {
-    setAchievements(() => []);
-    getAchievements(server).then((v) => {
-      for (const a of v)
-        a.achievements.forEach((item, interval) =>
-          setAchievements((prev) => [...prev, { interval, ...item }])
-        );
+	useEffectOnce(() => {
+		setAchievements(() => []);
+		getAchievements(server).then((v) => {
+			for (const a of v)
+				a.achievements.forEach((item, interval) =>
+					setAchievements((prev) => [...prev, { interval, ...item }]),
+				);
 
-      setLoading(false);
-    });
-  });
+			setLoading(false);
+		});
+	});
 
-  if (loading)
-    return (
-      <div>
-        <Skeleton className="w-full h-[112px] my-4" />
-        <Skeleton className="w-full h-[112px] my-4" />
-        <Skeleton className="w-full h-[112px] my-4" />
-      </div>
-    );
+	if (loading)
+		return (
+			<div>
+				<Skeleton className="w-full h-[112px] my-4" />
+				<Skeleton className="w-full h-[112px] my-4" />
+				<Skeleton className="w-full h-[112px] my-4" />
+			</div>
+		);
 
-  return (
-    <div>
-      <span>
-        Achievements are earned automatically when the server is online. See{" "}
-        <A alt="Achievement collection">Docs:Advanced/Achievements</A>
-      </span>
-      {achievements.length === 0 && <NoItems />}
-      {achievements
-        .filter(
-          (value, index) => listify(achievements).indexOf(value.type) === index
-        )
-        .map((a) => {
-          const Icon = formalNames[a.type].icon;
-          return (
-            <div key={`${a.date}--${a.interval}`}>
-              <Card className="my-4">
-                <CardContent className="pt-4">
-                  <span
-                    className="flex items-center"
-                    style={{ color: formalNames[a.type].color }}
-                  >
-                    <Icon size={16} className="mr-2" />
-                    <span
-                      dangerouslySetInnerHTML={{
-                        __html: formalNames[a.type].title,
-                      }}
-                    />
-                  </span>
-                  <p>{formalNames[a.type].description}</p>
-                  <span className="text-sm text-muted-foreground">
-                    Achieved on {new Date(a.date).getMonth()}/
-                    {new Date(a.date).getDate()}/
-                    {new Date(a.date).getFullYear()}{" "}
-                    <span className="text-muted-foreground/70">
-                      {new Date(a.date).toLocaleTimeString()}
-                    </span>
-                  </span>
-                </CardContent>
-              </Card>
-            </div>
-          );
-        })}
-    </div>
-  );
+	return (
+		<div>
+			<span>
+				Achievements are earned automatically when the server is online. See{" "}
+				<A alt="Achievement collection">Docs:Advanced/Achievements</A>
+			</span>
+			{achievements.length === 0 && <NoItems />}
+			{achievements
+				.filter(
+					(value, index) => listify(achievements).indexOf(value.type) === index,
+				)
+				.map((a) => {
+					const Icon = formalNames[a.type].icon;
+					return (
+						<div key={`${a.date}--${a.interval}`}>
+							<Card className="my-4">
+								<CardContent className="pt-4">
+									<span
+										className="flex items-center"
+										style={{ color: formalNames[a.type].color }}
+									>
+										<Icon size={16} className="mr-2" />
+										<span
+											dangerouslySetInnerHTML={{
+												__html: formalNames[a.type].title,
+											}}
+										/>
+									</span>
+									<p>{formalNames[a.type].description}</p>
+									<span className="text-sm text-muted-foreground">
+										Achieved on {new Date(a.date).getMonth()}/
+										{new Date(a.date).getDate()}/
+										{new Date(a.date).getFullYear()}{" "}
+										<span className="text-muted-foreground/70">
+											{new Date(a.date).toLocaleTimeString()}
+										</span>
+									</span>
+								</CardContent>
+							</Card>
+						</div>
+					);
+				})}
+		</div>
+	);
 }
 
 type WithInterval<K> = K & {
-  interval: number;
+	interval: number;
 };
 
 const listify = (list: WithInterval<Achievement>[]) => {
-  const newL: Array<string> = [];
+	const newL: Array<string> = [];
 
-  list.forEach((c) => newL.push(c.type));
+	list.forEach((c) => newL.push(c.type));
 
-  return newL;
+	return newL;
 };

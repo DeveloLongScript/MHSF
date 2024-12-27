@@ -33,40 +33,40 @@ import useTotalBannerSize from "@/lib/hooks/use-total-banner-size";
 import { useEffect, useState, ReactNode } from "react";
 
 export default function StickyTopbar({
-  children,
-  scrollElevation,
-  className,
+	children,
+	scrollElevation,
+	className,
 }: {
-  children: ReactNode;
-  scrollElevation: number;
-  className?: string;
+	children: ReactNode;
+	scrollElevation: number;
+	className?: string;
 }) {
-  const [isSticky, setIsSticky] = useState(false);
-  const { bannerSize } = useTotalBannerSize();
+	const [isSticky, setIsSticky] = useState(false);
+	const { bannerSize } = useTotalBannerSize();
 
-  const handleScroll = () => {
-    if (window.scrollY > scrollElevation) {
-      setIsSticky(true);
-    } else {
-      setIsSticky(false);
-    }
-  };
+	const handleScroll = () => {
+		if (window.scrollY > scrollElevation) {
+			setIsSticky(true);
+		} else {
+			setIsSticky(false);
+		}
+	};
 
-  useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
+	useEffect(() => {
+		window.addEventListener("scroll", handleScroll);
+		return () => {
+			window.removeEventListener("scroll", handleScroll);
+		};
+	}, []);
 
-  return (
-    <div
-      className={`transition-all duration-300 ${isSticky ? "fixed left-0 w-full backdrop-blur shadow-lg " + className : "block w-full bg-transparent"}`}
-      style={{
-        top: isSticky ? `${bannerSize * 32 + 38}px` : undefined,
-      }}
-    >
-      {children}
-    </div>
-  );
+	return (
+		<div
+			className={`transition-all duration-300 ${isSticky ? "fixed left-0 w-full backdrop-blur shadow-lg " + className : "block w-full bg-transparent"}`}
+			style={{
+				top: isSticky ? `${bannerSize * 32 + 38}px` : undefined,
+			}}
+		>
+			{children}
+		</div>
+	);
 }

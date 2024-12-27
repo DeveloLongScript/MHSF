@@ -35,11 +35,11 @@ const isProtectedRoute = createRouteMatcher(["/account(.*)"]);
 const isEmbed = createRouteMatcher(["/emebed(.*)"]);
 
 export default process.env.NEXT_PUBLIC_IS_AUTH === "true"
-  ? clerkMiddleware((auth, req) => {
-      if (isProtectedRoute(req)) auth.protect();
-    })
-  : (request: NextRequest) => {};
+	? clerkMiddleware((auth, req) => {
+			if (isProtectedRoute(req)) auth.protect();
+		})
+	: (request: NextRequest) => {};
 
 export const config = {
-  matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc)(.*)"],
+	matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc)(.*)"],
 };

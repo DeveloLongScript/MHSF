@@ -34,18 +34,18 @@ import ServerCustomize from "./ServerCustomize";
 import TabServer from "./misc/TabServer";
 
 export default function CustomizeRoot({
-  params,
+	params,
 }: {
-  params: { server: string };
+	params: { server: string };
 }) {
-  const [color, setColor] = useState("");
-  return (
-    <div className={"pt-16 xl:px-[100px] theme-" + color}>
-      <TabServer server={params.server} tabDef="customize" />
-      <br />
-      <div className="pl-[40px] pr-[40px]">
-        <ServerCustomize server={params.server} cs={color} setCS={setColor} />
-      </div>
-    </div>
-  );
+	const [color, setColor] = useState("");
+	return (
+		<div className={"pt-16 xl:px-[100px] theme-" + color}>
+			<TabServer server={params.server} tabDef="customize" />
+			<br />
+			<div className="pl-[40px] pr-[40px]">
+				<ServerCustomize server={params.server} cs={color} setCS={setColor} />
+			</div>
+		</div>
+	);
 }

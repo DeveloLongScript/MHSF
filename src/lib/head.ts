@@ -29,8 +29,10 @@
  */
 
 export async function getMinecraftHead(username: string) {
-    const uuidRequest = await fetch("https://api.mojang.com/users/profiles/minecraft/" + username);
-    const uuid = (await uuidRequest.json()).id;
+	const uuidRequest = await fetch(
+		"https://api.mojang.com/users/profiles/minecraft/" + username,
+	);
+	const uuid = (await uuidRequest.json()).id;
 
-    return `https://crafatar.com/avatars/${uuid}`;
-}   
+	return `https://crafatar.com/avatars/${uuid}`;
+}

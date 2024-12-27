@@ -33,19 +33,19 @@
 import useTotalBannerSize from "@/lib/hooks/use-total-banner-size";
 
 export default function BannerContainer({
-  children,
-  className,
-  style,
+	children,
+	className,
+	style,
 }: {
-  children: React.ReactNode;
-  className?: string;
-  style: (size: number) => React.CSSProperties;
+	children: React.ReactNode;
+	className?: string;
+	style: (size: number) => React.CSSProperties;
 }) {
-  const { bannerSize } = useTotalBannerSize();
+	const { bannerSize } = useTotalBannerSize();
 
-  return (
-    <div className={className} style={style(bannerSize)}>
-      {children}
-    </div>
-  );
+	return (
+		<div className={className} style={style(bannerSize)}>
+			{children}
+		</div>
+	);
 }

@@ -54,7 +54,11 @@ export async function createReportIssue(
 	}
 }
 
-const desc = (user: string, server: string, reason: string) => `There was a report against the server, submitted by a user.
+const desc = (
+	user: string,
+	server: string,
+	reason: string,
+) => `There was a report against the server, submitted by a user.
 Every issue must be [considered with care](https://list.mlnehut.com/docs/legal/external-content-agreement) before evaluating its outcome.
 
 

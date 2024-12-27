@@ -33,53 +33,53 @@ import { Moon, Sun } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useThemeTransition } from "./ThemeProvider";
 import { usePathname } from "next/navigation";
 
 export function ModeToggle() {
-  const { changeTheme } = useThemeTransition();
-  const pathname = usePathname();
+	const { changeTheme } = useThemeTransition();
+	const pathname = usePathname();
 
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon">
-          <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-          <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-          <span className="sr-only">Toggle theme</span>
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        {pathname?.startsWith("/server") && (
-          <div className="text-sm p-4">
-            For compatibility reasons, <br /> server pages are forced to dark
-            mode
-          </div>
-        )}
-        <DropdownMenuItem
-          onClick={() => changeTheme("light")}
-          disabled={pathname?.startsWith("/server")}
-        >
-          Light
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          onClick={() => changeTheme("dark")}
-          disabled={pathname?.startsWith("/server")}
-        >
-          Dark
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          onClick={() => changeTheme("system")}
-          disabled={pathname?.startsWith("/server")}
-        >
-          System
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
+	return (
+		<DropdownMenu>
+			<DropdownMenuTrigger asChild>
+				<Button variant="ghost" size="icon">
+					<Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+					<Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+					<span className="sr-only">Toggle theme</span>
+				</Button>
+			</DropdownMenuTrigger>
+			<DropdownMenuContent align="end">
+				{pathname?.startsWith("/server") && (
+					<div className="text-sm p-4">
+						For compatibility reasons, <br /> server pages are forced to dark
+						mode
+					</div>
+				)}
+				<DropdownMenuItem
+					onClick={() => changeTheme("light")}
+					disabled={pathname?.startsWith("/server")}
+				>
+					Light
+				</DropdownMenuItem>
+				<DropdownMenuItem
+					onClick={() => changeTheme("dark")}
+					disabled={pathname?.startsWith("/server")}
+				>
+					Dark
+				</DropdownMenuItem>
+				<DropdownMenuItem
+					onClick={() => changeTheme("system")}
+					disabled={pathname?.startsWith("/server")}
+				>
+					System
+				</DropdownMenuItem>
+			</DropdownMenuContent>
+		</DropdownMenu>
+	);
 }

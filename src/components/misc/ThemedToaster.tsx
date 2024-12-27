@@ -34,7 +34,7 @@ import { useTheme } from "next-themes";
 import { Toaster } from "../ui/sonner";
 
 export default function ThemedToaster() {
-  const { resolvedTheme } = useTheme();
+	const { resolvedTheme } = useTheme();
 
-  return <Toaster position="bottom-center" richColors />;
+	return <Toaster position="bottom-center" richColors />;
 }

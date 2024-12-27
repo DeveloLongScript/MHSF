@@ -36,22 +36,22 @@ import { Button } from "../ui/button";
 import { useTheme } from "next-themes";
 
 export default function QRCodeGenerator({ server }: { server: string }) {
-  const { resolvedTheme } = useTheme();
+	const { resolvedTheme } = useTheme();
 
-  return (
-    <div className="w-full">
-      <QRCode
-        value={"https://mhsf.app/server/" + server + "?source=qrCode"}
-        className="flex flex-col items-center w-full py-4"
-        style={{
-          backgroundColor: resolvedTheme === "dark" ? "#fff" : undefined,
-        }}
-      />
-      <DrawerFooter>
-        <DrawerTrigger asChild>
-          <Button>Close</Button>
-        </DrawerTrigger>
-      </DrawerFooter>
-    </div>
-  );
+	return (
+		<div className="w-full">
+			<QRCode
+				value={"https://mhsf.app/server/" + server + "?source=qrCode"}
+				className="flex flex-col items-center w-full py-4"
+				style={{
+					backgroundColor: resolvedTheme === "dark" ? "#fff" : undefined,
+				}}
+			/>
+			<DrawerFooter>
+				<DrawerTrigger asChild>
+					<Button>Close</Button>
+				</DrawerTrigger>
+			</DrawerFooter>
+		</div>
+	);
 }

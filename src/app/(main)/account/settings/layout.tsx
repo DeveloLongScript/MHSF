@@ -33,15 +33,15 @@ import { Sidebar } from "@/components/PreferencesSidebar";
 import { usePathname } from "next/navigation";
 
 export default function RootLayout({
-  children,
+	children,
 }: Readonly<{
-  children: React.ReactNode;
+	children: React.ReactNode;
 }>) {
-  const pathname = usePathname();
+	const pathname = usePathname();
 
-  return (
-    <span className="pt-[48px]">
-      <Sidebar curPage={pathname as string}>{children}</Sidebar>
-    </span>
-  );
+	return (
+		<span className="pt-[48px]">
+			<Sidebar curPage={pathname as string}>{children}</Sidebar>
+		</span>
+	);
 }

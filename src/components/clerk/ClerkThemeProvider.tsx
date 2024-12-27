@@ -37,54 +37,54 @@ import { ThemeProvider } from "../ThemeProvider";
 import Link from "next/link";
 
 export function ClerkThemeProvider({
-  children,
-  className,
+	children,
+	className,
 }: {
-  children?: ReactNode | ReactNode[];
-  className?: string | undefined;
+	children?: ReactNode | ReactNode[];
+	className?: string | undefined;
 }) {
-  const [theme, setTheme] = useState<string | undefined>("");
+	const [theme, setTheme] = useState<string | undefined>("");
 
-  if (process.env.NEXT_PUBLIC_IS_AUTH !== "true")
-    return (
-      <html lang="en" className={className}>
-        <body>
-          Non-authenticated environments are disallowed on this origin. <br />
-          <Link href="https://mhsf.app">Go to production</Link>
-        </body>
-      </html>
-    );
+	if (process.env.NEXT_PUBLIC_IS_AUTH !== "true")
+		return (
+			<html lang="en" className={className}>
+				<body>
+					Non-authenticated environments are disallowed on this origin. <br />
+					<Link href="https://mhsf.app">Go to production</Link>
+				</body>
+			</html>
+		);
 
-  return (
-    <ClerkProvider
-      appearance={{ baseTheme: theme == "dark" ? dark : undefined }}
-    >
-      <html lang="en" className={className}>
-        <body>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            {children}
-            {/** This *has* to be implemented in component form for the `useTheme` to load at the appropriate time. */}
-            <ThemeElement setTheme={setTheme} />
-          </ThemeProvider>
-        </body>
-      </html>
-    </ClerkProvider>
-  );
+	return (
+		<ClerkProvider
+			appearance={{ baseTheme: theme == "dark" ? dark : undefined }}
+		>
+			<html lang="en" className={className}>
+				<body>
+					<ThemeProvider
+						attribute="class"
+						defaultTheme="system"
+						enableSystem
+						disableTransitionOnChange
+					>
+						{children}
+						{/** This *has* to be implemented in component form for the `useTheme` to load at the appropriate time. */}
+						<ThemeElement setTheme={setTheme} />
+					</ThemeProvider>
+				</body>
+			</html>
+		</ClerkProvider>
+	);
 }
 
 function ThemeElement({
-  setTheme,
+	setTheme,
 }: {
-  setTheme: (update: string | undefined) => void;
+	setTheme: (update: string | undefined) => void;
 }) {
-  const theme = useTheme();
-  useEffect(() => {
-    setTheme(theme.resolvedTheme);
-  }, [theme.resolvedTheme, setTheme]);
-  return <></>;
+	const theme = useTheme();
+	useEffect(() => {
+		setTheme(theme.resolvedTheme);
+	}, [theme.resolvedTheme, setTheme]);
+	return <></>;
 }

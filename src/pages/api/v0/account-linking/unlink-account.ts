@@ -33,33 +33,31 @@ import { getAuth, clerkClient } from "@clerk/nextjs/server";
 import { MongoClient } from "mongodb";
 
 export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
+	req: NextApiRequest,
+	res: NextApiResponse,
 ) {
-  const { userId } = getAuth(req);
+	const { userId } = getAuth(req);
 
-  if (!userId) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
-  const client = new MongoClient(process.env.MONGO_DB as string);
-  await client.connect();
+	if (!userId) {
+		return res.status(401).json({ error: "Unauthorized" });
+	}
+	const client = new MongoClient(process.env.MONGO_DB as string);
+	await client.connect();
 
-  const db = client.db("mhsf");
-  const users = db.collection("claimed-users");
-  const user = await (await clerkClient()).users.getUser(userId);
+	const db = client.db("mhsf");
+	const users = db.collection("claimed-users");
+	const user = await (await clerkClient()).users.getUser(userId);
 
-  if (user.publicMetadata.player == undefined) {
-    res.status(400).send({ result: "Hasn't linked yet!" });
-    return;
-  }
-  await users.findOneAndDelete({ player: user.publicMetadata.player });
-  await (
-    await clerkClient()
-  ).users.updateUserMetadata(userId, {
-    publicMetadata: { player: null },
-  });
+	if (user.publicMetadata.player == undefined) {
+		res.status(400).send({ result: "Hasn't linked yet!" });
+		return;
+	}
+	await users.findOneAndDelete({ player: user.publicMetadata.player });
+	await (await clerkClient()).users.updateUserMetadata(userId, {
+		publicMetadata: { player: null },
+	});
 
-  res.send({ result: "Unlinked!" });
+	res.send({ result: "Unlinked!" });
 
-  client.close();
+	client.close();
 }

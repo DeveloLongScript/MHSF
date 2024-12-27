@@ -35,25 +35,25 @@ import Snowfall from "react-snowfall";
 
 export const snowfallEvents = new CommandEvents();
 export default function SnowfallController() {
-  const [visible, setVisible] = useState(true);
+	const [visible, setVisible] = useState(true);
 
-  useEffect(() => {
-    snowfallEvents.on("toggle", () => {
-      setVisible(!visible);
-    });
-  }, [visible]);
+	useEffect(() => {
+		snowfallEvents.on("toggle", () => {
+			setVisible(!visible);
+		});
+	}, [visible]);
 
-  return (
-    <>
-      {visible && (
-        <Snowfall
-          style={{
-            position: "fixed",
-            width: "100vw",
-            height: "100vh",
-          }}
-        />
-      )}
-    </>
-  );
+	return (
+		<>
+			{visible && (
+				<Snowfall
+					style={{
+						position: "fixed",
+						width: "100vw",
+						height: "100vh",
+					}}
+				/>
+			)}
+		</>
+	);
 }

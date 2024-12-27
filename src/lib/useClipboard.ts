@@ -34,18 +34,17 @@ import { toast } from "sonner";
  * @version 1.0
  */
 export default function useClipboard() {
+	const writeText = (text: string) => {
+		if (navigator.clipboard == undefined)
+			return toast.error("Clipboard doesn't exist");
 
-    const writeText = (text: string) => {
-        if (navigator.clipboard == undefined)
-            return toast.error("Clipboard doesn't exist");
+		navigator.clipboard.writeText(text);
+	};
+	const write = (text: ClipboardItems) => {
+		if (navigator.clipboard == undefined)
+			return toast.error("Clipboard doesn't exist");
 
-        navigator.clipboard.writeText(text);
-    }
-    const write = (text: ClipboardItems) => {
-        if (navigator.clipboard == undefined)
-            return toast.error("Clipboard doesn't exist")
-
-        navigator.clipboard.write(text);
-    }
-    return { writeText, write };
+		navigator.clipboard.write(text);
+	};
+	return { writeText, write };
 }

@@ -28,7 +28,7 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { NextApiRequest,  NextApiResponse } from "next";
+import { NextApiRequest, NextApiResponse } from "next";
 import { MongoClient } from "mongodb";
 
 export default async function handler(

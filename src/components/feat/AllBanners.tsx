@@ -33,11 +33,11 @@
 import { useBanners } from "@/lib/hooks/use-banners";
 
 export default function AllBanners() {
-  const { banners } = useBanners();
+	const { banners } = useBanners();
 
-  return (
-    <div className="fixed grid grid-cols-1 z-10">
-      {banners.map((banner) => banner.bannerContent)}
-    </div>
-  );
+	return (
+		<div className="fixed grid grid-cols-1 z-10">
+			{banners.map((banner) => banner.bannerContent)}
+		</div>
+	);
 }

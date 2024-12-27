@@ -31,38 +31,38 @@
 
 import { Button } from "@/components/ui/button";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogTitle,
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogTitle,
 } from "@/components/ui/dialog";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function NewDomainDialog() {
-  const searchParams = useSearchParams();
-  const toShow = searchParams?.get("newDomain") === "true";
-  const [open, setOpen] = useState(false);
+	const searchParams = useSearchParams();
+	const toShow = searchParams?.get("newDomain") === "true";
+	const [open, setOpen] = useState(false);
 
-  useEffect(() => {
-    if (toShow) setOpen(true);
-  }, [toShow]);
+	useEffect(() => {
+		if (toShow) setOpen(true);
+	}, [toShow]);
 
-  return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent>
-        <DialogTitle>We've moved domains!</DialogTitle>
-        <DialogDescription className="text-black dark:text-white">
-          We have changed our domain from <code>list.mlnehut.com</code> to{" "}
-          <code>mhsf.app</code>. Thank you for your continued support. We'd also
-          like to thank Tarna for providing us with a domain we can use for the
-          short-term.
-        </DialogDescription>
-        <DialogFooter>
-          <Button onClick={() => setOpen(false)}>Close</Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  );
+	return (
+		<Dialog open={open} onOpenChange={setOpen}>
+			<DialogContent>
+				<DialogTitle>We've moved domains!</DialogTitle>
+				<DialogDescription className="text-black dark:text-white">
+					We have changed our domain from <code>list.mlnehut.com</code> to{" "}
+					<code>mhsf.app</code>. Thank you for your continued support. We'd also
+					like to thank Tarna for providing us with a domain we can use for the
+					short-term.
+				</DialogDescription>
+				<DialogFooter>
+					<Button onClick={() => setOpen(false)}>Close</Button>
+				</DialogFooter>
+			</DialogContent>
+		</Dialog>
+	);
 }

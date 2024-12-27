@@ -36,87 +36,87 @@ import { type ThemeProviderProps } from "next-themes";
 import { usePathname } from "next/navigation";
 
 declare global {
-  interface Document {
-    startViewTransition(updateCallback: () => void):
-      | {
-          finished: Promise<void>;
-          ready: Promise<void>;
-          updateCallbackDone: Promise<void>;
-        }
-      | undefined;
-  }
+	interface Document {
+		startViewTransition(updateCallback: () => void):
+			| {
+					finished: Promise<void>;
+					ready: Promise<void>;
+					updateCallbackDone: Promise<void>;
+			  }
+			| undefined;
+	}
 }
 
 export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
-  const [mounted, setMounted] = React.useState(false);
-  const pathname = usePathname();
+	const [mounted, setMounted] = React.useState(false);
+	const pathname = usePathname();
 
-  React.useEffect(() => {
-    setMounted(true);
-  }, []);
+	React.useEffect(() => {
+		setMounted(true);
+	}, []);
 
-  if (!mounted) return null;
+	if (!mounted) return null;
 
-  return (
-    <NextThemesProvider
-      forcedTheme={pathname?.startsWith("/server") ? "dark" : undefined}
-      {...props}
-    >
-      {children}
-    </NextThemesProvider>
-  );
+	return (
+		<NextThemesProvider
+			forcedTheme={pathname?.startsWith("/server") ? "dark" : undefined}
+			{...props}
+		>
+			{children}
+		</NextThemesProvider>
+	);
 }
 
 interface UseThemeTransitionResult {
-  theme: string | undefined;
-  changeTheme: (changeTheme: string) => void;
-  mounted: boolean;
+	theme: string | undefined;
+	changeTheme: (changeTheme: string) => void;
+	mounted: boolean;
 }
 
 export function useThemeTransition(): UseThemeTransitionResult {
-  const { theme, setTheme, systemTheme } = useTheme();
-  const [mounted, setMounted] = React.useState<boolean>(false);
+	const { theme, setTheme, systemTheme } = useTheme();
+	const [mounted, setMounted] = React.useState<boolean>(false);
 
-  React.useEffect(() => {
-    setMounted(true);
-  }, []);
+	React.useEffect(() => {
+		setMounted(true);
+	}, []);
 
-  const changeTheme = (changeTheme: string) => {
-    if (!mounted) return;
+	const changeTheme = (changeTheme: string) => {
+		if (!mounted) return;
 
-    const resolvedTheme = theme === "system" ? systemTheme : changeTheme;
+		const resolvedTheme = theme === "system" ? systemTheme : changeTheme;
 
-    if (document.startViewTransition) {
-      document.startViewTransition(() => {
-        const root = document.documentElement;
-        root.style.setProperty(
-          "--current-background",
-          `var(--${resolvedTheme}-background)`
-        );
-        root.style.setProperty(
-          "--current-foreground",
-          `var(--${resolvedTheme}-foreground)`
-        );
-        setTheme(changeTheme);
-      });
-    } else {
-      setTheme(changeTheme);
-    }
-  };
+		if (document.startViewTransition) {
+			document.startViewTransition(() => {
+				const root = document.documentElement;
+				root.style.setProperty(
+					"--current-background",
+					`var(--${resolvedTheme}-background)`,
+				);
+				root.style.setProperty(
+					"--current-foreground",
+					`var(--${resolvedTheme}-foreground)`,
+				);
+				setTheme(changeTheme);
+			});
+		} else {
+			setTheme(changeTheme);
+		}
+	};
 
-  React.useEffect(() => {
-    if (mounted && theme) {
-      const root = document.documentElement;
-      root.style.setProperty(
-        "--current-background",
-        `var(--${theme}-background)`
-      );
-      root.style.setProperty(
-        "--current-foreground",
-        `var(--${theme}-foreground)`
-      );
-    }
-  }, [mounted, theme]);
+	React.useEffect(() => {
+		if (mounted && theme) {
+			const root = document.documentElement;
+			root.style.setProperty(
+				"--current-background",
+				`var(--${theme}-background)`,
+			);
+			root.style.setProperty(
+				"--current-foreground",
+				`var(--${theme}-foreground)`,
+			);
+		}
+	}, [mounted, theme]);
 
-  return { theme, changeTheme, mounted };
+	return { theme, changeTheme, mounted };
 }

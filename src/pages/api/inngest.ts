@@ -32,7 +32,7 @@ import type { OnlineServer } from "@/lib/types/mh-server";
 import { Inngest } from "inngest";
 import { serve } from "inngest/next";
 import { Document, MongoClient, ObjectId, WithId } from "mongodb";
-import {createReportIssue} from "@/lib/linear";
+import { createReportIssue } from "@/lib/linear";
 
 // Create a client to send and receive events
 export const inngest = new Inngest({ id: "mhsf" });
@@ -46,9 +46,13 @@ export default serve({
 			{ event: "report-server" },
 			async ({ event, step }) => {
 				// by the way, I bombed the Discord stuff
- 				await createReportIssue(event.data.server, event.data.reason, event.data.userId);
+				await createReportIssue(
+					event.data.server,
+					event.data.reason,
+					event.data.userId,
+				);
 
-				return { event, body: "Done" }
+				return { event, body: "Done" };
 			},
 		),
 		inngest.createFunction(
@@ -121,5 +125,3 @@ export default serve({
 		),
 	],
 });
-
-

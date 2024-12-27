@@ -35,23 +35,23 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import { useSearchParams } from "next/navigation";
 
 export default function RootLayout({
-  children,
+	children,
 }: {
-  children: React.ReactNode;
+	children: React.ReactNode;
 }) {
-  const searchParams = useSearchParams();
-  const search = searchParams?.get("theme") || "light";
-  return (
-    <html lang="en">
-      <body>
-        <ThemeProvider
-          attribute="class"
-          disableTransitionOnChange
-          forcedTheme={search}
-        >
-          <TooltipProvider>{children}</TooltipProvider>
-        </ThemeProvider>
-      </body>
-    </html>
-  );
+	const searchParams = useSearchParams();
+	const search = searchParams?.get("theme") || "light";
+	return (
+		<html lang="en">
+			<body>
+				<ThemeProvider
+					attribute="class"
+					disableTransitionOnChange
+					forcedTheme={search}
+				>
+					<TooltipProvider>{children}</TooltipProvider>
+				</ThemeProvider>
+			</body>
+		</html>
+	);
 }

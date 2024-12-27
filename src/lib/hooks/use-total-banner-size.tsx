@@ -33,29 +33,29 @@ import { useEffect, useState } from "react";
 import { useIsMobile } from "./use-mobile";
 
 export default function useTotalBannerSize() {
-  const [bannerSize, setBannerSize] = useState(0);
-  const isOnMobile = useIsMobile();
+	const [bannerSize, setBannerSize] = useState(0);
+	const isOnMobile = useIsMobile();
 
-  useEffect(() => {
-    setBannerSize(0);
-    if (isOnMobile) return;
-    const allBanners = [];
+	useEffect(() => {
+		setBannerSize(0);
+		if (isOnMobile) return;
+		const allBanners = [];
 
-    // First push the default banners
-    allBanners.push(...defaultBanners);
+		// First push the default banners
+		allBanners.push(...defaultBanners);
 
-    // Then push the banner hooks
-    bannerHooks.forEach((hook) => {
-      allBanners.push(hook());
-    });
+		// Then push the banner hooks
+		bannerHooks.forEach((hook) => {
+			allBanners.push(hook());
+		});
 
-    setBannerSize(
-      allBanners.reduce(
-        (acc, banner) => acc + (banner ?? { bannerSpace: 0 }).bannerSpace,
-        0
-      ) ?? 0
-    );
-  }, [isOnMobile]);
+		setBannerSize(
+			allBanners.reduce(
+				(acc, banner) => acc + (banner ?? { bannerSpace: 0 }).bannerSpace,
+				0,
+			) ?? 0,
+		);
+	}, [isOnMobile]);
 
-  return { bannerSize };
+	return { bannerSize };
 }

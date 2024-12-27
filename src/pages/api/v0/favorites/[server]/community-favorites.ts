@@ -32,57 +32,57 @@ import type { NextApiResponse, NextApiRequest } from "next";
 import { MongoClient } from "mongodb";
 
 export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
+	req: NextApiRequest,
+	res: NextApiResponse,
 ) {
-  const { server } = req.query;
-  const client = new MongoClient(process.env.MONGO_DB as string);
+	const { server } = req.query;
+	const client = new MongoClient(process.env.MONGO_DB as string);
 
-  await client.connect();
+	await client.connect();
 
-  const db = client.db("mhsf");
-  const collection = db.collection("meta");
-  const find = await collection.find({ server: server }).toArray();
+	const db = client.db("mhsf");
+	const collection = db.collection("meta");
+	const find = await collection.find({ server: server }).toArray();
 
-  if (find.length != 0) {
-    const entry = find[0];
-    res.send({ result: entry.favorites });
-  } else {
-    res.send({ result: 0 });
-  }
+	if (find.length != 0) {
+		const entry = find[0];
+		res.send({ result: entry.favorites });
+	} else {
+		res.send({ result: 0 });
+	}
 
-  client.close();
+	client.close();
 }
 
 export async function increaseNum(client: MongoClient, server: string) {
-  const db = client.db("mhsf");
-  const collection = db.collection("meta");
-  const find = await collection.find({ server: server }).toArray();
+	const db = client.db("mhsf");
+	const collection = db.collection("meta");
+	const find = await collection.find({ server: server }).toArray();
 
-  if (find.length == 0) {
-    collection.insertOne({ server: server, favorites: 1, date: new Date() });
-  } else {
-    const entry = find[0];
-    collection.findOneAndReplace(
-      { server: server },
-      { server: server, favorites: entry.favorites + 1, date: new Date() }
-    );
-  }
+	if (find.length == 0) {
+		collection.insertOne({ server: server, favorites: 1, date: new Date() });
+	} else {
+		const entry = find[0];
+		collection.findOneAndReplace(
+			{ server: server },
+			{ server: server, favorites: entry.favorites + 1, date: new Date() },
+		);
+	}
 }
 
 export async function decreaseNum(client: MongoClient, server: string) {
-  const db = client.db("mhsf");
-  const collection = db.collection("meta");
-  const find = await collection.find({ server: server }).toArray();
+	const db = client.db("mhsf");
+	const collection = db.collection("meta");
+	const find = await collection.find({ server: server }).toArray();
 
-  if (find.length == 0) {
-    return;
-    // Physically is impossible
-  } else {
-    const entry = find[0];
-    collection.findOneAndReplace(
-      { server: server },
-      { server: server, favorites: entry.favorites - 1 }
-    );
-  }
+	if (find.length == 0) {
+		return;
+		// Physically is impossible
+	} else {
+		const entry = find[0];
+		collection.findOneAndReplace(
+			{ server: server },
+			{ server: server, favorites: entry.favorites - 1 },
+		);
+	}
 }

@@ -36,29 +36,29 @@ import { Check } from "lucide-react";
 import useClipboard from "@/lib/useClipboard";
 
 export function TextCopyComp() {
-  "use client";
-  const clipboard = useClipboard();
-  const [textCopied, setTextCopied] = useState(false);
+	"use client";
+	const clipboard = useClipboard();
+	const [textCopied, setTextCopied] = useState(false);
 
-  return (
-    <code className="border p-3 rounded">
-      MHSFPV.minehut.gg{" "}
-      <Button
-        size="icon"
-        className="ml-1 h-[20px]"
-        onClick={() => {
-          setTextCopied(true);
-          clipboard.writeText("MHSFPV.minehut.gg");
-          toast.success("Copied!");
-          setTimeout(() => setTextCopied(false), 1000);
-        }}
-      >
-        {textCopied ? (
-          <Check size={16} className="flex items-center" />
-        ) : (
-          <p>Copy</p>
-        )}
-      </Button>
-    </code>
-  );
+	return (
+		<code className="border p-3 rounded">
+			MHSFPV.minehut.gg{" "}
+			<Button
+				size="icon"
+				className="ml-1 h-[20px]"
+				onClick={() => {
+					setTextCopied(true);
+					clipboard.writeText("MHSFPV.minehut.gg");
+					toast.success("Copied!");
+					setTimeout(() => setTextCopied(false), 1000);
+				}}
+			>
+				{textCopied ? (
+					<Check size={16} className="flex items-center" />
+				) : (
+					<p>Copy</p>
+				)}
+			</Button>
+		</code>
+	);
 }

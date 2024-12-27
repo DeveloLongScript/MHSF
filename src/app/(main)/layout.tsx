@@ -45,47 +45,47 @@ import LayoutPart from "@/components/feat/LayoutPart";
 import AllBanners from "@/components/feat/AllBanners";
 
 export const extraMetadata = {
-  twitter: {
-    images: [
-      {
-        url: "/imgs/icon-cf.png",
-      },
-    ],
-  },
-  themeColor: "#000000",
-  openGraph: {
-    images: [
-      {
-        url: "/imgs/icon-cf.png",
-      },
-    ],
-  },
+	twitter: {
+		images: [
+			{
+				url: "/imgs/icon-cf.png",
+			},
+		],
+	},
+	themeColor: "#000000",
+	openGraph: {
+		images: [
+			{
+				url: "/imgs/icon-cf.png",
+			},
+		],
+	},
 } satisfies Metadata;
 export const viewport: Viewport = {
-  themeColor: "black",
-  colorScheme: "dark",
+	themeColor: "black",
+	colorScheme: "dark",
 };
 
 const inter = interFont({ variable: "--font-inter", subsets: ["latin"] });
 export default async function RootLayout({
-  children,
+	children,
 }: Readonly<{
-  children: React.ReactNode;
+	children: React.ReactNode;
 }>) {
-  return (
-    <ClerkThemeProvider className={GeistSans.className}>
-      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-        <TooltipProvider>
-          <AllBanners />
-          <LayoutPart>{children}</LayoutPart>
-          <ThemedToaster />
-          <CommandBarer />
-          <SpeedInsights />
-          <Analytics />
-          <NewDomainDialog />
-          <UnofficalDialog />
-        </TooltipProvider>
-      </ThemeProvider>
-    </ClerkThemeProvider>
-  );
+	return (
+		<ClerkThemeProvider className={GeistSans.className}>
+			<ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+				<TooltipProvider>
+					<AllBanners />
+					<LayoutPart>{children}</LayoutPart>
+					<ThemedToaster />
+					<CommandBarer />
+					<SpeedInsights />
+					<Analytics />
+					<NewDomainDialog />
+					<UnofficalDialog />
+				</TooltipProvider>
+			</ThemeProvider>
+		</ClerkThemeProvider>
+	);
 }

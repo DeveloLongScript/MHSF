@@ -32,17 +32,17 @@
 import { DatabaseZap } from "lucide-react";
 
 export default function NoItems() {
-  return (
-    <>
-      <div className="flex flex-col items-center justify-center p-4 pt-10">
-        <DatabaseZap
-          className="text-2xl font-semibold text-gray-600"
-          size={32}
-        />
-        <p className="text-xl text-gray-600 mt-2">
-          Huh, we tried to find something, but nothing was found.
-        </p>
-      </div>
-    </>
-  );
+	return (
+		<>
+			<div className="flex flex-col items-center justify-center p-4 pt-10">
+				<DatabaseZap
+					className="text-2xl font-semibold text-gray-600"
+					size={32}
+				/>
+				<p className="text-xl text-gray-600 mt-2">
+					Huh, we tried to find something, but nothing was found.
+				</p>
+			</div>
+		</>
+	);
 }

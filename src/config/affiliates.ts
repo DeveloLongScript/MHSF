@@ -31,12 +31,12 @@
 import { SVGProps } from "react";
 
 export const affiliates: {
-  name: string;
-  shop: string;
-  line: string;
-  mode: string[];
-  otherLinks: {
-    name: string;
-    icon: (props: SVGProps<SVGSVGElement>) => JSX.Element;
-  }[];
+	name: string;
+	shop: string;
+	line: string;
+	mode: string[];
+	otherLinks: {
+		name: string;
+		icon: (props: SVGProps<SVGSVGElement>) => JSX.Element;
+	}[];
 }[] = [];

@@ -33,25 +33,26 @@ import { useEffect, useState } from "react";
 import { useIsMobile } from "./use-mobile";
 
 export function useBanners() {
-  const [banners, setBanners] = useState<
-    {
-      bannerSpace: number;
-      bannerContent: React.ReactNode;
-    }[]
-  >(defaultBanners);
-  const isOnMobile = useIsMobile();
+	const [banners, setBanners] =
+		useState<
+			{
+				bannerSpace: number;
+				bannerContent: React.ReactNode;
+			}[]
+		>(defaultBanners);
+	const isOnMobile = useIsMobile();
 
-  useEffect(() => {
-    if (isOnMobile) {
-      setBanners([]);
-      return;
-    }
-    setBanners(defaultBanners);
-    bannerHooks.forEach((hook) => {
-      const run = hook();
-      if (run !== undefined) setBanners((oldBanners) => [...oldBanners, run]);
-    });
-  }, [isOnMobile]);
+	useEffect(() => {
+		if (isOnMobile) {
+			setBanners([]);
+			return;
+		}
+		setBanners(defaultBanners);
+		bannerHooks.forEach((hook) => {
+			const run = hook();
+			if (run !== undefined) setBanners((oldBanners) => [...oldBanners, run]);
+		});
+	}, [isOnMobile]);
 
-  return { banners };
+	return { banners };
 }
