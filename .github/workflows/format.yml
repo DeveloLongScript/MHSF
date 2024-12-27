@@ -23,13 +23,9 @@ jobs:
           branch: 'main'
           owner: 'DeveloLongScript'
           repository: 'MHSF'
-
-      - name: Access cloned repository content
-        run: |
-            cd MHSF.
         
       - name: Run Biome
-        run: biome format --write ./src
+        run: biome format --write MHSF/src
           
       - name: Push to GitHub
         uses: stefanzweifel/git-auto-commit-action@v5
