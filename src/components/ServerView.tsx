@@ -121,12 +121,13 @@ export default function ServerView(props: { server: string }) {
     <>
       {single.grabOnline() == undefined && !single.grabOffline()?.online && (
         <div className="grid pl-4 pr-4">
+          <X />
           <div
             className=" rounded p-2"
             style={{ backgroundColor: "rgba(244, 63, 94, .16)" }}
           >
             <strong className="flex items-center">
-              This server is offline <X />
+              This server is offline 
             </strong>
             <p>
               This means that the server can{"'"}t loading some resources, like

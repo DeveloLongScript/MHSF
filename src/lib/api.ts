@@ -89,6 +89,28 @@ export async function getRelativeServerData(
   return json.data;
 }
 
+export async function getMonthlyData(
+  server: string
+): Promise<Array<{ month: string; result: number }>> {
+  const result = await fetch(
+    connector("/history/" + server + "/get-monthly-data", { version: 0 })
+  );
+
+  const json = await result.json();
+  return json.result;
+}
+
+export async function getDailyData(
+  server: string
+): Promise<Array<{ day: string; result: number }>> {
+  const result = await fetch(
+    connector("/history/" + server + "/get-daily-data", { version: 0 })
+  );
+
+  const json = await result.json();
+  return json.result;
+}
+
 export async function getCommunityServerFavorites(
   server: string
 ): Promise<number> {

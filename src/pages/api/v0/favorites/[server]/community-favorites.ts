@@ -40,7 +40,7 @@ export default async function handler(
 
   await client.connect();
 
-  const db = client.db("mhsf");
+  const db = client.db(process.env.CUSTOM_MONGO_DB ?? "mhsf");
   const collection = db.collection("meta");
   const find = await collection.find({ server: server }).toArray();
 

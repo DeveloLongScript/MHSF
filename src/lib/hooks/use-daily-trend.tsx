@@ -1,7 +1,7 @@
 /*
  * MHSF, Minehut Server List
  * All external content is rather licensed under the ECA Agreement
- * located here: https://list.mlnehut.com/docs/legal/external-content-agreement
+ * located here: https://mhsf.app/docs/legal/external-content-agreement
  *
  * All code under MHSF is licensed under the MIT License
  * by open source contributors
@@ -28,38 +28,53 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { NextApiRequest, NextApiResponse } from "next";
-import { getAuth, clerkClient } from "@clerk/nextjs/server";
-import { MongoClient } from "mongodb";
+import { useEffect, useState } from "react";
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  const { userId } = getAuth(req);
+export function useTrend(data: { day: string; result: number }[]) {
+	const [success, setSuccess] = useState(true);
+	const [trend, setTrend] = useState<"up" | "down">("up");
+	const [percentage, setPercentage] = useState<number>(0);
 
-  if (!userId) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
-  const client = new MongoClient(process.env.MONGO_DB as string);
-  await client.connect();
+	useEffect(() => {
+		const today = new Date();
+		const previousDay = new Date();
+		previousDay.setDate(previousDay.getDate() - 1);
 
-  const db = client.db(process.env.CUSTOM_MONGO_DB ?? "mhsf");
-  const users = db.collection("claimed-users");
-  const user = await (await clerkClient()).users.getUser(userId);
+		const previousDayData = data.find(
+			(x) => x.day === previousDay.toLocaleString('en-us', {  weekday: 'long' }),
+		);
+		const todayData = data.find(
+			(x) => x.day === today.toLocaleString('en-us', {  weekday: 'long' }),
+		);
 
-  if (user.publicMetadata.player == undefined) {
-    res.status(400).send({ result: "Hasn't linked yet!" });
-    return;
-  }
-  await users.findOneAndDelete({ player: user.publicMetadata.player });
-  await (
-    await clerkClient()
-  ).users.updateUserMetadata(userId, {
-    publicMetadata: { player: null },
-  });
+		if (previousDayData === undefined || todayData === undefined) {
+			setSuccess(false);
+			return;
+		}
 
-  res.send({ result: "Unlinked!" });
+		if (previousDayData.result === 0) {
+			setSuccess(false);
+			return;
+		}
 
-  client.close();
+		setSuccess(true);
+		setTrend(previousDayData.result < todayData.result ? "up" : "down");
+		setPercentage(
+			Math.abs(
+				Number(
+					(
+						((todayData.result - previousDayData.result) /
+							previousDayData.result) *
+						100
+					).toFixed(1),
+				),
+			),
+		);
+	}, [data]);
+
+	return {
+		success,
+		trend,
+		percentage,
+	};
 }

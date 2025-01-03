@@ -117,6 +117,7 @@ import { LoadingSpinner } from "./ui/loading-spinner";
 import StickyTopbar from "./misc/StickyTopbar";
 import { HoverCard } from "@radix-ui/react-hover-card";
 import { HoverCardTrigger } from "./ui/hover-card";
+import { ExampleChart } from "./charts/ExampleChart";
 
 // ag-grid
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -451,13 +452,22 @@ export default function ServerList() {
 								and descriptions, making your server stand out with information
 								that can be shown to players.
 							</p>
-							<BentoGrid className="max-h-[100px]">
+							<BentoGrid className="max-h-[100px] mb-[300px]">
 								{features.map((feature, idx) => (
 									<BentoCard key={idx} {...feature} />
 								))}
 							</BentoGrid>
-
-							<Separator />
+						
+							<br />
+							<br />
+							<h1 className="animate-fade-in -translate-y-4 text-balance bg-gradient-to-br from-black from-30% to-black/40 bg-clip-text pb-6 text-2xl font-semibold leading-none tracking-tighter text-transparent opacity-0 [--animation-delay:200ms] sm:text-2xl md:text-3xl lg:text-4xl dark:from-white dark:to-white/40">
+								Monitor your success
+							</h1>
+							<p className="animate-fade-in mb-12 -translate-y-4 text-balance text-lg tracking-tight text-gray-400 opacity-0 [--animation-delay:400ms] md:text-xl">
+								Ever wondered how a server was doing? MHSF constantly monitors servers
+								and shows you statistics about how a server is doing at any point of time.
+							</p>
+							<ExampleChart />
 						</div>
 					)}
 					<br />

@@ -36,6 +36,8 @@ import TabServer from "@/components/misc/TabServer";
 import type { Metadata, ResolvingMetadata } from "next";
 import StickyTopbar from "@/components/misc/StickyTopbar";
 import { RelativeChart } from "@/components/charts/RelativeChart";
+import { MonthlyChart } from "@/components/charts/MonthlyChart";
+import { DailyChart } from "@/components/charts/DailyChart";
 
 type Props = {
   params: { server: string };
@@ -113,6 +115,11 @@ export default function ServerPage({ params }: { params: { server: string } }) {
             <NewChart server={params.server} />
             <br />
             <RelativeChart server={params.server} />
+            <br />
+            <div className="grid grid-cols-2 gap-4">
+              <MonthlyChart server={params.server} />
+              <DailyChart server={params.server} />
+            </div>
           </div>
         </div>
       </ColorProvider>

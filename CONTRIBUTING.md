@@ -42,6 +42,7 @@ We use [Atlas](https://www.mongodb.com/atlas) to host our MongoDB database, but 
 ```dotenv
 MONGO_DB="mongodb+srv://..."
 ```
+You can also set `CUSTOM_MONGO_DB` to a database name that will apply to all operations except statistical operations.
 
 ## Smaller things (for production-ready servers)
 

@@ -134,7 +134,7 @@ export function NewChart({ server }: { server: string }) {
               {chartConfig[activeChart].label} Chart for {server}
             </CardTitle>
             <CardDescription className="flex items-center">
-              Showing {filter !== "all" && <>the last</>}{" "}
+              Showing {filter !== "all" && "the last"}{" "}
               <Select value={filter} onValueChange={setFilter}>
                 {" "}
                 <SelectTrigger className="max-w-[80px] mx-2">
@@ -154,7 +154,7 @@ export function NewChart({ server }: { server: string }) {
                   </SelectGroup>
                 </SelectContent>
               </Select>{" "}
-              {filter === "all" && <>of the</>} entries.
+              {filter === "all" && "of the"} entries.
             </CardDescription>
           </div>
           <div className="flex">

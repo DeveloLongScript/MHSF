@@ -1,7 +1,7 @@
 /*
  * MHSF, Minehut Server List
  * All external content is rather licensed under the ECA Agreement
- * located here: https://list.mlnehut.com/docs/legal/external-content-agreement
+ * located here: https://mhsf.app/docs/legal/external-content-agreement
  *
  * All code under MHSF is licensed under the MIT License
  * by open source contributors
@@ -28,38 +28,35 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { NextApiRequest, NextApiResponse } from "next";
-import { getAuth, clerkClient } from "@clerk/nextjs/server";
 import { MongoClient } from "mongodb";
+import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { userId } = getAuth(req);
+    const client = new MongoClient(process.env.MONGO_DB as string);
+    const db = client.db("mhsf").collection("history");
+    const server = req.query.server as string;
 
-  if (!userId) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
-  const client = new MongoClient(process.env.MONGO_DB as string);
-  await client.connect();
+    const daysOfWeek =  ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+	const result = await Promise.all([1,2,3,4,5,6,7].map(async (c) => {
+		const results = await db.find({ 
+			$and: [
+				{ server },
+				{ $expr: { $eq: [{ $dayOfWeek: "$date" }, c] } }
+			]
+		}).toArray()
 
-  const db = client.db(process.env.CUSTOM_MONGO_DB ?? "mhsf");
-  const users = db.collection("claimed-users");
-  const user = await (await clerkClient()).users.getUser(userId);
+		if (results.length !== 0) {
+			const averageNums = (results as any as {player_count: number}[]).map((x: {player_count: number}) => x.player_count)
+			const average = averageNums.reduce((sum, val) => sum + val, 0) / averageNums.length;
 
-  if (user.publicMetadata.player == undefined) {
-    res.status(400).send({ result: "Hasn't linked yet!" });
-    return;
-  }
-  await users.findOneAndDelete({ player: user.publicMetadata.player });
-  await (
-    await clerkClient()
-  ).users.updateUserMetadata(userId, {
-    publicMetadata: { player: null },
-  });
+			return { day: daysOfWeek[c - 1], result: Math.floor(average) };
+		}
+		return undefined;
+	}));
 
-  res.send({ result: "Unlinked!" });
-
-  client.close();
+	client.close()
+	res.send({result: result.filter((c) => c !== undefined)});
 }
