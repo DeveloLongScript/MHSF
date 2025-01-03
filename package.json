@@ -33,6 +33,7 @@
 		"@unocss/postcss": "^0.61.5",
 		"@unocss/transformer-directives": "^0.61.5",
 		"@unocss/webpack": "^0.61.5",
+		"ag-grid-react": "^33.0.3",
 		"contentlayer": "^0.3.4",
 		"cron": "^3.1.7",
 		"discord.js": "^14.15.3",

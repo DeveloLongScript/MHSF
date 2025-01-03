@@ -31,7 +31,14 @@
 "use client";
 
 import * as React from "react";
-import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
+import {
+  CartesianGrid,
+  Line,
+  LineChart,
+  XAxis,
+  YAxis,
+  ReferenceLine,
+} from "recharts";
 
 import {
   Card,
@@ -49,8 +56,16 @@ import {
 import { useEffectOnce } from "@/lib/useEffectOnce";
 import { ServerResponse } from "@/lib/types/mh-server";
 import { getCommunityServerFavorites, getShortTermData } from "@/lib/api";
-import { Skeleton } from "./ui/skeleton";
+import { Skeleton } from "../ui/skeleton";
 import FadeIn from "react-fade-in/lib/FadeIn";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const chartConfig = {
   player_count: {
@@ -68,15 +83,20 @@ export function NewChart({ server }: { server: string }) {
     React.useState<keyof typeof chartConfig>("player_count");
 
   const [chartData, setChartData] = React.useState<any>([]);
+  const [allData, setAllData] = React.useState<any>([]);
   const [joins, setJoins] = React.useState<any>(0);
   const [loading, setLoading] = React.useState(true);
+  const [dataMax, setDataMax] = React.useState(0);
   const [favorites, setFavorites] = React.useState<any>(0);
+  const [filter, setFilter] = React.useState("60");
 
   const allNums = { player_count: joins, favorites };
   useEffectOnce(() => {
     getShortTermData(server, ["player_count", "favorites", "date"]).then(
       (c) => {
-        setChartData(c);
+        setAllData(c.data);
+        setChartData(c.data.slice(-60));
+        setDataMax(c.dataMax);
         getCommunityServerFavorites(server).then((b) => setFavorites(b));
         fetch("https://api.minehut.com/server/" + server + "?byName=true").then(
           (k) => {
@@ -89,6 +109,14 @@ export function NewChart({ server }: { server: string }) {
       }
     );
   });
+
+  React.useEffect(() => {
+    if (filter === "all") {
+      setChartData(allData);
+    } else {
+      setChartData(allData.slice(Number(filter) * -1));
+    }
+  }, [filter, allData]);
 
   if (loading)
     return (
@@ -105,7 +133,29 @@ export function NewChart({ server }: { server: string }) {
             <CardTitle>
               {chartConfig[activeChart].label} Chart for {server}
             </CardTitle>
-            <CardDescription>Showing the past 30 entries.</CardDescription>
+            <CardDescription className="flex items-center">
+              Showing {filter !== "all" && <>the last</>}{" "}
+              <Select value={filter} onValueChange={setFilter}>
+                {" "}
+                <SelectTrigger className="max-w-[80px] mx-2">
+                  <SelectValue placeholder="60" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup className="max-h-[200px]">
+                    <SelectItem value="30">30</SelectItem>
+                    <SelectItem value="60">60</SelectItem>
+                    <SelectItem value="90">90</SelectItem>
+                    <SelectItem value="120">120</SelectItem>
+                    <SelectItem value="150">150</SelectItem>
+                    <SelectItem value="180">180</SelectItem>
+                    <SelectItem value="210">210</SelectItem>
+                    <SelectItem value="240">240</SelectItem>
+                    <SelectItem value="all">all</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>{" "}
+              {filter === "all" && <>of the</>} entries.
+            </CardDescription>
           </div>
           <div className="flex">
             {["player_count", "favorites"].map((key) => {
@@ -149,9 +199,7 @@ export function NewChart({ server }: { server: string }) {
                 tickMargin={8}
                 minTickGap={32}
                 tickFormatter={(value) => {
-                  return new Date(value).toLocaleTimeString("en-US", {
-                    timeStyle: "short",
-                  });
+                  return `${new Date(value).getMonth() + 1}/${new Date(value).getDate()}`;
                 }}
               />
               <YAxis
@@ -166,6 +214,9 @@ export function NewChart({ server }: { server: string }) {
                       : ` ${value == 1 ? "favorite" : "favrts."}`)
                   );
                 }}
+                domain={
+                  activeChart === "player_count" ? [0, dataMax + 10] : undefined
+                }
               />
               <ChartTooltip
                 content={
@@ -174,13 +225,25 @@ export function NewChart({ server }: { server: string }) {
                     nameKey={activeChart}
                     indicator="line"
                     labelFormatter={(value) => {
-                      return new Date(value).toLocaleTimeString("en-US", {
+                      return `${new Date(value).toLocaleDateString("en-US", {
+                        day: "numeric",
+                        month: "short",
+                      })} ${new Date(value).toLocaleTimeString("en-US", {
                         timeStyle: "short",
-                      });
+                      })}`;
                     }}
                   />
                 }
               />
+              {activeChart === "player_count" && (
+                <ReferenceLine
+                  y={dataMax}
+                  stroke={`var(--color-${activeChart})`}
+                  strokeWidth={2}
+                  label="all-time max"
+                  strokeDasharray="3 3"
+                />
+              )}
               <Line
                 dataKey={activeChart}
                 type="monotone"

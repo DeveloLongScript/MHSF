@@ -30,12 +30,12 @@
 
 import Banner from "@/components/Banner";
 import ColorProvider from "@/components/ColorProvider";
-import { NewChart } from "@/components/NewChart";
+import { NewChart } from "@/components/charts/NewChart";
 import ServerView from "@/components/ServerView";
 import TabServer from "@/components/misc/TabServer";
-import { Separator } from "@/components/ui/separator";
 import type { Metadata, ResolvingMetadata } from "next";
 import StickyTopbar from "@/components/misc/StickyTopbar";
+import { RelativeChart } from "@/components/charts/RelativeChart";
 
 type Props = {
   params: { server: string };
@@ -101,17 +101,18 @@ export default function ServerPage({ params }: { params: { server: string } }) {
       <ColorProvider server={params.server}>
         <div className={"pt-[300px] xl:px-[100px]"}>
           <Banner server={params.server} />
-          <div className="pt-8 z-10 relative">
+          <div className="pt-8 z-1 relative">
             <ServerView server={params.server} />
           </div>
 
           <StickyTopbar scrollElevation={100} className="pt-4">
             <TabServer server={params.server} tabDef="statistics" />
           </StickyTopbar>
-          <Separator />
           <br />
-          <div className="p-4 gap-4">
+          <div className="p-4 gap-4 relative z-1">
             <NewChart server={params.server} />
+            <br />
+            <RelativeChart server={params.server} />
           </div>
         </div>
       </ColorProvider>

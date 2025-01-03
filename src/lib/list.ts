@@ -5,7 +5,7 @@ import MiniMessage from "minimessage-js";
 var numberOfItemsInView = 20;
 
 export default class ServersList {
-  private servers: Array<OnlineServer> = [];
+  servers: Array<OnlineServer> = [];
   currentServers: Array<OnlineServer> = [];
   private filters: Array<(server: OnlineServer) => Promise<boolean>> = [];
   extraData: any = { total_players: 0, total_servers: 0 };

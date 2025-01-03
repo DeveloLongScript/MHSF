@@ -58,8 +58,9 @@ import IconDisplay from "./IconDisplay";
 import { useClerk, useUser } from "@clerk/nextjs";
 import { LoaderIcon } from "react-hot-toast";
 import { Separator } from "./ui/separator";
-import { convert } from "@/components/NewChart";
+import { convert } from "@/components/charts/NewChart";
 import { LoadingSpinner } from "./ui/loading-spinner";
+import { BadgeOfAffiliation } from "./Icon";
 
 export default function ServerView(props: { server: string }) {
   const [single, setSingle] = useState(new ServerSingle(props.server));
@@ -169,6 +170,22 @@ export default function ServerView(props: { server: string }) {
                   />
                 )}
                 {props.server}
+                {props.server === "CoreBoxx" && (
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <BadgeOfAffiliation className="size-8 pl-2" />
+                    </TooltipTrigger>
+                    <TooltipContent className="font-normal tracking-normal flex items-center">
+                      
+                    <BadgeOfAffiliation className="size-8 pr-2" />
+                    <span>
+                      CoreBoxx is an official affiliate of MHSF. This server was
+                      <br /> found to be a high-quality server and should be a
+                      good join for any player!
+                      </span>
+                    </TooltipContent>
+                  </Tooltip>
+                )}
               </CardTitle>
               <CardDescription>
                 {/* 1704088800000 is the Unix time (in milliseconds) of (GMT) Monday, January 1, 2024 6:00:00 AM */}

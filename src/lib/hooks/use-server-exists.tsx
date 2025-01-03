@@ -27,3 +27,24 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  * OTHER DEALINGS IN THE SOFTWARE.
  */
+
+import { useEffect, useState } from "react";
+
+export function useServerExists(server: string) {
+  const [serverExists, setServerExists] = useState(true);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch("https://api.minehut.com/server/" + server + "?byName=true")
+      .then((c) => c.json())
+      .then((d) => {
+        setServerExists(d.server != null);
+        setLoading(false);
+      });
+  });
+
+  return {
+    serverExists,
+    loading,
+  };
+}

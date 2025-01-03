@@ -87,6 +87,7 @@ export default function AfterServerView({ server }: { server: string }) {
         getCommunityServerFavorites(server).then((c) => {
           mhsf.setFavorites(c);
         });
+        setView(description !== "" || discord !== "" ? "desc" : "extra");
       }
       fetch("https://api.minehut.com/server/" + server + "?byName=true").then(
         (c) => c.json().then((n) => setServerObject(n.server))
@@ -96,7 +97,7 @@ export default function AfterServerView({ server }: { server: string }) {
       });
       setLoading(false);
     });
-  }, []);
+  }, [description, discord]);
   if (loading) return <></>;
 
   return (
@@ -216,20 +217,13 @@ export default function AfterServerView({ server }: { server: string }) {
               </Card>
             )}
             {discord != "" && view == "desc" && (
-              <Card>
-                <CardHeader>
-                  <CardTitle>Discord Server</CardTitle>
-                  <CardDescription className="p-4 prose dark:prose-invert">
-                    <iframe
-                      src={`https://discord.com/widget?id=${discord}&theme=${resolvedTheme}`}
-                      height="500"
-                      allowTransparency={true}
-                      className="rounded-lg max-sm:w-[100px] max-md:w-[250px]"
-                      sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"
-                    />
-                  </CardDescription>
-                </CardHeader>
-              </Card>
+              <iframe
+                src={`https://discord.com/widget?id=${discord}&theme=${resolvedTheme}`}
+                height="500"
+                allowTransparency={true}
+                className="rounded-lg max-md:w-full"
+                sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"
+              />
             )}{" "}
             {view == "achievements" && (
               <div className="col-span-4">
@@ -452,7 +446,7 @@ export default function AfterServerView({ server }: { server: string }) {
                       </tr>
                       <tr>
                         <th className="border p-2">Server ID</th>
-                        <td className="border p-2">
+                        <td className="border p-2 break-all">
                           {serverObject?._id == undefined ? (
                             "? (unknown)"
                           ) : (

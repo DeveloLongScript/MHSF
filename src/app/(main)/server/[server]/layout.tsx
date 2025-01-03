@@ -29,44 +29,23 @@
  */
 
 "use client";
-import useTotalBannerSize from "@/lib/hooks/use-total-banner-size";
-import { useEffect, useState, ReactNode } from "react";
 
-export default function StickyTopbar({
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { useServerExists } from "@/lib/hooks/use-server-exists";
+import { notFound } from "next/navigation";
+
+export default function ServerLayout({
+  params,
   children,
-  scrollElevation,
-  className,
 }: {
-  children: ReactNode;
-  scrollElevation: number;
-  className?: string;
+  params: { server: string };
+  children: React.ReactNode;
 }) {
-  const [isSticky, setIsSticky] = useState(false);
-  const { bannerSize } = useTotalBannerSize();
+  const { serverExists, loading } = useServerExists(params.server);
 
-  const handleScroll = () => {
-    if (window.scrollY > scrollElevation) {
-      setIsSticky(true);
-    } else {
-      setIsSticky(false);
-    }
-  };
+  if (loading) return <LoadingSpinner />;
 
-  useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
+  if (!serverExists) notFound();
 
-  return (
-    <div
-      className={`transition-all duration-300 z-[9] ${isSticky ? "fixed left-0 w-full backdrop-blur shadow-lg " + className : "block w-full bg-transparent"}`}
-      style={{
-        top: isSticky ? `${bannerSize * 32 + 38}px` : undefined,
-      }}
-    >
-      {children}
-    </div>
-  );
+  return children;
 }
