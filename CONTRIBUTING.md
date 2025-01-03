@@ -34,7 +34,7 @@ Set the following variables in the .env.local file:
 # Clerk
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY="pk_..."
 CLERK_SECRET_KEY="sk_..."
-IS_AUTH="true"
+NEXT_PUBLIC_IS_AUTH="true"
 ```
 
 ## MongoDB
@@ -42,6 +42,7 @@ We use [Atlas](https://www.mongodb.com/atlas) to host our MongoDB database, but 
 ```dotenv
 MONGO_DB="mongodb+srv://..."
 ```
+You can also set `CUSTOM_MONGO_DB` to a database name that will apply to all operations except statistical operations.
 
 ## Smaller things (for production-ready servers)
 

@@ -29,7 +29,6 @@
  */
 
 "use client";
-
 import { TooltipProvider } from "@/components/ui/tooltip";
 import "../globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";

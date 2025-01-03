@@ -32,7 +32,8 @@
 
 import * as React from "react";
 import { ThemeProvider as NextThemesProvider, useTheme } from "next-themes";
-import { type ThemeProviderProps } from "next-themes/dist/types";
+import { type ThemeProviderProps } from "next-themes";
+import { usePathname } from "next/navigation";
 
 declare global {
   interface Document {
@@ -48,6 +49,7 @@ declare global {
 
 export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
   const [mounted, setMounted] = React.useState(false);
+  const pathname = usePathname();
 
   React.useEffect(() => {
     setMounted(true);
@@ -55,7 +57,14 @@ export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
 
   if (!mounted) return null;
 
-  return <NextThemesProvider {...props}>{children}</NextThemesProvider>;
+  return (
+    <NextThemesProvider
+      forcedTheme={pathname?.startsWith("/server") ? "dark" : undefined}
+      {...props}
+    >
+      {children}
+    </NextThemesProvider>
+  );
 }
 
 interface UseThemeTransitionResult {

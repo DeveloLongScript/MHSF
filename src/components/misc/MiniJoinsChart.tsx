@@ -52,7 +52,7 @@ export function MiniJoinsChart({ server }: { server: string }) {
 
 	useEffectOnce(() => {
 		getShortTermData(server, ["player_count", "date"]).then((result) => {
-			setChartData(result.slice(-20));
+			setChartData(result.data.slice(-20));
 			setLoading(false);
 		});
 	});

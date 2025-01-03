@@ -30,7 +30,6 @@
 
 "use client";
 import { useState } from "react";
-import Banner from "./Banner";
 import ServerCustomize from "./ServerCustomize";
 import TabServer from "./misc/TabServer";
 
@@ -42,7 +41,6 @@ export default function CustomizeRoot({
   const [color, setColor] = useState("");
   return (
     <div className={"pt-16 xl:px-[100px] theme-" + color}>
-      <Banner server={params.server} />
       <TabServer server={params.server} tabDef="customize" />
       <br />
       <div className="pl-[40px] pr-[40px]">

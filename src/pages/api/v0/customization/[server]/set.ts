@@ -86,7 +86,7 @@ export default async function handler(
   const client = new MongoClient(process.env.MONGO_DB as string);
   await client.connect();
 
-  const db = client.db("mhsf");
+  const db = client.db(process.env.CUSTOM_MONGO_DB ?? "mhsf");
   const collection = db.collection("owned-servers");
   const customizationColl = db.collection("customization");
   if (!((await collection.findOne({ server, author: userId })) == undefined)) {

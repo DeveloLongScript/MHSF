@@ -68,7 +68,8 @@ import {
 } from "@/lib/api";
 import IconDisplay from "./IconDisplay";
 import ServerSingle from "@/lib/single";
-import toast from "react-hot-toast";
+import SnowfallController from "./misc/SnowfallController";
+import { toast } from "sonner";
 import { ServerResponse, OnlineServer } from "@/lib/types/mh-server";
 import {
   Dialog,
@@ -80,6 +81,7 @@ import {
 import { TagShower } from "./ServerList";
 import { Button } from "./ui/button";
 import { useTheme } from "next-themes";
+import { CheckmarkIcon } from "react-hot-toast";
 
 export function SearchCommandBar() {
   const [serverList, setServerList] = useState<OnlineServer[]>([]);
@@ -278,7 +280,7 @@ export function OfflineServerCB() {
 
             {customized && (
               <h2 className="flex items-center text-muted-foreground">
-                <CheckIcon />
+                <CheckmarkIcon />
                 <span className="pl-1.5 text-[16px]">
                   Is customized by a MHSF User
                 </span>
@@ -511,12 +513,25 @@ export function ServerCommandBar() {
 }
 
 function timeConverter(UNIX_timestamp: any) {
-  var a = new Date(UNIX_timestamp);
-  var months = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"];
-  var year = a.getFullYear();
-  var month = months[a.getMonth()];
-  var date = a.getDate();
-  var time = month + "/" + date + "/" + year;
+  const a = new Date(UNIX_timestamp);
+  const months = [
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9",
+    "10",
+    "11",
+    "12",
+  ];
+  const year = a.getFullYear();
+  const month = months[a.getMonth()];
+  const date = a.getDate();
+  const time = month + "/" + date + "/" + year;
   return time;
 }
 
@@ -841,6 +856,7 @@ export function CommandBarer() {
       <ServerCommandBar />
       <OfflineServerCB />
       <RandomServerDialog />
+      <SnowfallController />
     </>
   );
 }

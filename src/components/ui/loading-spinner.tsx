@@ -1,7 +1,7 @@
 /*
  * MHSF, Minehut Server List
  * All external content is rather licensed under the ECA Agreement
- * located here: https://list.mlnehut.com/docs/legal/external-content-agreement
+ * located here: https://mhsf.app/docs/legal/external-content-agreement
  *
  * All code under MHSF is licensed under the MIT License
  * by open source contributors
@@ -28,26 +28,37 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
+import { cn } from "@/lib/utils";
 
-/** used when there is a outage */
-export const banner = {
-  isBanner:
-    process.env.NEXT_PUBLIC_VERCEL_ENV !== "production"
-      ? true
-      : /** Set this to true when outage --->*/ false,
-  bannerText:
-    process.env.NEXT_PUBLIC_VERCEL_ENV !== "production" ? (
-      <>
-        Your not in production!{" "}
-        <Link href="https://list.mlnehut.com">
-          <Button variant="link" className="dark:text-black">
-            Go to production
-          </Button>
-        </Link>
-      </>
-    ) : (
-      <>{/** Set this to an explanation! */}</>
-    ),
-};
+export function LoadingSpinner({ className }: { className?: string }) {
+  return (
+    <div className={cn("h-5 w-5", className)}>
+      <div
+        style={{
+          position: "relative",
+          top: "50%",
+          left: "50%",
+        }}
+        className={cn("loading-spinner", "h-5 w-5", className)}
+      >
+        {[...Array(12)].map((_, i) => (
+          <div
+            key={i}
+            style={{
+              animationDelay: `${-1.2 + 0.1 * i}s`,
+              background: "gray",
+              position: "absolute",
+              borderRadius: "1rem",
+              width: "30%",
+              height: "8%",
+              left: "-10%",
+              top: "-4%",
+              transform: `rotate(${30 * i}deg) translate(120%)`,
+            }}
+            className="animate-spinner"
+          />
+        ))}
+      </div>
+    </div>
+  );
+}

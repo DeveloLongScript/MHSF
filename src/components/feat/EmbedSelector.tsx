@@ -39,7 +39,7 @@ import { codeToHtml } from "shiki";
 import { useTheme } from "next-themes";
 import { Asterisk, Copy } from "lucide-react";
 import useClipboard from "@/lib/useClipboard";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import { Checkbox } from "../ui/checkbox";
 import {
   Select,
@@ -59,7 +59,7 @@ export default function EmbedSelector({ server }: { server: string }) {
   const [selectedCodeType, setSelectedCodeType] = useState("jsx");
   const [noMinehutBranding, setNoMinehutBranding] = useState(false);
   const clipboard = useClipboard();
-  const [url, setURL] = useState(`https://mhsf.app/embed/${server}?`);
+  const [url, setURL] = useState(`https://embeds.mhsf.app/embed/${server}?`);
   const [jsxCode, setJsxCode] = useState(`<iframe
     src="${url}"
     width={390}
@@ -155,7 +155,7 @@ export default function EmbedSelector({ server }: { server: string }) {
               onCheckedChange={(c) => {
                 setEmbedStatic(c == "indeterminate" ? true : c);
                 setURL(
-                  `https://mhsf.app/embed/${server}?${c ? "&static=true" : ""}${
+                  `https://embeds.mhsf.app/embed/${server}?${c ? "&static=true" : ""}${
                     noMinehutBranding ? "&branding=false" : ""
                   }&theme=${embedTheme}`
                 );
@@ -182,7 +182,7 @@ export default function EmbedSelector({ server }: { server: string }) {
               onCheckedChange={(c) => {
                 setNoMinehutBranding(c == "indeterminate" ? true : c);
                 setURL(
-                  `https://mhsf.app/embed/${server}?${embedStatic ? "&static=true" : ""}${
+                  `https://embeds.mhsf.app/embed/${server}?${embedStatic ? "&static=true" : ""}${
                     c ? "&branding=false" : ""
                   }&theme=${embedTheme}`
                 );
@@ -214,7 +214,7 @@ export default function EmbedSelector({ server }: { server: string }) {
               onValueChange={(c) => {
                 setEmbedTheme(c);
                 setURL(
-                  `https://mhsf.app/embed/${server}?${embedStatic ? "&static=true" : ""}${
+                  `https://embeds.mhsf.app/embed/${server}?${embedStatic ? "&static=true" : ""}${
                     noMinehutBranding ? "&branding=false" : ""
                   }&theme=${c}`
                 );

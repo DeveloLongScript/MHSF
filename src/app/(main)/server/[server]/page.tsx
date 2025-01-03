@@ -32,8 +32,8 @@ import AfterServerView from "@/components/AfterServerView";
 import Banner from "@/components/Banner";
 import ColorProvider from "@/components/ColorProvider";
 import ServerView from "@/components/ServerView";
+import StickyTopbar from "@/components/misc/StickyTopbar";
 import TabServer from "@/components/misc/TabServer";
-import { Separator } from "@/components/ui/separator";
 import type { Metadata, ResolvingMetadata } from "next";
 
 type Props = {
@@ -128,15 +128,17 @@ export async function generateMetadata(
 
 export default function ServerPage({ params }: { params: { server: string } }) {
   return (
-    <main>
+    <main style={{ "color-scheme": "dark" } as React.CSSProperties}>
       <ColorProvider server={params.server}>
-        <div className={"pt-16 xl:px-[100px]"}>
+        <div className={"pt-[300px] xl:px-[100px]"}>
           <Banner server={params.server} />
-          <TabServer server={params.server} tabDef="general" />
-          <div className="pt-8">
+          <div className="pt-8 z-10 relative">
             <ServerView server={params.server} />
           </div>
-          <Separator />
+
+          <StickyTopbar scrollElevation={100} className="pt-4">
+            <TabServer server={params.server} tabDef="general" />
+          </StickyTopbar>
           <br />
           <AfterServerView server={params.server} />
         </div>

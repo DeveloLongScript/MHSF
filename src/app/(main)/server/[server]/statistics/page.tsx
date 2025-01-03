@@ -30,11 +30,14 @@
 
 import Banner from "@/components/Banner";
 import ColorProvider from "@/components/ColorProvider";
-import { NewChart } from "@/components/NewChart";
+import { NewChart } from "@/components/charts/NewChart";
 import ServerView from "@/components/ServerView";
 import TabServer from "@/components/misc/TabServer";
-import { Separator } from "@/components/ui/separator";
 import type { Metadata, ResolvingMetadata } from "next";
+import StickyTopbar from "@/components/misc/StickyTopbar";
+import { RelativeChart } from "@/components/charts/RelativeChart";
+import { MonthlyChart } from "@/components/charts/MonthlyChart";
+import { DailyChart } from "@/components/charts/DailyChart";
 
 type Props = {
   params: { server: string };
@@ -96,17 +99,26 @@ export async function generateMetadata(
 
 export default function ServerPage({ params }: { params: { server: string } }) {
   return (
-    <main>
+    <main style={{ "color-scheme": "dark" } as React.CSSProperties}>
       <ColorProvider server={params.server}>
-        <div className={"pt-16 xl:px-[100px]"}>
+        <div className={"pt-[300px] xl:px-[100px]"}>
           <Banner server={params.server} />
-          <TabServer server={params.server} tabDef="statistics" />
-          <div className="pt-8">
+          <div className="pt-8 z-1 relative">
             <ServerView server={params.server} />
-            <Separator />
+          </div>
+
+          <StickyTopbar scrollElevation={100} className="pt-4">
+            <TabServer server={params.server} tabDef="statistics" />
+          </StickyTopbar>
+          <br />
+          <div className="p-4 gap-4 relative z-1">
+            <NewChart server={params.server} />
             <br />
-            <div className="p-4 gap-4">
-              <NewChart server={params.server} />
+            <RelativeChart server={params.server} />
+            <br />
+            <div className="grid grid-cols-2 gap-4">
+              <MonthlyChart server={params.server} />
+              <DailyChart server={params.server} />
             </div>
           </div>
         </div>

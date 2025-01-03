@@ -38,10 +38,15 @@ export default async function handler(
   const client = new MongoClient(process.env.MONGO_DB as string);
   const db = client.db("mhsf").collection("history");
   const server = req.query.server as string;
+  let dataMax = 0;
   const scopes: Array<string> = checkForInfoOrLeave(res, req.body.scopes);
 
   const allData = await db.find({ server }).toArray();
   const data: any[] = [];
+
+  dataMax = (
+    await db.find({ server }).sort({ player_count: -1 }).limit(1).toArray()
+  )[0].player_count;
 
   allData.forEach((d) => {
     const result: any = {};
@@ -52,7 +57,7 @@ export default async function handler(
   });
 
   client.close();
-  res.send({ data });
+  res.send({ data, dataMax });
 }
 
 function checkForInfoOrLeave(res: NextApiResponse, info: any) {

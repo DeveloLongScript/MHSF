@@ -28,7 +28,7 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import toast from "react-hot-toast"
+import { toast } from "sonner";
 
 /** A hook to properly write text to the clipboard without triggering a client-side error
  * @version 1.0

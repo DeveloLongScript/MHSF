@@ -39,9 +39,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useThemeTransition } from "./ThemeProvider";
+import { usePathname } from "next/navigation";
 
 export function ModeToggle() {
   const { changeTheme } = useThemeTransition();
+  const pathname = usePathname();
 
   return (
     <DropdownMenu>
@@ -53,13 +55,28 @@ export function ModeToggle() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => changeTheme("light")}>
+        {pathname?.startsWith("/server") && (
+          <div className="text-sm p-4">
+            For compatibility reasons, <br /> server pages are forced to dark
+            mode
+          </div>
+        )}
+        <DropdownMenuItem
+          onClick={() => changeTheme("light")}
+          disabled={pathname?.startsWith("/server")}
+        >
           Light
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => changeTheme("dark")}>
+        <DropdownMenuItem
+          onClick={() => changeTheme("dark")}
+          disabled={pathname?.startsWith("/server")}
+        >
           Dark
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => changeTheme("system")}>
+        <DropdownMenuItem
+          onClick={() => changeTheme("system")}
+          disabled={pathname?.startsWith("/server")}
+        >
           System
         </DropdownMenuItem>
       </DropdownMenuContent>

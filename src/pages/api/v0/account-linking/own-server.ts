@@ -49,14 +49,15 @@ export default async function handler(
     return res.status(401).json({ error: "Unauthorized" });
   }
   if (
-    (await clerkClient.users.getUser(userId)).publicMetadata.player == undefined
+    (await (await clerkClient()).users.getUser(userId)).publicMetadata.player ==
+    undefined
   ) {
     return res.status(401).json({ error: "Account not linked" });
   }
   const client = new MongoClient(process.env.MONGO_DB as string);
   await client.connect();
 
-  const db = client.db("mhsf");
+  const db = client.db(process.env.CUSTOM_MONGO_DB ?? "mhsf");
   const collection = db.collection("owned-servers");
 
   if ((await collection.findOne({ server: server })) == undefined) {
@@ -81,7 +82,7 @@ export default async function handler(
 
     servers.forEach(async (c, i) => {
       if (c.name == server) {
-        const MCUsername = (await clerkClient.users.getUser(userId))
+        const MCUsername = (await (await clerkClient()).users.getUser(userId))
           .publicMetadata.player;
 
         if (MCUsername == c.author) {

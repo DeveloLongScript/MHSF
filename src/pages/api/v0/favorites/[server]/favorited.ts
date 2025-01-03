@@ -45,7 +45,7 @@ export default async function handler(
   const client = new MongoClient(process.env.MONGO_DB as string);
   await client.connect();
 
-  const db = client.db("mhsf");
+  const db = client.db(process.env.CUSTOM_MONGO_DB ?? "mhsf");
   const collection = db.collection("favorites");
   const find = await collection.find({ user: userId }).toArray();
   if (find.length == 0) res.send({ result: false });

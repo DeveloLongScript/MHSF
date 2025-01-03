@@ -32,10 +32,11 @@ import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextRequest } from "next/server";
 
 const isProtectedRoute = createRouteMatcher(["/account(.*)"]);
+const isEmbed = createRouteMatcher(["/emebed(.*)"]);
 
-export default process.env.IS_AUTH == "true"
+export default process.env.NEXT_PUBLIC_IS_AUTH === "true"
   ? clerkMiddleware((auth, req) => {
-      if (isProtectedRoute(req)) auth().protect();
+      if (isProtectedRoute(req)) auth.protect();
     })
   : (request: NextRequest) => {};
 

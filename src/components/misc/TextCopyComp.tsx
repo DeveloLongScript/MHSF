@@ -31,7 +31,7 @@
 "use client";
 import { useState } from "react";
 import { Button } from "../ui/button";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import { Check } from "lucide-react";
 import useClipboard from "@/lib/useClipboard";
 

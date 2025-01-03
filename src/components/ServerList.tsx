@@ -31,6 +31,7 @@
 "use client";
 import { BorderBeam } from "@/components/effects/border-beam";
 import { Button } from "@/components/ui/button";
+import { AgGridReact, CustomCellRendererProps } from "ag-grid-react";
 import {
 	Dialog,
 	DialogContent,
@@ -39,6 +40,15 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+	AllCommunityModule,
+	ModuleRegistry,
+	colorSchemeDarkBlue,
+	colorSchemeDarkWarm,
+	colorSchemeLightCold,
+	colorSchemeLightWarm,
+	themeQuartz,
+} from "ag-grid-community";
 import {
 	Menubar,
 	MenubarCheckboxItem,
@@ -74,8 +84,10 @@ import {
 	ArrowDownZA,
 	Check,
 	CircleUser,
+	Copy,
 	ImageIcon,
 	Info,
+	Layers,
 	LogIn,
 	Network,
 	Sun,
@@ -85,7 +97,7 @@ import { CommandIcon } from "lucide-react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import InfiniteScroll from "react-infinite-scroll-component";
 import ClientFadeIn from "./ClientFadeIn";
 import IconDisplay from "./IconDisplay";
@@ -100,7 +112,18 @@ import { pageFind } from "./misc/Link";
 import { Badge } from "./ui/badge";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Skeleton } from "./ui/skeleton";
-import { Spinner } from "./ui/spinner";
+import { affiliates } from "@/config/affiliates";
+import { LoadingSpinner } from "./ui/loading-spinner";
+import StickyTopbar from "./misc/StickyTopbar";
+import { HoverCard } from "@radix-ui/react-hover-card";
+import { HoverCardTrigger } from "./ui/hover-card";
+import { ExampleChart } from "./charts/ExampleChart";
+
+// ag-grid
+ModuleRegistry.registerModules([AllCommunityModule]);
+
+const themeLightWarm = themeQuartz.withPart(colorSchemeLightWarm);
+const themeDarkWarm = themeQuartz.withPart(colorSchemeDarkBlue);
 
 const features = [
 	{
@@ -162,6 +185,9 @@ export default function ServerList() {
 	const { user, isSignedIn } = useUser();
 	const [pOS, setpOS] = useState(false);
 	const [ipr, setIPR] = useState<string>("4");
+	const [presentationMode, setPresentationMode] = useState<"table" | "grid">(
+		"grid",
+	);
 	const [am, setAM] = useState(false);
 	const [filters, setFilters] = useState<
 		Array<(server: OnlineServer) => Promise<boolean>>
@@ -342,7 +368,7 @@ export default function ServerList() {
 								<br className="hidden md:block" /> in less than 10 minutes.
 							</p>
 							<div className="relative flex h-[300px] w-full flex-col items-center justify-center overflow-hidden rounded-lg bg-background ">
-								<Marquee className="[--duration:30s]">
+								<Marquee className="[--duration:30s]" pauseOnHover>
 									{serverList.currentServers.slice(0, 20).map((server) => (
 										<div
 											key={server.name}
@@ -376,7 +402,7 @@ export default function ServerList() {
 										</div>
 									))}
 								</Marquee>
-								<Marquee reverse className="[--duration:30s]">
+								<Marquee reverse className="[--duration:30s]" pauseOnHover>
 									{serverList.currentServers.slice(0, 20).map((server) => (
 										<div
 											key={server.name}
@@ -426,13 +452,22 @@ export default function ServerList() {
 								and descriptions, making your server stand out with information
 								that can be shown to players.
 							</p>
-							<BentoGrid className="max-h-[100px]">
+							<BentoGrid className="max-h-[100px] mb-[300px]">
 								{features.map((feature, idx) => (
 									<BentoCard key={idx} {...feature} />
 								))}
 							</BentoGrid>
-
-							<Separator />
+						
+							<br />
+							<br />
+							<h1 className="animate-fade-in -translate-y-4 text-balance bg-gradient-to-br from-black from-30% to-black/40 bg-clip-text pb-6 text-2xl font-semibold leading-none tracking-tighter text-transparent opacity-0 [--animation-delay:200ms] sm:text-2xl md:text-3xl lg:text-4xl dark:from-white dark:to-white/40">
+								Monitor your success
+							</h1>
+							<p className="animate-fade-in mb-12 -translate-y-4 text-balance text-lg tracking-tight text-gray-400 opacity-0 [--animation-delay:400ms] md:text-xl">
+								Ever wondered how a server was doing? MHSF constantly monitors servers
+								and shows you statistics about how a server is doing at any point of time.
+							</p>
+							<ExampleChart />
 						</div>
 					)}
 					<br />
@@ -519,489 +554,498 @@ export default function ServerList() {
 				<br id="serverlist" className="pb-14" />
 				<Separator />
 				<ClientFadeIn delay={100}>
-					<Menubar className="mt-3 ml-2 border rounded p-2 shadow">
-						<MenubarMenu>
-							<MenubarTrigger>Servers</MenubarTrigger>
-							<MenubarContent>
-								<MenubarItem
-									onSelect={() => events.emit("search-request-event")}
-								>
-									Search Servers
-									<MenubarShortcut className="flex items-center ml-3">
-										<CommandIcon size={14} />
-										+Shift+K
-									</MenubarShortcut>
-								</MenubarItem>
-								<MenubarItem
-									onSelect={() => {
-										setRandomData(serverList.getRandomServer());
-										setRandom(true);
-									}}
-								>
-									Pick Random Server
-								</MenubarItem>
-								<MenubarSeparator />
-								<MenubarItem
-									onSelect={() => {
-										toast.promise(
-											new Promise((s, e) => {
-												setLoading(true);
-												serverList
-													.fetchDataAndFilter()
-													.then(() => {
-														serverList.moveListDown();
-
-														let stringList: Array<{
-															server: string;
-															motd: string;
-														}> = [];
-														let obj: any = {};
-
-														serverList.currentServers.forEach((b) => {
-															stringList.push({ motd: b.motd, server: b.name });
-														});
-
-														serverList.getMOTDs(stringList).then((c) => {
-															var updatedSL = motdList;
-															c.forEach(
-																(b: { server: string; motd: string }) => {
-																	updatedSL[b.server] = b.motd;
-																},
-															);
-															setMotdList(updatedSL);
-															setServers(serverList.currentServers);
-															setLoading(false);
-															s(false);
-														});
-													})
-													.catch(() => {
-														e();
-													});
-											}),
-											{
-												success: "Succesfully refreshed servers",
-												loading: "Refreshing...",
-												error: "Error while refreshing",
-											},
-										);
-									}}
-								>
-									Refresh
-								</MenubarItem>
-							</MenubarContent>
-						</MenubarMenu>
-						<MenubarMenu>
-							<MenubarTrigger>Filter</MenubarTrigger>
-							<MenubarContent className="max-h-[400px] overflow-auto">
-								<MenubarRadioGroup
-									onValueChange={(v) => {
-										toast.promise(
-											new Promise((g, b) => {
-												if (v == "smaller") {
-													setTemplateFilter(true);
-													var filt = nameFilters;
-													filt["smaller-tf"] = true;
-													filt["bigger-tf"] = false;
-													setNameFilters(filt);
-
-													var filt2 = filters;
-													filt2.push(smaller);
-													if (filt2.includes(bigger)) {
-														filt2.splice(filt2.indexOf(bigger), 1);
-													}
-													setFilters(filt2);
-													serverList.editFilters(filters);
-													serverList.fetchDataAndFilter().then(() => {
-														serverList.moveListDown();
-
-														let stringList: Array<{
-															server: string;
-															motd: string;
-														}> = [];
-														let obj: any = {};
-
-														serverList.currentServers.forEach((b) => {
-															stringList.push({ motd: b.motd, server: b.name });
-														});
-
-														serverList.getMOTDs(stringList).then((c) => {
-															var updatedSL = motdList;
-															c.forEach(
-																(b: { server: string; motd: string }) => {
-																	updatedSL[b.server] = b.motd;
-																},
-															);
-															setMotdList(updatedSL);
-															setServers(serverList.currentServers);
-															g(undefined);
-														});
-													});
-												} else if (v == "bigger") {
-													setTemplateFilter(true);
-													var filt = nameFilters;
-													filt["smaller-tf"] = false;
-													filt["bigger-tf"] = true;
-													setNameFilters(filt);
-													var filt2 = filters;
-													filt2.push(bigger);
-
-													filt2.splice(filt2.indexOf(smaller), 1);
-
-													setFilters(filt2);
-													serverList.editFilters(filters);
-
-													serverList.fetchDataAndFilter().then(() => {
-														serverList.moveListDown();
-
-														let stringList: Array<{
-															server: string;
-															motd: string;
-														}> = [];
-														let obj: any = {};
-
-														serverList.currentServers.forEach((b) => {
-															stringList.push({ motd: b.motd, server: b.name });
-														});
-
-														serverList.getMOTDs(stringList).then((c) => {
-															var updatedSL = motdList;
-															c.forEach(
-																(b: { server: string; motd: string }) => {
-																	updatedSL[b.server] = b.motd;
-																},
-															);
-															setMotdList(updatedSL);
-															setServers(serverList.currentServers);
-															g(undefined);
-														});
-													});
-												} else {
-													var filt = nameFilters;
-													filt["smaller-tf"] = false;
-													filt["bigger-tf"] = false;
-													setNameFilters(filt);
-													setTemplateFilter(false);
-
-													var filt2 = filters;
-													filt2.splice(filt2.indexOf(smaller), 1);
-													filt2.splice(filt2.indexOf(bigger), 1);
-													setFilters(filt2);
-													console.log(filters, filters.includes(smaller));
-													serverList.editFilters(filters);
-
-													serverList.fetchDataAndFilter().then(() => {
-														serverList.moveListDown();
-
-														let stringList: Array<{
-															server: string;
-															motd: string;
-														}> = [];
-														let obj: any = {};
-
-														serverList.currentServers.forEach((b) => {
-															stringList.push({ motd: b.motd, server: b.name });
-														});
-
-														serverList.getMOTDs(stringList).then((c) => {
-															var updatedSL = motdList;
-															c.forEach(
-																(b: { server: string; motd: string }) => {
-																	updatedSL[b.server] = b.motd;
-																},
-															);
-															setMotdList(updatedSL);
-															setServers(serverList.currentServers);
-															g(undefined);
-														});
-													});
-												}
-											}),
-											{
-												error: "Error while changing filters",
-												loading: "Changing filters...",
-												success: "Changed filters!",
-											},
-										);
-									}}
-									value={(() => {
-										if (nameFilters["smaller-tf"]) {
-											return "smaller";
-										} else if (nameFilters["bigger-tf"]) {
-											return "bigger";
-										} else {
-											return "none";
-										}
-									})()}
-								>
-									<MenubarRadioItem value="smaller">
-										<div className="block">
-											Only allow smaller servers
-											<br />
-											<span className="text-sm text-muted-foreground">
-												Only allow servers that have the player range 7-15, and
-												cannot <br />
-												be Always Online.
-											</span>
-										</div>
-									</MenubarRadioItem>
-									<MenubarRadioItem value="bigger">
-										<div className="block">
-											Only allow bigger servers
-											<br />
-											<span className="text-sm text-muted-foreground">
-												Only allow servers with more than 15 players.
-											</span>
-										</div>
-									</MenubarRadioItem>
-									<MenubarRadioItem value="none">
-										No/custom requirements
-									</MenubarRadioItem>
-								</MenubarRadioGroup>
-								<MenubarSeparator />
-								<MenubarSub>
-									<span className="text-sm text-muted-foreground ml-2">
-										Tags
-									</span>
-								</MenubarSub>
-								{allTags.map((tag) => (
-									<div key={tag.docsName}>
-										{tag.docsName && tag.__filter == undefined && (
-											<MenubarCheckboxItem
-												disabled={templateFilter && tag.__disab != undefined}
-												id={tag.docsName}
-												checked={(() => {
-													return nameFilters["t-" + tag.docsName];
-												})()}
-												onCheckedChange={async (b) => {
-													var filt = nameFilters;
-													filt["t-" + tag.docsName] = b;
-													setNameFilters(filt);
-													if (b) {
-														var filt2 = filters;
-														filt2.push(tag.condition);
-														setFilters(filt2);
-													} else {
-														var filt2 = filters;
-														filt2.splice(filt2.indexOf(tag.condition), 1);
-														setFilters(filt2);
-													}
-													serverList.editFilters(filters);
-													serverList.fetchDataAndFilter().then(() => {
-														serverList.moveListDown();
-
-														let stringList: Array<{
-															server: string;
-															motd: string;
-														}> = [];
-														let obj: any = {};
-
-														serverList.currentServers.forEach((b) => {
-															stringList.push({ motd: b.motd, server: b.name });
-														});
-
-														serverList.getMOTDs(stringList).then((c) => {
-															var updatedSL = motdList;
-															c.forEach(
-																(b: { server: string; motd: string }) => {
-																	updatedSL[b.server] = b.motd;
-																},
-															);
-															setMotdList(updatedSL);
-															setServers(serverList.currentServers);
-														});
-													});
-												}}
-											>
-												<Badge variant={tag.role} className="mr-1">
-													{tag.docsName}
-												</Badge>
-											</MenubarCheckboxItem>
-										)}
-									</div>
-								))}
-								<MenubarSeparator />
-								<MenubarSub>
-									<span className="text-sm text-muted-foreground ml-2">
-										Categories
-									</span>
-								</MenubarSub>
-								{allCategories.map((categorie) => (
-									<MenubarCheckboxItem
-										id={categorie.name}
-										key={categorie.name}
-										onCheckedChange={async (b) => {
-											var filt = nameFilters;
-											filt["c-" + categorie.name] = b;
-											setNameFilters(filt);
-											if (b) {
-												var filt2 = filters;
-												filt2.push(categorie.condition);
-												setFilters(filt2);
-											} else {
-												var filt2 = filters;
-												filt2.splice(filt2.indexOf(categorie.condition), 1);
-												setFilters(filt2);
-											}
-											serverList.editFilters(filters);
-											serverList.fetchDataAndFilter().then(() => {
-												serverList.moveListDown();
-
-												let stringList: Array<{
-													server: string;
-													motd: string;
-												}> = [];
-												let obj: any = {};
-
-												serverList.currentServers.forEach((b) => {
-													stringList.push({ motd: b.motd, server: b.name });
-												});
-
-												serverList.getMOTDs(stringList).then((c) => {
-													var updatedSL = motdList;
-													c.forEach((b: { server: string; motd: string }) => {
-														updatedSL[b.server] = b.motd;
-													});
-													setMotdList(updatedSL);
-													setServers(serverList.currentServers);
-												});
-											});
+					<StickyTopbar scrollElevation={250} className="p-2">
+						<Menubar className="mt-3  border rounded shadow">
+							<MenubarMenu>
+								<MenubarTrigger>Servers</MenubarTrigger>
+								<MenubarContent>
+									<MenubarItem
+										onSelect={() => events.emit("search-request-event")}
+									>
+										Search Servers
+										<MenubarShortcut className="flex items-center ml-3">
+											<CommandIcon size={14} />
+											+Shift+K
+										</MenubarShortcut>
+									</MenubarItem>
+									<MenubarItem
+										onSelect={() => {
+											setRandomData(serverList.getRandomServer());
+											setRandom(true);
 										}}
-										checked={(() => {
-											return nameFilters["c-" + categorie.name];
+									>
+										Pick Random Server
+									</MenubarItem>
+									<MenubarSeparator />
+									<MenubarItem
+										onSelect={() => {
+											toast.promise(
+												new Promise((s, e) => {
+													setLoading(true);
+													serverList
+														.fetchDataAndFilter()
+														.then(() => {
+															serverList.moveListDown();
+
+															let stringList: Array<{
+																server: string;
+																motd: string;
+															}> = [];
+															let obj: any = {};
+
+															serverList.currentServers.forEach((b) => {
+																stringList.push({
+																	motd: b.motd,
+																	server: b.name,
+																});
+															});
+
+															serverList.getMOTDs(stringList).then((c) => {
+																var updatedSL = motdList;
+																c.forEach(
+																	(b: { server: string; motd: string }) => {
+																		updatedSL[b.server] = b.motd;
+																	},
+																);
+																setMotdList(updatedSL);
+																setServers(serverList.currentServers);
+																setLoading(false);
+																s(false);
+															});
+														})
+														.catch(() => {
+															e();
+														});
+												}),
+												{
+													success: "Succesfully refreshed servers",
+													loading: "Refreshing...",
+													error: "Error while refreshing",
+												},
+											);
+										}}
+									>
+										Refresh
+									</MenubarItem>
+								</MenubarContent>
+							</MenubarMenu>
+							<MenubarMenu>
+								<MenubarTrigger>Filter</MenubarTrigger>
+								<MenubarContent className="max-h-[400px] overflow-auto">
+									<MenubarRadioGroup
+										onValueChange={(v) => {
+											toast.promise(
+												new Promise((g, b) => {
+													if (v == "smaller") {
+														setTemplateFilter(true);
+														var filt = nameFilters;
+														filt["smaller-tf"] = true;
+														filt["bigger-tf"] = false;
+														setNameFilters(filt);
+
+														var filt2 = filters;
+														filt2.push(smaller);
+														if (filt2.includes(bigger)) {
+															filt2.splice(filt2.indexOf(bigger), 1);
+														}
+														setFilters(filt2);
+														serverList.editFilters(filters);
+														serverList.fetchDataAndFilter().then(() => {
+															serverList.moveListDown();
+
+															let stringList: Array<{
+																server: string;
+																motd: string;
+															}> = [];
+															let obj: any = {};
+
+															serverList.currentServers.forEach((b) => {
+																stringList.push({
+																	motd: b.motd,
+																	server: b.name,
+																});
+															});
+
+															serverList.getMOTDs(stringList).then((c) => {
+																var updatedSL = motdList;
+																c.forEach(
+																	(b: { server: string; motd: string }) => {
+																		updatedSL[b.server] = b.motd;
+																	},
+																);
+																setMotdList(updatedSL);
+																setServers(serverList.currentServers);
+																g(undefined);
+															});
+														});
+													} else if (v == "bigger") {
+														setTemplateFilter(true);
+														var filt = nameFilters;
+														filt["smaller-tf"] = false;
+														filt["bigger-tf"] = true;
+														setNameFilters(filt);
+														var filt2 = filters;
+														filt2.push(bigger);
+
+														filt2.splice(filt2.indexOf(smaller), 1);
+
+														setFilters(filt2);
+														serverList.editFilters(filters);
+
+														serverList.fetchDataAndFilter().then(() => {
+															serverList.moveListDown();
+
+															let stringList: Array<{
+																server: string;
+																motd: string;
+															}> = [];
+															let obj: any = {};
+
+															serverList.currentServers.forEach((b) => {
+																stringList.push({
+																	motd: b.motd,
+																	server: b.name,
+																});
+															});
+
+															serverList.getMOTDs(stringList).then((c) => {
+																var updatedSL = motdList;
+																c.forEach(
+																	(b: { server: string; motd: string }) => {
+																		updatedSL[b.server] = b.motd;
+																	},
+																);
+																setMotdList(updatedSL);
+																setServers(serverList.currentServers);
+																g(undefined);
+															});
+														});
+													} else {
+														var filt = nameFilters;
+														filt["smaller-tf"] = false;
+														filt["bigger-tf"] = false;
+														setNameFilters(filt);
+														setTemplateFilter(false);
+
+														var filt2 = filters;
+														filt2.splice(filt2.indexOf(smaller), 1);
+														filt2.splice(filt2.indexOf(bigger), 1);
+														setFilters(filt2);
+														console.log(filters, filters.includes(smaller));
+														serverList.editFilters(filters);
+
+														serverList.fetchDataAndFilter().then(() => {
+															serverList.moveListDown();
+
+															let stringList: Array<{
+																server: string;
+																motd: string;
+															}> = [];
+															let obj: any = {};
+
+															serverList.currentServers.forEach((b) => {
+																stringList.push({
+																	motd: b.motd,
+																	server: b.name,
+																});
+															});
+
+															serverList.getMOTDs(stringList).then((c) => {
+																var updatedSL = motdList;
+																c.forEach(
+																	(b: { server: string; motd: string }) => {
+																		updatedSL[b.server] = b.motd;
+																	},
+																);
+																setMotdList(updatedSL);
+																setServers(serverList.currentServers);
+																g(undefined);
+															});
+														});
+													}
+												}),
+												{
+													error: "Error while changing filters",
+													loading: "Changing filters...",
+													success: "Changed filters!",
+												},
+											);
+										}}
+										value={(() => {
+											if (nameFilters["smaller-tf"]) {
+												return "smaller";
+											} else if (nameFilters["bigger-tf"]) {
+												return "bigger";
+											} else {
+												return "none";
+											}
 										})()}
 									>
-										<Badge variant={categorie.role} className="mr-1">
-											{categorie.name}
-										</Badge>
-									</MenubarCheckboxItem>
-								))}
-							</MenubarContent>
-						</MenubarMenu>
-						<MenubarMenu>
-							<MenubarTrigger>View</MenubarTrigger>
-							<MenubarContent>
-								<MenubarSub>
-									<MenubarSubTrigger>Grid</MenubarSubTrigger>
-									<MenubarSubContent>
-										<MenubarRadioGroup
-											value={ipr}
-											onValueChange={(v) => {
-												if (am)
-													toast(
-														<span>
-															These settings will not change over reloads
-															because you have account specific options enabled
-															<Button
-																variant="link"
-																className="p-0 m-0"
-																onClick={() =>
-																	router.push("/account/settings/options")
-																}
-															>
-																Change your preferences
-															</Button>
-														</span>,
-														{ icon: "!" },
-													);
-												setIPR(v);
-											}}
-										>
-											<MenubarRadioItem value="4">
-												4 items per row
-											</MenubarRadioItem>
-											<MenubarRadioItem value="5">
-												5 items per row
-											</MenubarRadioItem>
-											<MenubarRadioItem value="6">
-												6 items per row
-											</MenubarRadioItem>
-										</MenubarRadioGroup>
-									</MenubarSubContent>
-								</MenubarSub>
-								<MenubarSub>
-									<MenubarSubTrigger>Padding</MenubarSubTrigger>
-									<MenubarSubContent>
-										<MenubarRadioGroup
-											value={padding.toString()}
-											onValueChange={(v) => {
-												if (am)
-													toast(
-														<span>
-															These settings will not change over reloads
-															because you have account specific options enabled
-															<Button
-																variant="link"
-																className="p-0 m-0"
-																onClick={() =>
-																	router.push("/account/settings/options")
-																}
-															>
-																Change your preferences
-															</Button>
-														</span>,
-														{ icon: "!" },
-													);
-												setPadding(v);
-											}}
-										>
-											<MenubarRadioItem value="0">Default</MenubarRadioItem>
-											<MenubarSeparator />
-											<MenubarRadioItem value="15">15px</MenubarRadioItem>
-											<MenubarRadioItem value="30">30px</MenubarRadioItem>
-											<MenubarRadioItem value="40">40px</MenubarRadioItem>
-											<MenubarRadioItem value="60">60px</MenubarRadioItem>
-											<MenubarRadioItem value="100">100px</MenubarRadioItem>
-											<MenubarRadioItem value="200">200px</MenubarRadioItem>
-										</MenubarRadioGroup>
-										<MenubarSeparator />
-										<MenubarCheckboxItem checked={pOS} onCheckedChange={setpOS}>
-											Only use padding on servers
-										</MenubarCheckboxItem>
-									</MenubarSubContent>
-								</MenubarSub>
-								<MenubarSub>
-									<MenubarSubTrigger>Sort</MenubarSubTrigger>
-									<MenubarSubContent>
-										<MenubarRadioGroup
-											value="joins"
-											onValueChange={(c) => {
-												if (c === "favorites") router.push("/sort/favorites");
-											}}
-										>
-											<MenubarRadioItem value="joins">
-												Players Online
-											</MenubarRadioItem>
-											<MenubarRadioItem value="favorites">
-												Favorites
-											</MenubarRadioItem>
-										</MenubarRadioGroup>
-									</MenubarSubContent>
-								</MenubarSub>
-								<MenubarSeparator />
-								<SignedIn>
-									<MenubarCheckboxItem checked={hero} onCheckedChange={setHero}>
-										Show Hero
-									</MenubarCheckboxItem>
-								</SignedIn>
-								<MenubarItem onClick={() => router.push("/docs")}>
-									View the docs
-								</MenubarItem>
-								{am && (
-									<MenubarItem
-										onClick={() => router.push("/account/settings")}
-										className="block"
-									>
-										Using saved settings in Preferences
-										<br />
-										<span className="text-muted-foreground text-xs">
-											Your using settings stored on your account, that are not
-											temporary.
+										<MenubarRadioItem value="smaller">
+											<div className="block">
+												Only allow smaller servers
+												<br />
+												<span className="text-sm text-muted-foreground">
+													Only allow servers that have the player range 7-15,
+													and cannot <br />
+													be Always Online.
+												</span>
+											</div>
+										</MenubarRadioItem>
+										<MenubarRadioItem value="bigger">
+											<div className="block">
+												Only allow bigger servers
+												<br />
+												<span className="text-sm text-muted-foreground">
+													Only allow servers with more than 15 players.
+												</span>
+											</div>
+										</MenubarRadioItem>
+										<MenubarRadioItem value="none">
+											No/custom requirements
+										</MenubarRadioItem>
+									</MenubarRadioGroup>
+									<MenubarSeparator />
+									<MenubarSub>
+										<span className="text-sm text-muted-foreground ml-2">
+											Tags
 										</span>
+									</MenubarSub>
+									{allTags.map((tag) => (
+										<div key={tag.docsName}>
+											{tag.docsName && tag.__filter == undefined && (
+												<MenubarCheckboxItem
+													disabled={templateFilter && tag.__disab != undefined}
+													id={tag.docsName}
+													checked={(() => {
+														return nameFilters["t-" + tag.docsName];
+													})()}
+													onCheckedChange={async (b) => {
+														var filt = nameFilters;
+														filt["t-" + tag.docsName] = b;
+														setNameFilters(filt);
+														if (b) {
+															var filt2 = filters;
+															filt2.push(tag.condition);
+															setFilters(filt2);
+														} else {
+															var filt2 = filters;
+															filt2.splice(filt2.indexOf(tag.condition), 1);
+															setFilters(filt2);
+														}
+														serverList.editFilters(filters);
+														serverList.fetchDataAndFilter().then(() => {
+															serverList.moveListDown();
+
+															let stringList: Array<{
+																server: string;
+																motd: string;
+															}> = [];
+															let obj: any = {};
+
+															serverList.currentServers.forEach((b) => {
+																stringList.push({
+																	motd: b.motd,
+																	server: b.name,
+																});
+															});
+
+															serverList.getMOTDs(stringList).then((c) => {
+																var updatedSL = motdList;
+																c.forEach(
+																	(b: { server: string; motd: string }) => {
+																		updatedSL[b.server] = b.motd;
+																	},
+																);
+																setMotdList(updatedSL);
+																setServers(serverList.currentServers);
+															});
+														});
+													}}
+												>
+													<Badge variant={tag.role} className="mr-1">
+														{tag.docsName}
+													</Badge>
+												</MenubarCheckboxItem>
+											)}
+										</div>
+									))}
+									<MenubarSeparator />
+									<MenubarSub>
+										<span className="text-sm text-muted-foreground ml-2">
+											Categories
+										</span>
+									</MenubarSub>
+									{allCategories.map((categorie) => (
+										<MenubarCheckboxItem
+											id={categorie.name}
+											key={categorie.name}
+											onCheckedChange={async (b) => {
+												var filt = nameFilters;
+												filt["c-" + categorie.name] = b;
+												setNameFilters(filt);
+												if (b) {
+													var filt2 = filters;
+													filt2.push(categorie.condition);
+													setFilters(filt2);
+												} else {
+													var filt2 = filters;
+													filt2.splice(filt2.indexOf(categorie.condition), 1);
+													setFilters(filt2);
+												}
+												serverList.editFilters(filters);
+												serverList.fetchDataAndFilter().then(() => {
+													serverList.moveListDown();
+
+													let stringList: Array<{
+														server: string;
+														motd: string;
+													}> = [];
+													let obj: any = {};
+
+													serverList.currentServers.forEach((b) => {
+														stringList.push({ motd: b.motd, server: b.name });
+													});
+
+													serverList.getMOTDs(stringList).then((c) => {
+														var updatedSL = motdList;
+														c.forEach((b: { server: string; motd: string }) => {
+															updatedSL[b.server] = b.motd;
+														});
+														setMotdList(updatedSL);
+														setServers(serverList.currentServers);
+													});
+												});
+											}}
+											checked={(() => {
+												return nameFilters["c-" + categorie.name];
+											})()}
+										>
+											<Badge variant={categorie.role} className="mr-1">
+												{categorie.name}
+											</Badge>
+										</MenubarCheckboxItem>
+									))}
+								</MenubarContent>
+							</MenubarMenu>
+							<MenubarMenu>
+								<MenubarTrigger>View</MenubarTrigger>
+								<MenubarContent>
+									<MenubarSub>
+										<MenubarSubTrigger>Mode</MenubarSubTrigger>
+										<MenubarSubContent>
+											<MenubarRadioGroup
+												value={presentationMode}
+												onValueChange={(v) =>
+													setPresentationMode(v as "grid" | "table")
+												}
+											>
+												<MenubarRadioItem value="grid">Grid</MenubarRadioItem>
+												<MenubarRadioItem value="table">Table</MenubarRadioItem>
+											</MenubarRadioGroup>
+										</MenubarSubContent>
+									</MenubarSub>
+									<MenubarSub>
+										<MenubarSubTrigger disabled={presentationMode === "table"} className={presentationMode === "table" ? "text-muted-foreground" : ""}>
+											Grid
+										</MenubarSubTrigger>
+				 						<MenubarSubContent>
+											<MenubarRadioGroup
+												value={ipr}
+												onValueChange={(v) => {
+													if (am)
+														toast.warning(
+															"These settings will not change over reloads because you have account specific options enabled",
+															{
+																action: {
+																	label: "Check settings",
+																	onClick: () =>
+																		router.push("/account/settings/options"),
+																},
+															},
+														);
+													setIPR(v);
+												}}
+											>
+												<MenubarRadioItem value="4">
+													4 items per row
+												</MenubarRadioItem>
+												<MenubarRadioItem value="5">
+													5 items per row
+												</MenubarRadioItem>
+												<MenubarRadioItem value="6">
+													6 items per row
+												</MenubarRadioItem>
+											</MenubarRadioGroup>
+										</MenubarSubContent>
+									</MenubarSub>
+									<MenubarSub>
+										<MenubarSubTrigger>Padding</MenubarSubTrigger>
+										<MenubarSubContent>
+											<MenubarRadioGroup
+												value={padding.toString()}
+												onValueChange={(v) => {
+													if (am)
+														toast.warning(
+															"These settings will not change over reloads because you have account specific options enabled",
+															{
+																action: {
+																	label: "Check settings",
+																	onClick: () =>
+																		router.push("/account/settings/options"),
+																},
+															},
+														);
+													setPadding(v);
+												}}
+											>
+												<MenubarRadioItem value="0">Default</MenubarRadioItem>
+												<MenubarSeparator />
+												<MenubarRadioItem value="15">15px</MenubarRadioItem>
+												<MenubarRadioItem value="30">30px</MenubarRadioItem>
+												<MenubarRadioItem value="40">40px</MenubarRadioItem>
+												<MenubarRadioItem value="60">60px</MenubarRadioItem>
+												<MenubarRadioItem value="100">100px</MenubarRadioItem>
+												<MenubarRadioItem value="200">200px</MenubarRadioItem>
+											</MenubarRadioGroup>
+											<MenubarSeparator />
+											<MenubarCheckboxItem
+												checked={pOS}
+												onCheckedChange={setpOS}
+											>
+												Only use padding on servers
+											</MenubarCheckboxItem>
+										</MenubarSubContent>
+									</MenubarSub>
+									<MenubarSeparator />
+									<SignedIn>
+										<MenubarCheckboxItem
+											checked={hero}
+											onCheckedChange={setHero}
+										>
+											Show Hero
+										</MenubarCheckboxItem>
+									</SignedIn>
+									<MenubarItem onClick={() => router.push("/docs")}>
+										View the docs
 									</MenubarItem>
-								)}
-							</MenubarContent>
-						</MenubarMenu>
-					</Menubar>
+									{am && (
+										<MenubarItem
+											onClick={() => router.push("/account/settings")}
+											className="block"
+										>
+											Using saved settings in Preferences
+											<br />
+											<span className="text-muted-foreground text-xs">
+												Your using settings stored on your account, that are not
+												temporary.
+											</span>
+										</MenubarItem>
+									)}
+								</MenubarContent>
+							</MenubarMenu>
+						</Menubar>
+					</StickyTopbar>
 				</ClientFadeIn>
 
 				<Dialog open={random} onOpenChange={setRandom}>
@@ -1083,68 +1127,247 @@ export default function ServerList() {
 				</Dialog>
 
 				<br />
-				<InfiniteScroll
-					dataLength={serverList.currentServers.length}
-					hasMore={serverList.hasMore}
-					next={() => {
-						serverList.moveListDown();
-						let stringList: Array<{ server: string; motd: string }> = [];
-						serverList.currentServers.forEach((b) => {
-							stringList.push({ motd: b.motd, server: b.name });
-						});
-
-						serverList.getMOTDs(stringList).then((c) => {
-							var updatedSL = motdList;
-							c.forEach((b: { server: string; motd: string }) => {
-								updatedSL[b.server] = b.motd;
+				{presentationMode === "grid" && (
+					<InfiniteScroll
+						dataLength={serverList.currentServers.length}
+						hasMore={serverList.hasMore}
+						next={() => {
+							serverList.moveListDown();
+							let stringList: Array<{ server: string; motd: string }> = [];
+							serverList.currentServers.forEach((b) => {
+								stringList.push({ motd: b.motd, server: b.name });
 							});
-							setMotdList(updatedSL);
-							setServers(serverList.currentServers);
-							setLoading(false);
-						});
-					}}
-					loader={<Spinner className="flex items-center" />}
-					endMessage={
-						<p
-							style={{ textAlign: "center" }}
-							dangerouslySetInnerHTML={{
-								__html:
-									randomText + "<br /> <strong>You've seen it all</strong>",
+
+							serverList.getMOTDs(stringList).then((c) => {
+								var updatedSL = motdList;
+								c.forEach((b: { server: string; motd: string }) => {
+									updatedSL[b.server] = b.motd;
+								});
+								setMotdList(updatedSL);
+								setServers(serverList.currentServers);
+								setLoading(false);
+							});
+						}}
+						loader={<LoadingSpinner className="flex items-center" />}
+						endMessage={
+							<p
+								style={{ textAlign: "center" }}
+								dangerouslySetInnerHTML={{
+									__html:
+										randomText + "<br /> <strong>You've seen it all</strong>",
+								}}
+							/>
+						}
+						style={{
+							overflow: "hidden !important",
+							paddingLeft: pOS ? `${padding}px` : 6,
+							paddingRight: pOS ? `${padding}px` : 6,
+						}}
+					>
+						<ClientFadeIn delay={200}>
+							{/** This looks stupid, but its the only way that works */}
+							<div
+								className={
+									" sm:grid " +
+									(ipr == "4"
+										? "lg:grid-cols-4"
+										: ipr == "5"
+											? "lg:grid-cols-5"
+											: ipr == "6"
+												? "lg:grid-cols-6"
+												: "") +
+									" gap-4 sm:grid-cols-2"
+								}
+							>
+								{servers.map((b: any, i: number) => (
+									<>
+										{/* <>
+                  {i === Number(ipr) && affiliates.length != 0 && (
+                    <div
+                      className="border rounded h-[450px] shadow p-10 max-w-full dark:prose-invert prose grid grid-cols-3 max-xl:hidden"
+                      style={{
+                        gridColumn: `span ${ipr} / span ${ipr}`,
+                      }}
+                    >
+                      <div className="dark:text-white text-black max-w-[300px] overflow-auto">
+                        <h2 className="bg-gradient-to-bl from-yellow-300 via-yellow-500 to-yellow-100 bg-clip-text text-transparent">
+                          Affiliates
+                        </h2>
+                        <p>
+                          We have been able to partner with some servers that we
+                          think are high-effort servers that need to be
+                          recognized.
+                        </p>
+                        <p>
+                          Please take some interest in a server you find
+                          interesting and give them some much needed support.
+                        </p>
+                        <small>
+                          These servers have absolutely no financial affiliation
+                          with MHSF.
+                        </small>
+                      </div>
+                      {affiliates
+                        .filter((a) => a.mode.includes("server-list"))
+                        .map((a) => (
+                          <div
+                            className="border rounded p-4 col-span-2"
+                            key={a.name}
+                          >
+                            {a.name}
+                          </div>
+                        ))}
+                    </div>
+                  )} </> */}
+										<ServerCard b={b} motd={motdList[b.name]} />
+									</>
+								))}
+							</div>
+						</ClientFadeIn>
+					</InfiniteScroll>
+				)}
+				{presentationMode === "table" && (
+					<div className="h-[calc(100vh-430px)]">
+						<AgGridReact
+							rowData={serverList.servers}
+							columnDefs={[
+								{
+									field: "name",
+									cellRenderer: (c: CustomCellRendererProps) => {
+										return (
+											<>
+												<Tooltip>
+													<TooltipTrigger>
+														<HoverCard>
+															<HoverCardTrigger>
+																{c.data?.name}
+															</HoverCardTrigger>
+														</HoverCard>
+													</TooltipTrigger>
+													<TooltipContent>{c.data?.name}</TooltipContent>
+												</Tooltip>
+											</>
+										);
+									},
+								},
+								{
+									field: "playerData.playerCount",
+									headerName: "Players",
+									cellRenderer: (params: CustomCellRendererProps) => {
+										return (
+											<div className="flex items-center gap-2">
+												{params.value == 0 ? (
+													<div
+														className="items-center border"
+														style={{
+															width: ".5rem",
+															height: ".5rem",
+															borderRadius: "9999px",
+														}}
+													/>
+												) : (
+													<div
+														className="items-center"
+														style={{
+															backgroundColor: "#0cce6b",
+															width: ".5rem",
+															height: ".5rem",
+															borderRadius: "9999px",
+														}}
+													/>
+												)}{" "}
+												{params.value}
+											</div>
+										);
+									},
+								},
+								{
+									headerName: "Owner",
+									valueGetter: (p) => p.data?.author ?? "--",
+									cellRenderer: (c: CustomCellRendererProps) => {
+										if (c.data.author === "--") {
+											return <>--</>;
+										}
+
+										return (
+											<>
+												<Tooltip>
+													<TooltipTrigger>{c.data?.author}</TooltipTrigger>
+													<TooltipContent>{c.data?.author}</TooltipContent>
+												</Tooltip>
+											</>
+										);
+									},
+								},
+								{
+									headerName: "Tags",
+									valueGetter: (p) => (
+										<TagShower server={p.data as OnlineServer} />
+									),
+									cellRenderer: TagCR,
+									minWidth: 249,
+								},
+								{
+									headerName: "Actions",
+									minWidth: 107,
+									cellRenderer: (c: CustomCellRendererProps) => {
+										return (
+											<div>
+												<Button
+													size="icon"
+													variant="secondary"
+													className="md:min-w-[128px] md:max-w-[328px] h-[32px] mt-1 ml-2"
+													onClick={() => {
+														clipboard.writeText(
+															c.data.name + ".mshf.minehut.gg",
+														);
+														toast.success("Copied IP to clipboard");
+													}}
+												>
+													<Copy size={18} />
+													<code className="ml-2 max-md:hidden">
+														{c.data.name}
+													</code>
+												</Button>
+												<Tooltip>
+													<TooltipTrigger>
+														<Link href={"/server/" + c.data.name}>
+															<Button
+																size="icon"
+																variant="secondary"
+																className="w-[32px] h-[32px] mt-1 ml-2"
+															>
+																<Layers size={18} />
+															</Button>
+														</Link>
+													</TooltipTrigger>
+													<TooltipContent>
+														Open up the server page to see more information
+														about the server
+													</TooltipContent>
+												</Tooltip>
+											</div>
+										);
+									},
+								},
+							]}
+							pagination={true}
+							paginationPageSize={50}
+							paginationPageSizeSelector={[10, 25, 50, 100]}
+							theme={resolvedTheme === "dark" ? themeDarkWarm : themeLightWarm}
+							defaultColDef={{
+								flex: 1,
 							}}
 						/>
-					}
-					style={{
-						overflow: "hidden !important",
-						paddingLeft: pOS ? `${padding}px` : 6,
-						paddingRight: pOS ? `${padding}px` : 6,
-					}}
-				>
-					<ClientFadeIn delay={200}>
-						{/** This looks stupid, but its the only way that works */}
-						<div
-							className={
-								" sm:grid " +
-								(ipr == "4"
-									? "lg:grid-cols-4"
-									: ipr == "5"
-										? "lg:grid-cols-5"
-										: ipr == "6"
-											? "lg:grid-cols-6"
-											: "") +
-								" gap-4 sm:grid-cols-2"
-							}
-						>
-							{servers.map((b: any) => (
-								<>
-									<ServerCard b={b} motd={motdList[b.name]} />
-								</>
-							))}
-						</div>
-					</ClientFadeIn>
-				</InfiniteScroll>
+					</div>
+				)}
 			</div>
 		</div>
 	);
+}
+
+export function TagCR(params: CustomCellRendererProps) {
+	return <span className="w-full">{params.value}</span>;
 }
 
 export function TagShower(props: {
@@ -1206,9 +1429,9 @@ export function TagShower(props: {
 	}
 
 	return (
-		<div className="font-normal tracking-normal">
-			{compatiableTags.map((t) => (
-				<>
+		<div className="font-normal tracking-normal ">
+			{compatiableTags.map((t, i) => (
+				<span key={i} className="mx-2">
 					{props.unclickable && (
 						<Badge variant={t.role} className={props.className}>
 							{t.name}
@@ -1248,7 +1471,7 @@ export function TagShower(props: {
 							</DialogContent>
 						</Dialog>
 					)}
-				</>
+				</span>
 			))}
 		</div>
 	);

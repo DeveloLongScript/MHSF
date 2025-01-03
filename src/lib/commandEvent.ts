@@ -28,7 +28,7 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-class CommandEvents {
+export class CommandEvents {
   eventTarget;
 
   constructor() {

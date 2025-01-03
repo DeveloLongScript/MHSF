@@ -45,7 +45,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { Switch } from "./ui/switch";
 import { setAccountSL } from "@/lib/api";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import { useUser } from "@clerk/nextjs";
 
 export function SLCustomize() {
