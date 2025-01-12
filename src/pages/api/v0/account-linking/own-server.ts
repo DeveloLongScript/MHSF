@@ -61,23 +61,31 @@ export default async function handler(
   const collection = db.collection("owned-servers");
 
   if ((await collection.findOne({ server: server })) == undefined) {
-    const mh = await fetch("https://api.minehut.com/servers", {
-      headers: {
-        accept: "*/*",
-        "accept-language": Math.random().toString(),
-        priority: "u=1, i",
-        "sec-ch-ua": '"Not/A)Brand";v="8", "Chromium";v="126"',
-        "sec-ch-ua-mobile": "?0",
-        "sec-ch-ua-platform": '"macOS"',
-        "sec-fetch-dest": "empty",
-        "sec-fetch-mode": "cors",
-        "sec-fetch-site": "cross-site",
-        Referer: "http://localhost:3000/",
-        "Referrer-Policy": "strict-origin-when-cross-origin",
-      },
-      body: null,
-      method: "GET",
-    });
+    const mh = await fetch(
+      process.env.MHSF_BACKEND_API_LOCATION ??
+        "https://api.minehut.com/servers",
+      {
+        headers: {
+          accept: "*/*",
+          "accept-language": Math.random().toString(),
+          priority: "u=1, i",
+          "sec-ch-ua": '"Not/A)Brand";v="8", "Chromium";v="126"',
+          "sec-ch-ua-mobile": "?0",
+          "sec-ch-ua-platform": '"macOS"',
+          "sec-fetch-dest": "empty",
+          "sec-fetch-mode": "cors",
+          "sec-fetch-site": "cross-site",
+          Referer: "http://localhost:3000/",
+          "Referrer-Policy": "strict-origin-when-cross-origin",
+          Authentication:
+            process.env.MHSF_BACKEND_SECRET !== undefined
+              ? `MHSF-Backend-Server ${process.env.MHSF_BACKEND_SECRET}`
+              : undefined,
+        },
+        body: null,
+        method: "GET",
+      }
+    );
     const servers: Array<OnlineServer> = (await mh.json()).servers;
 
     servers.forEach(async (c, i) => {

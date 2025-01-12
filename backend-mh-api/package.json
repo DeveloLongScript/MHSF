@@ -1,0 +1,16 @@
+{
+  "name": "backend-mh-api",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "author": "DeveloLongScript",
+  "license": "MIT",
+  "dependencies": {
+    "@types/express": "^5.0.0",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "typescript": "^5.7.2"
+  },
+  "scripts": {
+    "build": "npx tsc -p ./tsconfig.json"
+  }
+}
