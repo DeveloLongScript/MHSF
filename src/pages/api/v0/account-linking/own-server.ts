@@ -77,10 +77,7 @@ export default async function handler(
           "sec-fetch-site": "cross-site",
           Referer: "http://localhost:3000/",
           "Referrer-Policy": "strict-origin-when-cross-origin",
-          Authentication:
-            process.env.MHSF_BACKEND_SECRET !== undefined
-              ? `MHSF-Backend-Server ${process.env.MHSF_BACKEND_SECRET}`
-              : undefined,
+          Authentication: `MHSF-Backend-Server ${process.env.MHSF_BACKEND_API_LOCATION ? process.env.MHSF_BACKEND_SECRET : "Sorry Minehut Devs."}`,
         },
         body: null,
         method: "GET",
