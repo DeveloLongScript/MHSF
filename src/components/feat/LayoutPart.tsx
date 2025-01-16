@@ -48,24 +48,26 @@ export default function LayoutPart({
             </BreadcrumbList>
           </Breadcrumb>
         </div>
-        {!loading && incidents !== null && (
-          <div className="justify-self-center items-center text-center pb-2 pt-2 rounded border my-1 px-2 bg-red-500 text-white">
-            <strong className="text-sm">
-              {
-                (
-                  incidents[0] as {
-                    attributes: { title: string };
-                  }
-                ).attributes.title
-              }{" "}
-            </strong>{" "}
-            <span className="text-sm">- MHSF may be down</span>
-            <br />
-            <Link href={"https://" + statusURL} className="text-sm">
-              View MHSF Status
-            </Link>
-          </div>
-        )}
+        {!loading &&
+          incidents !== null &&
+          (incidents as Array<any>).length > 0 && (
+            <div className="justify-self-center items-center text-center pb-2 pt-2 rounded border my-1 px-2 bg-red-500 text-white">
+              <strong className="text-sm">
+                {
+                  (
+                    incidents[0] as {
+                      attributes: { title: string };
+                    }
+                  ).attributes.title
+                }{" "}
+              </strong>{" "}
+              <span className="text-sm">- MHSF may be down</span>
+              <br />
+              <Link href={"https://" + statusURL} className="text-sm">
+                View MHSF Status
+              </Link>
+            </div>
+          )}
 
         <div className="justify-self-end">
           <TopBar inter={inter.className} />
