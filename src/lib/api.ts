@@ -290,7 +290,6 @@ export async function unlinkMCAccount(): Promise<boolean> {
     const response = await fetch(
       connector(`/account-linking/unlink-account`, { version: 0 }),
       {
-        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
