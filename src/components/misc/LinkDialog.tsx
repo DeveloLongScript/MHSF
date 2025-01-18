@@ -83,15 +83,20 @@ export default function CodeDialog({
   });
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     const { code } = data;
-    const playerName = await toast.promise(
-      new Promise(async (g, b) => {
-        const response = await linkMCAccount(code);
+    toast.promise(
+      new Promise<void>((g, b) => {
+        linkMCAccount(code).then((c) => {
+          console.log(c);
+          if (c === undefined) {
+            b();
+            return;
+          }
+          g();
 
-        if (response == undefined) {
-          b();
-          return;
-        }
-        g(response);
+          setName(c);
+          setDialog(true);
+          setLinked(true);
+        });
       }),
       {
         loading: "Linking account..",
@@ -99,9 +104,6 @@ export default function CodeDialog({
         success: "Linked account!",
       }
     );
-    setName(playerName as string);
-    setDialog(true);
-    setLinked(true);
   }
 
   return (
@@ -156,9 +158,9 @@ export default function CodeDialog({
             <DialogTitle>You have linked your account!</DialogTitle>
             <Confetti className="absolute left-0 top-0 z-0 size-full" />
             <DialogDescription>
-              You've successfully linked your account, <strong>{name}</strong>!
-              Enjoy adding banners, custom accent colors, and other things to
-              your server page.
+              You've successfully linked your account, {name}! Enjoy adding
+              banners, custom accent colors, and other things to your server
+              page.
             </DialogDescription>
           </DialogHeader>
         </DialogContent>
