@@ -46,13 +46,13 @@ export default async function handler(
 
   const db = client.db(process.env.CUSTOM_MONGO_DB ?? "mhsf");
   const users = db.collection("claimed-users");
-  const user = await (await clerkClient()).users.getUser(userId);
-
-  if (user.publicMetadata.player == undefined) {
+  if ((await users.find({ userId }).toArray()).length === 0) {
     res.status(400).send({ result: "Hasn't linked yet!" });
     return;
   }
-  await users.findOneAndDelete({ player: user.publicMetadata.player });
+  await users.findOneAndDelete({ userId });
+  const user = await (await clerkClient()).users.getUser(userId);
+
   await (
     await clerkClient()
   ).users.updateUserMetadata(userId, {
