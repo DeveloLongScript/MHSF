@@ -78,7 +78,7 @@ export function DiscordPopover({ server, get }: { server: string; get: any }) {
   }, [get]);
 
   return (
-    <ColorProvider server={server} fetch={get}>
+    <ColorProvider server={server} fetchV={get}>
       <div>
         <span className="text-sm">
           To embed a Discord server into your server page, first enable the
