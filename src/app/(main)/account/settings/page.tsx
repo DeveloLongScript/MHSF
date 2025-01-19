@@ -85,7 +85,7 @@ export default function Settings() {
       <br />
       <strong className="font-bold">Unlink Account</strong>
       <div className="flex items-center">
-        <p>Unlink your Minecraft acconut if you have already linked one.</p>
+        <p>Unlink your Minecraft account if you have already linked one.</p>
 
         {!linked && (
           <Button className="h-[30px] ml-2" disabled>

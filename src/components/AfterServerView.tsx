@@ -118,7 +118,7 @@ export default function AfterServerView({ server }: { server: string }) {
           <QRCodeGenerator server={server} />
         </DrawerContent>
       </Drawer>
-      <FadeIn className="relative z-10">
+      <FadeIn className="relative z-8">
         <div className="grid sm:grid-cols-6 h-full pl-4 pr-4 ">
           <div className="ml-5 mb-2 flex items-center sm:hidden overflow-auto w-[calc(100vw-5rem)]">
             {(description != "" || discord != "") && (

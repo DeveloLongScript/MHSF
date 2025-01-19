@@ -27,24 +27,48 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  * OTHER DEALINGS IN THE SOFTWARE.
  */
+
 "use client";
 
-import { DatabaseZap } from "lucide-react";
+import { Book } from "lucide-react";
+import { BrandingColorfulIcon } from "../Icon";
+import { Button } from "../ui/button";
+import Github from "../ui/github";
+import { Separator } from "../ui/separator";
+import Link from "next/link";
+import { useTheme } from "next-themes";
 
-export default function NoItems({ title }: { title?: string }) {
+export default function Footer() {
+  const { resolvedTheme } = useTheme();
+
   return (
-    <>
-      <div className="flex flex-col items-center justify-center p-4 pt-10">
-        <DatabaseZap
-          className="text-2xl font-semibold text-gray-600"
-          size={32}
-        />
-        <p className="text-xl text-gray-600 mt-2">
-          {title
-            ? title
-            : "Huh, we tried to find something, but nothing was found."}
-        </p>
-      </div>
-    </>
+    <footer>
+      <Separator />
+      <p className="px-4 pt-8 pb-2">
+        <span className="text-xl font-bold text-muted-foreground pb-12 flex items-center">
+          <BrandingColorfulIcon className="w-12 h-12 mr-2" />
+          MHSF
+        </span>
+
+        <p>© {new Date().getFullYear()} dvelo</p>
+        <strong className="text-sm">
+          MHSF is built on open-source technologies and is not endorsed by or
+          affiliated with GamerSafer or its subsidiaries.{" "}
+        </strong>
+        <br />
+        <span className="flex items-center">
+          <Link href="https://github.com/DeveloLongScript/MHSF">
+            <Button variant="ghost" size="icon">
+              <Github fill={resolvedTheme === "dark" ? "white" : "black"} />
+            </Button>
+          </Link>
+          <Link href="/docs">
+            <Button variant="ghost" size="icon">
+              <Book size={14} />
+            </Button>
+          </Link>
+        </span>
+      </p>
+    </footer>
   );
 }

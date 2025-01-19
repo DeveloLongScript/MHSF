@@ -30,6 +30,9 @@
 
 "use client";
 import A from "@/components/misc/Link";
+import { Button } from "@/components/ui/button";
+import Github from "@/components/ui/github";
+import Link from "next/link";
 import type { ReactNode } from "react";
 
 const User = ({ user }: { user: string }) => (
@@ -41,13 +44,22 @@ const User = ({ user }: { user: string }) => (
 const FeatureList = ({
   features,
   title,
+  github,
 }: {
   features: (string | ReactNode)[];
+  github?: string;
   title: ReactNode;
 }) => {
   return (
     <ul>
       {title}
+      {github && (
+        <Link href={github}>
+          <Button variant="ghost" size="sm">
+            <Github className="mr-1" /> Release
+          </Button>
+        </Link>
+      )}
       {features.map((feature, i) => (
         <li key={i}>• {feature}</li>
       ))}
@@ -55,13 +67,42 @@ const FeatureList = ({
   );
 };
 
-export const version = "1.6.50";
+export const version = "1.7.0";
 export const changelog: { name: string; id: string; changelog: ReactNode }[] = [
+  {
+    id: "38ufajf8efajwj3njdaisef",
+    name: "v1.7",
+    changelog: (
+      <FeatureList
+        github="https://github.com/DeveloLongScript/MHSF/releases/tag/1.7"
+        features={[
+          "Partnered with CoreBoxx!",
+          "You can now link your Minecraft account on CoreBoxx! (check out CB 3.0.15)",
+          "Revamped the server finding controls",
+          "Fixed various bugs",
+          "Made banners a different style",
+          "Made Discord embed not inside a card",
+          "Added incorrect server capitalization detection",
+          "Made the MOTD area slightly bigger",
+          "New footer",
+          "Added padding for settings page",
+          "Added new table mode",
+          "Added new button for GitHub release on changelog",
+        ]}
+        title={
+          <strong className="flex items-center">
+            Version 1.7 (January 18th 2025)
+          </strong>
+        }
+      />
+    ),
+  },
   {
     id: "dut6hx3f2paswzjve4yg9r",
     name: "v1.6.5",
     changelog: (
       <FeatureList
+        github="https://github.com/DeveloLongScript/MHSF/releases/tag/1.6.5"
         features={[
           "New MOTD engine that is over 3,000% faster, runs client-side, and doesn't need any requests to run.",
           "Fixed issue where GitHub link was broken if you were signed-out",
@@ -80,6 +121,7 @@ export const changelog: { name: string; id: string; changelog: ReactNode }[] = [
     name: "v1.6.0",
     changelog: (
       <FeatureList
+        github="https://github.com/DeveloLongScript/MHSF/releases/tag/1.6"
         features={[
           "Completely redid top of server view",
           "Favorite counts are now prominent on the server view",
@@ -102,6 +144,7 @@ export const changelog: { name: string; id: string; changelog: ReactNode }[] = [
     name: "v1.5.0",
     changelog: (
       <FeatureList
+        github="https://github.com/DeveloLongScript/MHSF/releases/tag/1.5"
         features={[
           "New embeds",
           "More mobile friendly elements",
@@ -121,6 +164,7 @@ export const changelog: { name: string; id: string; changelog: ReactNode }[] = [
     name: "v1.4.5",
     changelog: (
       <FeatureList
+        github="https://github.com/DeveloLongScript/MHSF/releases/tag/1.4.5"
         features={["Add server icons"]}
         title={
           <strong className="flex items-center">
@@ -135,6 +179,7 @@ export const changelog: { name: string; id: string; changelog: ReactNode }[] = [
     name: "v1.4.0",
     changelog: (
       <FeatureList
+        github="https://github.com/DeveloLongScript/MHSF/releases/tag/1.4"
         features={[
           "Revamped documentation",
           "Revamped changelog UI",
