@@ -646,7 +646,7 @@ export default function ServerList() {
                 categoryChangerValueCallback: (categorie: any) => {
                   return nameFilters["c-" + categorie.name];
                 },
-                categoryChangerCallback: (categorie: any) => async (b) => {
+                categoryChangerCallback: (categorie: any) => async (b: any) => {
                   var filt = nameFilters;
                   filt["c-" + categorie.name] = b;
                   setNameFilters(filt);
@@ -683,7 +683,7 @@ export default function ServerList() {
                     });
                   });
                 },
-                tagChangerCallback: (tag) => async (b) => {
+                tagChangerCallback: (tag: any) => async (b: any) => {
                   var filt = nameFilters;
                   filt["t-" + tag.docsName] = b;
                   setNameFilters(filt);
