@@ -132,15 +132,17 @@ export default function ServerPage({ params }: { params: { server: string } }) {
       <ColorProvider server={params.server}>
         <div className={"pt-[300px] xl:px-[100px]"}>
           <Banner server={params.server} />
-          <div className="pt-8 z-10 relative">
+          <div className="pt-8 z-8 relative">
             <ServerView server={params.server} />
           </div>
 
-          <StickyTopbar scrollElevation={100} className="pt-4">
+          <StickyTopbar scrollElevation={100} className="pt-4 z-10">
             <TabServer server={params.server} tabDef="general" />
           </StickyTopbar>
           <br />
-          <AfterServerView server={params.server} />
+          <div className="z-8 relative">
+            <AfterServerView server={params.server} />
+          </div>
         </div>
       </ColorProvider>
     </main>

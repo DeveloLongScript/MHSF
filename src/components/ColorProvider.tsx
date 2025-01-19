@@ -29,28 +29,48 @@
  */
 
 "use client";
-
 import { getCustomization } from "@/lib/api";
 import { useEffect, useState } from "react";
 import "@/themes.css";
+import { toast } from "sonner";
+import { useRouter } from "@/lib/useRouter";
+import { useEffectOnce } from "@/lib/useEffectOnce";
 
 export default function ColorProvider({
   server,
   children,
-  fetch,
+  fetchV,
 }: {
   server: string;
   children: any;
-  fetch?: any;
+  fetchV?: any;
 }) {
   const [color, setColor] = useState("zinc");
+  const nav = useRouter();
+
+  useEffectOnce(() => {
+    fetch("https://api.minehut.com/server/" + server + "?byName=true")
+      .then((c) => c.json())
+      .then((c: any) => {
+        console.log(c.server.name, server);
+        if (c.server.name !== server) {
+          toast.warning(
+            "The capitalization of this server was incorrect. If your using a permanent link resource, please change it to account for a new name. (" +
+              c.server.name +
+              ") Redirecting now.",
+            { duration: 15000 }
+          );
+          nav.replace("/server/" + c.server.name);
+        }
+      });
+  });
 
   useEffect(() => {
-    if (!fetch)
+    if (!fetchV)
       getCustomization(server).then((v) =>
         setColor(v != null ? v.colorScheme : "zinc")
       );
-    else setColor(fetch.colorScheme);
+    else setColor(fetchV.colorScheme);
   }, []);
 
   return <div className={`theme-${color}`}>{children}</div>;

@@ -43,6 +43,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter as interFont } from "next/font/google";
 import LayoutPart from "@/components/feat/LayoutPart";
 import AllBanners from "@/components/feat/AllBanners";
+import Footer from "@/components/misc/Footer";
 
 export const extraMetadata = {
   twitter: {
@@ -84,6 +85,7 @@ export default async function RootLayout({
           <Analytics />
           <NewDomainDialog />
           <UnofficalDialog />
+          <Footer />
         </TooltipProvider>
       </ThemeProvider>
     </ClerkThemeProvider>

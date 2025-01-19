@@ -294,7 +294,6 @@ async function requestServer(s: OnlineServer): Promise<ServerResponse> {
     const json = await re.json();
     serverCache[s.name] = json.server;
     return json.server;
-  } else {
-    return serverCache[s.name];
   }
+  return serverCache[s.name];
 }

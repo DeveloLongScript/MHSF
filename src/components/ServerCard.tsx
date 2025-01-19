@@ -49,7 +49,13 @@ import {
 } from "./ui/card";
 import { TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
-export default function ServerCard({ b, motd, mini, favs }: any) {
+export default function ServerCard({
+  b,
+  motd,
+  mini,
+  favs,
+  selectedProperties,
+}: any) {
   const router = useRouter();
   const clipboard = useClipboard();
   const [favoriteStar, setFavoriteStar] = useState(false);
@@ -165,100 +171,110 @@ export default function ServerCard({ b, motd, mini, favs }: any) {
                   </DrawerFooter>
                 </DrawerContent>
               </Drawer>
-              {b.author != undefined ? (
+
+              {selectedProperties.includes("Author") &&
+              b.author != undefined ? (
                 <div className="text-sm text-muted-foreground font-normal tracking-normal">
                   by {b.author}
                 </div>
               ) : (
                 <br />
               )}
-              <TagShower server={b} />
+              {selectedProperties.includes("Tags") && <TagShower server={b} />}
             </CardTitle>
             <CardDescription className="float-left inline ">
               <span className="flex items-center">
-                {b.playerData.playerCount == 0 ? (
-                  <div
-                    className="items-center border"
-                    style={{
-                      width: ".5rem",
-                      height: ".5rem",
-                      borderRadius: "9999px",
-                    }}
-                  />
-                ) : (
-                  <div
-                    className="items-center"
-                    style={{
-                      backgroundColor: "#0cce6b",
-                      width: ".5rem",
-                      height: ".5rem",
-                      borderRadius: "9999px",
-                    }}
-                  />
+                {selectedProperties.includes("Players Online") && (
+                  <>
+                    {b.playerData.playerCount == 0 ? (
+                      <div
+                        className="items-center border"
+                        style={{
+                          width: ".5rem",
+                          height: ".5rem",
+                          borderRadius: "9999px",
+                        }}
+                      />
+                    ) : (
+                      <div
+                        className="items-center"
+                        style={{
+                          backgroundColor: "#0cce6b",
+                          width: ".5rem",
+                          height: ".5rem",
+                          borderRadius: "9999px",
+                        }}
+                      />
+                    )}
+                  </>
                 )}
 
-                <span className="pl-1">
-                  {b.playerData.playerCount}{" "}
-                  {b.playerData.playerCount == 1 ? "player" : "players"}{" "}
-                  currently online {favs && <>• {favs} favorited</>}
-                </span>
+                {selectedProperties.includes("Players Online") && (
+                  <span className="pl-1">
+                    {b.playerData.playerCount}{" "}
+                    {b.playerData.playerCount == 1 ? "player" : "players"}{" "}
+                    currently online {favs && <>• {favs} favorited</>}
+                  </span>
+                )}
               </span>
 
-              <ContextMenu>
-                <ContextMenuTrigger>
-                  <>
-                    <Button
-                      size="icon"
-                      variant="secondary"
-                      className="min-w-[128px] max-w-[328px] h-[32px] mt-2 ml-2 max-md:hidden"
+              {selectedProperties.includes("Actions") && (
+                <ContextMenu>
+                  <ContextMenuTrigger>
+                    <>
+                      <Button
+                        size="icon"
+                        variant="secondary"
+                        className="min-w-[128px] max-w-[328px] h-[32px] mt-2 ml-2 max-md:hidden"
+                        onClick={() => {
+                          clipboard.writeText(b.name + ".mshf.minehut.gg");
+                          toast.success("Copied IP to clipboard");
+                        }}
+                      >
+                        <Copy size={18} />
+                        <code className="ml-2">{b.name}</code>
+                      </Button>
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <Link href={"/server/" + b.name}>
+                            <Button
+                              size="icon"
+                              variant="secondary"
+                              className="w-[32px] h-[32px] mt-2 ml-2 max-md:hidden"
+                            >
+                              <Layers size={18} />
+                            </Button>
+                          </Link>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          Open up the server page to see more information about
+                          the server
+                        </TooltipContent>
+                      </Tooltip>
+                    </>
+                  </ContextMenuTrigger>
+                  <ContextMenuContent>
+                    <ContextMenuItem
                       onClick={() => {
                         clipboard.writeText(b.name + ".mshf.minehut.gg");
                         toast.success("Copied IP to clipboard");
                       }}
                     >
-                      <Copy size={18} />
-                      <code className="ml-2">{b.name}</code>
-                    </Button>
-                    <Tooltip>
-                      <TooltipTrigger>
-                        <Link href={"/server/" + b.name}>
-                          <Button
-                            size="icon"
-                            variant="secondary"
-                            className="w-[32px] h-[32px] mt-2 ml-2 max-md:hidden"
-                          >
-                            <Layers size={18} />
-                          </Button>
-                        </Link>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        Open up the server page to see more information about
-                        the server
-                      </TooltipContent>
-                    </Tooltip>
-                  </>
-                </ContextMenuTrigger>
-                <ContextMenuContent>
-                  <ContextMenuItem
-                    onClick={() => {
-                      clipboard.writeText(b.name + ".mshf.minehut.gg");
-                      toast.success("Copied IP to clipboard");
-                    }}
-                  >
-                    Copy server IP
-                    <div className="RightSlot">
-                      <Copy size={18} />
-                    </div>
-                  </ContextMenuItem>
-                  <ContextMenuSeparator />
-                  <Link href={"/src/app/(main)/server/" + b.name}>
-                    <ContextMenuItem>Open server page</ContextMenuItem>
-                  </Link>
-                </ContextMenuContent>
-              </ContextMenu>
+                      Copy server IP
+                      <div className="RightSlot">
+                        <Copy size={18} />
+                      </div>
+                    </ContextMenuItem>
+                    <ContextMenuSeparator />
+                    <Link href={"/src/app/(main)/server/" + b.name}>
+                      <ContextMenuItem>Open server page</ContextMenuItem>
+                    </Link>
+                  </ContextMenuContent>
+                </ContextMenu>
+              )}
             </CardDescription>
-            <CardContent>
-              {motd && (
+            <CardContent className="p-0">
+              {motd && selectedProperties.includes("MOTD") && (
                 <span
                   dangerouslySetInnerHTML={{ __html: motd }}
                   className="w-[30px] text-center break-all overflow-hidden"
