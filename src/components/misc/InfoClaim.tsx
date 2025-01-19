@@ -29,44 +29,107 @@
  */
 
 "use client";
-
-import { useState } from "react";
-import { TextCopyComp } from "./TextCopyComp";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
+import { Badge } from "../ui/badge";
+import Link from "next/link";
+import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
+import { ServerOff } from "lucide-react";
 
 export function ShowInfo() {
-  const [open, setOpen] = useState(false);
   return (
     <div>
-      {open == false && (
-        <div
-          className="text-blue-500 flex items-center cursor-pointer"
-          onClick={() => setOpen(true)}
-        >
-          More info <ChevronDown size={16} className="ml-2" />
+      <br />
+      Choose a method:
+      <Tabs defaultValue="preview" className="relative mr-auto w-full">
+        <div className="flex items-center justify-between pb-3">
+          <TabsList className="w-full justify-start rounded-none border-b bg-transparent p-0">
+            <TabsTrigger
+              value="coreboxx"
+              className="relative h-9 rounded-none border-b-2 border-b-transparent bg-transparent px-4 pb-3 pt-2 font-semibold text-muted-foreground shadow-none transition-none data-[state=active]:border-b-primary data-[state=active]:text-foreground data-[state=active]:shadow-none"
+            >
+              CoreBoxx <Badge className="ml-3">Recommended</Badge>
+            </TabsTrigger>
+            <TabsTrigger
+              value="mhsfpv"
+              className="relative h-9 rounded-none border-b-2 border-b-transparent bg-transparent px-4 pb-3 pt-2 font-semibold text-muted-foreground shadow-none transition-none data-[state=active]:border-b-primary data-[state=active]:text-foreground data-[state=active]:shadow-none"
+            >
+              MHSFPV
+            </TabsTrigger>
+          </TabsList>
         </div>
-      )}
-      {open == true && (
-        <>
+        <TabsContent value="coreboxx">
           <p>
-            By claiming your account, you can add Markdown descriptions and{" "}
-            custom color schemes to your server (and more), making it stand out.
-            To get started, join the server below on your Minecraft account.
-            Enter the code in chat in the website, and you will link your
-            account. You may need to go into the lobby and start the server.
+            <Link href="/server/CoreBoxx" className="underline">
+              CoreBoxx
+            </Link>{" "}
+            has partnered with us to have an integrated account linking feature,
+            which is also open all day.
           </p>
           <br />
-          <TextCopyComp />
+          <p className="py-1">
+            <code className="border rounded-full bg-muted h-[1.75rem] w-[1.75rem] absolute inline-flex items-center justify-center">
+              1
+            </code>
+            <span className="ml-[2.25rem] pt-0.5 grid grid-rows-2">
+              <span>Join CoreBoxx</span>
+
+              <code className="border rounded p-2">CoreBoxx.minehut.gg</code>
+            </span>
+          </p>
+          <p className="py-1">
+            <code className="border rounded-full bg-muted h-[1.75rem] w-[1.75rem] absolute inline-flex items-center justify-center">
+              2
+            </code>
+            <span className="ml-[2.25rem] pt-0.5 grid">
+              <span>
+                Link your account using <code>/mhsf</code>
+              </span>
+            </span>
+          </p>
+          <p className="py-1">
+            <code className="border rounded-full bg-muted h-[1.75rem] w-[1.75rem] absolute inline-flex items-center justify-center">
+              3
+            </code>
+            <span className="ml-[2.25rem] pt-0.5 grid">
+              <span>Input the code returned below</span>
+            </span>
+          </p>
+        </TabsContent>
+        <TabsContent value="mhsfpv">
+          <Alert>
+            <ServerOff className="h-4 w-4" />
+            <AlertTitle>Server isn't online all day</AlertTitle>
+            <AlertDescription>
+              While joining MHSFPV, you may need to go into the lobby to start
+              the server to then join.
+            </AlertDescription>
+          </Alert>
           <br />
+          <p>
+            MHSFPV is a Minehut server dedicated to linking your account on
+            MHSF.
+          </p>
           <br />
-          <div
-            className="text-blue-500 flex items-center cursor-pointer"
-            onClick={() => setOpen(false)}
-          >
-            Less info <ChevronUp size={16} className="ml-2" />
-          </div>
-        </>
-      )}
+          <p className="py-1">
+            <code className="border rounded-full bg-muted h-[1.75rem] w-[1.75rem] absolute inline-flex items-center justify-center">
+              1
+            </code>
+            <span className="ml-[2.25rem] pt-0.5 grid grid-rows-2">
+              <span>Join MHSFPV</span>
+
+              <code className="border rounded p-2">MHSFPV.minehut.gg</code>
+            </span>
+          </p>
+          <p className="py-1">
+            <code className="border rounded-full bg-muted h-[1.75rem] w-[1.75rem] absolute inline-flex items-center justify-center">
+              2
+            </code>
+            <span className="ml-[2.25rem] pt-0.5 grid">
+              <span>Input the code in chat below</span>
+            </span>
+          </p>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
