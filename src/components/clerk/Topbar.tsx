@@ -39,7 +39,6 @@ import { CloudSnow, InfoIcon } from "lucide-react";
 import LoggedInPopover from "./LoggedInPopover";
 import SignInPopoverButton from "./SignInPopoverButton";
 import InfoPopover from "../misc/InfoPopover";
-import { snowfallEvents } from "../misc/SnowfallController";
 
 export default function TopBar({ inter }: { inter: string }) {
   const clerk = useClerk();
@@ -50,14 +49,6 @@ export default function TopBar({ inter }: { inter: string }) {
       <SignedOut>
         <div className="mt-1 gap-1 grid grid-cols-6">
           <SignInPopoverButton className="col-span-2" variant="outline" />
-          <Button
-            size="icon"
-            variant="ghost"
-            className="mb-1"
-            onClick={() => snowfallEvents.emit("toggle")}
-          >
-            <CloudSnow className="h-[1.2rem] w-[1.2rem]" />
-          </Button>
           <Popover>
             <PopoverTrigger>
               <Button size="icon" variant="ghost">
@@ -112,14 +103,6 @@ export default function TopBar({ inter }: { inter: string }) {
               <LoggedInPopover />
             </PopoverContent>
           </Popover>
-          <Button
-            size="icon"
-            variant="ghost"
-            className="mb-1"
-            onClick={() => snowfallEvents.emit("toggle")}
-          >
-            <CloudSnow className="h-[1.2rem] w-[1.2rem]" />
-          </Button>
           <Popover>
             <PopoverTrigger>
               <Button size="icon" variant="ghost" className="mb-1">
