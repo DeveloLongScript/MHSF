@@ -47,7 +47,7 @@ export default function TopBar({ inter }: { inter: string }) {
   return (
     <>
       <SignedOut>
-        <div className="mt-1 gap-1 grid grid-cols-6">
+        <div className="mt-1 gap-1 grid grid-cols-5">
           <SignInPopoverButton className="col-span-2" variant="outline" />
           <Popover>
             <PopoverTrigger>
@@ -82,7 +82,7 @@ export default function TopBar({ inter }: { inter: string }) {
         </div>
       </SignedOut>
       <SignedIn>
-        <div className="mt-1 grid grid-cols-5 gap-1">
+        <div className="mt-1 grid grid-cols-4 gap-1">
           <Popover>
             <PopoverTrigger>
               <Button size="icon" variant="ghost" className="mb-1">
