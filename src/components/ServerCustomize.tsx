@@ -140,7 +140,7 @@ export default function ServerCustomize({
         });
       });
     });
-  }, [isSignedIn]);
+  }, [isSignedIn, server]);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
