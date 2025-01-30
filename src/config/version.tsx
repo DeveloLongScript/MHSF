@@ -67,8 +67,25 @@ const FeatureList = ({
   );
 };
 
-export const version = "1.7.0";
+export const version = "1.7.5";
 export const changelog: { name: string; id: string; changelog: ReactNode }[] = [
+  {
+    id: "tj4ijg09aern9eargjjuauerr",
+    name: "v1.7.5",
+    changelog: (
+      <FeatureList
+        github="https://github.com/DeveloLongScript/MHSF/releases/tag/1.7.5"
+        features={[
+          "Migrated accounts from development to production"
+        ]}
+        title={
+          <strong className="flex items-center">
+            Version 1.7.5 (January 29th 2025)
+          </strong>
+        }
+      />
+    ),
+  },
   {
     id: "38ufajf8efajwj3njdaisef",
     name: "v1.7",

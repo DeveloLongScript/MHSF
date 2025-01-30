@@ -37,13 +37,13 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import { ClerkThemeProvider } from "@/components/clerk/ClerkThemeProvider";
 import NewDomainDialog from "@/components/misc/NewDomainDialog";
 import ThemedToaster from "@/components/misc/ThemedToaster";
-import UnofficalDialog from "@/components/misc/UnofficalDialog";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import type { Metadata, Viewport } from "next";
 import { Inter as interFont } from "next/font/google";
 import LayoutPart from "@/components/feat/LayoutPart";
 import AllBanners from "@/components/feat/AllBanners";
 import Footer from "@/components/misc/Footer";
+import { SwitchEnvPopup } from "@/components/misc/SwitchEnvPopup";
 
 export const extraMetadata = {
   twitter: {
@@ -84,7 +84,7 @@ export default async function RootLayout({
           <SpeedInsights />
           <Analytics />
           <NewDomainDialog />
-          <UnofficalDialog />
+          <SwitchEnvPopup />
           <Footer />
         </TooltipProvider>
       </ThemeProvider>

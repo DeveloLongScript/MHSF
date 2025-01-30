@@ -35,8 +35,9 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Button } from "../ui/button";
-import { AtSign, LogIn } from "lucide-react";
+import { AtSign, LogIn, Ship } from "lucide-react";
 import { useClerk } from "@clerk/nextjs";
+import { useRouter } from "@/lib/useRouter";
 
 export default function SignInPopoverButton({
   className,
@@ -67,11 +68,14 @@ export default function SignInPopoverButton({
 
 export function SignInPopover() {
   const clerk = useClerk();
+  const router = useRouter();
   return (
     <div className=" grid w-[200px]">
       <strong className="text-center">Login</strong>
-      <small className="text-center pb-6">
-        Customize your own servers and favorite other servers. Secured by Clerk
+      <small className="text-center pb-2">
+        Customize your own servers and favorite other servers. Secured by Clerk
+        <br className="py-2"/>
+        If you created your account before Jan. 29, 2025, use the legacy migration button.
       </small>
       <br />
       <Button variant={"ghost"} onClick={() => clerk.openSignIn()}>
@@ -81,6 +85,9 @@ export function SignInPopover() {
       <Button variant={"ghost"} onClick={() => clerk.openSignUp()}>
         <AtSign size={18} className="mr-2" />
         Sign-up
+      </Button>
+      <Button variant="ghost" onClick={() => router.push(process.env.NEXT_PUBLIC_CLERK_SWITCH_DOMAIN as string)}>
+        <Ship size={18} className="mr-2"/>Legacy Migration
       </Button>
     </div>
   );
