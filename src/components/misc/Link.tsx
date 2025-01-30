@@ -41,8 +41,8 @@ export default function A({
 }) {
   return (
     <NextLink
-      href={pageFind(children || "")}
-      className="no-underline transition duration-300 hover:underline "
+      href={pageFind(children || "") || "#"}
+      className="transition duration-300 underline"
       title={children}
     >
       {(children || "").startsWith("Docs:") && (
@@ -68,7 +68,7 @@ export function ALegacy({
 }) {
   return (
     <NextLink
-      href={pageFind(href || "")}
+      href={pageFind(href || "") || "#"}
       className="no-underline transition duration-300 hover:underline "
       title={href}
     >
@@ -95,6 +95,7 @@ export const pageFind = (text: string) => {
   if (text === "Special:AccountOptions") return "/account/settings/options";
   if (text.startsWith("Server:") && text.endsWith("/Customization"))
     return "/server/" + text.substring(7, text.length - 14) + "/customization";
+  if (text === "Special:ClerkConvertionPage") return process.env.NEXT_PUBLIC_CLERK_SWITCH_DOMAIN;
   if (text.startsWith("Server:")) return "/server/" + text.substring(7);
   if (text.startsWith("Wiki:"))
     return "https://minehut.wiki.gg/wiki/" + text.substring(5);
