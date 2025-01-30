@@ -368,7 +368,7 @@ export default function ServerList() {
                           "dark:border-gray-50/[.1] dark:bg-gray-50/[.10] dark:hover:bg-gray-50/[.15]"
                       )}
                       onClick={() =>
-                        router.push(pageFind(`Server:${server.name}`))
+                        router.push(pageFind(`Server:${server.name}`) as string)
                       }
                     >
                       <div className="items-center gap-2 p-4">
