@@ -5,7 +5,7 @@ title: '[bug]: '
 labels: ['bug']
 body:
  - type: markdown
-    attributes:
+   attributes:
       value: |
         Thank you for coming here to submit a bug report. We care about anything from big to small relating to MHSF, making a better experience for you and others.
 
