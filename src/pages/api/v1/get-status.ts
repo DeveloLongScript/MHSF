@@ -30,32 +30,33 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
+	req: NextApiRequest,
+	res: NextApiResponse,
 ) {
-  const betterStackResult = await fetch(
-    `https://uptime.betterstack.com/api/v2/status-pages/${process.env.BS_STATUS_PAGE}/status-reports`,
-    { headers: { Authorization: `Bearer ${process.env.BS_TOKEN}` } }
-  );
-  const betterStackURL = await fetch(
-    `https://uptime.betterstack.com/api/v2/status-pages/${process.env.BS_STATUS_PAGE}`,
-    { headers: { Authorization: `Bearer ${process.env.BS_TOKEN}` } }
-  );
+	const betterStackResult = await fetch(
+		`https://uptime.betterstack.com/api/v2/status-pages/${process.env.BS_STATUS_PAGE}/status-reports`,
+		{ headers: { Authorization: `Bearer ${process.env.BS_TOKEN}` } },
+	);
+	const betterStackURL = await fetch(
+		`https://uptime.betterstack.com/api/v2/status-pages/${process.env.BS_STATUS_PAGE}`,
+		{ headers: { Authorization: `Bearer ${process.env.BS_TOKEN}` } },
+	);
 
-  const result = await betterStackResult.json();
-  const url = await betterStackURL.json();
+	const result = await betterStackResult.json();
+	const url = await betterStackURL.json();
 
-  const filtered = result.data.filter(
-    (c: any) =>
-      c.attributes.ends_at === null &&
-      c.attributes.affected_resources.filter(
-        (v: any) =>
-          v.status_page_resource_id === process.env.BS_STATUS_MAIN_WEBSITE
-      ).length > 0
-  );
+	const filtered = result.data.filter(
+		(c: any) =>
+			c.attributes.ends_at === null &&
+			c.attributes.affected_resources.filter(
+				(v: any) =>
+					v.status_page_resource_id === process.env.BS_STATUS_MAIN_WEBSITE &&
+					v.status !== "resolved",
+			).length > 0,
+	);
 
-  res.status(200).send({
-    url: url.data.attributes.custom_domain,
-    incidents: filtered,
-  });
+	res.status(200).send({
+		url: url.data.attributes.custom_domain,
+		incidents: filtered,
+	});
 }
