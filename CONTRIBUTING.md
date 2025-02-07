@@ -29,7 +29,8 @@ The primary stack for MHSF is Next.js, a React framework, which you can start by
 
 ## Clerk
 > [!CAUTION]
-> Clerk is no longer optional. If Clerk is not setup, you *will* get a `Non-authenticated environments are disallowed on this origin.` error.
+> Clerk is no longer optional. If Clerk is not setup, you *will* get a `Non-authenticated environments are disallowed on this origin.` error on the frontend.
+> You may be able to modify/test API endpoints as long as they do not require accounts.
 
 If you want to test out accounts, [you must create an Clerk key from their website.](https://clerk.com)
 Set the following variables in the .env.local file:
