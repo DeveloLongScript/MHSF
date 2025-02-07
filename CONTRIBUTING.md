@@ -28,6 +28,9 @@ The primary stack for MHSF is Next.js, a React framework, which you can start by
 [You can also opt out of telemetry if you'd like.](https://nextjs.org/telemetry)
 
 ## Clerk
+> [!CAUTION]
+> Clerk is no longer optional. If Clerk is not setup, you *will* get a `Non-authenticated environments are disallowed on this origin.` error.
+
 If you want to test out accounts, [you must create an Clerk key from their website.](https://clerk.com)
 Set the following variables in the .env.local file:
 ```dotenv
