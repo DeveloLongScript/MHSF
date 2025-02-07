@@ -19,19 +19,19 @@ body:
      required: true
  - type: textarea
    attributes:
-       label: To Reproduce
-       description: If this is self-explanatory with information above, keep this blank.
-       placeholder: |
-         1. Open X
-         2. Click Y
-         3. See Z
+     label: To Reproduce
+     description: If this is self-explanatory with information above, keep this blank.
+     placeholder: |
+       1. Open X
+       2. Click Y
+       3. See Z
      validations:
        required: false
-- type: input
-  attributes:
+ - type: input
+   attributes:
     label: MHSF Username (if applicable)
     description: If this bug has soft-locked your account or something similar where we need to know your username, please put it here.
-- type: input
-  attributes:
-    label: Minecraft Username (if applicable)
-    description: If this bug is related to Minecraft account linking, please put your username here.
+ - type: input
+   attributes:
+      label: Minecraft Username (if applicable)
+      description: If this bug is related to Minecraft account linking, please put your username here.
