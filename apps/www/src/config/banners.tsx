@@ -60,7 +60,7 @@ function AffiliateBanner() {
   return (
     <>
       <div onClick={() => router.push(pageFind("Special:GitHub/releases/tag/1.8.0") as string)} className="cursor-pointer">
-        <MainBanner size={1} className="max-h-[4rem] border-0">
+        <MainBanner size={1} className="max-h-[2rem] border-0">
           <GradientBanner>
             <strong>v2</strong>: the future of MHSF
           </GradientBanner>
