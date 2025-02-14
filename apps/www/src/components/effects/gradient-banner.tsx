@@ -51,7 +51,7 @@ export default function GradientBanner({
       <canvas
         id={gradientId}
         data-js-darken-top
-        className="w-screen blur-sm h-[4rem] border-b z-1"
+        className="w-screen blur-sm h-[2rem] border-b z-1"
         style={
           {
             "--gradient-color-1": "#c3e4ff",
@@ -65,7 +65,7 @@ export default function GradientBanner({
         height="64"
         width={window.screen.width}
       />{" "}
-      <div className="fixed top-0 left-0 z-2 p-2 text-left text-black dark:text-white">
+      <div className="fixed top-0 left-0 z-2 px-2 pt-1 text-left text-black dark:text-white">
         {children}
       </div>
     </div>
