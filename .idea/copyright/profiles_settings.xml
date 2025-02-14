@@ -1,3 +1,7 @@
 <component name="CopyrightManager">
-  <settings default="MIT License f/ MHSF" />
+  <settings>
+    <module2copyright>
+      <element module="All" copyright="MIT License f/ MHSF" />
+    </module2copyright>
+  </settings>
 </component>
