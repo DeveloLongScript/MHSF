@@ -36,6 +36,8 @@ import { useState, useEffect } from "react";
 import { DialogContent, Dialog } from "@/components/ui/dialog";
 import AffiliatePopup from "@/components/misc/AffiliatePopup";
 import { Gradient } from "stripe-gradient";
+import {useRouter} from "@/lib/useRouter";
+import {pageFind} from "@/components/misc/Link"
 
 export const defaultBanners: {
   bannerSpace: number;
@@ -43,7 +45,7 @@ export const defaultBanners: {
 }[] = [
   // The affilation banner ALWAYS has to be first.
   {
-    bannerSpace: 2,
+    bannerSpace: 1,
     bannerContent: (
       <>
         <AffiliateBanner />
@@ -53,57 +55,14 @@ export const defaultBanners: {
 ];
 
 function AffiliateBanner() {
-  const [isOpen, setOpen] = useState(false);
-
-  useEffect(() => {
-    const gradient = new Gradient();
-
-    const initializeGradient = () => {
-      const canvasElement = document.getElementById(
-        "gradient-dialog"
-      ) as HTMLCanvasElement;
-      if (canvasElement) gradient.initGradient("#gradient-dialog");
-    };
-
-    if (isOpen) {
-      const timeoutId = setTimeout(initializeGradient, 100); // Delay to ensure canvas is ready
-      return () => clearTimeout(timeoutId); // Cleanup timeout
-    }
-  }, [isOpen]);
+  const router = useRouter();
 
   return (
     <>
-      <Dialog open={isOpen} onOpenChange={setOpen}>
-        <DialogContent>
-          <>
-            <canvas
-              id="gradient-dialog"
-              className="h-full absolute w-[512px] rounded blur-sm"
-              style={
-                {
-                  "--gradient-color-1": "#6ec3f4",
-                  "--gradient-color-2": "#3a3aff",
-                  "--gradient-color-3": "#ff61ab",
-                  "--gradient-color-4": "#E63946",
-                  webKitMaskImage:
-                    "linear-gradient(to top, black 0%, transparent 25%, transparent 80%, black 100%)",
-                  maskImage:
-                    "linear-gradient(to top, black 0%, transparent 25%, transparent 80%, black 100%)",
-                } as React.CSSProperties
-              }
-            />
-            <div className="relative z-10">
-              <AffiliatePopup />
-            </div>
-          </>
-        </DialogContent>
-      </Dialog>
-      <div onClick={() => setOpen(true)} className="cursor-pointer">
-        <MainBanner size={2} className="max-h-[4rem] border-0">
+      <div onClick={() => router.push(pageFind("Special:GitHub/releases/tag/1.8.0") as string)} className="cursor-pointer">
+        <MainBanner size={1} className="max-h-[2rem] border-0">
           <GradientBanner>
-            <strong>CoreBoxx</strong> — <i>an official affiliate of MHSF</i>{" "}
-            <br />
-            Season 3 is out the doors for the best box server on Minehut
+            <strong>v2</strong>: the future of MHSF
           </GradientBanner>
         </MainBanner>
       </div>

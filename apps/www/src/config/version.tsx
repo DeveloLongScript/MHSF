@@ -67,8 +67,26 @@ const FeatureList = ({
   );
 };
 
-export const version = "1.7.5";
+export const version = "1.8.0";
 export const changelog: { name: string; id: string; changelog: ReactNode }[] = [
+    {
+        id: "tnjageringae231nfnajrekgra",
+        name: "v1.8.0",
+        changelog: (
+            <FeatureList
+                github="https://github.com/DeveloLongScript/MHSF/releases/tag/1.8.0"
+                features={[
+                    "Major changes have been made with the technical project structure",
+                    "Please check the GitHub for information about the status of the project."
+                ]}
+                title={
+                    <strong className="flex items-center">
+                        Version 1.8.0 (February 14th 2025, {"<3 happy valentines"})
+                    </strong>
+                }
+            />
+        ),
+    },
   {
     id: "tj4ijg09aern9eargjjuauerr",
     name: "v1.7.5",

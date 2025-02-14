@@ -45,23 +45,6 @@ import AllBanners from "@/components/feat/AllBanners";
 import Footer from "@/components/misc/Footer";
 import { SwitchEnvPopup } from "@/components/misc/SwitchEnvPopup";
 
-export const extraMetadata = {
-  twitter: {
-    images: [
-      {
-        url: "/imgs/icon-cf.png",
-      },
-    ],
-  },
-  themeColor: "#000000",
-  openGraph: {
-    images: [
-      {
-        url: "/imgs/icon-cf.png",
-      },
-    ],
-  },
-} satisfies Metadata;
 export const viewport: Viewport = {
   themeColor: "black",
   colorScheme: "dark",
