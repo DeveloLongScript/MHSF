@@ -1,0 +1,44 @@
+<!--
+  - MHSF, Minehut Server List
+  - All external content is rather licensed under the ECA Agreement
+  - located here: https://mhsf.app/docs/legal/external-content-agreement
+  -
+  - All code under MHSF is licensed under the MIT License
+  - by open source contributors
+  -
+  - Copyright (c) 2025 dvelo
+  -
+  - Permission is hereby granted, free of charge, to any person obtaining a copy
+  - of this software and associated documentation files (the "Software"), to
+  - deal in the Software without restriction, including without limitation the
+  - rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  - sell copies of the Software, and to permit persons to whom the Software is
+  - furnished to do so, subject to the following conditions:
+  -
+  - The above copyright notice and this permission notice shall be included in all
+  - copies or substantial portions of the Software.
+  -
+  - THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+  - EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+  - OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+  - NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+  - HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+  - WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  - FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+  - OTHER DEALINGS IN THE SOFTWARE.
+  -->
+
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect x="0.761536" width="127.238" height="127.238" rx="63.6192" fill="url(#paint0_linear_1_204)"/>
+<path d="M50.7026 59.2012H46.0726C44.8446 59.2012 43.6669 58.7134 42.7986 57.8451C41.9303 56.9768 41.4425 55.7991 41.4425 54.5712V45.311C41.4425 44.0831 41.9303 42.9054 42.7986 42.0371C43.6669 41.1688 44.8446 40.681 46.0726 40.681H83.1131C84.3411 40.681 85.5187 41.1688 86.3871 42.0371C87.2554 42.9054 87.7432 44.0831 87.7432 45.311V54.5712C87.7432 55.7991 87.2554 56.9768 86.3871 57.8451C85.5187 58.7134 84.3411 59.2012 83.1131 59.2012H78.483M50.7026 68.4614H46.0726C44.8446 68.4614 43.6669 68.9492 42.7986 69.8175C41.9303 70.6858 41.4425 71.8635 41.4425 73.0914V82.3516C41.4425 83.5795 41.9303 84.7572 42.7986 85.6255C43.6669 86.4938 44.8446 86.9816 46.0726 86.9816H83.1131C84.3411 86.9816 85.5187 86.4938 86.3871 85.6255C87.2554 84.7572 87.7432 83.5795 87.7432 82.3516V73.0914C87.7432 71.8635 87.2554 70.6858 86.3871 69.8175C85.5187 68.9492 84.3411 68.4614 83.1131 68.4614H78.483M50.7026 49.9411H50.7258M50.7026 77.7215H50.7258M66.9079 49.9411L57.6477 63.8313H71.5379L62.2778 77.7215" stroke="black" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="64.3808" cy="63.6192" r="41.8058" stroke="url(#paint1_linear_1_204)" stroke-width="8"/>
+<defs>
+<linearGradient id="paint0_linear_1_204" x1="52.2931" y1="26.296" x2="111.247" y2="108.153" gradientUnits="userSpaceOnUse">
+<stop stop-color="white"/>
+</linearGradient>
+<linearGradient id="paint1_linear_1_204" x1="64.3808" y1="17.8134" x2="64.3808" y2="109.425" gradientUnits="userSpaceOnUse">
+<stop stop-color="#EFEC32"/>
+<stop offset="1" stop-color="#98FF60"/>
+</linearGradient>
+</defs>
+</svg>

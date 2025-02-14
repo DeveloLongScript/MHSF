@@ -1,0 +1,94 @@
+---
+title: "Troubleshooting: Making external servers on Minehut"
+folder: "Advanced"
+---
+
+# External Servers on Minehut
+I think creating external servers on Minehut is an advanced subject, and it is not documented well enough for the circumstances that
+might occur with server owners. This is a [extension/rephrasing of the offical wiki guide](Wiki:External). All points in **bold** are things you shouldn't miss, and are commonly misread.
+
+<br/>
+<Separator/>
+_Note: This is an unoffical guide, but the offical way of connecting! This is safe!_
+## Getting started
+You must pick a host that allows the following when making external servers:
+ - **Editing server flags** Editing flags for the server to run is essential. There are many cases where you were not able to continue because your provider was resetting your flags back
+ - **A supported server software** For standalone servers, you must run on [Paper](https://papermc.io/software/paper). For proxy networks, you can use [Velocity](https://velocitypowered.com/), [Waterfall](https://papermc.io/software/waterfall) & [Lilypad](https://www.lilypadmc.org/). **BungeeCord is not supported by any means!**
+
+Minehut offically recommends Velocity, which you can find instructions [here](https://docs.papermc.io/velocity/getting-started) to get going! If you do not wish to use a proxy, using Paper is recommended, which you can find a guide [here](https://docs.papermc.io/paper/getting-started).
+Before doing below, **make sure your proxy _actually works!_**
+
+## Changing flags
+To ensure that Minehut can properly connect your players to your server, you need to add flags when booting up your server. These are commonly in `start.bat` or `start.sh` for Linux-based hosts. **Players cannot join your server from Minehut without adding these flags!**
+
+
+### Velocity
+Add the following `sessionserver` flag to your start script:
+ ```
+ -Dmojang.sessionserver=https://api.minehut.com/mitm/proxy/session/minecraft/hasJoined
+ ```
+  All flags put together should look like the following:
+  ```
+  java -Dmojang.sessionserver=https://api.minehut.com/mitm/proxy/session/minecraft/hasJoined -jar velocity.jar
+  ```
+
+### Paper - standalone
+ Like said above, if you run a proxy, add the flags for Velocity. **Adding both the Velocity (or any other proxy server) & Paper flags will cause your server to be unauthenticatable!** <br/>
+   Add the following `auth.host`, `account.host`, `services.host` & `session.host` flags:
+   ```
+   -Dminecraft.api.auth.host=https://authserver.mojang.com/
+   -Dminecraft.api.account.host=https://api.mojang.com/
+   -Dminecraft.api.services.host=https://api.minecraftservices.com/
+   -Dminecraft.api.session.host=https://api.minehut.com/mitm/proxy
+   ```
+   All the script together
+   ```
+   java -Dminecraft.api.auth.host=https://authserver.mojang.com/ -Dminecraft.api.account.host=https://api.mojang.com/ -Dminecraft.api.services.host=https://api.minecraftservices.com/ -Dminecraft.api.session.host=https://api.minehut.com/mitm/proxy -jar paper.jar 
+   ``` 
+   **Along with this,** make sure to set the `enforce-secure-profile` flag in the `server.properties` file to `false`.
+    ```
+    enable-status=true
+    # Set this to false!
+    enforce-secure-profile=false
+    enforce-whitelist=false
+    ```
+
+
+### Lilypad
+Set the following environment variable `LILYPAD_MOJANG_SESSIONSERVER_URL` to `https://api.minehut.com/mitm/proxy/session/minecraft/hasJoined`. Environment variables are set as a seperate command in the start script:
+```
+LILYPAD_MOJANG_SESSIONSERVER_URL="https://api.minehut.com/mitm/proxy/session/minecraft/hasJoined"
+```
+If above doesn't work, try this:
+```
+export LILYPAD_MOJANG_SESSIONSERVER_URL="https://api.minehut.com/mitm/proxy/session/minecraft/hasJoined"
+```
+
+## Enable Proxy Protocol
+_Note: Skip this step if you're using [TCPShield](https://tcpshield.com/) for DDoS protection._
+
+Enable proxy protocol in your proxy's configuration file: 
+### Velocity
+
+In `velocity.toml` under advanced, set
+```
+haproxy-protocol = true
+```
+### Waterfall
+
+In `config.yml` under listeners, set
+```
+proxy_protocol: true
+```
+### Paper
+
+In `config/paper-global.yml` under proxies, set
+```
+proxy-protocol: true
+```
+
+## Thats it!
+After this, there are mostly no more common issues. Continue on [the wiki](Wiki:External#Connect_Your_External_Server_Plan_on_Minehut)!
+
+## Have any issues?
+Go to the offical <Discord/> Minehut Discord server and go into the [#ask-for-help](https://discord.com/channels/239599059415859200/1014801630295760897) channel and create a thread.
