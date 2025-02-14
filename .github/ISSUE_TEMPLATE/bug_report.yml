@@ -1,0 +1,36 @@
+name: Bug report
+title: '[bug]: '
+labels: ['bug']
+description: Create a report to help us improve
+body:
+ - type: markdown
+   attributes:
+      value: |
+        Thank you for coming here to submit a bug report. We care about anything from big to small relating to MHSF, making a better experience for you and others.
+
+        Try and be as descriptive as possible & type in a way thats able to understood by other contributors.
+ - type: textarea
+   attributes:
+     label: Current and Expected Behavior
+     description: What are you experiencing right now, and what did you expect to happen? 
+     placeholder: I was trying to do XYZ, however X happened instead of Y.
+   validations:
+     required: true
+ - type: textarea
+   attributes:
+     label: To Reproduce
+     description: If this is self-explanatory with information above, keep this blank.
+     placeholder: |
+       1. Open X
+       2. Click Y
+       3. See Z
+   validations:
+     required: false
+ - type: input
+   attributes:
+    label: MHSF Username (if applicable)
+    description: If this bug has soft-locked your account or something similar where we need to know your username, please put it here.
+ - type: input
+   attributes:
+      label: Minecraft Username (if applicable)
+      description: If this bug is related to Minecraft account linking, please put your username here.
