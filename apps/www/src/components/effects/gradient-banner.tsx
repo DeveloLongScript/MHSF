@@ -54,10 +54,10 @@ export default function GradientBanner({
         className="w-screen blur-sm h-[4rem] border-b z-1"
         style={
           {
-            "--gradient-color-1": "#6ec3f4",
-            "--gradient-color-2": "#3a3aff",
-            "--gradient-color-3": "#ff61ab",
-            "--gradient-color-4": "#E63946",
+            "--gradient-color-1": "#c3e4ff",
+            "--gradient-color-2": "#6ec3f4",
+            "--gradient-color-3": "#eae2ff",
+            "--gradient-color-4": "#b9beff",
             webKitMaskImage: "linear-gradient(to top, transparent, black)",
             maskImage: "linear-gradient(to top, transparent, black)",
           } as React.CSSProperties
