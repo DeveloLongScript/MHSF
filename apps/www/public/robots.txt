@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://mhsf.app
+
+# Sitemaps
+Sitemap: https://mhsf.app/sitemap.xml
