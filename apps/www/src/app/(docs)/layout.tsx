@@ -66,7 +66,7 @@ interface Props {
 	pathname: string;
 }
 
-export default async function RootLayout({
+export default function RootLayout({
 	children,
 }: Readonly<{
 	children: React.ReactNode;
