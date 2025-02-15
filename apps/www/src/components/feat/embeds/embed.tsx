@@ -32,11 +32,10 @@
 import IconDisplay from "@/components/feat/icons/minecraft-icon-display";
 import { Badge } from "@/components/ui/badge";
 import type { ServerResponse } from "@/lib/types/mh-server";
-import { Copy, ExternalLink, ServerCrash } from "lucide-react";
+import { Check, Copy, ExternalLink, ServerCrash } from "lucide-react";
 import { notFound, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { CheckmarkIcon } from "react-hot-toast";
 import useClipboard from "@/lib/useClipboard";
 import {
   Tooltip,
@@ -46,6 +45,7 @@ import {
 import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { AnimatePresence, motion } from "framer-motion";
 
 export default function Embed({ params }: { params: { server: string } }) {
   const [serverFound, setServerFound] = useState(true);
@@ -97,7 +97,14 @@ export default function Embed({ params }: { params: { server: string } }) {
         </span>
       </Link>
       <div className="px-4 pt-2 flex items-center group overflow-hidden">
-        <div className={staticMode ? "block" : "group-hover:block hidden"}>
+        <div
+          className={cn(
+            staticMode ? "block" : "opacity-0 group-hover:opacity-100",
+            "transform transition-all duration-300 ease-in-out",
+            "group-hover:translate-x-0 -translate-x-full",
+            "absolute left-[10px] w-0 group-hover:w-[64px]"
+          )}
+        >
           <Tooltip>
             <TooltipTrigger>
               <Button
@@ -110,7 +117,35 @@ export default function Embed({ params }: { params: { server: string } }) {
                   setTimeout(() => setCopied(false), 1000);
                 }}
               >
-                {copied ? <CheckmarkIcon /> : <Copy size={16} />}
+                <div className="relative w-full h-full grid place-items-center">
+                  <AnimatePresence>
+                    {copied ? (
+                      <motion.div
+                        key="check"
+                        animate={{ opacity: 1, scale: 1 }}
+                        initial={{ opacity: 0, scale: 0.3 }}
+                        exit={{ opacity: 0, scale: 0.3 }}
+                        transition={{ duration: 0.2, ease: "linear" }}
+                        className="top-0 left-0"
+                        style={{ gridRow: 1, gridColumn: 1 }}
+                      >
+                        <Check size={18} />
+                      </motion.div>
+                    ) : (
+                      <motion.div
+                        key="clipboard"
+                        animate={{ opacity: 1, scale: 1 }}
+                        initial={{ opacity: 0, scale: 0.3 }}
+                        exit={{ opacity: 0, scale: 0.3 }}
+                        transition={{ duration: 0.2, ease: "linear" }}
+                        className="top-0 left-0"
+                        style={{ gridRow: 1, gridColumn: 1 }}
+                      >
+                        <Copy size={18} />
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
               </Button>
             </TooltipTrigger>
             <TooltipContent>Copy this server IP</TooltipContent>
@@ -126,49 +161,55 @@ export default function Embed({ params }: { params: { server: string } }) {
             <ExternalLink size={16} />
           </Button>
         </div>
-        {serverObject && (
-          <IconDisplay
-            server={serverObject}
-            className={cn(
-              "flex items-center mr-2",
-              staticMode ? "mb-1 ml-1" : "group-hover:mb-1 group-hover:ml-1"
-            )}
-          />
-        )}
-
-        <div className={cn("block", staticMode ? "mb-1" : " group-hover:mb-1")}>
-          <strong className="text-lg flex items-center gap-2">
-            {params.server}
-            {!noShowBranding && <Badge variant="blue">on Minehut</Badge>}
-          </strong>{" "}
-          <span className="text-sm">Joined {serverObject?.joins} times</span>
-          {serverObject?.online && (
-            <span className="flex items-center">
-              {serverObject.playerCount === 0 ? (
-                <div
-                  className="items-center border"
-                  style={{
-                    width: ".5rem",
-                    height: ".5rem",
-                    borderRadius: "9999px",
-                  }}
-                />
-              ) : (
-                <div
-                  className="items-center"
-                  style={{
-                    backgroundColor: "#0cce6b",
-                    width: ".5rem",
-                    height: ".5rem",
-                    borderRadius: "9999px",
-                  }}
-                />
-              )}
-              <span className="text-sm ml-1">
-                {serverObject.playerCount} player(s) online
-              </span>
-            </span>
+        <div
+          className={cn(
+            "flex items-center transition-all duration-300 ease-in-out",
+            staticMode ? "ml-0" : "group-hover:ml-[42px]"
           )}
+        >
+          {serverObject && (
+            <IconDisplay
+              server={serverObject}
+              className={cn(
+                "flex items-center mr-2",
+                staticMode ? "mb-1" : "group-hover:mb-1"
+              )}
+            />
+          )}
+          <div className="block">
+            <strong className="text-lg flex items-center gap-2">
+              {params.server}
+              {!noShowBranding && <Badge variant="blue">on Minehut</Badge>}
+            </strong>
+            <span className="text-sm">Joined {serverObject?.joins} times</span>
+            {serverObject?.online && (
+              <span className="flex items-center">
+                {serverObject.playerCount === 0 ? (
+                  <div
+                    className="items-center border"
+                    style={{
+                      width: ".5rem",
+                      height: ".5rem",
+                      borderRadius: "9999px",
+                    }}
+                  />
+                ) : (
+                  <div
+                    className="items-center"
+                    style={{
+                      backgroundColor: "#0cce6b",
+                      width: ".5rem",
+                      height: ".5rem",
+                      borderRadius: "9999px",
+                    }}
+                  />
+                )}
+                <span className="text-sm ml-1">
+                  {serverObject.playerCount} player(s) online
+                </span>
+              </span>
+            )}
+          </div>
         </div>
       </div>
     </div>
