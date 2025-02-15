@@ -151,15 +151,20 @@ export default function Embed({ params }: { params: { server: string } }) {
             <TooltipContent>Copy this server IP</TooltipContent>
           </Tooltip>{" "}
           <br />
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={() => {
-              window.open(`/server/${params.server}`, "_blank")?.focus();
-            }}
-          >
-            <ExternalLink size={16} />
-          </Button>
+          <Tooltip>
+            <TooltipTrigger>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => {
+                  window.open(`/server/${params.server}`, "_blank")?.focus();
+                }}
+              >
+                <ExternalLink size={16} />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Open {params.server} in MHSF</TooltipContent>
+          </Tooltip>
         </div>
         <div
           className={cn(
