@@ -28,34 +28,53 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-"use client"
+import React from "react";
+import { cn } from "@/lib/utils";
+import { VariantProps, cva } from "class-variance-authority";
+import { Loader2 } from "lucide-react";
 
-import { useTheme } from "next-themes"
-import { Toaster as Sonner } from "sonner"
+const spinnerVariants = cva("flex-col items-center justify-center", {
+  variants: {
+    show: {
+      true: "flex",
+      false: "hidden",
+    },
+  },
+  defaultVariants: {
+    show: true,
+  },
+});
 
-type ToasterProps = React.ComponentProps<typeof Sonner>
+const loaderVariants = cva("animate-spin text-primary", {
+  variants: {
+    size: {
+      small: "size-6",
+      medium: "size-8",
+      large: "size-12",
+    },
+  },
+  defaultVariants: {
+    size: "medium",
+  },
+});
 
-const Toaster = ({ ...props }: ToasterProps) => {
-  const { theme = "system" } = useTheme()
-
-  return (
-    <Sonner
-      theme={theme as ToasterProps["theme"]}
-      className="toaster group"
-      toastOptions={{
-        classNames: {
-          toast:
-            "group toast group-[.toaster]:bg-background group-[.toaster]:text-foreground group-[.toaster]:border-border group-[.toaster]:shadow-lg",
-          description: "group-[.toast]:text-muted-foreground",
-          actionButton:
-            "group-[.toast]:bg-primary group-[.toast]:text-primary-foreground",
-          cancelButton:
-            "group-[.toast]:bg-muted group-[.toast]:text-muted-foreground",
-        },
-      }}
-      {...props}
-    />
-  )
+interface SpinnerContentProps
+  extends VariantProps<typeof spinnerVariants>,
+    VariantProps<typeof loaderVariants> {
+  className?: string;
+  children?: React.ReactNode;
 }
 
-export { Toaster }
+export function Spinner({
+  size,
+  show,
+  children,
+  className,
+}: SpinnerContentProps) {
+  return (
+    <span className={spinnerVariants({ show })}>
+      <Loader2 className={cn(loaderVariants({ size }), className)} />
+      {children}
+    </span>
+  );
+}

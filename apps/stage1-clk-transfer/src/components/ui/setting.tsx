@@ -28,34 +28,61 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-"use client"
+"use client";
 
-import { useTheme } from "next-themes"
-import { Toaster as Sonner } from "sonner"
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm, UseFormReturn } from "react-hook-form";
+import { z } from "zod";
+import { Form } from "./form";
 
-type ToasterProps = React.ComponentProps<typeof Sonner>
-
-const Toaster = ({ ...props }: ToasterProps) => {
-  const { theme = "system" } = useTheme()
-
+export default function Setting({
+  name,
+  description,
+  button,
+  input,
+  onSubmit,
+  form,
+}: {
+  name: string;
+  description: JSX.Element;
+  button: JSX.Element;
+  input?: JSX.Element;
+  onSubmit?: () => void;
+  form?: UseFormReturn;
+}) {
   return (
-    <Sonner
-      theme={theme as ToasterProps["theme"]}
-      className="toaster group"
-      toastOptions={{
-        classNames: {
-          toast:
-            "group toast group-[.toaster]:bg-background group-[.toaster]:text-foreground group-[.toaster]:border-border group-[.toaster]:shadow-lg",
-          description: "group-[.toast]:text-muted-foreground",
-          actionButton:
-            "group-[.toast]:bg-primary group-[.toast]:text-primary-foreground",
-          cancelButton:
-            "group-[.toast]:bg-muted group-[.toast]:text-muted-foreground",
-        },
-      }}
-      {...props}
-    />
-  )
-}
+    <Card>
+      <CardHeader>
+        <CardTitle>{name}</CardTitle>
+        <CardDescription>{description}</CardDescription>
+      </CardHeader>
+      {input && form && (
+        <Form {...form}>
+          <form
+            onSubmit={
+              onSubmit != undefined ? form.handleSubmit(onSubmit) : undefined
+            }
+            className="space-y-8"
+          >
+            <CardContent>{input}</CardContent>
+            <CardFooter className="border-t px-6 py-4">{button}</CardFooter>
+          </form>
+        </Form>
+      )}
 
-export { Toaster }
+      {!input && (
+        <CardFooter className="border-t px-6 py-4">{button}</CardFooter>
+      )}
+    </Card>
+  );
+}
