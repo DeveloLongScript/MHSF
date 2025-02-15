@@ -28,12 +28,8 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import Embed from "@/components/feat/Embed";
+import Embed from "@/components/feat/embeds/embed";
 
-export default function EmbedPage({
-	params,
-}: {
-	params: { server: string };
-}) {
-	return <Embed params={params} />;
+export default function EmbedPage({ params }: { params: { server: string } }) {
+  return <Embed params={params} />;
 }
