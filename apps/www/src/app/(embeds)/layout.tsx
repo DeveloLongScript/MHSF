@@ -33,6 +33,9 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import "../globals.css";
 import { ThemeProvider } from "@/components/util/theme-provider";
 import { useSearchParams } from "next/navigation";
+import { Inter } from "next/font/google";
+
+const inter = Inter({ subsets: ["latin"] });
 
 export default function RootLayout({
   children,
@@ -41,9 +44,10 @@ export default function RootLayout({
 }) {
   const searchParams = useSearchParams();
   const search = searchParams?.get("theme") || "light";
+
   return (
     <html lang="en">
-      <body>
+      <body className={inter.className}>
         <ThemeProvider
           attribute="class"
           disableTransitionOnChange

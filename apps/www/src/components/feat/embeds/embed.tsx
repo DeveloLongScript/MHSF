@@ -136,14 +136,12 @@ export default function Embed({ params }: { params: { server: string } }) {
           />
         )}
 
-        <div
-          className={cn("block", staticMode ? " mb-1" : " group-hover:mb-1")}
-        >
-          <strong className="text-lg">{params.server}</strong>{" "}
-          {!noShowBranding && <Badge variant="blue">on Minehut</Badge>}
-          <br />
+        <div className={cn("block", staticMode ? "mb-1" : " group-hover:mb-1")}>
+          <strong className="text-lg flex items-center gap-2">
+            {params.server}
+            {!noShowBranding && <Badge variant="blue">on Minehut</Badge>}
+          </strong>{" "}
           <span className="text-sm">Joined {serverObject?.joins} times</span>
-          <br />
           {serverObject?.online && (
             <span className="flex items-center">
               {serverObject.playerCount === 0 ? (
