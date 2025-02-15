@@ -6,7 +6,7 @@
  * All code under MHSF is licensed under the MIT License
  * by open source contributors
  *
- * Copyright (c) 2025 dvelo
+ * Copyright (c) 2024 dvelo
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to

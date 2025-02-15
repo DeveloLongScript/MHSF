@@ -6,7 +6,7 @@
  * All code under MHSF is licensed under the MIT License
  * by open source contributors
  *
- * Copyright (c) 2024 dvelo
+ * Copyright (c) 2025 dvelo
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to
@@ -29,29 +29,60 @@
  */
 
 "use client";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import "../globals.css";
-import { ThemeProvider } from "@/components/util/theme-provider";
-import { useSearchParams } from "next/navigation";
 
-export default function RootLayout({
-  children,
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm, UseFormReturn } from "react-hook-form";
+import { z } from "zod";
+import { Form } from "./form";
+
+export default function Setting({
+  name,
+  description,
+  button,
+  input,
+  onSubmit,
+  form,
 }: {
-  children: React.ReactNode;
+  name: string;
+  description: JSX.Element;
+  button: JSX.Element;
+  input?: JSX.Element;
+  onSubmit?: () => void;
+  form?: UseFormReturn;
 }) {
-  const searchParams = useSearchParams();
-  const search = searchParams?.get("theme") || "light";
   return (
-    <html lang="en">
-      <body>
-        <ThemeProvider
-          attribute="class"
-          disableTransitionOnChange
-          forcedTheme={search}
-        >
-          <TooltipProvider>{children}</TooltipProvider>
-        </ThemeProvider>
-      </body>
-    </html>
+    <Card>
+      <CardHeader>
+        <CardTitle>{name}</CardTitle>
+        <CardDescription>{description}</CardDescription>
+      </CardHeader>
+      {input && form && (
+        <Form {...form}>
+          <form
+            onSubmit={
+              onSubmit != undefined ? form.handleSubmit(onSubmit) : undefined
+            }
+            className="space-y-8"
+          >
+            <CardContent>{input}</CardContent>
+            <CardFooter className="border-t px-6 py-4">{button}</CardFooter>
+          </form>
+        </Form>
+      )}
+
+      {!input && (
+        <CardFooter className="border-t px-6 py-4">{button}</CardFooter>
+      )}
+    </Card>
   );
 }
