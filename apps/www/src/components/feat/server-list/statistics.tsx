@@ -66,7 +66,17 @@ export function Statistics({
           </Tooltip>
         </strong>
         <span className="text-lg flex items-center gap-1">
-          {totalPlayers}
+          <span
+            className={
+              !averagesLoading && !error
+                ? (averages?.totalPlayerAverage as number) > totalPlayers
+                  ? "text-red-400"
+                  : "text-green-400"
+                : ""
+            }
+          >
+            {totalPlayers}
+          </span>
           <AnimatePresence>
             {!averagesLoading && !error && (
               <motion.span
@@ -99,7 +109,17 @@ export function Statistics({
           </Tooltip>
         </strong>
         <span className="text-lg flex items-center gap-1">
-          {totalServers}
+          <span
+            className={
+              !averagesLoading && !error
+                ? (averages?.totalServerAverage as number) > totalServers
+                  ? "text-red-400"
+                  : "text-green-400"
+                : ""
+            }
+          >
+            {totalServers}
+          </span>
           <AnimatePresence>
             {!averagesLoading && !error && (
               <motion.span
@@ -117,7 +137,7 @@ export function Statistics({
       </Material>
       <Material className="gap-2">
         <strong>Top Server</strong> <br />
-        <span className="text-lg">{topServer.name}</span>
+        <span className="text-lg"> {topServer.name}</span>
       </Material>
     </div>
   );
