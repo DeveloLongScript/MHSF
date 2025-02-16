@@ -6,7 +6,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import type { OnlineServer } from "@/lib/types/mh-server";
-import { ChartArea, InfoIcon } from "lucide-react";
+import { ChartArea, HardDriveUpload, InfoIcon, Users } from "lucide-react";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import IconDisplay from "../icons/minecraft-icon-display";
@@ -50,21 +50,24 @@ export function Statistics({
 
   return (
     <div className="grid grid-cols-3 gap-2">
-      <Material className="gap-2">
-        <strong className="flex items-center gap-1">
-          Total Players
-          <Tooltip>
-            <TooltipTrigger>
-              <InfoIcon size={14} />
-            </TooltipTrigger>
-            <TooltipContent>
-              For players, the first number represents the current amount of
-              <br />
-              players, while the second one represents the average of the last
-              <br />
-              100 entries of players.
-            </TooltipContent>
-          </Tooltip>
+      <Material className="gap-3">
+        <strong className="justify-between flex items-center">
+          <span className="flex items-center gap-1">
+            Total Players
+            <Tooltip>
+              <TooltipTrigger>
+                <InfoIcon size={14} />
+              </TooltipTrigger>
+              <TooltipContent>
+                For players, the first number represents the current amount of
+                <br />
+                players, while the second one represents the average of the last
+                <br />
+                100 entries of players.
+              </TooltipContent>
+            </Tooltip>
+          </span>
+          <Users size={16} className="text-muted-foreground" />
         </strong>
         <span className="text-lg flex items-center gap-1">
           <span
@@ -93,21 +96,31 @@ export function Statistics({
           {averagesLoading && <FormSpinner />}
         </span>
       </Material>
-      <Material className="gap-2">
-        <strong className="flex items-center gap-1">
-          Total Servers
-          <Tooltip>
-            <TooltipTrigger>
-              <InfoIcon size={14} />
-            </TooltipTrigger>
-            <TooltipContent>
-              For servers, the first number represents the current amount of
-              <br />
-              servers, while the second one represents the average of the last
-              <br />
-              100 entries of servers.
-            </TooltipContent>
-          </Tooltip>
+      <Material className="gap-3">
+        <strong className="justify-between flex items-center">
+          <span className="flex items-center gap-1">
+            Total Servers
+            <Tooltip>
+              <TooltipTrigger>
+                <InfoIcon size={14} />
+              </TooltipTrigger>
+              <TooltipContent className="max-w-[390px] break-words">
+                <p>
+                  For servers, the first number represents the current amount of
+                  servers, while the second one represents the average of the
+                  last 100 entries of servers.
+                </p>
+                <p className="mt-1">
+                  Minehut automatically puts new servers in a queue once the
+                  total amount of servers is near or at 3.5k for efficiency
+                  reasons. This usually happens during high demand times, most
+                  likely during the American summer, in the afternoon.
+                </p>
+              </TooltipContent>
+            </Tooltip>
+          </span>
+
+          <HardDriveUpload size={16} className="text-muted-foreground" />
         </strong>
         <span className="text-lg flex items-center gap-1">
           <span
@@ -136,7 +149,7 @@ export function Statistics({
           {averagesLoading && <FormSpinner />}
         </span>
       </Material>
-      <Material className="gap-2">
+      <Material className="gap-3">
         <strong className="justify-between flex items-center">
           Top Server <ChartArea size={16} className="text-muted-foreground" />
         </strong>{" "}
