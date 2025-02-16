@@ -112,9 +112,10 @@ export function Statistics({
                 </p>
                 <p className="mt-1">
                   Minehut automatically puts new servers in a queue once the
-                  total amount of servers is near or at 3.5k for efficiency
-                  reasons. This usually happens during high demand times, most
-                  likely during the American summer, in the afternoon.
+                  queue for the server plan (1,800 paid & 1,380 free = 3,180
+                  total) is hit for efficiency & economical reasons. This
+                  usually happens during high demand times, most likely during
+                  the American summer, in the afternoon.
                 </p>
               </TooltipContent>
             </Tooltip>
