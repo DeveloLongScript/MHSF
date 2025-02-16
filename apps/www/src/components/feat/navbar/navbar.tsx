@@ -1,5 +1,5 @@
 "use client";
-import { BrandingGenericIcon } from "@/components/icon";
+import { BrandingGenericIcon } from "@/components/feat/icons/branding-icons";
 import { version } from "@/config/version";
 import { useScroll } from "@/lib/hooks/use-scroll";
 import { cn } from "@/lib/utils";
