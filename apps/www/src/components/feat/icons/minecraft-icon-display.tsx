@@ -20,8 +20,7 @@ export default function IconDisplay(props: {
           <i
             className={cn(
               props.server.icon != null
-                ? `icon-minecraft icon-minecraft-
-                      ${props.server.icon.replaceAll("_", "-").toLowerCase()}`
+                ? `icon-minecraft icon-minecraft-${props.server.icon.replaceAll("_", "-").toLowerCase()}`
                 : "icon-minecraft icon-minecraft-oak-sign",
               props.className
             )}
@@ -62,8 +61,7 @@ export function IconDisplayClient(props: { server: string }) {
             <i
               className={cn(
                 icon != null
-                  ? `icon-minecraft icon-minecraft-
-                        ${icon.replaceAll("_", "-").toLowerCase()}`
+                  ? `icon-minecraft icon-minecraft-${icon.replaceAll("_", "-").toLowerCase()}`
                   : "icon-minecraft icon-minecraft-oak-sign",
                 "w-[16px] h-[16px]"
               )}

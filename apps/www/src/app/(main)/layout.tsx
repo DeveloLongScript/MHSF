@@ -39,6 +39,7 @@ import { Button } from "@/components/ui/button";
 import { ClerkProvider } from "@clerk/nextjs";
 import Link from "next/link";
 import { NavBar } from "@/components/feat/navbar/navbar";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -54,23 +55,25 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en">
         <body className={inter.className}>
-          <noscript>
-            <main className="flex justify-center items-center text-center min-h-screen h-max">
-              <Placeholder
-                icon={<X />}
-                title="JavaScript is required for MHSF"
-                description="MHSF cannot grab servers or do other external requests without JavaScript."
-              >
-                <Link href="https://www.enable-javascript.com/">
-                  <Button>Here's how</Button>
-                </Link>
-              </Placeholder>
-            </main>
-          </noscript>
-          <IsScript>
-            <NavBar />
-            <div className="pt-16">{children}</div>
-          </IsScript>
+          <TooltipProvider>
+            <noscript>
+              <main className="flex justify-center items-center text-center min-h-screen h-max">
+                <Placeholder
+                  icon={<X />}
+                  title="JavaScript is required for MHSF"
+                  description="MHSF cannot grab servers or do other external requests without JavaScript."
+                >
+                  <Link href="https://www.enable-javascript.com/">
+                    <Button>Here's how</Button>
+                  </Link>
+                </Placeholder>
+              </main>
+            </noscript>
+            <IsScript>
+              <NavBar />
+              <div className="pt-16">{children}</div>
+            </IsScript>
+          </TooltipProvider>
         </body>
       </html>
     </ClerkProvider>

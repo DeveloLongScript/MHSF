@@ -189,7 +189,7 @@ export function BrandingPrideIcon(props: SVGProps<SVGSVGElement>) {
 export function BrandingGenericIcon(props: SVGProps<SVGSVGElement>) {
   const { resolvedTheme } = useTheme();
 
-  if (resolvedTheme == "dark") {
+  if (resolvedTheme === "dark") {
     return (
       <svg
         width="265"
