@@ -6,9 +6,10 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import type { OnlineServer } from "@/lib/types/mh-server";
-import { InfoIcon } from "lucide-react";
+import { ChartArea, InfoIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import IconDisplay from "../icons/minecraft-icon-display";
 
 export function Statistics({
   totalPlayers,
@@ -70,8 +71,8 @@ export function Statistics({
             className={
               !averagesLoading && !error
                 ? (averages?.totalPlayerAverage as number) > totalPlayers
-                  ? "text-red-400"
-                  : "text-green-400"
+                  ? "text-rose-400"
+                  : "text-lime-400"
                 : ""
             }
           >
@@ -113,8 +114,8 @@ export function Statistics({
             className={
               !averagesLoading && !error
                 ? (averages?.totalServerAverage as number) > totalServers
-                  ? "text-red-400"
-                  : "text-green-400"
+                  ? "text-rose-400"
+                  : "text-lime-400"
                 : ""
             }
           >
@@ -136,8 +137,13 @@ export function Statistics({
         </span>
       </Material>
       <Material className="gap-2">
-        <strong>Top Server</strong> <br />
-        <span className="text-lg"> {topServer.name}</span>
+        <strong className="justify-between flex items-center">
+          Top Server <ChartArea size={16} className="text-muted-foreground" />
+        </strong>{" "}
+        <span className="text-lg gap-2 flex items-center">
+          {topServer.name}
+          <IconDisplay server={topServer} />
+        </span>
       </Material>
     </div>
   );

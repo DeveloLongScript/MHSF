@@ -40,6 +40,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import Link from "next/link";
 import { NavBar } from "@/components/feat/navbar/navbar";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { ThemeProvider } from "@/components/util/theme-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -70,8 +71,15 @@ export default function RootLayout({
               </main>
             </noscript>
             <IsScript>
-              <NavBar />
-              <div className="pt-16">{children}</div>
+              <ThemeProvider
+                attribute="class"
+                defaultTheme="system"
+                enableSystem
+                disableTransitionOnChange
+              >
+                <NavBar />
+                <div className="pt-16">{children}</div>
+              </ThemeProvider>
             </IsScript>
           </TooltipProvider>
         </body>
