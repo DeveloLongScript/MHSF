@@ -4,9 +4,13 @@ import { useServers } from "@/lib/hooks/use-servers";
 import ServerCard from "./server-card";
 import { Separator } from "@/components/ui/separator";
 import { Statistics } from "./statistics";
+import InfiniteScroll from "react-infinite-scroll-component";
+import { useInfiniteScrolling } from "@/lib/hooks/use-infinite-scrolling";
 
 export function ServerList() {
   const { servers, loading, serverCount, playerCount } = useServers();
+  const { itemsLength, fetchMoreData, hasMoreData, data } =
+    useInfiniteScrolling(servers);
 
   if (loading)
     return (
@@ -29,11 +33,18 @@ export function ServerList() {
       <h1 className="scroll-m-20 text-2xl font-extrabold tracking-tight lg:text-4xl">
         Servers
       </h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 mt-3">
-        {servers.map((c) => (
-          <ServerCard server={c} key={c.name} />
-        ))}
-      </div>
+      <InfiniteScroll
+        dataLength={itemsLength}
+        next={fetchMoreData}
+        hasMore={hasMoreData}
+        loader={<>Loading...</>}
+      >
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 mt-3">
+          {data.map((c) => (
+            <ServerCard server={c} key={c.name} />
+          ))}
+        </div>
+      </InfiniteScroll>
     </main>
   );
 }

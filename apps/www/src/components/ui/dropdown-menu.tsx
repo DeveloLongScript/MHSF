@@ -65,7 +65,7 @@ const DropdownMenuContent = React.forwardRef<
     <DropdownMenuPrimitive.Content
       ref={ref}
       className={cn(
-        "backdrop-blur-xl w-max z-[100] max-w-[280px] origin-top-left max-h-[32rem] overflow-auto list-none shadow-xl rounded-xl",
+        "backdrop-blur-xl w-max z-[100] max-w-[280px] origin-top-left max-h-[32rem] overflow-auto list-none shadow-xl rounded-xl select-none outline-none",
         className
       )}
       {...props}
@@ -96,7 +96,7 @@ const DropdownMenuItem = React.forwardRef<
   <DropdownMenuPrimitive.Item
     ref={ref}
     className={cn(
-      "w-full px-2 rounded-lg z-[100] min-h-[36px] font-normal flex items-center cursor-pointer hover:dark:bg-zinc-800/70",
+      "w-full px-2 rounded-lg z-[100] outline-none min-h-[36px] font-normal flex items-center cursor-pointer hover:dark:bg-zinc-800/70",
       props.disabled ? "opacity-70 pointer-events-none cursor-not-allowed" : "",
       "duration-100 border border-transparent bg-transparent hover:bg-slate-100 dark:text-zinc-200",
       className
@@ -176,9 +176,15 @@ const DropdownMenuSeparator = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DropdownMenuPrimitive.Separator
     ref={ref}
-    className={cn("-mx-1 my-1 h-px bg-muted", className)}
+    className={cn(
+      "text-slate-800 dark:text-zinc-200 text-xs font-medium py-2 px-2 flex items-center gap-1",
+      className
+    )}
     {...props}
-  />
+  >
+    <div>{props.children}</div>
+    <hr className="flex-shrink flex-1 border-slate-200 dark:border-zinc-800 border-opacity-70" />
+  </DropdownMenuPrimitive.Separator>
 ));
 DropdownMenuSeparator.displayName = DropdownMenuPrimitive.Separator.displayName;
 
