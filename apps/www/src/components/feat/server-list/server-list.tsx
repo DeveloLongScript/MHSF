@@ -37,7 +37,11 @@ export function ServerList() {
         dataLength={itemsLength}
         next={fetchMoreData}
         hasMore={hasMoreData}
-        loader={<>Loading...</>}
+        loader={
+          <span className="mt-2 left-[50%] right-[50%] absolute">
+            <Spinner />
+          </span>
+        }
       >
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 mt-3">
           {data.map((c) => (
