@@ -14,12 +14,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Github from "@/components/ui/github";
-import { ALegacy } from "@/components/util/link";
+import { Link } from "@/components/util/link";
 import { version } from "@/config/version";
 import { useScroll } from "@/lib/hooks/use-scroll";
 import { cn } from "@/lib/utils";
 import { Menu, ServerCrash } from "lucide-react";
-import Link from "next/link";
 import { MenuDropdown } from "./menu-dropdown";
 
 export function NavBar() {
@@ -47,28 +46,28 @@ export function NavBar() {
             </Link>
           </ContextMenuTrigger>
           <ContextMenuContent className="overflow-hidden min-w-[300px]">
-            <ALegacy href="Special:Root">
+            <Link href="Special:Root">
               <ContextMenuItem>
                 <span className="pl-2 flex gap-2 items-center">
                   <ServerCrash size={16} /> Go home
                 </span>
               </ContextMenuItem>
-            </ALegacy>
+            </Link>
             <ContextMenuSeparator />
-            <ALegacy href="Special:GitHub">
+            <Link href="Special:GitHub">
               <ContextMenuItem>
                 <span className="pl-2 flex gap-2 items-center">
                   <Github /> Open GitHub
                 </span>
               </ContextMenuItem>
-            </ALegacy>
-            <ALegacy href="Special:GitHub/releases">
+            </Link>
+            <Link href="Special:GitHub/releases">
               <ContextMenuItem>
                 <span className="pl-2 flex gap-2 items-center">
                   <Github /> Open GitHub Releases
                 </span>
               </ContextMenuItem>
-            </ALegacy>
+            </Link>
           </ContextMenuContent>
         </ContextMenu>
       </span>

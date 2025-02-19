@@ -1,9 +1,14 @@
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
+import Github from "@/components/ui/github";
+import { Link } from "@/components/util/link";
+import { version } from "@/config/version";
 import { SignedIn, SignedOut, useClerk } from "@clerk/nextjs";
-import { LogIn, Settings, Ship, User, UserCog } from "lucide-react";
+import { LogIn, LogOut, Settings, Ship, User, UserCog } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export function MenuDropdown() {
@@ -51,14 +56,44 @@ export function MenuDropdown() {
             User Settings
           </span>
         </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => clerk.signOut()}>
+          <span className="flex items-center gap-2 text-red-500">
+            <LogOut size={16} />
+            Sign out
+          </span>
+        </DropdownMenuItem>
       </SignedIn>
       <DropdownMenuSeparator>App</DropdownMenuSeparator>
-      <DropdownMenuItem>
-        <span className="flex items-center gap-2">
-          <Settings size={16} />
-          Settings
-        </span>
-      </DropdownMenuItem>
+      <Link href="/settings">
+        <DropdownMenuItem>
+          <span className="flex items-center gap-2">
+            <Settings size={16} />
+            Settings
+          </span>
+        </DropdownMenuItem>
+      </Link>
+      <DropdownMenuSeparator />
+      <li className="flex flex-col px-2 py-1 mx-auto my-1 text-xs w-full">
+        <div className="flex flex-row gap-2 w-full items-center">
+          <div className="flex-1">
+            <button
+              className="hover:brightness-110 transition-all"
+              type="button"
+            >
+              <Badge variant="blue-subtle">v{version}</Badge>
+            </button>
+          </div>
+          <Link href="Special:GitHub">
+            <Button
+              variant="tertiary"
+              className="flex items-center"
+              size="square-lg"
+            >
+              <Github />
+            </Button>
+          </Link>
+        </div>
+      </li>
     </>
   );
 }

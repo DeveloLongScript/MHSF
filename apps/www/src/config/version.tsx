@@ -29,10 +29,9 @@
  */
 
 "use client";
-import A from "@/components/util/link";
+import { Link } from "@/components/util/link";
 import { Button } from "@/components/ui/button";
 import Github from "@/components/ui/github";
-import Link from "next/link";
 import type { ReactNode } from "react";
 
 const User = ({ user }: { user: string }) => (
@@ -238,9 +237,9 @@ export const changelog: { name: string; id: string; changelog: ReactNode }[] = [
           <li>• Minor backend changes</li>
           <li>
             •{" "}
-            <A alt="Please check on GitHub for statuses about this project.">
-              Special:GitHub/releases/tag/1.3.2
-            </A>
+            <Link href="Special:GitHub/releases/tag/1.3.2">
+              Please check on GitHub for statuses about this project.
+            </Link>
           </li>
         </ul>
       </div>
@@ -256,11 +255,11 @@ export const changelog: { name: string; id: string; changelog: ReactNode }[] = [
         </strong>
         <ul>
           <li>
-            • <A alt="New documentation linking">Docs:Reading</A>
+            • <Link href="Docs:Reading">New documentation linking</Link>
           </li>
           <li>
             • Achievements are here! See more at{" "}
-            <A alt="here">Docs:Advanced/Achievements</A>
+            <Link href="Docs:Advanced/Achievements">here</Link>
           </li>
           <li>• Finally fixed Cron actions for the final time™</li>
           <li>• Overhauled account preferences</li>
