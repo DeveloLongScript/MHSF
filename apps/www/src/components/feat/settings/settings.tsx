@@ -16,7 +16,7 @@ export function Settings() {
       <h1 className="scroll-m-20 text-2xl font-extrabold tracking-tight lg:text-4xl mb-3">
         Settings
       </h1>
-      <Tabs defaultValue="account" className="mt-3">
+      <Tabs defaultValue="browser-settings" className="mt-3">
         <TabsList>
           <TabsTrigger
             value="browser-settings"
@@ -47,10 +47,10 @@ export function Settings() {
         </TabsContent>
         <TabsContent value="user-settings">
           <SignedOut>
-            <Material className="mt-6 grid gap-4">
+            <Material className="mt-6 grid gap-4 py-6">
               <h3
                 className={cn(
-                  "scroll-m-20 text-2xl font-semibold tracking-tight bg-gradient-to-r from-[#3b82f6] to-[#ef4444] bg-clip-text text-transparent",
+                  "scroll-m-20 text-2xl font-semibold tracking-tight bg-linear-to-r from-[#3b82f6] to-[#ef4444] bg-clip-text text-transparent",
                   "w-full flex items-center text-center justify-center"
                 )}
               >

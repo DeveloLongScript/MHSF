@@ -31,6 +31,8 @@
 "use client";
 import "./globals.css";
 import { useSearchParams } from "next/navigation";
+import { ThemeProvider } from "@/components/util/theme-provider";
+import { ClerkProvider } from "@/components/util/clerk-provider";
 import { Inter } from "next/font/google";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -45,7 +47,17 @@ export default function RootLayout({
 
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <noscript>{children}</noscript>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <ClerkProvider>{children}</ClerkProvider>
+        </ThemeProvider>
+      </body>
     </html>
   );
 }

@@ -1,9 +1,142 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-body {
-  font-family: Arial, Helvetica, sans-serif;
+@plugin 'tailwindcss-animate';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --animate-spin: spin 1s linear infinite;
+  --animate-scale-in: scaleIn 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+
+  --color-shadcn-primary: hsl(var(--primary));
+  --color-shadcn-primary-foreground: hsl(var(--primary-foreground));
+
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+
+  --color-slate-25: rgb(var(--c-s-25, 252 253 254));
+  --color-slate-50: rgb(var(--c-s-50, 248 250 252));
+  --color-slate-100: rgb(var(--c-s-100, 241 245 249));
+  --color-slate-200: rgb(var(--c-s-200, 226 232 240));
+  --color-slate-300: rgb(var(--c-s-300, 203 213 225));
+  --color-slate-400: rgb(var(--c-s-400, 148 163 184));
+  --color-slate-500: rgb(var(--c-s-500, 100 116 139));
+  --color-slate-600: rgb(var(--c-s-600, 71 85 105));
+  --color-slate-700: rgb(var(--c-s-700, 51 65 85));
+  --color-slate-800: rgb(var(--c-s-800, 30 41 59));
+  --color-slate-900: rgb(var(--c-s-900, 15 23 42));
+  --color-slate-950: rgb(var(--c-s-950, 2 6 23));
+
+  --color-zinc-50: rgb(var(--c-z-50, 249 250 251));
+  --color-zinc-100: rgb(var(--c-z-100, 243 244 246));
+  --color-zinc-200: rgb(var(--c-z-200, 229 231 235));
+  --color-zinc-300: rgb(var(--c-z-300, 209 213 219));
+  --color-zinc-400: rgb(var(--c-z-400, 156 163 175));
+  --color-zinc-500: rgb(var(--c-z-500, 107 114 128));
+  --color-zinc-600: rgb(var(--c-z-600, 75 85 99));
+  --color-zinc-700: rgb(var(--c-z-700, 50 60 76));
+  --color-zinc-800: rgb(var(--c-z-800, 22 31 45));
+  --color-zinc-900: rgb(var(--c-z-900, 17 24 39));
+  --color-zinc-925: rgb(var(--c-z-925, 8 12 25));
+  --color-zinc-950: rgb(var(--c-z-950, 5 9 16));
+
+  --color-primary-100: rgb(var(--c-p-100, 241 245 249));
+  --color-primary-900: rgb(var(--c-p-900, 15 23 42));
+
+  --color-black: rgb(var(--c-o-black, 0 0 0));
+  --color-white: rgb(var(--c-o-white, 255 255 255));
+
+  --color-sidebar: hsl(var(--sidebar-background));
+  --color-sidebar-foreground: hsl(var(--sidebar-foreground));
+  --color-sidebar-primary: hsl(var(--sidebar-primary));
+  --color-sidebar-primary-foreground: hsl(var(--sidebar-primary-foreground));
+  --color-sidebar-accent: hsl(var(--sidebar-accent));
+  --color-sidebar-accent-foreground: hsl(var(--sidebar-accent-foreground));
+  --color-sidebar-border: hsl(var(--sidebar-border));
+  --color-sidebar-ring: hsl(var(--sidebar-ring));
+
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  @keyframes scaleIn {
+    0% {
+      transform: scale(0.95);
+      opacity: 0;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+}
+
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+}
+
+@layer utilities {
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+  }
+}
+
+.system-ui-font--font-boundary {
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    "Open Sans",
+    "Helvetica Neue",
+    sans-serif;
 }
 
 @layer base {
@@ -93,8 +226,10 @@ body {
   }
 }
 
-body {
-  @apply bg-slate-50 text-slate-900 dark:bg-zinc-950 dark:text-zinc-100 accent-slate-950 dark:accent-zinc-50;
+@layer utilities {
+  body {
+    @apply bg-slate-50 text-slate-900 dark:bg-zinc-950 dark:text-zinc-100 accent-slate-950 dark:accent-zinc-50;
+  }
 }
 
 @layer base {
@@ -104,6 +239,29 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+}
+
+.cl-headerTitle {
+  @apply bg-linear-to-r from-[#3b82f6] to-[#ef4444] bg-clip-text text-transparent;
+}
+
+.cl-socialButtonsBlockButtonText__discord {
+  @apply text-[#5865f2];
+}
+
+.cl-socialButtonsBlockButtonText__github {
+  @apply text-black dark:text-white;
+}
+
+.cl-footer {
+  background: white !important;
+  &:is(.dark *) {
+    background: #1e1e24 !important;
+  }
+}
+
+.cl-card {
+  box-shadow: none !important;
 }
 
 @layer base {

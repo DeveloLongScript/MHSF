@@ -31,18 +31,16 @@
 "use client";
 import "../globals.css";
 import { useSearchParams } from "next/navigation";
-import { Inter } from "next/font/google";
 import { Placeholder } from "@/components/ui/placeholder";
 import { X } from "lucide-react";
 import { IsScript } from "@/components/util/is-script";
 import { Button } from "@/components/ui/button";
-import { ClerkProvider } from "@clerk/nextjs";
 import Link from "next/link";
 import { NavBar } from "@/components/feat/navbar/navbar";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/util/theme-provider";
-
-const inter = Inter({ subsets: ["latin"] });
+import { FontBoundary } from "@/components/util/font-boundary";
+import { ClerkProvider } from "@/components/util/clerk-provider";
 
 export default function RootLayout({
   children,
@@ -53,37 +51,37 @@ export default function RootLayout({
   const search = searchParams?.get("theme") || "light";
 
   return (
-    <ClerkProvider>
-      <html lang="en">
-        <body className={inter.className}>
+    <html lang="en">
+      <noscript>
+        <main className="flex justify-center items-center text-center min-h-screen h-max">
+          <Placeholder
+            icon={<X />}
+            title="JavaScript is required for MHSF"
+            description="MHSF cannot grab servers or do other external requests without JavaScript."
+          >
+            <Link href="https://www.enable-javascript.com/">
+              <Button>Here's how</Button>
+            </Link>
+          </Placeholder>
+        </main>
+      </noscript>
+      <IsScript>
+        <FontBoundary>
           <TooltipProvider>
-            <noscript>
-              <main className="flex justify-center items-center text-center min-h-screen h-max">
-                <Placeholder
-                  icon={<X />}
-                  title="JavaScript is required for MHSF"
-                  description="MHSF cannot grab servers or do other external requests without JavaScript."
-                >
-                  <Link href="https://www.enable-javascript.com/">
-                    <Button>Here's how</Button>
-                  </Link>
-                </Placeholder>
-              </main>
-            </noscript>
-            <IsScript>
-              <ThemeProvider
-                attribute="class"
-                defaultTheme="system"
-                enableSystem
-                disableTransitionOnChange
-              >
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <ClerkProvider>
                 <NavBar />
                 <div className="pt-16">{children}</div>
-              </ThemeProvider>
-            </IsScript>
+              </ClerkProvider>
+            </ThemeProvider>
           </TooltipProvider>
-        </body>
-      </html>
-    </ClerkProvider>
+        </FontBoundary>
+      </IsScript>
+    </html>
   );
 }

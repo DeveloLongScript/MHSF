@@ -21,7 +21,7 @@ const DialogOverlay = React.forwardRef<
   <DialogPrimitive.Overlay ref={ref} asChild {...props}>
     <motion.div
       className={cn(
-        "fixed bg-[#ffffff]/50 dark:bg-black/50 inset-0 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+        "fixed bg-[#ffffff]/50 dark:bg-black/50 inset-0 backdrop-blur-xs data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
         className
       )}
       initial={{ opacity: 0 }}
@@ -65,7 +65,7 @@ const DialogContent = React.forwardRef<
         ref={ref}
         {...props}
         className={cn(
-          "top-[50%] left-[50%] max-h-[85vh] translate-x-[-50%] translate-y-[-50%] focus:outline-none",
+          "top-[50%] left-[50%] max-h-[85vh] translate-x-[-50%] translate-y-[-50%] focus:outline-hidden",
           "w-full border border-slate-200 border-b-slate-300",
           "dark:border-zinc-900 dark:border-t-zinc-800 dark:border-b-zinc-900",
           "rounded-2xl max-w-lg box-border mx-auto overscroll-contain shadow-lg overflow-auto",

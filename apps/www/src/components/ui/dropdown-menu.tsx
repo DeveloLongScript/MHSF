@@ -28,7 +28,7 @@ const DropdownMenuSubTrigger = React.forwardRef<
   <DropdownMenuPrimitive.SubTrigger
     ref={ref}
     className={cn(
-      "flex cursor-default gap-2 select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none focus:bg-accent data-[state=open]:bg-accent [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+      "flex cursor-default gap-2 select-none items-center rounded-sm px-2 py-1.5 text-sm outline-hidden focus:bg-accent data-[state=open]:bg-accent [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
       inset && "pl-8",
       className
     )}
@@ -65,7 +65,7 @@ const DropdownMenuContent = React.forwardRef<
     <DropdownMenuPrimitive.Content
       ref={ref}
       className={cn(
-        "backdrop-blur-xl w-max z-[100] max-w-[280px] origin-top-left max-h-[32rem] overflow-auto list-none shadow-xl rounded-xl select-none outline-none",
+        "backdrop-blur-xl w-max z-100 max-w-[280px] origin-top-left max-h-[32rem] overflow-auto list-none shadow-xl rounded-xl select-none outline-hidden",
         className
       )}
       {...props}
@@ -96,7 +96,7 @@ const DropdownMenuItem = React.forwardRef<
   <DropdownMenuPrimitive.Item
     ref={ref}
     className={cn(
-      "w-full px-2 rounded-lg z-[100] outline-none min-h-[36px] font-normal flex items-center cursor-pointer hover:dark:bg-zinc-800/70",
+      "w-full px-2 rounded-lg z-100 outline-hidden min-h-[36px] font-normal flex items-center cursor-pointer dark:hover:bg-zinc-800/70",
       props.disabled ? "opacity-70 pointer-events-none cursor-not-allowed" : "",
       "duration-100 border border-transparent bg-transparent hover:bg-slate-100 dark:text-zinc-200",
       className
@@ -113,7 +113,7 @@ const DropdownMenuCheckboxItem = React.forwardRef<
   <DropdownMenuPrimitive.CheckboxItem
     ref={ref}
     className={cn(
-      "relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+      "relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-hidden transition-colors focus:bg-accent focus:text-accent-foreground data-disabled:pointer-events-none data-disabled:opacity-50",
       className
     )}
     checked={checked}
@@ -137,7 +137,7 @@ const DropdownMenuRadioItem = React.forwardRef<
   <DropdownMenuPrimitive.RadioItem
     ref={ref}
     className={cn(
-      "relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+      "relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-hidden transition-colors focus:bg-accent focus:text-accent-foreground data-disabled:pointer-events-none data-disabled:opacity-50",
       className
     )}
     {...props}
@@ -183,7 +183,7 @@ const DropdownMenuSeparator = React.forwardRef<
     {...props}
   >
     <div>{props.children}</div>
-    <hr className="flex-shrink flex-1 border-slate-200 dark:border-zinc-800 border-opacity-70" />
+    <hr className="shrink flex-1 border-slate-200 dark:border-zinc-800 border-opacity-70" />
   </DropdownMenuPrimitive.Separator>
 ));
 DropdownMenuSeparator.displayName = DropdownMenuPrimitive.Separator.displayName;

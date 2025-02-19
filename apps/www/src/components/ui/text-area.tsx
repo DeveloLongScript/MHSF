@@ -65,7 +65,7 @@ const TextArea: React.FC<TextAreaProps> = ({
           value={value}
           onChange={(e) => restProps.onChange?.(e)}
           ref={elementRef}
-          className={`${sizeClass[size]} ${borderClass} focus:border-slate-800 focus:dark:border-zinc-200 bg-white dark:bg-zinc-950 focus:outline-none focus:ring-2 ring-slate-800/50 rounded-xl dark:ring-zinc-200/50 transition-all text-sm w-full disabled:bg-slate-100 disabled:cursor-not-allowed invalid:!border-red-500 peer invalid:text-red-500 z-10 ${className}`}
+          className={`${sizeClass[size]} ${borderClass} focus:border-slate-800 dark:focus:border-zinc-200 bg-white dark:bg-zinc-950 focus:outline-hidden focus:ring-2 ring-slate-800/50 rounded-xl dark:ring-zinc-200/50 transition-all text-sm w-full disabled:bg-slate-100 disabled:cursor-not-allowed invalid:border-red-500! peer invalid:text-red-500 z-10 ${className}`}
         />
       </div>
       {restProps.children}

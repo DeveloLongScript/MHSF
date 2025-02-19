@@ -7,8 +7,8 @@ const cardVariants = cva("text-sm", {
   variants: {
     elevation: {
       flat: "",
-      low: "shadow-xs",
-      medium: "shadow-sm",
+      low: "shadow-2xs",
+      medium: "shadow-xs",
       high: "shadow-md",
       xhigh: "shadow-lg",
       max: "shadow-xl",

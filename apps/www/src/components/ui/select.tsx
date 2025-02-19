@@ -20,11 +20,11 @@ const SelectTrigger = React.forwardRef<
     ref={ref}
     className={cn(
       // Select Specific
-      "appearance-none transition-colors rounded-lg text-sm w-full min-w-full cursor-pointer px-3",
+      "appearance-none transition-colors rounded-lg text-sm w-full cursor-pointer px-3",
       "flex items-center h-9 justify-between",
       // Secondary Button Props
       "border border-slate-200 border-b-slate-300 dark:border-zinc-800 dark:border-t-zinc-700/50 bg-white dark:bg-zinc-900",
-      "hover:bg-slate-100 hover:dark:bg-zinc-800 hover:dark:border-zinc-700  active:dark:bg-zinc-900 active:bg-slate-200",
+      "hover:bg-slate-100 dark:hover:bg-zinc-800 dark:hover:border-zinc-700  dark:active:bg-zinc-900 active:bg-slate-200",
       className
     )}
     {...props}
@@ -133,8 +133,8 @@ const SelectItem = React.forwardRef<
     ref={ref}
     {...props}
     className={cn(
-      "relative flex w-full select-none items-center data-[state=checked]:!bg-slate-100 data-[state=checked]:dark:!bg-zinc-800 rounded-lg py-1.5 pl-2 pr-8 text-sm outline-none focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
-      "w-full px-2 rounded-lg cursor-pointer min-h-[36px] font-normal flex items-center hover:dark:bg-zinc-800/70 hover:bg-slate-100",
+      "relative flex w-full select-none items-center data-[state=checked]:bg-slate-100! dark:data-[state=checked]:bg-zinc-800! rounded-lg py-1.5 pl-2 pr-8 text-sm outline-hidden focus:text-accent-foreground data-disabled:pointer-events-none data-disabled:opacity-50",
+      "w-full px-2 rounded-lg cursor-pointer min-h-[36px] font-normal flex items-center dark:hover:bg-zinc-800/70 hover:bg-slate-100",
       disabled ? "opacity-70 pointer-events-none cursor-not-allowed" : "",
       "duration-100",
       className

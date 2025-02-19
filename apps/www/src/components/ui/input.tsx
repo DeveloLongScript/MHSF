@@ -14,7 +14,7 @@ const sizeClass = {
 };
 
 const shadowClass = {
-  sm: "shadow-sm",
+  sm: "shadow-xs",
   none: "shadow-none",
 };
 
@@ -63,7 +63,7 @@ const Input: React.FC<InputWithLabelProps> = ({
         </Label>
       )}
       <div
-        className={`${shadowClass[shadow]} border ${borderClass} focus-within:border-primary-900 focus-within:dark:border-primary-100 focus-within:ring-2 ring-slate-300 dark:ring-zinc-700 transition-colors rounded-lg flex flex-row items-center text-sm ${className}`}
+        className={`${shadowClass[shadow-sm]} border ${borderClass} focus-within:border-primary-900 dark:focus-within:border-primary-100 focus-within:ring-2 ring-slate-300 dark:ring-zinc-700 transition-colors rounded-lg flex flex-row items-center text-sm ${className}`}
       >
         {prefix && (
           <div
@@ -79,7 +79,7 @@ const Input: React.FC<InputWithLabelProps> = ({
           disabled={disabled}
           value={value}
           onChange={onChange}
-          className={`${sizeClass[size]} bg-white dark:bg-zinc-950 focus:outline-none rounded-lg text-sm w-full disabled:bg-slate-100 disabled:cursor-not-allowed invalid:!border-red-500 peer invalid:text-red-500 z-10 ${className}`}
+          className={`${sizeClass[size]} bg-white dark:bg-zinc-950 focus:outline-hidden rounded-lg text-sm w-full disabled:bg-slate-100 disabled:cursor-not-allowed invalid:border-red-500! peer invalid:text-red-500 z-10 ${className}`}
         />
         {suffix && (
           <div

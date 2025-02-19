@@ -30,52 +30,41 @@
 
 import type { NextApiRequest, NextApiResponse } from "next";
 import { clerkClient, getAuth } from "@clerk/nextjs/server";
+import z from "zod";
+
+const obj = z.object({
+	// Use padding on the sides of only the servers, not the whole server list
+	srv: z.boolean(),
+	// Items per row (4-6 rows)
+	ipr: z.number().min(4).max(6),
+	// Padding of server list (0-120px)
+	pad: z.number().min(0).max(120),
+});
 
 export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
+	req: NextApiRequest,
+	res: NextApiResponse,
 ) {
-  const { userId } = getAuth(req);
+	const { userId } = getAuth(req);
 
-  if (!userId) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
-  const { data } = req.body;
+	if (!userId) {
+		return res.status(401).json({ error: "Unauthorized" });
+	}
+	const { data } = req.body;
 
-  if (data === undefined) {
-    res.status(400).send({ message: "Couldn't find data" });
-    return;
-  }
-  const { type } = req.body;
+	if (data === undefined) {
+		res.status(400).send({ message: "Couldn't find data" });
+		return;
+	}
 
-  if (type === undefined) {
-    res.status(400).send({ message: "Couldn't find data" });
-    return;
-  }
-  if (data === null) {
-    await (
-      await clerkClient()
-    ).users.updateUserMetadata(userId, {
-      publicMetadata: { [type]: null },
-    });
-    res.status(200).send({ message: "Success" });
-  }
-  if (type !== "srv" && type !== "ipr" && type !== "pad")
-    return res.status(400).send({ message: "Couldn't find data" });
+	const v = obj.parse(data);
+	for (const [key, value] of Object.entries(v)) {
+		(await clerkClient()).users.updateUserMetadata(userId, {
+			publicMetadata: {
+				[key]: typeof value === "number" ? value.toString() : value,
+			},
+		});
+	}
 
-  if (type === "srv" && typeof data !== "boolean")
-    return res.status(400).send({ message: "Couldn't find data" });
-
-  if (type === "ipr" && typeof data !== "number")
-    return res.status(400).send({ message: "Couldn't find data" });
-
-  if (type === "pad" && typeof data !== "number")
-    return res.status(400).send({ message: "Couldn't find data" });
-
-  (await clerkClient()).users.updateUserMetadata(userId, {
-    publicMetadata: {
-      [type]: typeof data === "number" ? data.toString() : data,
-    },
-  });
-  res.status(200).send({ message: "Success" });
+	res.status(200).send({ message: "Success" });
 }

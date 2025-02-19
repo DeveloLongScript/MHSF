@@ -90,9 +90,9 @@ export default function Embed({ params }: { params: { server: string } }) {
       >
         <ServerCrash
           size={16}
-          className="group-hover:text-white p-[4px] group-hover:p-[3px] w-[24px] h-[24px] transition-all bg-gradient-to-r group-hover:from-blue-600 group-hover:to-purple-500 group-hover:rounded"
+          className="group-hover:text-white p-[4px] group-hover:p-[3px] w-[24px] h-[24px] transition-all bg-linear-to-r group-hover:from-blue-600 group-hover:to-purple-500 group-hover:rounded"
         />
-        <span className="transition-colors ml-2 group-hover:bg-clip-text group-hover:text-transparent bg-gradient-to-r group-hover:from-blue-600 group-hover:to-purple-500">
+        <span className="transition-colors ml-2 group-hover:bg-clip-text group-hover:text-transparent bg-linear-to-r group-hover:from-blue-600 group-hover:to-purple-500">
           Powered by MHSF
         </span>
       </Link>

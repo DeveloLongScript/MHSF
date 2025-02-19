@@ -4,6 +4,7 @@ import { Book, ExternalLink, NotebookText } from "lucide-react";
 export function Link(
   props: LinkProps & {
     children?: React.ReactNode;
+    className?: string;
   }
 ) {
   const href = props.href as string;
