@@ -41,6 +41,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/util/theme-provider";
 import { FontBoundary } from "@/components/util/font-boundary";
 import { ClerkProvider } from "@/components/util/clerk-provider";
+import { Toaster } from "sonner";
 
 export default function RootLayout({
   children,
@@ -65,23 +66,26 @@ export default function RootLayout({
           </Placeholder>
         </main>
       </noscript>
-      <IsScript>
-        <FontBoundary>
-          <TooltipProvider>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange
-            >
-              <ClerkProvider>
-                <NavBar />
-                <div className="pt-16">{children}</div>
-              </ClerkProvider>
-            </ThemeProvider>
-          </TooltipProvider>
-        </FontBoundary>
-      </IsScript>
+      <ThemeProvider
+        attribute="class"
+        defaultTheme="system"
+        enableSystem
+        disableTransitionOnChange
+      >
+        <ClerkProvider>
+          <IsScript>
+            <FontBoundary>
+              <TooltipProvider>
+                <Toaster richColors position="top-center" />
+                <ClerkProvider>
+                  <NavBar />
+                  <div className="pt-16">{children}</div>
+                </ClerkProvider>
+              </TooltipProvider>
+            </FontBoundary>
+          </IsScript>
+        </ClerkProvider>
+      </ThemeProvider>
     </html>
   );
 }

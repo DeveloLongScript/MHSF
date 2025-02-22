@@ -29,17 +29,24 @@
  */
 
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-const isProtectedRoute = createRouteMatcher(["/account(.*)"]);
-const isEmbed = createRouteMatcher(["/emebed(.*)"]);
+// Thanks for the router matcher API Clerk <3
+const isRootRoute = createRouteMatcher(["/"]);
 
 export default process.env.NEXT_PUBLIC_IS_AUTH === "true"
-  ? clerkMiddleware((auth, req) => {
-      if (isProtectedRoute(req)) auth.protect();
-    })
-  : (request: NextRequest) => {};
+	? clerkMiddleware(async (auth, req) => {
+			if (isRootRoute(req)) {
+				switch ((await auth()).userId === null) {
+					case false:
+						return NextResponse.redirect(new URL("/servers", req.url));
+					case true:
+						return NextResponse.redirect(new URL("/home", req.url));
+				}
+			}
+		})
+	: (request: NextRequest) => {};
 
 export const config = {
-  matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc)(.*)"],
+	matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc)(.*)"],
 };

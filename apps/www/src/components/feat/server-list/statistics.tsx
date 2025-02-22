@@ -49,7 +49,7 @@ export function Statistics({
   }, []);
 
   return (
-    <div className="grid grid-cols-3 gap-2">
+    <div className="md:grid grid-cols-3 gap-2">
       <Material className="gap-3">
         <strong className="justify-between flex items-center">
           <span className="flex items-center gap-1">
@@ -96,7 +96,7 @@ export function Statistics({
           {averagesLoading && <FormSpinner />}
         </span>
       </Material>
-      <Material className="gap-3">
+      <Material className="gap-3 max-md:mt-2">
         <strong className="justify-between flex items-center">
           <span className="flex items-center gap-1">
             Total Servers
@@ -150,7 +150,7 @@ export function Statistics({
           {averagesLoading && <FormSpinner />}
         </span>
       </Material>
-      <Material className="gap-3">
+      <Material className="gap-3 max-md:mt-2">
         <strong className="justify-between flex items-center">
           Top Server <ChartArea size={16} className="text-muted-foreground" />
         </strong>{" "}
