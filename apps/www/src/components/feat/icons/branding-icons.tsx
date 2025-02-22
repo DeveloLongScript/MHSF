@@ -1,12 +1,12 @@
 /*
  * MHSF, Minehut Server List
  * All external content is rather licensed under the ECA Agreement
- * located here: https://list.mlnehut.com/docs/legal/external-content-agreement
+ * located here: https://mhsf.app/docs/legal/external-content-agreement
  *
  * All code under MHSF is licensed under the MIT License
  * by open source contributors
  *
- * Copyright (c) 2024 dvelo
+ * Copyright (c) 2025 dvelo
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to

@@ -1,1 +1,31 @@
+<!--
+  - MHSF, Minehut Server List
+  - All external content is rather licensed under the ECA Agreement
+  - located here: https://mhsf.app/docs/legal/external-content-agreement
+  -
+  - All code under MHSF is licensed under the MIT License
+  - by open source contributors
+  -
+  - Copyright (c) 2025 dvelo
+  -
+  - Permission is hereby granted, free of charge, to any person obtaining a copy
+  - of this software and associated documentation files (the "Software"), to
+  - deal in the Software without restriction, including without limitation the
+  - rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  - sell copies of the Software, and to permit persons to whom the Software is
+  - furnished to do so, subject to the following conditions:
+  -
+  - The above copyright notice and this permission notice shall be included in all
+  - copies or substantial portions of the Software.
+  -
+  - THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+  - EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+  - OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+  - NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+  - HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+  - WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  - FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+  - OTHER DEALINGS IN THE SOFTWARE.
+  -->
+
 <svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill-rule="evenodd" clip-rule="evenodd" d="M1.5 2.5h13v10a1 1 0 0 1-1 1h-11a1 1 0 0 1-1-1zM0 1h16v11.5a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 0 12.5zm3.75 4.5a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5M7 4.75a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0m1.75.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5" fill="#666"/></svg>
