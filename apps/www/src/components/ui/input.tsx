@@ -93,7 +93,7 @@ const Input: React.FC<InputWithLabelProps> = ({
         </Label>
       )}
       <div
-        className={`${shadowClass[shadow-sm]} border ${borderClass} focus-within:border-primary-900 dark:focus-within:border-primary-100 focus-within:ring-2 ring-slate-300 dark:ring-zinc-700 transition-colors rounded-lg flex flex-row items-center text-sm ${className}`}
+        className={`${shadowClass[shadow]} border ${borderClass} focus-within:border-primary-900 dark:focus-within:border-primary-100 focus-within:ring-2 ring-slate-300 dark:ring-zinc-700 transition-colors rounded-lg flex flex-row items-center text-sm ${className}`}
       >
         {prefix && (
           <div
