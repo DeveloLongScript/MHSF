@@ -181,11 +181,8 @@ export default function ServerCustomize({
               Is this server in violation of the ECA?
             </div>
             Is this server in violation of the{" "}
-            <Link href="/docs/legal/external-content-agreement">
-              External Content Agreement (aka ECA)
-            </Link>
-            ? You can report the server to remove the customizations from the
-            server.
+            <Link href="/docs/legal/rules">MHSF Rules</Link>? You can report the
+            server to remove the customizations from the server.
             <Dialog>
               <DialogTrigger>
                 <Button className="h-[30px] ml-2">Report</Button>
@@ -329,10 +326,7 @@ export default function ServerCustomize({
                               Minehuts Terms of Service
                             </Link>{" "}
                             & the{" "}
-                            <Link href="/docs/legal/external-content-agreement">
-                              External Content Agreement
-                            </Link>
-                            .
+                            <Link href="/docs/legal/rules">MHSF Rules</Link>.
                           </small>
                         </FormDescription>
                         <FormMessage />
@@ -435,11 +429,7 @@ export default function ServerCustomize({
                   <Link href="https://imgur.com/tos">
                     Imgurs Terms of Service
                   </Link>{" "}
-                  & the{" "}
-                  <Link href="/docs/legal/external-content-agreement">
-                    External Content Agreement
-                  </Link>
-                  .
+                  & the <Link href="/docs/legal/rules">MHSF Rules</Link>.
                 </small>
               </>
             }
@@ -467,11 +457,7 @@ export default function ServerCustomize({
                   <Link href="https://discord.com/terms/">
                     Discords Terms of Service
                   </Link>{" "}
-                  & the{" "}
-                  <Link href="/docs/legal/external-content-agreement">
-                    External Content Agreement
-                  </Link>
-                  .
+                  & the <Link href="/docs/legal/rules">MHSF Rules</Link>.
                 </small>
               </>
             }
