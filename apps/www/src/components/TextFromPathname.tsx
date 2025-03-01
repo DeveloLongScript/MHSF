@@ -35,7 +35,6 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "./ui/breadcrumb";
-import { allDocs } from "contentlayer/generated";
 
 export default function TextFromPathname() {
   const pathname = usePathname();
@@ -133,27 +132,6 @@ export default function TextFromPathname() {
           <BreadcrumbSeparator />
           <BreadcrumbItem>
             <BreadcrumbPage>Favorites</BreadcrumbPage>
-          </BreadcrumbItem>
-        </>
-      )}
-      {pathname?.startsWith("/docs/") && (
-        <>
-          <BreadcrumbSeparator className="max-sm:hidden" />
-          <BreadcrumbItem>Docs</BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbPage>
-              {
-                allDocs.find(
-                  (c) =>
-                    c._raw.flattenedPath ===
-                    pathname
-                      ?.split("/")
-                      .splice(2, pathname?.split("/").length)
-                      .join("/")
-                )?.title
-              }
-            </BreadcrumbPage>
           </BreadcrumbItem>
         </>
       )}
