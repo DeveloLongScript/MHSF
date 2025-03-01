@@ -60,6 +60,7 @@ import EmbedSelector from "./feat/EmbedSelector";
 import { Separator } from "./ui/separator";
 import QRCodeGenerator from "./feat/QRCodeGen";
 import NoItems from "./misc/NoItems";
+import { version } from "@/config/version";
 
 export default function AfterServerView({ server }: { server: string }) {
   const [description, setDescription] = useState("");
@@ -89,9 +90,11 @@ export default function AfterServerView({ server }: { server: string }) {
         });
         setView(description !== "" || discord !== "" ? "desc" : "extra");
       }
-      fetch("https://api.minehut.com/server/" + server + "?byName=true").then(
-        (c) => c.json().then((n) => setServerObject(n.server))
-      );
+      fetch("https://api.minehut.com/server/" + server + "?byName=true", {
+        headers: {
+          "User-Agent": `MHSF ${version} (github.com/DeveloLongScript/MHSF)`,
+        },
+      }).then((c) => c.json().then((n) => setServerObject(n.server)));
       getMinehutIcons().then((i) => {
         setIcons(i);
       });

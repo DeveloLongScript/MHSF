@@ -63,6 +63,7 @@
 		"react-hot-toast": "^2.4.1",
 		"react-qr-code": "^2.0.15",
 		"react-snowfall": "^2.2.0",
+		"rehype-autolink-headings": "^7.1.0",
 		"rehype-slug": "^6.0.0",
 		"remark-gfm": "^4.0.0",
 		"sonner": "^1.7.0",
@@ -75,6 +76,9 @@
 	},
 	"devDependencies": {
 		"@clerk/themes": "^2.1.19",
+		"@content-collections/core": "^0.8.0",
+		"@content-collections/mdx": "^0.2.0",
+		"@content-collections/next": "^0.2.5",
 		"@hookform/resolvers": "^3.9.0",
 		"@radix-ui/react-checkbox": "^1.1.1",
 		"@radix-ui/react-context-menu": "^2.1.5",

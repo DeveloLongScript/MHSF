@@ -34,18 +34,26 @@ import ColorProvider from "@/components/ColorProvider";
 import ServerView from "@/components/ServerView";
 import StickyTopbar from "@/components/misc/StickyTopbar";
 import TabServer from "@/components/misc/TabServer";
+import { version } from "@/config/version";
 import type { Metadata, ResolvingMetadata } from "next";
 
 type Props = {
   params: Promise<{ server: string }>;
 };
 
-export async function generateMetadata(props: Props, parent: ResolvingMetadata): Promise<Metadata> {
+export async function generateMetadata(
+  props: Props,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
   const params = await props.params;
   // read route params
   const { server } = params;
   const json = await (
-    await fetch("https://api.minehut.com/server/" + server + "?byName=true")
+    await fetch("https://api.minehut.com/server/" + server + "?byName=true", {
+      headers: {
+        "User-Agent": `MHSF ${version} (github.com/DeveloLongScript/MHSF)`,
+      },
+    })
   ).json();
 
   return {
@@ -124,7 +132,9 @@ export async function generateMetadata(props: Props, parent: ResolvingMetadata):
   };
 }
 
-export default async function ServerPage(props: { params: Promise<{ server: string }> }) {
+export default async function ServerPage(props: {
+  params: Promise<{ server: string }>;
+}) {
   const params = await props.params;
   return (
     <main style={{ "color-scheme": "dark" } as React.CSSProperties}>

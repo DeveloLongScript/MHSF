@@ -28,7 +28,7 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { withContentlayer } from "next-contentlayer";
+import { withContentCollections } from "@content-collections/next";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -57,4 +57,4 @@ const nextConfig = {
 	},
 };
 
-export default withContentlayer(nextConfig);
+export default withContentCollections(nextConfig);

@@ -1,96 +1,71 @@
 {
 	"$schema": "https://mintlify.com/docs.json",
-	"theme": "mint",
-	"name": "Mint Starter Kit",
+	"theme": "maple",
+	"name": "MHSF Docs",
 	"colors": {
-		"primary": "#16A34A",
-		"light": "#07C983",
-		"dark": "#15803D"
+		"primary": "#817abb",
+		"light": "#817abb",
+		"dark": "#c15281"
 	},
-	"favicon": "/favicon.svg",
+	"favicon": "/docs/content/favicon.svg",
 	"navigation": {
 		"tabs": [
 			{
-				"tab": "Guides",
+				"tab": "Documentation",
 				"groups": [
 					{
-						"group": "Get Started",
-						"pages": ["introduction", "quickstart", "development"]
+						"group": "General",
+						"pages": ["docs/getting-started"]
 					},
 					{
-						"group": "Essentials",
+						"group": "Guides",
 						"pages": [
-							"essentials/markdown",
-							"essentials/code",
-							"essentials/images",
-							"essentials/settings",
-							"essentials/navigation",
-							"essentials/reusable-snippets"
+							"docs/guides/customization",
+							"docs/guides/linking",
+							"docs/guides/owning-a-server",
+							"docs/guides/reporting-server"
 						]
+					},
+					{
+						"group": "Advanced",
+						"pages": [
+							"docs/advanced/achievements",
+							"docs/advanced/command-bar",
+							"docs/advanced/tech-stack"
+						]
+					},
+					{
+						"group": "Legal",
+						"pages": ["docs/legal/rules"]
 					}
 				]
 			},
 			{
-				"tab": "API Reference",
-				"groups": [
-					{
-						"group": "API Documentation",
-						"pages": ["api-reference/introduction"]
-					},
-					{
-						"group": "Endpoint Examples",
-						"pages": [
-							"api-reference/endpoint/get",
-							"api-reference/endpoint/create",
-							"api-reference/endpoint/delete",
-							"api-reference/endpoint/webhook"
-						]
-					}
-				]
+				"tab": "Changelog",
+				"pages": ["docs/changelog"]
 			}
-		],
-		"global": {
-			"anchors": [
-				{
-					"anchor": "Documentation",
-					"href": "https://mintlify.com/docs",
-					"icon": "book-open-cover"
-				},
-				{
-					"anchor": "Community",
-					"href": "https://mintlify.com/community",
-					"icon": "slack"
-				},
-				{
-					"anchor": "Blog",
-					"href": "https://mintlify.com/blog",
-					"icon": "newspaper"
-				}
-			]
-		}
+		]
 	},
 	"logo": {
-		"light": "/logo/light.svg",
-		"dark": "/logo/dark.svg"
+		"light": "/docs/content/icon-gl.svg",
+		"dark": "/docs/content/icon-gd.svg"
 	},
 	"navbar": {
 		"links": [
 			{
 				"label": "Support",
-				"href": "mailto:hi@mintlify.com"
+				"href": "mailto:support@mhsf.app"
 			}
 		],
 		"primary": {
 			"type": "button",
-			"label": "Dashboard",
-			"href": "https://dashboard.mintlify.com"
+			"label": "MHSF",
+			"href": "https://mhsf.app"
 		}
 	},
 	"footer": {
 		"socials": {
-			"x": "https://x.com/mintlify",
-			"github": "https://github.com/mintlify",
-			"linkedin": "https://linkedin.com/company/mintlify"
+			"github": "https://github.com/DeveloLongScript/MHSF"
 		}
 	}
 }
