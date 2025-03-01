@@ -30,10 +30,11 @@
 
 import Embed from "@/components/feat/Embed";
 
-export default function EmbedPage({
-	params,
-}: {
-	params: { server: string };
-}) {
-	return <Embed params={params} />;
+export default async function EmbedPage(
+    props: {
+        params: Promise<{ server: string }>;
+    }
+) {
+    const params = await props.params;
+    return <Embed params={params} />;
 }

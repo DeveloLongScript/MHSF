@@ -40,13 +40,11 @@ import { MonthlyChart } from "@/components/charts/MonthlyChart";
 import { DailyChart } from "@/components/charts/DailyChart";
 
 type Props = {
-  params: { server: string };
+  params: Promise<{ server: string }>;
 };
 
-export async function generateMetadata(
-  { params }: Props,
-  parent: ResolvingMetadata
-): Promise<Metadata> {
+export async function generateMetadata(props: Props, parent: ResolvingMetadata): Promise<Metadata> {
+  const params = await props.params;
   // read route params
   const { server } = params;
   const json = await (
@@ -97,7 +95,8 @@ export async function generateMetadata(
   };
 }
 
-export default function ServerPage({ params }: { params: { server: string } }) {
+export default async function ServerPage(props: { params: Promise<{ server: string }> }) {
+  const params = await props.params;
   return (
     <main style={{ "color-scheme": "dark" } as React.CSSProperties}>
       <ColorProvider server={params.server}>

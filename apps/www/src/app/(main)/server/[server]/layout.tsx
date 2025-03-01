@@ -28,19 +28,25 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-"use client";
+"use client";;
+import { use } from "react";
 
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { useServerExists } from "@/lib/hooks/use-server-exists";
 import { notFound } from "next/navigation";
 
-export default function ServerLayout({
-  params,
-  children,
-}: {
-  params: { server: string };
-  children: React.ReactNode;
-}) {
+export default function ServerLayout(
+  props: {
+    params: Promise<{ server: string }>;
+    children: React.ReactNode;
+  }
+) {
+  const params = use(props.params);
+
+  const {
+    children
+  } = props;
+
   const { serverExists, loading } = useServerExists(params.server);
 
   if (loading) return <LoadingSpinner />;

@@ -1,3 +1,4 @@
+import { use } from "react";
 /*
  * MHSF, Minehut Server List
  * All external content is rather licensed under the ECA Agreement
@@ -41,28 +42,30 @@ import { notFound } from "next/navigation";
 export const generateStaticParams = async () =>
 	allDocs.map((post) => ({ slug: [post._raw.flattenedPath] }));
 
-export const generateMetadata = ({
-	params,
-}: {
-	params: { slug: string[] };
-}) => {
-	const post = allDocs.find(
+export const generateMetadata = async (
+    props: {
+        params: Promise<{ slug: string[] }>;
+    }
+) => {
+    const params = await props.params;
+    const post = allDocs.find(
 		(post) => post._raw.flattenedPath === params.slug.join("/"),
 	);
-	if (!post) notFound();
-	return { title: post.title + " | MHSF Docs", themeColor: "#000000" };
+    if (!post) notFound();
+    return { title: post.title + " | MHSF Docs", themeColor: "#000000" };
 };
 
-const PostLayout = ({ params }: { params: { slug: string[] } }) => {
-	const doc = allDocs.find(
+const PostLayout = (props0: { params: Promise<{ slug: string[] }> }) => {
+    const params = use(props0.params);
+    const doc = allDocs.find(
 		(post) => post._raw.flattenedPath === params.slug.join("/"),
 	);
 
-	if (!doc) notFound();
-	console.log(doc);
-	const MDXContent = useMDXComponent(doc.body.code);
+    if (!doc) notFound();
+    console.log(doc);
+    const MDXContent = useMDXComponent(doc.body.code);
 
-	return (
+    return (
 		<main className="relative py-6 lg:gap-10 lg:py-8 xl:grid xl:grid-cols-[1fr_300px]">
 			<div className="mx-auto w-full min-w-0">
 				<div className="pb-12 pt-8 prose dark:prose-invert">
