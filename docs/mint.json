@@ -11,6 +11,12 @@
 		"light": "/logo/light.svg",
 		"dark": "/logo/dark.svg"
 	},
+     "navigation": {
+      "pages": [
+        "file",
+        "api-reference/introduction.mdx"
+      ]
+    },
 	"navbar": {
 		"links": [
 			{
