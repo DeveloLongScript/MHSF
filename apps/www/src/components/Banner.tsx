@@ -64,7 +64,9 @@ export default function Banner({ server }: { server: string }) {
           src={
             bannerURL.startsWith("https://i.imgur.com")
               ? bannerURL
-              : "wsrv.nl/?url=" + encodeURIComponent(bannerURL) + "?n=-1"
+              : "https://wsrv.nl/?url=" +
+                encodeURIComponent(bannerURL) +
+                "?n=-1"
           }
           className="rounded align-middle block ml-auto mr-auto absolute left-0 z-0 w-full object-fill"
           alt="User-provided banner for this server."
