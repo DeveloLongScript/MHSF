@@ -24,8 +24,6 @@ const nextConfig = {
 		ignoreBuildErrors: true,
 	},
 	output: "standalone",
-	// Disable static error pages generation
-	staticPageGenerationTimeout: 0,
 }; //
 
 export default nextConfig;
