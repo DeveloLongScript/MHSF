@@ -9,6 +9,15 @@
 	},
 	"favicon": "/content/favicon.svg",
 	"navigation": {
+		"global": {
+			"anchors": [
+				{
+					"anchor": "MHSF Update Discord",
+					"href": "https://discord.gg/QC2GfgWXVD",
+					"icon": "discord"
+				}
+			]
+		},
 		"tabs": [
 			{
 				"tab": "Documentation",
