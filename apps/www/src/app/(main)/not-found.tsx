@@ -28,19 +28,18 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import Link from "next/link";
+"use client";
 
 export default function NotFound() {
-	return (
-		<main>
-			<div className="pt-[60px] p-4">
-				<strong>404 - Page not found</strong>
-				<br />
-				<p>
-					We couldn't find the page you were looking for.{" "}
-					<Link href="/public">Go home</Link>
-				</p>
-			</div>
-		</main>
-	);
+  return (
+    <div className="min-h-screen flex items-center justify-center flex-col">
+      <div className="text-center">
+        <h1 className="text-4xl font-bold mb-4">404 - Page not found</h1>
+        <p className="mb-4">We couldn't find the page you were looking for.</p>
+        <a href="/" className="text-blue-500 hover:underline">
+          Return home
+        </a>
+      </div>
+    </div>
+  );
 }

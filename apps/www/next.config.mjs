@@ -53,6 +53,12 @@ const nextConfig = {
 	typescript: {
 		ignoreBuildErrors: true,
 	},
+	output: "standalone",
+	experimental: {
+		serverActions: {
+			allowedOrigins: ["localhost:3000", "mhsf.app"],
+		},
+	},
 };
 
 export default nextConfig;
