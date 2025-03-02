@@ -1,8 +1,8 @@
 {
-	"rewrites": [
+	"redirects": [
 		{
 			"source": "/docs/:match*",
-			"destination": "https://mhsf.mintlify.app/docs/:match*"
+			"destination": "https://docs.mhsf.app/docs/:match*"
 		}
 	]
 }
