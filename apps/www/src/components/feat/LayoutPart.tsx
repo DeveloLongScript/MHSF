@@ -107,6 +107,7 @@ export default function LayoutPart({
         style={(size: number) => ({
           paddingTop: `${2 * size}rem`,
         })}
+        className="min-h-screen"
       >
         <NextTopLoader />
         <ClientFadeIn>{children}</ClientFadeIn>
