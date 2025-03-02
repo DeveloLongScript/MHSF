@@ -92,7 +92,7 @@ export default function AfterServerView({ server }: { server: string }) {
       }
       fetch("https://api.minehut.com/server/" + server + "?byName=true", {
         headers: {
-          "User-Agent": `MHSF ${version} (github.com/DeveloLongScript/MHSF)`,
+          "X-Website-Agent": `MHSF ${version} (github.com/DeveloLongScript/MHSF)`,
         },
       }).then((c) => c.json().then((n) => setServerObject(n.server)));
       getMinehutIcons().then((i) => {

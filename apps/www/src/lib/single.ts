@@ -54,7 +54,7 @@ export default class ServerSingle {
 		return new Promise<boolean>((g, bc) => {
 			fetch("https://api.minehut.com/server/" + this.name + "?byName=true", {
 				headers: {
-					"User-Agent": `MHSF ${version} (github.com/DeveloLongScript/MHSF)`,
+					"X-Website-Agent": `MHSF ${version} (github.com/DeveloLongScript/MHSF)`,
 				},
 			})
 				.then((d) => {
@@ -65,7 +65,7 @@ export default class ServerSingle {
 							if (this.online === true && skipOnline !== true) {
 								fetch("https://api.minehut.com/servers", {
 									headers: {
-										"User-Agent": `MHSF ${version} (github.com/DeveloLongScript/MHSF)`,
+										"X-Website-Agent": `MHSF ${version} (github.com/DeveloLongScript/MHSF)`,
 									},
 								}).then((l) =>
 									l.json().then((o) => {

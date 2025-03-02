@@ -31,6 +31,7 @@
 import { toast } from "sonner";
 import { OnlineServer } from "./types/mh-server";
 import MiniMessage from "minimessage-js";
+import { version } from "@/config/version";
 
 var numberOfItemsInView = 20;
 
@@ -55,7 +56,7 @@ export default class ServersList {
 		return new Promise((g, bc) => {
 			fetch("https://api.minehut.com/servers", {
 				headers: {
-					"User-Agent": `MHSF ${version} (github.com/DeveloLongScript/MHSF)`,
+					"X-Website-Agent": `MHSF ${version} (github.com/DeveloLongScript/MHSF)`,
 				},
 			})
 				.then((b) => {

@@ -46,7 +46,7 @@ export async function generateMetadata(
   const json = await (
     await fetch("https://api.minehut.com/server/" + server + "?byName=true", {
       headers: {
-        "User-Agent": `MHSF ${version} (github.com/DeveloLongScript/MHSF)`,
+        "X-Website-Agent": `MHSF ${version} (github.com/DeveloLongScript/MHSF)`,
       },
     })
   ).json();
