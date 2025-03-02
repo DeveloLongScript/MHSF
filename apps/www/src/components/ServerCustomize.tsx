@@ -178,7 +178,7 @@ export default function ServerCustomize({
         {serverOwned && !userOwned && (
           <div>
             <div className="font-bold">
-              Is this server in violation of the ECA?
+              Is this server in violation of the Rules?
             </div>
             Is this server in violation of the{" "}
             <Link href="/docs/legal/rules">MHSF Rules</Link>? You can report the
@@ -193,12 +193,10 @@ export default function ServerCustomize({
                   <DialogDescription>
                     This will send a notification to MHSF maintainers. This
                     server must be in violation of the{" "}
-                    <Link href="/docs/legal/external-content-agreement">
-                      ECA
-                    </Link>{" "}
-                    to be a valid report. Typical response times include 1 hour
-                    to 1 day, and you will not be notified if your report is
-                    successful or not.{" "}
+                    <Link href="/docs/legal/rules">Rules</Link> to be a valid
+                    report. Typical response times include 1 hour to 1 day, and
+                    you will not be notified if your report is successful or
+                    not.{" "}
                     <b>
                       Please do not spam this form with mindless reports. If you
                       do, your account will be banned. We are not Minehut
