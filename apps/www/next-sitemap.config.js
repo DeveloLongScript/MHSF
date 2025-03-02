@@ -29,7 +29,7 @@
  */
 
 /** @type {import('next-sitemap').IConfig} */
-module.exports = {
-    siteUrl: "https://mhsf.app",
-    generateRobotsTxt: true
-}
+export default {
+	siteUrl: "https://mhsf.app",
+	generateRobotsTxt: true,
+};
