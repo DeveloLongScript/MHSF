@@ -7,7 +7,7 @@
 		"light": "#817abb",
 		"dark": "#c15281"
 	},
-	"favicon": "/docs/content/favicon.svg",
+	"favicon": "/content/favicon.svg",
 	"navigation": {
 		"tabs": [
 			{
@@ -15,40 +15,40 @@
 				"groups": [
 					{
 						"group": "General",
-						"pages": ["docs/getting-started"]
+						"pages": ["getting-started"]
 					},
 					{
 						"group": "Guides",
 						"pages": [
-							"docs/guides/customization",
-							"docs/guides/linking",
-							"docs/guides/owning-a-server",
-							"docs/guides/reporting-server"
+							"guides/customization",
+							"guides/linking",
+							"guides/owning-a-server",
+							"guides/reporting-server"
 						]
 					},
 					{
 						"group": "Advanced",
 						"pages": [
-							"docs/advanced/achievements",
-							"docs/advanced/command-bar",
-							"docs/advanced/tech-stack"
+							"advanced/achievements",
+							"advanced/command-bar",
+							"advanced/tech-stack"
 						]
 					},
 					{
 						"group": "Legal",
-						"pages": ["docs/legal/rules"]
+						"pages": ["legal/rules"]
 					}
 				]
 			},
 			{
 				"tab": "Changelog",
-				"pages": ["docs/changelog"]
+				"pages": ["changelog"]
 			}
 		]
 	},
 	"logo": {
-		"light": "/docs/content/icon-gl.svg",
-		"dark": "/docs/content/icon-gd.svg"
+		"light": "/content/icon-gl.svg",
+		"dark": "/content/icon-gd.svg"
 	},
 	"navbar": {
 		"links": [
