@@ -28,18 +28,22 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-"use client";
-
-export default function NotFound() {
+export default async function NotFound() {
   return (
-    <div className="min-h-screen flex items-center justify-center flex-col">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">404 - Page not found</h1>
-        <p className="mb-4">We couldn't find the page you were looking for.</p>
-        <a href="/" className="text-blue-500 hover:underline">
-          Return home
-        </a>
-      </div>
-    </div>
+    <html>
+      <body>
+        <div className="min-h-screen flex items-center justify-center flex-col">
+          <div className="text-center">
+            <h1 className="text-4xl font-bold mb-4">404 - Page Not Found</h1>
+            <p className="mb-4">
+              The page you are looking for could not be found.
+            </p>
+            <a href="/" className="text-blue-500 hover:underline">
+              Return to Home
+            </a>
+          </div>
+        </div>
+      </body>
+    </html>
   );
 }
