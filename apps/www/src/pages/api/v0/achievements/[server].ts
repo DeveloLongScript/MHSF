@@ -28,6 +28,7 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import { waitUntil } from "@vercel/functions";
 import { MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 
@@ -43,6 +44,10 @@ export default async function handler(
 
 	const db = client.db(process.env.CUSTOM_MONGO_DB ?? "mhsf");
 	const collection = db.collection("achievements");
+
+	// Close the database, but don't close this
+	// serverless instance until it happens
+	waitUntil(client.close());
 
 	res.send({ result: await collection.find({ name: server }).toArray() });
 }

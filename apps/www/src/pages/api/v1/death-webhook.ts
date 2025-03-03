@@ -28,8 +28,9 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { NextApiRequest,  NextApiResponse } from "next";
+import { NextApiRequest, NextApiResponse } from "next";
 import { MongoClient } from "mongodb";
+import { waitUntil } from "@vercel/functions";
 
 export default async function handler(
 	req: NextApiRequest,
@@ -46,6 +47,9 @@ export default async function handler(
 	const collection = db.collection("claimed-users");
 	await collection.findOneAndDelete({ userId: id });
 
+	// Close the database, but don't close this
+	// serverless instance until it happens
+	waitUntil(client.close());
+
 	res.send({ message: "Done!" });
-	client.close();
 }

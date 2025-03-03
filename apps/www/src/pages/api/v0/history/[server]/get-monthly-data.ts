@@ -30,33 +30,61 @@
 
 import { MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
+import { waitUntil } from "@vercel/functions";
 
 export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
+	req: NextApiRequest,
+	res: NextApiResponse,
 ) {
-    const client = new MongoClient(process.env.MONGO_DB as string);
-    const db = client.db("mhsf").collection("history");
-    const server = req.query.server as string;
+	const client = new MongoClient(process.env.MONGO_DB as string);
+	const db = client.db("mhsf").collection("history");
+	const server = req.query.server as string;
 
-    const months =  ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-	const result = await Promise.all([1,2,3,4,5,6,7,8,9,10,11,12].map(async (c) => {
-		const results = await db.find({ 
-			$and: [
-				{ server },
-				{ date: { $gte: new Date(new Date().getFullYear(), c - 1, 1), $lt: new Date(new Date().getFullYear(), c, 1) } }
-			]
-		}).toArray()
+	const months = [
+		"January",
+		"February",
+		"March",
+		"April",
+		"May",
+		"June",
+		"July",
+		"August",
+		"September",
+		"October",
+		"November",
+		"December",
+	];
+	const result = await Promise.all(
+		[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(async (c) => {
+			const results = await db
+				.find({
+					$and: [
+						{ server },
+						{
+							date: {
+								$gte: new Date(new Date().getFullYear(), c - 1, 1),
+								$lt: new Date(new Date().getFullYear(), c, 1),
+							},
+						},
+					],
+				})
+				.toArray();
 
-		if (results.length !== 0) {
-			const averageNums = (results as any as {player_count: number}[]).map((x: {player_count: number}) => x.player_count)
-			const average = averageNums.reduce((sum, val) => sum + val, 0) / averageNums.length;
+			if (results.length !== 0) {
+				const averageNums = (results as any as { player_count: number }[]).map(
+					(x: { player_count: number }) => x.player_count,
+				);
+				const average =
+					averageNums.reduce((sum, val) => sum + val, 0) / averageNums.length;
 
-			return { month: months[c - 1], result: Math.floor(average) };
-		}
-		return undefined;
-	}));
+				return { month: months[c - 1], result: Math.floor(average) };
+			}
+			return undefined;
+		}),
+	);
 
-	client.close()
-	res.send({result: result.filter((c) => c !== undefined)});
+	// Close the database, but don't close this
+	// serverless instance until it happens
+	waitUntil(client.close());
+	res.send({ result: result.filter((c) => c !== undefined) });
 }

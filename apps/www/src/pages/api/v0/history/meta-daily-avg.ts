@@ -30,6 +30,7 @@
 
 import { MongoClient, type WithId } from "mongodb";
 import type { NextApiRequest, NextApiResponse } from "next";
+import { waitUntil } from "@vercel/functions";
 
 export default async function handler(
 	req: NextApiRequest,
@@ -49,6 +50,10 @@ export default async function handler(
 	const totalPlayerAverage =
 		array.slice(0, 100).reduce((acc, curr) => acc + curr.total_players, 0) /
 		array.slice(0, 100).length;
+
+	// Close the database, but don't close this
+	// serverless instance until it happens
+	waitUntil(client.close());
 
 	res.send({ totalServerAverage, totalPlayerAverage });
 }

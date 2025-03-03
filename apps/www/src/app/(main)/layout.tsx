@@ -42,6 +42,7 @@ import { ThemeProvider } from "@/components/util/theme-provider";
 import { FontBoundary } from "@/components/util/font-boundary";
 import { ClerkProvider } from "@/components/util/clerk-provider";
 import { Toaster } from "sonner";
+import { Footer } from "@/components/feat/footer/footer";
 
 export default function RootLayout({
   children,
@@ -79,7 +80,8 @@ export default function RootLayout({
                 <Toaster richColors position="top-center" />
                 <ClerkProvider>
                   <NavBar />
-                  <div className="pt-16">{children}</div>
+                  <div className="pt-16 min-h-screen">{children}</div>
+                  <Footer />
                 </ClerkProvider>
               </TooltipProvider>
             </FontBoundary>

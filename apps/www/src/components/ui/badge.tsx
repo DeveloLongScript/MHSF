@@ -40,6 +40,8 @@ const badgeVariants = cva(
   {
     variants: {
       variant: {
+        default:
+          "bg-shadcn-primary text-shadcn-primary-foreground ring-transparent",
         red: "bg-red-500 text-white ring-transparent",
         green: "bg-green-500 text-white dark:text-black ring-transparent",
         yellow: "bg-yellow-500 text-black ring-transparent",

@@ -30,33 +30,48 @@
 
 import { MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
+import { waitUntil } from "@vercel/functions";
 
 export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
+	req: NextApiRequest,
+	res: NextApiResponse,
 ) {
-    const client = new MongoClient(process.env.MONGO_DB as string);
-    const db = client.db("mhsf").collection("history");
-    const server = req.query.server as string;
+	const client = new MongoClient(process.env.MONGO_DB as string);
+	const db = client.db("mhsf").collection("history");
+	const server = req.query.server as string;
 
-    const daysOfWeek =  ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
-	const result = await Promise.all([1,2,3,4,5,6,7].map(async (c) => {
-		const results = await db.find({ 
-			$and: [
-				{ server },
-				{ $expr: { $eq: [{ $dayOfWeek: "$date" }, c] } }
-			]
-		}).toArray()
+	const daysOfWeek = [
+		"Sunday",
+		"Monday",
+		"Tuesday",
+		"Wednesday",
+		"Thursday",
+		"Friday",
+		"Saturday",
+	];
+	const result = await Promise.all(
+		[1, 2, 3, 4, 5, 6, 7].map(async (c) => {
+			const results = await db
+				.find({
+					$and: [{ server }, { $expr: { $eq: [{ $dayOfWeek: "$date" }, c] } }],
+				})
+				.toArray();
 
-		if (results.length !== 0) {
-			const averageNums = (results as any as {player_count: number}[]).map((x: {player_count: number}) => x.player_count)
-			const average = averageNums.reduce((sum, val) => sum + val, 0) / averageNums.length;
+			if (results.length !== 0) {
+				const averageNums = (results as any as { player_count: number }[]).map(
+					(x: { player_count: number }) => x.player_count,
+				);
+				const average =
+					averageNums.reduce((sum, val) => sum + val, 0) / averageNums.length;
 
-			return { day: daysOfWeek[c - 1], result: Math.floor(average) };
-		}
-		return undefined;
-	}));
+				return { day: daysOfWeek[c - 1], result: Math.floor(average) };
+			}
+			return undefined;
+		}),
+	);
 
-	client.close()
-	res.send({result: result.filter((c) => c !== undefined)});
+	// Close the database, but don't close this
+	// serverless instance until it happens
+	waitUntil(client.close());
+	res.send({ result: result.filter((c) => c !== undefined) });
 }

@@ -56,7 +56,7 @@
   --color-destructive-foreground: hsl(var(--destructive-foreground));
 
   --color-muted: hsl(var(--muted));
-  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-muted-foreground: hsl(0 0% 45.1%);
 
   --color-accent: hsl(var(--accent));
   --color-accent-foreground: hsl(var(--accent-foreground));
@@ -9285,4 +9285,15 @@ body {
 }
 .icon-minecraft-sm.icon-minecraft-mob-zombified-piglin-face {
   background-position: -144px -736px;
+}
+/*
+ ---break---
+ */
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
 }

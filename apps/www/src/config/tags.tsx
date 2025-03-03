@@ -28,7 +28,10 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import { BadgeColor } from "@/components/feat/server-list/server-card";
 import { OnlineServer, ServerResponse } from "@/lib/types/mh-server";
+import { ServerCog } from "lucide-react";
+import { ReactNode } from "react";
 
 const serverCache: any = {};
 
@@ -46,36 +49,70 @@ const serverCache: any = {};
 //
 // You may also use `requestServer()` to grab the offline version of the server from the API, which may get you more information about the server (ServerResponse)
 export const allTags: Array<{
-  name: (server: OnlineServer) => Promise<string>;
-  condition: (server: OnlineServer) => Promise<boolean>;
+  name: (server: OnlineServer) => Promise<string | ReactNode>;
+  condition?: (server: OnlineServer) => Promise<boolean>;
   listCondition?: (server: ServerResponse) => Promise<boolean>;
   tooltipDesc: string;
   htmlDocs: string;
   docsName: string;
   primary: boolean;
-  role?:
-    | "default"
-    | "destructive"
-    | "outline"
-    | "secondary"
-    | "red"
-    | "orange"
-    | "yellow"
-    | "green"
-    | "lime"
-    | "blue"
-    | "teal"
-    | "cyan"
-    | "violet"
-    | "indigo"
-    | "purple"
-    | "fuchsia"
-    | "pink";
+  role?: BadgeColor;
   __disab?: boolean;
   __filter?: boolean;
 }> = [
   {
-    name: async () => "Always Online",
+    name: async (c) => (
+      <>
+        <div
+          className="items-center bg-green-700 dark:bg-green-400"
+          style={{
+            width: ".4rem",
+            height: ".4rem",
+            borderRadius: "9999px",
+          }}
+        />
+        {c.playerData.playerCount} online
+      </>
+    ),
+    condition: async (c) => c.playerData.playerCount !== 0,
+    htmlDocs:
+      "'Players Online' specifies the amount of players currently online. If this server is a network, the amount of players may not be accurate as this counter only counts the number of players coming directly from Minehut",
+    tooltipDesc:
+      "'Players Online' specifies the amount of players currently online.",
+    primary: true,
+    role: "green-subtle",
+    docsName: "Players Online",
+    __filter: true,
+  },
+  {
+    name: async (c) => (
+      <>
+        <div
+          className="items-center bg-gray-700 dark:bg-gray-300"
+          style={{
+            width: ".4rem",
+            height: ".4rem",
+            borderRadius: "9999px",
+          }}
+        />{" "}
+        0 online
+      </>
+    ),
+    condition: async (c) => c.playerData.playerCount === 0,
+    htmlDocs: "Nobody is online this server.",
+    tooltipDesc: "Nobody is online this server.",
+    primary: true,
+    role: "gray-subtle",
+    docsName: "Nobody Online",
+    __filter: true,
+  },
+  {
+    name: async () => (
+      <>
+        <ServerCog size={16} />
+        Always Online
+      </>
+    ),
     condition: async (b: any) => b.staticInfo.alwaysOnline,
     tooltipDesc:
       '"Always online" means that the server will not shut down until the plan associated with it expires.',
@@ -84,7 +121,7 @@ export const allTags: Array<{
     `,
     primary: true,
     docsName: "Always Online",
-    role: "secondary",
+    role: "blue",
     __disab: true,
   },
   {
@@ -96,7 +133,7 @@ export const allTags: Array<{
     htmlDocs:
       "This tag represents the maximum amount of players the server can have at one time. This doesn't mean the amount of players before the server crashes, it means the amount Minehut said the server can handle or the plan the server is on. <em>However, sometimes it might not appear because the server is external.</em>",
     primary: true,
-    role: "secondary",
+    role: "default",
     __filter: true,
   },
   {
@@ -107,6 +144,16 @@ export const allTags: Array<{
     htmlDocs: "This tag represents that this server is a partner with MHSF.",
     primary: true,
     role: "purple",
+  },
+  {
+    name: async (s) => <>{s.staticInfo.serverPlan.split(" ")[0]}</>,
+    tooltipDesc: "This tag represents the server plan this server is using.",
+    docsName: "Server Plan",
+    htmlDocs:
+      "This tag represents the maximum amount of players the server can have at one time. This doesn't mean the amount of players before the server crashes, it means the amount Minehut said the server can handle or the plan the server is on. <em>However, sometimes it might not appear because the server is external.</em>",
+    primary: true,
+    role: "red-subtle",
+    __filter: true,
   },
   // deprecated
   /**{

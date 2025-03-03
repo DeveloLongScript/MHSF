@@ -30,6 +30,7 @@
 
 import { MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
+import { waitUntil } from "@vercel/functions"
 
 export default async function handler(
   req: NextApiRequest,
@@ -49,7 +50,11 @@ export default async function handler(
     });
     data.push(result);
   });
-  client.close();
+
+    // Close the database, but don't close this
+    // serverless instance until it happens
+    waitUntil(client.close())
+
   res.send({ data });
 }
 

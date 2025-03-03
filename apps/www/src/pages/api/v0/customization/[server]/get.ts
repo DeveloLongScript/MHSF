@@ -30,19 +30,24 @@
 
 import { NextApiRequest, NextApiResponse } from "next";
 import { MongoClient } from "mongodb";
+import { waitUntil } from "@vercel/functions";
 
 export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
+	req: NextApiRequest,
+	res: NextApiResponse,
 ) {
-  const server = req.query.server as string;
-  const client = new MongoClient(process.env.MONGO_DB as string);
-  await client.connect();
+	const server = req.query.server as string;
+	const client = new MongoClient(process.env.MONGO_DB as string);
+	await client.connect();
 
-  const db = client.db(process.env.CUSTOM_MONGO_DB ?? "mhsf");
-  const collection = db.collection("customization");
+	const db = client.db(process.env.CUSTOM_MONGO_DB ?? "mhsf");
+	const collection = db.collection("customization");
 
-  res.send({ results: await collection.findOne({ server }) });
+	// Close the database, but don't close this
+	// serverless instance until it happens
+	waitUntil(client.close());
 
-  client.close();
+	res.send({ results: await collection.findOne({ server }) });
+
+	client.close();
 }

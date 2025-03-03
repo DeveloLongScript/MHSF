@@ -32,82 +32,96 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { clerkClient, getAuth } from "@clerk/nextjs/server";
 import { MongoClient } from "mongodb";
 import { OnlineServer } from "@/lib/types/mh-server";
+import { waitUntil } from "@vercel/functions";
 
 export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
+	req: NextApiRequest,
+	res: NextApiResponse,
 ) {
-  const { userId } = getAuth(req);
-  const { server } = req.body;
+	const { userId } = getAuth(req);
+	const { server } = req.body;
 
-  if (server == null) {
-    res.status(400).send({ message: "Couldn't find data" });
-    return;
-  }
+	if (server == null) {
+		res.status(400).send({ message: "Couldn't find data" });
+		return;
+	}
 
-  if (!userId) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
-  if (
-    (await (await clerkClient()).users.getUser(userId)).publicMetadata.player ==
-    undefined
-  ) {
-    return res.status(401).json({ error: "Account not linked" });
-  }
-  const client = new MongoClient(process.env.MONGO_DB as string);
-  await client.connect();
+	if (!userId) {
+		return res.status(401).json({ error: "Unauthorized" });
+	}
+	if (
+		(await (await clerkClient()).users.getUser(userId)).publicMetadata.player ==
+		undefined
+	) {
+		return res.status(401).json({ error: "Account not linked" });
+	}
+	const client = new MongoClient(process.env.MONGO_DB as string);
+	await client.connect();
 
-  const db = client.db(process.env.CUSTOM_MONGO_DB ?? "mhsf");
-  const collection = db.collection("owned-servers");
+	const db = client.db(process.env.CUSTOM_MONGO_DB ?? "mhsf");
+	const collection = db.collection("owned-servers");
 
-  if ((await collection.findOne({ server: server })) == undefined) {
-    const mh = await fetch(
-      process.env.MHSF_BACKEND_API_LOCATION ??
-        "https://api.minehut.com/servers",
-      {
-        headers: {
-          accept: "*/*",
-          "accept-language": Math.random().toString(),
-          priority: "u=1, i",
-          "sec-ch-ua": '"Not/A)Brand";v="8", "Chromium";v="126"',
-          "sec-ch-ua-mobile": "?0",
-          "sec-ch-ua-platform": '"macOS"',
-          "sec-fetch-dest": "empty",
-          "sec-fetch-mode": "cors",
-          "sec-fetch-site": "cross-site",
-          Referer: "http://localhost:3000/",
-          "Referrer-Policy": "strict-origin-when-cross-origin",
-          Authentication: `MHSF-Backend-Server ${process.env.MHSF_BACKEND_API_LOCATION ? process.env.MHSF_BACKEND_SECRET : "Sorry Minehut Devs."}`,
-        },
-        body: null,
-        method: "GET",
-      }
-    );
-    const servers: Array<OnlineServer> = (await mh.json()).servers;
+	if ((await collection.findOne({ server: server })) == undefined) {
+		const mh = await fetch(
+			process.env.MHSF_BACKEND_API_LOCATION ??
+				"https://api.minehut.com/servers",
+			{
+				headers: {
+					accept: "*/*",
+					"accept-language": Math.random().toString(),
+					priority: "u=1, i",
+					"sec-ch-ua": '"Not/A)Brand";v="8", "Chromium";v="126"',
+					"sec-ch-ua-mobile": "?0",
+					"sec-ch-ua-platform": '"macOS"',
+					"sec-fetch-dest": "empty",
+					"sec-fetch-mode": "cors",
+					"sec-fetch-site": "cross-site",
+					Referer: "http://localhost:3000/",
+					"Referrer-Policy": "strict-origin-when-cross-origin",
+					Authentication: `MHSF-Backend-Server ${process.env.MHSF_BACKEND_API_LOCATION ? process.env.MHSF_BACKEND_SECRET : "Sorry Minehut Devs."}`,
+				},
+				body: null,
+				method: "GET",
+			},
+		);
+		const servers: Array<OnlineServer> = (await mh.json()).servers;
 
-    servers.forEach(async (c, i) => {
-      if (c.name == server) {
-        const MCUsername = (await (await clerkClient()).users.getUser(userId))
-          .publicMetadata.player;
+		servers.forEach(async (c, i) => {
+			if (c.name === server) {
+				const MCUsername = (await (await clerkClient()).users.getUser(userId))
+					.publicMetadata.player;
 
-        if (MCUsername == c.author) {
-          await collection.insertOne({ server, author: userId });
-          res.send({ message: "Successfully owned server!" });
-          client.close();
-        } else {
-          res
-            .status(400)
-            .send({ message: "The linked account doesn't own the server." });
-          client.close();
-        }
-      }
-      if (i == servers.length) {
-        res.status(400).send({ message: "The server needs to be online." });
-        client.close();
-      }
-    });
-  } else {
-    res.status(400).send({ message: "This server has already been owned." });
-    client.close();
-  }
+				if (MCUsername === c.author) {
+					await collection.insertOne({ server, author: userId });
+
+					// Close the database, but don't close this
+					// serverless instance until it happens
+					waitUntil(client.close());
+
+					res.send({ message: "Successfully owned server!" });
+				} else {
+					// Close the database, but don't close this
+					// serverless instance until it happens
+					waitUntil(client.close());
+
+					res
+						.status(400)
+						.send({ message: "The linked account doesn't own the server." });
+				}
+			}
+			if (i == servers.length) {
+				// Close the database, but don't close this
+				// serverless instance until it happens
+				waitUntil(client.close());
+
+				res.status(400).send({ message: "The server needs to be online." });
+			}
+		});
+	} else {
+		// Close the database, but don't close this
+		// serverless instance until it happens
+		waitUntil(client.close());
+
+		res.status(400).send({ message: "This server has already been owned." });
+	}
 }

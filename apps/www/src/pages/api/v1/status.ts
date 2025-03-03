@@ -28,8 +28,14 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import { version } from "@/config/version";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
-  res.send({ up: true });
+	res.send({
+		up: true,
+		apiNotice: `MHSF v${version} is an open-source, MIT-licensed Minehut API wrapper.
+          MHSF is not officially affiliated with with Minehut, Super League Enterprise, or GamerSafer in any way.
+          Spamming, abusing or misusing the Minehut API and/or MHSF will get your IP blocked, we are not responsible for IP blocks.`,
+	});
 }

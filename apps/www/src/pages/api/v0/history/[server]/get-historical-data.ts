@@ -30,33 +30,36 @@
 
 import { MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
+import { waitUntil } from "@vercel/functions";
 
 export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
+	req: NextApiRequest,
+	res: NextApiResponse,
 ) {
-  const client = new MongoClient(process.env.MONGO_DB as string);
-  const db = client.db("mhsf").collection("historical");
-  const server = req.query.server as string;
-  const scopes: Array<string> = checkForInfoOrLeave(res, req.body.scopes);
+	const client = new MongoClient(process.env.MONGO_DB as string);
+	const db = client.db("mhsf").collection("historical");
+	const server = req.query.server as string;
+	const scopes: Array<string> = checkForInfoOrLeave(res, req.body.scopes);
 
-  const allData = await db.find({ server }).toArray();
-  const data: any[] = [];
+	const allData = await db.find({ server }).toArray();
+	const data: any[] = [];
 
-  allData.forEach((d) => {
-    const result: any = {};
-    scopes.forEach((b) => {
-      result[b] = d[b];
-    });
-    data.push(result);
-  });
+	allData.forEach((d) => {
+		const result: any = {};
+		scopes.forEach((b) => {
+			result[b] = d[b];
+		});
+		data.push(result);
+	});
 
-  client.close();
-  res.send({ data });
+	// Close the database, but don't close this
+	// serverless instance until it happens
+	waitUntil(client.close());
+	res.send({ data });
 }
 
 function checkForInfoOrLeave(res: NextApiResponse, info: any) {
-  if (info == undefined)
-    res.status(400).json({ message: "Information wasn't supplied" });
-  return info;
+	if (info == undefined)
+		res.status(400).json({ message: "Information wasn't supplied" });
+	return info;
 }

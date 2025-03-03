@@ -37,6 +37,21 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { toast } from "sonner";
+import { useEffectOnce } from "@/lib/useEffectOnce";
+import { allTags } from "@/config/tags";
+import { ReactNode, useState } from "react";
+import { Badge } from "@/components/ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Copy } from "lucide-react";
+import useClipboard from "@/lib/useClipboard";
 
 export default function ServerCard({
   server,
@@ -45,6 +60,8 @@ export default function ServerCard({
   server: OnlineServer;
   motd: string | undefined;
 }) {
+  const clipboard = useClipboard();
+
   return (
     <Material
       key={server.name}
@@ -66,6 +83,30 @@ export default function ServerCard({
       <span className="flex gap-2 items-center">
         <IconDisplay server={server} />
         <strong className="text-lg">{server.name}</strong>
+        <Tooltip>
+          <TooltipTrigger>
+            <Button
+              variant="secondary"
+              size="square-md"
+              className="flex items-center"
+              onClick={(e) => {
+                e.stopPropagation();
+                toast.success("Copied IP address to clipboard.");
+                clipboard.writeText(`${server.name}.mhsf.minehut.gg`);
+              }}
+            >
+              <Copy size={16} />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent
+            className="max-w-[390px] break-words"
+            onClick={(e) => e.stopPropagation()}
+          >
+            Copy the server address to your clipboard. MHSF automatically adds
+            .mhsf in-between the server name and minehut.gg to tell server
+            owners where you came from.
+          </TooltipContent>
+        </Tooltip>
       </span>
       <Tooltip>
         <TooltipTrigger>
@@ -74,7 +115,10 @@ export default function ServerCard({
           </span>
         </TooltipTrigger>
 
-        <TooltipContent className="max-w-[390px] break-words">
+        <TooltipContent
+          className="max-w-[390px] break-words"
+          onClick={(e) => e.stopPropagation()}
+        >
           {server.author ? (
             <span>
               {server.name} is owned by{" "}
@@ -88,6 +132,7 @@ export default function ServerCard({
           )}
         </TooltipContent>
       </Tooltip>
+      <TagShower server={server} className="mt-1" />
       {motd && (
         <span
           className="block break-all overflow-hidden mt-3"
@@ -95,6 +140,129 @@ export default function ServerCard({
         />
       )}
     </Material>
+  );
+}
+
+export type BadgeColor =
+  | "default"
+  | "red"
+  | "green"
+  | "yellow"
+  | "gray"
+  | "blue"
+  | "purple"
+  | "red-subtle"
+  | "green-subtle"
+  | "yellow-subtle"
+  | "gray-subtle"
+  | "blue-subtle"
+  | "purple-subtle"
+  | "custom";
+
+export function TagShower(props: {
+  server: OnlineServer;
+  className?: string;
+  unclickable?: boolean;
+}) {
+  const [loading, setLoading] = useState(true);
+  const [compatiableTags, setCompatiableTags] = useState<
+    Array<{
+      name: ReactNode;
+      docsName?: string;
+      tooltip: string;
+      htmlDocs: string;
+      role: BadgeColor;
+    }>
+  >([]);
+
+  useEffectOnce(() => {
+    if (loading) {
+      allTags.forEach((tag) => {
+        if (!tag.condition) {
+          tag.name(props.server).then((n) => {
+            compatiableTags.push({
+              name: n,
+              docsName: tag.docsName,
+              tooltip: tag.tooltipDesc,
+              htmlDocs: tag.htmlDocs,
+              role: tag.role === undefined ? "default" : tag.role,
+            });
+            setLoading(false);
+          });
+        } else
+          tag.condition(props.server).then((b) => {
+            if (b && tag.primary) {
+              tag.name(props.server).then((n) => {
+                compatiableTags.push({
+                  name: n,
+                  docsName: tag.docsName,
+                  tooltip: tag.tooltipDesc,
+                  htmlDocs: tag.htmlDocs,
+                  role: tag.role === undefined ? "default" : tag.role,
+                });
+                setLoading(false);
+              });
+            }
+          });
+      });
+    }
+  });
+
+  if (loading) {
+    return <></>;
+  }
+
+  return (
+    <div
+      className="font-normal tracking-normal flex flex-wrap"
+      onClick={(e) => e.stopPropagation()}
+      onKeyDown={(e) => e.stopPropagation()}
+    >
+      {compatiableTags.map((t, i) => (
+        <span key={t.docsName} className="mr-1">
+          {props.unclickable && (
+            <Badge variant={t.role} className={props.className}>
+              {t.name}
+            </Badge>
+          )}
+          {!props.unclickable && (
+            <Dialog key={t.docsName}>
+              <DialogTrigger>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <Badge variant={t.role} className={props.className}>
+                      {t.name}
+                    </Badge>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <div className="font-normal">
+                      {t.tooltip}
+                      <br />
+                      Click the tag to learn more about it.
+                    </div>
+                  </TooltipContent>
+                </Tooltip>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>
+                    {'"'}
+                    {t.docsName == undefined ? t.name : t.docsName}
+                    {'"'} documentation
+                  </DialogTitle>
+                  <DialogDescription
+                    className="font-normal"
+                    dangerouslySetInnerHTML={{
+                      __html: t.htmlDocs,
+                    }}
+                  />
+                </DialogHeader>
+              </DialogContent>
+            </Dialog>
+          )}
+        </span>
+      ))}
+    </div>
   );
 }
 

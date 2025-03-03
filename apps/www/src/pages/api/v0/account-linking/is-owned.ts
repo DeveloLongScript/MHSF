@@ -30,25 +30,28 @@
 
 import { NextApiRequest, NextApiResponse } from "next";
 import { MongoClient } from "mongodb";
+import { waitUntil } from "@vercel/functions";
 
 export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
+	req: NextApiRequest,
+	res: NextApiResponse,
 ) {
-  const { server } = req.body;
+	const { server } = req.body;
 
-  if (server == null) {
-    res.status(400).send({ message: "Couldn't find data" });
-    return;
-  }
+	if (server == null) {
+		res.status(400).send({ message: "Couldn't find data" });
+		return;
+	}
 
-  const client = new MongoClient(process.env.MONGO_DB as string);
-  await client.connect();
+	const client = new MongoClient(process.env.MONGO_DB as string);
+	await client.connect();
 
-  const db = client.db(process.env.CUSTOM_MONGO_DB ?? "mhsf");
-  const collection = db.collection("owned-servers");
+	const db = client.db(process.env.CUSTOM_MONGO_DB ?? "mhsf");
+	const collection = db.collection("owned-servers");
 
-  res.send({ owned: (await collection.findOne({ server })) != undefined });
+	// Close the database, but don't close this
+	// serverless instance until it happens
+	waitUntil(client.close());
 
-  client.close();
+	res.send({ owned: (await collection.findOne({ server })) != undefined });
 }

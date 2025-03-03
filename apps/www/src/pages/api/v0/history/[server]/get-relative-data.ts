@@ -30,40 +30,43 @@
 
 import { MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
+import { waitUntil } from "@vercel/functions";
 
 export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
+	req: NextApiRequest,
+	res: NextApiResponse,
 ) {
-  const client = new MongoClient(process.env.MONGO_DB as string);
-  const db = client.db("mhsf").collection("history");
-  const mh = client.db("mhsf").collection("mh");
-  const server = req.query.server as string;
+	const client = new MongoClient(process.env.MONGO_DB as string);
+	const db = client.db("mhsf").collection("history");
+	const mh = client.db("mhsf").collection("mh");
+	const server = req.query.server as string;
 
-  const allData = await db.find({ server }).toArray();
-  const data: any[] = [];
-  if (server === "peww") console.log(allData.slice(-30));
+	const allData = await db.find({ server }).toArray();
+	const data: any[] = [];
+	if (server === "peww") console.log(allData.slice(-30));
 
-  for (const d of allData.slice(-30)) {
-    const dateOfEntry = new Date(d.date);
-    const result = await mh
-      .find({
-        date: {
-          $gte: new Date(dateOfEntry.getTime() - 1000 * 60 * 60),
-          $lt: new Date(dateOfEntry.getTime() + 1000 * 60 * 60),
-        },
-      })
-      .toArray();
+	for (const d of allData.slice(-30)) {
+		const dateOfEntry = new Date(d.date);
+		const result = await mh
+			.find({
+				date: {
+					$gte: new Date(dateOfEntry.getTime() - 1000 * 60 * 60),
+					$lt: new Date(dateOfEntry.getTime() + 1000 * 60 * 60),
+				},
+			})
+			.toArray();
 
-    if (result.length > 0) {
-      const resultedData = result[0];
-      data.push({
-        relativePrecentage: d.player_count / resultedData.total_players,
-        date: dateOfEntry,
-      });
-    }
-  }
+		if (result.length > 0) {
+			const resultedData = result[0];
+			data.push({
+				relativePrecentage: d.player_count / resultedData.total_players,
+				date: dateOfEntry,
+			});
+		}
+	}
 
-  client.close();
-  res.send({ data });
+	// Close the database, but don't close this
+	// serverless instance until it happens
+	waitUntil(client.close());
+	res.send({ data });
 }

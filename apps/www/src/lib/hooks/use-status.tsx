@@ -33,7 +33,7 @@ import { useEffect, useState } from "react";
 export default function useStatus() {
   const [loading, setLoading] = useState(true);
   const [incidents, setIncidents] = useState(null);
-  const [statusURL, setStatusURL] = useState(null);
+  const [statusURL, setStatusURL] = useState<string | null>(null);
 
   useEffect(() => {
     fetch("/api/v1/get-status")

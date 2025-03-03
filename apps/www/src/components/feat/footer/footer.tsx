@@ -1,0 +1,61 @@
+import { BrandingGenericIcon } from "../icons/branding-icons";
+import { Link } from "../../util/link";
+import { FooterStatus } from "./status";
+
+export function Footer() {
+  return (
+    <footer className="w-full border-t p-[20px] mt-15">
+      <div className="flex justify-between items-center">
+        <span className="flex items-center gap-4 text-muted-foreground">
+          <Link href="Special:Root">
+            <BrandingGenericIcon className="max-w-[32px] max-h-[32px]" />
+          </Link>
+          <ul className="grid grid-cols-2 md:flex gap-4 p-0 m-0 w-full md:items-center items-start list-none">
+            <li className="text-sm">
+              <Link
+                href="/home"
+                className="text-muted-foreground hover:text-shadcn-primary transition-colors"
+              >
+                Home
+              </Link>
+            </li>
+            <li className="text-sm">
+              <Link
+                href="/servers"
+                className="text-muted-foreground hover:text-shadcn-primary transition-colors"
+              >
+                Servers
+              </Link>
+            </li>
+            <li className="text-sm">
+              <Link
+                href="/support"
+                className="text-muted-foreground hover:text-shadcn-primary transition-colors"
+              >
+                Contact
+              </Link>
+            </li>
+          </ul>
+        </span>
+        <FooterStatus />
+      </div>
+      <span className="block mt-4">
+        <small className="text-muted-foreground text-[0.75rem]">
+          MHSF is an open-source project licensed under the MIT license. MHSF is
+          not officially affiliated with with Minehut, Super League Enterprise,
+          or GamerSafer in any way. <br className="spacing-3" />
+          Spamming, abusing or misusing the Minehut API and/or MHSF will get
+          your IP blocked, we are not responsible for IP blocks.{" "}
+          <strong>You have been warned.</strong>
+          <br className="spacing-3" />
+          If you're worried, please review the{" "}
+          <Link href="https://support.minehut.com/hc/en-us/articles/27075816947731-Minehut-Rules">
+            Rules
+          </Link>
+          , <Link href="https://minehut.com/terms-of-service">ToS</Link> &{" "}
+          <Link href="https://support.mhsf.app/ECA">ECA</Link>.
+        </small>
+      </span>
+    </footer>
+  );
+}
