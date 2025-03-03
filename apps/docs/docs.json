@@ -1,0 +1,80 @@
+{
+	"$schema": "https://mintlify.com/docs.json",
+	"theme": "maple",
+	"name": "MHSF Docs",
+	"colors": {
+		"primary": "#817abb",
+		"light": "#817abb",
+		"dark": "#c15281"
+	},
+	"favicon": "/content/favicon.svg",
+	"navigation": {
+		"global": {
+			"anchors": [
+				{
+					"anchor": "MHSF Update Discord",
+					"href": "https://discord.gg/QC2GfgWXVD",
+					"icon": "discord"
+				}
+			]
+		},
+		"tabs": [
+			{
+				"tab": "Documentation",
+				"groups": [
+					{
+						"group": "General",
+						"pages": ["getting-started"]
+					},
+					{
+						"group": "Guides",
+						"pages": [
+							"guides/customization",
+							"guides/linking",
+							"guides/owning-a-server",
+							"guides/reporting-server"
+						]
+					},
+					{
+						"group": "Advanced",
+						"pages": [
+							"advanced/achievements",
+							"advanced/command-bar",
+							"advanced/tech-stack"
+						]
+					},
+					{
+						"group": "Legal",
+						"pages": ["legal/rules"]
+					}
+				]
+			},
+			{
+				"tab": "Changelog",
+				"pages": ["changelog"]
+			}
+		]
+	},
+	"logo": {
+		"light": "/content/icon-gl.svg",
+		"dark": "/content/icon-gd.svg"
+	},
+	"navbar": {
+		"links": [
+			{
+				"label": "Support",
+				"href": "mailto:support@mhsf.app"
+			}
+		],
+		"primary": {
+			"type": "button",
+			"label": "MHSF",
+			"href": "https://mhsf.app"
+		}
+	},
+	"footer": {
+		"socials": {
+			"github": "https://github.com/DeveloLongScript/MHSF"
+		}
+	}
+}
