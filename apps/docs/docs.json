@@ -45,7 +45,7 @@
 					},
 					{
 						"group": "Legal",
-						"pages": ["legal/rules"]
+						"pages": ["legal/rules", "legal/compliance"]
 					}
 				]
 			},
