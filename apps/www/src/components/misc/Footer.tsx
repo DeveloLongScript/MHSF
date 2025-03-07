@@ -52,8 +52,10 @@ export default function Footer() {
 
         <p>© {new Date().getFullYear()} dvelo</p>
         <strong className="text-sm">
-          MHSF is built on open-source technologies and is not endorsed by or
-          affiliated with GamerSafer or its subsidiaries.{" "}
+          MHSF is built with open-source technologies.{" "}
+          <Link href="/docs/legal/compliance">
+            Please view our compliance documentation for more information.
+          </Link>
         </strong>
         <br />
         <span className="flex items-center">
