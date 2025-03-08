@@ -128,7 +128,7 @@ const DropdownMenuItem = React.forwardRef<
     className={cn(
       "w-full px-2 rounded-lg z-100 outline-hidden min-h-[36px] font-normal flex items-center cursor-pointer dark:hover:bg-zinc-800/70",
       props.disabled ? "opacity-70 pointer-events-none cursor-not-allowed" : "",
-      "duration-100 border border-transparent bg-transparent hover:bg-slate-100 dark:text-zinc-200",
+      "duration-100 bg-transparent hover:bg-slate-100 dark:text-zinc-200",
       className
     )}
     {...props}

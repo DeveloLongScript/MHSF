@@ -28,10 +28,11 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { BadgeColor } from "@/components/feat/server-list/server-card";
-import { OnlineServer, ServerResponse } from "@/lib/types/mh-server";
-import { ServerCog } from "lucide-react";
-import { ReactNode } from "react";
+import type { BadgeColor } from "@/components/feat/server-list/server-card";
+import { isFavorited } from "@/lib/api";
+import type { OnlineServer, ServerResponse } from "@/lib/types/mh-server";
+import { Cake, ServerCog } from "lucide-react";
+import type { ReactNode } from "react";
 
 const serverCache: any = {};
 
@@ -43,19 +44,22 @@ const serverCache: any = {};
 // htmlDocs: when clicked, what appears (formatted in HTML, string, using the `` string format)
 // docsName: name appearing on the title in the docs. (string)
 // role?: the role used on the badge (https://ui.shadcn.com/docs/components/badge + some custom others, string)
-// primary: does this tag appear **just** in the home screen (true), or **just** inside the server screen (false)
 // __disab: you shouldn't mess with this flag
 // __filter: if your name isn't static, set this to true
 //
 // You may also use `requestServer()` to grab the offline version of the server from the API, which may get you more information about the server (ServerResponse)
 export const allTags: Array<{
-  name: (server: OnlineServer) => Promise<string | ReactNode>;
-  condition?: (server: OnlineServer) => Promise<boolean>;
-  listCondition?: (server: ServerResponse) => Promise<boolean>;
+  name: (server: {
+    online?: OnlineServer;
+    server?: ServerResponse;
+  }) => Promise<string | ReactNode>;
+  condition?: (server: {
+    online?: OnlineServer;
+    server?: ServerResponse;
+  }) => Promise<boolean>;
   tooltipDesc: string;
   htmlDocs: string;
   docsName: string;
-  primary: boolean;
   role?: BadgeColor;
   __disab?: boolean;
   __filter?: boolean;
@@ -71,15 +75,23 @@ export const allTags: Array<{
             borderRadius: "9999px",
           }}
         />
-        {c.playerData.playerCount} online
+        {String(
+          c.online === undefined
+            ? c.server?.playerCount
+            : c.online.playerData.playerCount
+        )}{" "}
+        online
       </>
     ),
-    condition: async (c) => c.playerData.playerCount !== 0,
+    condition: async (c) =>
+      (c.online === undefined
+        ? c.server?.playerCount
+        : c.online.playerData.playerCount) !== 0,
     htmlDocs:
       "'Players Online' specifies the amount of players currently online. If this server is a network, the amount of players may not be accurate as this counter only counts the number of players coming directly from Minehut",
     tooltipDesc:
       "'Players Online' specifies the amount of players currently online.",
-    primary: true,
+
     role: "green-subtle",
     docsName: "Players Online",
     __filter: true,
@@ -98,10 +110,12 @@ export const allTags: Array<{
         0 online
       </>
     ),
-    condition: async (c) => c.playerData.playerCount === 0,
+    condition: async (c) =>
+      (c.online === undefined ? c.server?.playerCount : c.online.playerData) ===
+      0,
     htmlDocs: "Nobody is online this server.",
     tooltipDesc: "Nobody is online this server.",
-    primary: true,
+
     role: "gray-subtle",
     docsName: "Nobody Online",
     __filter: true,
@@ -113,47 +127,90 @@ export const allTags: Array<{
         Always Online
       </>
     ),
-    condition: async (b: any) => b.staticInfo.alwaysOnline,
+    condition: async (b) =>
+      b.online !== undefined && b.online.staticInfo?.alwaysOnline,
     tooltipDesc:
       '"Always online" means that the server will not shut down until the plan associated with it expires.',
     htmlDocs: `
     This tag appears on servers where the plan they are under allows the server to be always online. However, if the plan associated with the tag expires, the server will no longer be Always Online. <em>This is in servers with one of the more expensive plans, or just a server that is external.</em>
     `,
-    primary: true,
+
     docsName: "Always Online",
-    role: "blue",
+    role: "blue-subtle",
     __disab: true,
   },
   {
-    name: async (s) => s.staticInfo.planMaxPlayers + " max players",
-    condition: async (s) => s.staticInfo.planMaxPlayers != null,
+    name: async (s) =>
+      (s.online !== undefined
+        ? s.online.staticInfo.planMaxPlayers
+        : s.server?.maxPlayers) + " max players",
+    condition: async (s) =>
+      s.online !== undefined
+        ? s.online.staticInfo.planMaxPlayers != null
+        : s.server?.maxPlayers != null,
     tooltipDesc:
       "This tag represents the maximum amount of players the server can have at one time.",
     docsName: "Max Players",
     htmlDocs:
       "This tag represents the maximum amount of players the server can have at one time. This doesn't mean the amount of players before the server crashes, it means the amount Minehut said the server can handle or the plan the server is on. <em>However, sometimes it might not appear because the server is external.</em>",
-    primary: true,
-    role: "default",
+
+    role: "blue",
     __filter: true,
   },
   {
     name: async () => "Partner",
-    condition: async (s) => s.name === "CoreBoxx",
+    condition: async (s) =>
+      (s.server ?? s.online ?? { name: "" }).name === "CoreBoxx",
     tooltipDesc: "This server is a partner with MHSF.",
     docsName: "Partner",
     htmlDocs: "This tag represents that this server is a partner with MHSF.",
-    primary: true,
-    role: "purple",
+    role: "rainbow",
   },
   {
-    name: async (s) => <>{s.staticInfo.serverPlan.split(" ")[0]}</>,
+    name: async (s) => (
+      <span className="capitalize">
+        {(s.online !== undefined
+          ? s.online.staticInfo.serverPlan
+          : (s.server?.server_plan ?? "")
+        )
+          .split(" ")[0]
+          .split("_")[0]
+          .toLocaleLowerCase()}
+      </span>
+    ),
     tooltipDesc: "This tag represents the server plan this server is using.",
     docsName: "Server Plan",
     htmlDocs:
       "This tag represents the maximum amount of players the server can have at one time. This doesn't mean the amount of players before the server crashes, it means the amount Minehut said the server can handle or the plan the server is on. <em>However, sometimes it might not appear because the server is external.</em>",
-    primary: true,
+
     role: "red-subtle",
     __filter: true,
+  },
+  {
+    name: async (s) => (
+      <span className="flex items-center gap-2">
+        <Cake size={16} /> Created {timeConverter(s.server?.creation)}
+      </span>
+    ),
+    condition: async (s) => s.server !== undefined,
+    tooltipDesc: "This tag represents the date this server was created.",
+    docsName: "Creation Date",
+    htmlDocs: "This tag represents the date this server was created.",
+    role: "gray",
+  },
+  {
+    name: async (s) => "Favorited",
+    condition: async (s) => {
+      const favorited = await isFavorited(
+        (s.online ?? s.server ?? { name: "" }).name
+      );
+      return favorited;
+    },
+    tooltipDesc: "This tag represents that you favorited this server.",
+    docsName: "Favorited",
+    htmlDocs:
+      "This tag shows that you favorited this server in MHSF. The amount of favorites is publicly shown to other users using MHSF. We do not provide server owners with data about who favorites a server, unlike traditional voting systems.",
+    role: "red",
   },
   // deprecated
   /**{
@@ -167,7 +224,7 @@ export const allTags: Array<{
     htmlDocs:
       'Does this server use <a href="https://papermc.io/software/velocity">Velocity</a>? This means that the server has multiple minigames/other servers gamemodes that are private, and this server is the lobby.',
     docsName: "Velocity",
-    primary: true,
+    
     role: "violet",
   }, */
 ];
@@ -175,161 +232,143 @@ export const allTags: Array<{
 export const allCategories: Array<{
   name: string;
   condition: (server: OnlineServer) => Promise<boolean>;
-  primary: boolean;
-  role?:
-    | "default"
-    | "destructive"
-    | "outline"
-    | "secondary"
-    | "red"
-    | "orange"
-    | "yellow"
-    | "green"
-    | "lime"
-    | "blue"
-    | "teal"
-    | "cyan"
-    | "violet"
-    | "indigo"
-    | "purple"
-    | "fuchsia"
-    | "pink";
+  role?: BadgeColor;
 }> = [
   {
     name: "Farming",
     condition: async (b: any) => {
       return b.allCategories.includes("farming");
     },
-    primary: true,
-    role: "secondary",
+
+    role: "default",
   },
   {
     name: "SMP",
     condition: async (b: any) => {
       return b.allCategories.includes("smp");
     },
-    primary: true,
-    role: "secondary",
+
+    role: "default",
   },
   {
     name: "Factions",
     condition: async (b: any) => {
       return b.allCategories.includes("factions");
     },
-    primary: true,
-    role: "secondary",
+
+    role: "default",
   },
   {
     name: "Meme",
     condition: async (b: any) => {
       return b.allCategories.includes("meme");
     },
-    primary: true,
-    role: "secondary",
+
+    role: "default",
   },
   {
     name: "Puzzle",
     condition: async (b: any) => {
       return b.allCategories.includes("puzzle");
     },
-    primary: true,
-    role: "secondary",
+
+    role: "default",
   },
   {
     name: "Box",
     condition: async (b: any) => {
       return b.allCategories.includes("box");
     },
-    primary: true,
-    role: "secondary",
+
+    role: "default",
   },
   {
     name: "Minigames",
     condition: async (b: any) => {
       return b.allCategories.includes("minigames");
     },
-    primary: true,
-    role: "secondary",
+
+    role: "default",
   },
   {
     name: "RPG",
     condition: async (b: any) => {
       return b.allCategories.includes("rpg");
     },
-    primary: true,
-    role: "secondary",
+
+    role: "default",
   },
   {
     name: "Parkour",
     condition: async (b: any) => {
       return b.allCategories.includes("parkour");
     },
-    primary: true,
-    role: "secondary",
+
+    role: "default",
   },
   {
     name: "Lifesteal",
     condition: async (b: any) => {
       return b.allCategories.includes("lifesteal");
     },
-    primary: true,
-    role: "secondary",
+
+    role: "default",
   },
   {
     name: "Prison",
     condition: async (b: any) => {
       return b.allCategories.includes("prison");
     },
-    primary: true,
-    role: "secondary",
+
+    role: "default",
   },
   {
     name: "Gens",
     condition: async (b: any) => {
       return b.allCategories.includes("gens");
     },
-    primary: true,
-    role: "secondary",
+
+    role: "default",
   },
   {
     name: "Skyblock",
     condition: async (b: any) => {
       return b.allCategories.includes("skyblock");
     },
-    primary: true,
-    role: "secondary",
+
+    role: "default",
   },
   {
     name: "Roleplay",
     condition: async (b: any) => {
       return b.allCategories.includes("roleplay");
     },
-    primary: true,
-    role: "secondary",
+
+    role: "default",
   },
   {
     name: "PvP",
     condition: async (b: any) => {
       return b.allCategories.includes("pvp");
     },
-    primary: true,
-    role: "secondary",
+
+    role: "default",
   },
   {
     name: "Modded",
     condition: async (b: any) => {
       return b.allCategories.includes("modded");
     },
-    primary: true,
-    role: "secondary",
+
+    role: "default",
   },
   {
     name: "Creative",
     condition: async (b: any) => {
       return b.allCategories.includes("creative");
     },
-    primary: true,
-    role: "secondary",
+
+    role: "default",
   },
 ];
 
@@ -343,4 +382,27 @@ async function requestServer(s: OnlineServer): Promise<ServerResponse> {
     return json.server;
   }
   return serverCache[s.name];
+}
+
+function timeConverter(UNIX_timestamp: any) {
+  const a = new Date(UNIX_timestamp);
+  const months = [
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9",
+    "10",
+    "11",
+    "12",
+  ];
+  const year = a.getFullYear();
+  const month = months[a.getMonth()];
+  const date = a.getDate();
+  const time = month + "/" + date + "/" + year;
+  return time;
 }

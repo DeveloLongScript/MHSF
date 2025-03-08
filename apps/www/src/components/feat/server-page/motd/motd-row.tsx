@@ -28,35 +28,44 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-"use client";
-
-import * as React from "react";
-import * as SwitchPrimitives from "@radix-ui/react-switch";
-
+import { Separator } from "@/components/ui/separator";
+import type { ServerResponse } from "@/lib/types/mh-server";
+import { MOTDRenderer } from "./motd-renderer";
+import useClipboard from "@/lib/useClipboard";
+import { miniMessage } from "minimessage-js";
+import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
-const Switch = React.forwardRef<
-  React.ElementRef<typeof SwitchPrimitives.Root>,
-  React.ComponentPropsWithoutRef<typeof SwitchPrimitives.Root>
->(({ className, ...props }, ref) => (
-  <SwitchPrimitives.Root
-    className={cn(
-      "peer inline-flex w-11 h-6 shrink-0 cursor-pointer items-center rounded-full border-2 data-[state=unchecked]:border-transparent data-[state=checked]:!border-shadcn-primary shadow-xs",
-      "transition-colors focus-visible:outline-hidden ",
-      "data-[state=unchecked]:bg-input data-[state=checked]:bg-shadcn-primary",
-      className
-    )}
-    {...props}
-    ref={ref}
-  >
-    <SwitchPrimitives.Thumb
-      className={cn(
-        "box-border w-5 h-full bg-white dark:bg-black rounded-full shadow-xs",
-        "transition data-[state=checked]:translate-x-5"
-      )}
-    />
-  </SwitchPrimitives.Root>
-));
-Switch.displayName = SwitchPrimitives.Root.displayName;
+export function MOTDRow({ server }: { server: ServerResponse }) {
+  const clipboard = useClipboard();
 
-export { Switch };
+  return (
+    <div className="border rounded-xl p-4 relative max-h-[250px] ">
+      <strong className="text-lg">MOTD</strong>
+      <br />
+      <Separator className="my-2" />
+      <MOTDRenderer
+        className={cn("mt-2 break-all overflow-y-auto max-h-[150px]")}
+        minecraftFont
+      >
+        {server.motd}
+      </MOTDRenderer>
+      <br />
+      <small className="absolute bottom-[10px]">
+        {server.motd.length} characters,{" "}
+        <button
+          className="cursor-pointer underline"
+          type="button"
+          onClick={() => {
+            clipboard.writeText(
+              miniMessage().toHTML(miniMessage().deserialize(server.motd))
+            );
+            toast.success("Copied to clipboard.");
+          }}
+        >
+          click to copy HTML
+        </button>
+      </small>
+    </div>
+  );
+}

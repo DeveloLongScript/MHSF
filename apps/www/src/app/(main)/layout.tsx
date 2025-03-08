@@ -43,6 +43,7 @@ import { FontBoundary } from "@/components/util/font-boundary";
 import { ClerkProvider } from "@/components/util/clerk-provider";
 import { Toaster } from "sonner";
 import { Footer } from "@/components/feat/footer/footer";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 export default function RootLayout({
   children,
@@ -75,16 +76,18 @@ export default function RootLayout({
       >
         <ClerkProvider>
           <IsScript>
-            <FontBoundary>
-              <TooltipProvider>
-                <Toaster richColors position="top-center" />
-                <ClerkProvider>
-                  <NavBar />
-                  <div className="pt-16 min-h-screen">{children}</div>
-                  <Footer />
-                </ClerkProvider>
-              </TooltipProvider>
-            </FontBoundary>
+            <NuqsAdapter>
+              <FontBoundary>
+                <TooltipProvider>
+                  <Toaster richColors position="top-center" />
+                  <ClerkProvider>
+                    <NavBar />
+                    <div className="pt-16 min-h-screen">{children}</div>
+                    <Footer />
+                  </ClerkProvider>
+                </TooltipProvider>
+              </FontBoundary>
+            </NuqsAdapter>
           </IsScript>
         </ClerkProvider>
       </ThemeProvider>

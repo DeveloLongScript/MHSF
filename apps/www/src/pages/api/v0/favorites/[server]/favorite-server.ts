@@ -51,7 +51,7 @@ export default async function handler(
 	const collection = db.collection("favorites");
 	const find = await collection.find({ user: userId }).toArray();
 
-	if (find.length == 0) {
+	if (find.length === 0) {
 		collection.insertOne({ user: userId, favorites: [server] });
 		await increaseNum(client, server);
 
@@ -72,7 +72,7 @@ export default async function handler(
 			if (index > -1) {
 				existingFavorites.splice(index, 1);
 			}
-			collection.replaceOne(
+			await collection.replaceOne(
 				{ _id: new ObjectId(collect._id) },
 				{
 					user: userId,
@@ -88,7 +88,7 @@ export default async function handler(
 		} else {
 			existingFavorites.push(server);
 			await increaseNum(client, server);
-			collection.replaceOne(
+			await collection.replaceOne(
 				{ _id: new ObjectId(collect._id) },
 				{
 					user: userId,

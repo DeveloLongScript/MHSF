@@ -36,33 +36,11 @@ import { Separator } from "@/components/ui/separator";
 import { Statistics } from "./statistics";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useInfiniteScrolling } from "@/lib/hooks/use-infinite-scrolling";
-import { useEffect, useState } from "react";
-import MiniMessage from "minimessage-js";
 
 export function ServerList() {
   const { servers, loading, serverCount, playerCount } = useServers();
   const { itemsLength, fetchMoreData, hasMoreData, data } =
     useInfiniteScrolling(servers);
-  const [motdList, setMotdList] = useState<{ name: string; motd: string }[]>(
-    []
-  );
-
-  useEffect(() => {
-    const result: Array<{ name: string; motd: string }> = [];
-    const mm = MiniMessage.miniMessage();
-    servers.forEach((c) => {
-      try {
-        result.push({
-          name: c.name,
-          motd: mm.toHTML(mm.deserialize(c.motd)),
-        });
-      } catch (e) {
-        console.log(e);
-      }
-    });
-
-    setMotdList(result);
-  }, [servers]);
 
   if (loading)
     return (
@@ -97,11 +75,7 @@ export function ServerList() {
       >
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 mt-3">
           {data.map((c) => (
-            <ServerCard
-              server={c}
-              key={c.name}
-              motd={motdList.find((x) => x.name === c.name)?.motd}
-            />
+            <ServerCard server={c} key={c.staticInfo._id} />
           ))}
         </div>
       </InfiniteScroll>

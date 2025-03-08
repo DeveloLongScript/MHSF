@@ -58,7 +58,7 @@ export default async function handler(
 }
 
 export async function increaseNum(client: MongoClient, server: string) {
-	const db = client.db("mhsf");
+	const db = client.db(process.env.CUSTOM_MONGO_DB ?? "mhsf");
 	const collection = db.collection("meta");
 	const find = await collection.find({ server: server }).toArray();
 
@@ -74,7 +74,7 @@ export async function increaseNum(client: MongoClient, server: string) {
 }
 
 export async function decreaseNum(client: MongoClient, server: string) {
-	const db = client.db("mhsf");
+	const db = client.db(process.env.CUSTOM_MONGO_DB ?? "mhsf");
 	const collection = db.collection("meta");
 	const find = await collection.find({ server: server }).toArray();
 

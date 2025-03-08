@@ -39,7 +39,7 @@ import {
 import { toast } from "sonner";
 import { useEffectOnce } from "@/lib/useEffectOnce";
 import { allTags } from "@/config/tags";
-import { ReactNode, useState } from "react";
+import { type ReactNode, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import {
   Dialog,
@@ -52,25 +52,21 @@ import {
 import { Button } from "@/components/ui/button";
 import { Copy } from "lucide-react";
 import useClipboard from "@/lib/useClipboard";
+import { useRouter } from "next/navigation";
+import { MOTDRenderer } from "../server-page/motd/motd-renderer";
 
-export default function ServerCard({
-  server,
-  motd,
-}: {
-  server: OnlineServer;
-  motd: string | undefined;
-}) {
+export default function ServerCard({ server }: { server: OnlineServer }) {
   const clipboard = useClipboard();
+  const router = useRouter();
 
   return (
     <Material
-      key={server.name}
       className="min-h-[250px] max-h-[250px] cursor-pointer outline-0 group hover:drop-shadow-card-hover focus:drop-shadow-card-hover transition-all"
-      onClick={() => toast.success("pluh")}
+      onClick={() => router.push(`/server/${server.staticInfo._id}`)}
       tabIndex={0}
       onKeyDown={(e) => {
         // Only send user when they hit "Enter"
-        if (e.key === "Enter") toast.success("keyboard");
+        if (e.key === "Enter") router.push(`/server/${server.staticInfo._id}`);
       }}
     >
       <span className="text-sm hidden group-focus-visible:block text-muted-foreground mb-2">
@@ -132,12 +128,14 @@ export default function ServerCard({
           )}
         </TooltipContent>
       </Tooltip>
-      <TagShower server={server} className="mt-1" />
-      {motd && (
-        <span
+      <TagShower server={server} className="mt-1 " />
+      {server.motd && (
+        <MOTDRenderer
           className="block break-all overflow-hidden mt-3"
-          dangerouslySetInnerHTML={{ __html: motd }}
-        />
+          minecraftFont
+        >
+          {server.motd}
+        </MOTDRenderer>
       )}
     </Material>
   );
@@ -157,7 +155,8 @@ export type BadgeColor =
   | "gray-subtle"
   | "blue-subtle"
   | "purple-subtle"
-  | "custom";
+  | "custom"
+  | "rainbow";
 
 export function TagShower(props: {
   server: OnlineServer;
@@ -179,7 +178,7 @@ export function TagShower(props: {
     if (loading) {
       allTags.forEach((tag) => {
         if (!tag.condition) {
-          tag.name(props.server).then((n) => {
+          tag.name({ online: props.server }).then((n) => {
             compatiableTags.push({
               name: n,
               docsName: tag.docsName,
@@ -190,9 +189,9 @@ export function TagShower(props: {
             setLoading(false);
           });
         } else
-          tag.condition(props.server).then((b) => {
-            if (b && tag.primary) {
-              tag.name(props.server).then((n) => {
+          tag.condition({ online: props.server }).then((b) => {
+            if (b) {
+              tag.name({ online: props.server }).then((n) => {
                 compatiableTags.push({
                   name: n,
                   docsName: tag.docsName,

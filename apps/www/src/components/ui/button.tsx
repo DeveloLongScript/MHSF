@@ -49,7 +49,7 @@ const buttonVariants = cva(
 		    hover:bg-slate-100 dark:hover:bg-zinc-800 dark:hover:border-zinc-700 dark:hover:border-zinc-700 dark:active:bg-zinc-900 active:bg-slate-200`,
 
         tertiary:
-          "border border-transparent bg-transparent hover:bg-slate-100 dark:hover:bg-zinc-700/30 dark:text-zinc-200",
+          "bg-transparent hover:bg-slate-100 dark:hover:bg-zinc-700/30 dark:text-zinc-200",
 
         danger:
           "border border-red-500 bg-red-500 hover:text-red-500 hover:bg-transparent text-white",

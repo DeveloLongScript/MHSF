@@ -28,35 +28,53 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-"use client";
-
-import * as React from "react";
-import * as SwitchPrimitives from "@radix-ui/react-switch";
-
+import { miniMessage } from "minimessage-js";
 import { cn } from "@/lib/utils";
+import localFont from "next/font/local";
+import { useEffect, useState } from "react";
+import { useSettingsStore } from "@/lib/hooks/use-settings-store";
 
-const Switch = React.forwardRef<
-  React.ElementRef<typeof SwitchPrimitives.Root>,
-  React.ComponentPropsWithoutRef<typeof SwitchPrimitives.Root>
->(({ className, ...props }, ref) => (
-  <SwitchPrimitives.Root
-    className={cn(
-      "peer inline-flex w-11 h-6 shrink-0 cursor-pointer items-center rounded-full border-2 data-[state=unchecked]:border-transparent data-[state=checked]:!border-shadcn-primary shadow-xs",
-      "transition-colors focus-visible:outline-hidden ",
-      "data-[state=unchecked]:bg-input data-[state=checked]:bg-shadcn-primary",
-      className
-    )}
-    {...props}
-    ref={ref}
-  >
-    <SwitchPrimitives.Thumb
+const Font = localFont({ src: "./motd-font.ttf" });
+
+export function MOTDRenderer({
+  className,
+  children,
+  minecraftFont,
+}: {
+  className?: string;
+  children: string;
+  minecraftFont?: boolean;
+}) {
+  const [result, setResult] = useState("");
+  const [error, setError] = useState(false);
+  const { get } = useSettingsStore();
+
+  useEffect(() => {
+    try {
+      setResult(miniMessage().toHTML(miniMessage().deserialize(children)));
+    } catch (e) {
+      setError(true);
+      setResult(
+        "Error while parsing MOTD. \n Please let the server owners know."
+      );
+    }
+  }, []);
+
+  return (
+    <div
+      dangerouslySetInnerHTML={{
+        __html: result,
+      }}
       className={cn(
-        "box-border w-5 h-full bg-white dark:bg-black rounded-full shadow-xs",
-        "transition data-[state=checked]:translate-x-5"
+        className,
+        minecraftFont
+          ? error
+            ? ""
+            : (get("mc-font") ?? "true") === "true"
+              ? Font.className
+              : ""
+          : ""
       )}
     />
-  </SwitchPrimitives.Root>
-));
-Switch.displayName = SwitchPrimitives.Root.displayName;
-
-export { Switch };
+  );
+}

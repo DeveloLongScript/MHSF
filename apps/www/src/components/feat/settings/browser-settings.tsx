@@ -46,14 +46,17 @@ import {
 } from "@/components/ui/select";
 import { useEffect, useState } from "react";
 import { useSettingsStore } from "@/lib/hooks/use-settings-store";
+import { Switch } from "@/components/ui/switch";
 
 export function BrowserSettings() {
   const settingsStore = useSettingsStore();
   const [fontFamily, setFontFamily] = useState("inter");
+  const [mcFont, setMcFont] = useState(true);
 
   useEffect(() => {
     setFontFamily((settingsStore.get("font-family") ?? "inter") as string);
-  }, [settingsStore]);
+    setMcFont((settingsStore.get("mc-font") === "true") as boolean);
+  }, []);
 
   return (
     <Material className="mt-6 grid gap-4">
@@ -67,6 +70,24 @@ export function BrowserSettings() {
             </SettingDescription>
           </SettingMeta>
           <ModeToggle />
+        </SettingContent>
+      </Setting>
+      <Setting>
+        <SettingContent>
+          <SettingMeta>
+            <SettingTitle>Use Minecraft font</SettingTitle>
+            <SettingDescription>
+              Use Minecraft font for MOTD. Turning this off restores font
+              settings for MOTD's to a v1-like state.
+            </SettingDescription>
+          </SettingMeta>
+          <Switch
+            checked={mcFont}
+            onCheckedChange={(c) => {
+              settingsStore.set("mc-font", c, false);
+              setMcFont(c);
+            }}
+          />
         </SettingContent>
       </Setting>
       <Setting>

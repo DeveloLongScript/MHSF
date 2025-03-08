@@ -52,16 +52,24 @@ export function useSettingsStore() {
       }
       return localStorage.getItem(key);
     },
-    set: async (key: string, value: string, userEntry: boolean) => {
+    set: async (
+      key: string,
+      value: string | boolean,
+      userEntry: boolean,
+      __unsafeMetadata = false
+    ) => {
+      if (isSignedIn && userEntry === true && __unsafeMetadata) {
+        await user.update({ unsafeMetadata: { [key]: value } });
+      }
       if (isSignedIn && userEntry === true) {
         await fetch("/api/v0/account-sl/change", {
           body: JSON.stringify({ [key]: value }),
+          method: "POST",
         });
       }
-      if (!isSignedIn && userEntry)
-        throw new Error("How is this even possible?!?!");
+      if (!isSignedIn && userEntry) localStorage.setItem(key, value.toString());
       if (userEntry === false) {
-        localStorage.setItem(key, value);
+        localStorage.setItem(key, value.toString());
       }
     },
   };
