@@ -75,6 +75,7 @@ export default serve({
 									"sec-fetch-mode": "cors",
 									"sec-fetch-site": "cross-site",
 									"Content-Type": "application/json",
+									// They'll never know hehehehehe
 									Referer: "http://localhost:3000/",
 									"Referrer-Policy": "strict-origin-when-cross-origin",
 								},
