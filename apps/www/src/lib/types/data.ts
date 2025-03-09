@@ -28,30 +28,29 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { NextApiRequest, NextApiResponse } from "next";
-import { MongoClient } from "mongodb";
-import { waitUntil } from "@vercel/functions";
+import { Achievement } from "./achievement";
 
-export default async function handler(
-	req: NextApiRequest,
-	res: NextApiResponse,
-) {
-	const { server } = req.body;
-
-	if (server == null) {
-		res.status(400).send({ message: "Couldn't find data" });
-		return;
-	}
-
-	const client = new MongoClient(process.env.MONGO_DB as string);
-	await client.connect();
-
-	const db = client.db(process.env.CUSTOM_MONGO_DB ?? "mhsf");
-	const collection = db.collection("owned-servers");
-
-	// Close the database, but don't close this
-	// serverless instance until it happens
-	waitUntil(client.close());
-
-	res.send({ owned: (await collection.findOne({ server })) != undefined });
-}
+export type MHSFData = {
+  favoriteData: {
+    favoritedByAccount: boolean | null;
+    favoriteNumber: number;
+    favoriteHistoricalData: { date: string; favorites: number }[];
+  };
+  customizationData: {
+    description: string | undefined;
+    banner: string | undefined;
+    discord: string | undefined;
+    colorScheme: string | undefined;
+    userProfilePicture: string | undefined;
+    isOwned: boolean;
+    isOwnedByUser: boolean;
+  };
+  playerData: {
+    historically: { date: string; playerCount: number }[];
+    max: number;
+  };
+  achievements: {
+    historically: { _id: string; name: string; achievements: Achievement[] }[];
+    currently: Achievement[];
+  };
+};
