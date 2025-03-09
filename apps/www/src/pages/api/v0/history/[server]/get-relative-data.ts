@@ -28,42 +28,92 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { MongoClient } from "mongodb";
-import { NextApiRequest, NextApiResponse } from "next";
+import type { NextApiRequest, NextApiResponse } from "next";
+import { MongoClient as MongoClientImpl } from "mongodb";
+
+interface ServerHistoryRecord {
+  server: string;
+  player_count: number;
+  date: Date;
+}
+
+interface MHRecord {
+  total_players: number;
+  date: Date;
+}
+
+interface RelativeData {
+  relativePrecentage: number;
+  date: Date;
+}
+
+interface ResponseData {
+  data: RelativeData[];
+}
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse<ResponseData | { message: string }>
 ) {
-  const client = new MongoClient(process.env.MONGO_DB as string);
-  const db = client.db("mhsf").collection("history");
-  const mh = client.db("mhsf").collection("mh");
-  const server = req.query.server as string;
+  const client = new MongoClientImpl(process.env.MONGO_DB as string);
 
-  const allData = await db.find({ server }).toArray();
-  const data: any[] = [];
-  if (server === "peww") console.log(allData.slice(-30));
+  try {
+    const db = client.db("mhsf").collection("history");
+    const mh = client.db("mhsf").collection("mh");
+    const server = req.query.server as string;
 
-  for (const d of allData.slice(-30)) {
-    const dateOfEntry = new Date(d.date);
-    const result = await mh
-      .find({
-        date: {
-          $gte: new Date(dateOfEntry.getTime() - 1000 * 60 * 60),
-          $lt: new Date(dateOfEntry.getTime() + 1000 * 60 * 60),
-        },
-      })
+    // Get only the last 30 records with needed fields
+    const recentData = await db
+      .find<ServerHistoryRecord>(
+        { server },
+        {
+          projection: { player_count: 1, date: 1 },
+          sort: { date: -1 },
+          limit: 30,
+        }
+      )
       .toArray();
 
-    if (result.length > 0) {
-      const resultedData = result[0];
-      data.push({
-        relativePrecentage: d.player_count / resultedData.total_players,
-        date: dateOfEntry,
-      });
-    }
-  }
+    const data: RelativeData[] = [];
 
-  client.close();
-  res.send({ data });
+    // Process in batches to reduce the number of database queries
+    const batchSize = 5;
+    for (let i = 0; i < recentData.length; i += batchSize) {
+      const batch = recentData.slice(i, i + batchSize);
+      const batchQueries = batch.map(async (d) => {
+        const dateOfEntry = new Date(d.date);
+        const hourBefore = new Date(dateOfEntry.getTime() - 1000 * 60 * 60);
+        const hourAfter = new Date(dateOfEntry.getTime() + 1000 * 60 * 60);
+
+        const result = await mh.findOne<MHRecord>(
+          {
+            date: {
+              $gte: hourBefore,
+              $lt: hourAfter,
+            },
+          },
+          { projection: { total_players: 1, date: 1 } }
+        );
+
+        if (result) {
+          return {
+            relativePrecentage: d.player_count / result.total_players,
+            date: dateOfEntry,
+          };
+        }
+        return null;
+      });
+
+      const batchResults = await Promise.all(batchQueries);
+      data.push(
+        ...batchResults.filter((item): item is RelativeData => item !== null)
+      );
+    }
+
+    res.send({ data });
+  } catch (error) {
+    res.status(500).json({ message: "An error occurred while fetching data" });
+  } finally {
+    await client.close();
+  }
 }

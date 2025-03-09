@@ -28,35 +28,78 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { MongoClient } from "mongodb";
-import { NextApiRequest, NextApiResponse } from "next";
+import type { NextApiRequest, NextApiResponse } from "next";
+import { MongoClient as MongoClientImpl } from "mongodb";
+
+interface MonthlyAverage {
+  month: string;
+  result: number;
+}
+
+interface ResponseData {
+  result: MonthlyAverage[];
+}
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse<ResponseData | { message: string }>
 ) {
-    const client = new MongoClient(process.env.MONGO_DB as string);
+  const client = new MongoClientImpl(process.env.MONGO_DB as string);
+
+  try {
     const db = client.db("mhsf").collection("history");
     const server = req.query.server as string;
+    const months = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+    const currentYear = new Date().getFullYear();
 
-    const months =  ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-	const result = await Promise.all([1,2,3,4,5,6,7,8,9,10,11,12].map(async (c) => {
-		const results = await db.find({ 
-			$and: [
-				{ server },
-				{ date: { $gte: new Date(new Date().getFullYear(), c - 1, 1), $lt: new Date(new Date().getFullYear(), c, 1) } }
-			]
-		}).toArray()
+    // Use MongoDB aggregation pipeline for better performance
+    const monthlyAverages = (await db
+      .aggregate([
+        {
+          $match: {
+            server,
+            date: {
+              $gte: new Date(currentYear, 0, 1),
+              $lt: new Date(currentYear + 1, 0, 1),
+            },
+          },
+        },
+        {
+          $group: {
+            _id: { $month: "$date" },
+            averagePlayerCount: { $avg: "$player_count" },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            month: { $arrayElemAt: [months, { $subtract: ["$_id", 1] }] },
+            result: { $floor: "$averagePlayerCount" },
+          },
+        },
+        {
+          $sort: { _id: 1 },
+        },
+      ])
+      .toArray()) as MonthlyAverage[];
 
-		if (results.length !== 0) {
-			const averageNums = (results as any as {player_count: number}[]).map((x: {player_count: number}) => x.player_count)
-			const average = averageNums.reduce((sum, val) => sum + val, 0) / averageNums.length;
-
-			return { month: months[c - 1], result: Math.floor(average) };
-		}
-		return undefined;
-	}));
-
-	client.close()
-	res.send({result: result.filter((c) => c !== undefined)});
+    res.send({ result: monthlyAverages });
+  } catch (error) {
+    res.status(500).json({ message: "An error occurred while fetching data" });
+  } finally {
+    await client.close();
+  }
 }

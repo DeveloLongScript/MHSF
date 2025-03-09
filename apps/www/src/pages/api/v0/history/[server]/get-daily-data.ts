@@ -28,35 +28,66 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { MongoClient } from "mongodb";
-import { NextApiRequest, NextApiResponse } from "next";
+import type { NextApiRequest, NextApiResponse } from "next";
+import { MongoClient as MongoClientImpl } from "mongodb";
+
+interface DailyAverage {
+  day: string;
+  result: number;
+}
+
+interface ResponseData {
+  result: DailyAverage[];
+}
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse<ResponseData | { message: string }>
 ) {
-    const client = new MongoClient(process.env.MONGO_DB as string);
+  const client = new MongoClientImpl(process.env.MONGO_DB as string);
+
+  try {
     const db = client.db("mhsf").collection("history");
     const server = req.query.server as string;
+    const daysOfWeek = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ];
 
-    const daysOfWeek =  ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
-	const result = await Promise.all([1,2,3,4,5,6,7].map(async (c) => {
-		const results = await db.find({ 
-			$and: [
-				{ server },
-				{ $expr: { $eq: [{ $dayOfWeek: "$date" }, c] } }
-			]
-		}).toArray()
+    // Use MongoDB aggregation pipeline for better performance
+    const dailyAverages = (await db
+      .aggregate([
+        {
+          $match: { server },
+        },
+        {
+          $group: {
+            _id: { $dayOfWeek: "$date" },
+            averagePlayerCount: { $avg: "$player_count" },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            day: { $arrayElemAt: [daysOfWeek, { $subtract: ["$_id", 1] }] },
+            result: { $floor: "$averagePlayerCount" },
+          },
+        },
+        {
+          $sort: { _id: 1 },
+        },
+      ])
+      .toArray()) as DailyAverage[];
 
-		if (results.length !== 0) {
-			const averageNums = (results as any as {player_count: number}[]).map((x: {player_count: number}) => x.player_count)
-			const average = averageNums.reduce((sum, val) => sum + val, 0) / averageNums.length;
-
-			return { day: daysOfWeek[c - 1], result: Math.floor(average) };
-		}
-		return undefined;
-	}));
-
-	client.close()
-	res.send({result: result.filter((c) => c !== undefined)});
+    res.send({ result: dailyAverages });
+  } catch (error) {
+    res.status(500).json({ message: "An error occurred while fetching data" });
+  } finally {
+    await client.close();
+  }
 }

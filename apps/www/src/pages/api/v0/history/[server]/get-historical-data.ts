@@ -28,35 +28,64 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { MongoClient } from "mongodb";
-import { NextApiRequest, NextApiResponse } from "next";
+import type { NextApiRequest, NextApiResponse } from "next";
+import { MongoClient as MongoClientImpl } from "mongodb";
+
+// Define types for our data
+interface ServerHistoricalRecord {
+  server: string;
+  [key: string]: unknown;
+}
+
+interface ResponseData {
+  data: Record<string, unknown>[];
+}
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse<ResponseData | { message: string }>
 ) {
-  const client = new MongoClient(process.env.MONGO_DB as string);
-  const db = client.db("mhsf").collection("historical");
-  const server = req.query.server as string;
-  const scopes: Array<string> = checkForInfoOrLeave(res, req.body.scopes);
+  const client = new MongoClientImpl(process.env.MONGO_DB as string);
 
-  const allData = await db.find({ server }).toArray();
-  const data: any[] = [];
+  try {
+    const db = client.db("mhsf").collection("historical");
+    const server = req.query.server as string;
+    const scopes: string[] = checkForInfoOrLeave(res, req.body.scopes);
 
-  allData.forEach((d) => {
-    const result: any = {};
-    scopes.forEach((b) => {
-      result[b] = d[b];
+    // Only fetch the fields we need using projection
+    const projection: Record<string, 1> = { server: 1 };
+    for (const scope of scopes) {
+      projection[scope] = 1;
+    }
+
+    const allData = await db
+      .find<ServerHistoricalRecord>({ server }, { projection })
+      .toArray();
+
+    // Use map instead of forEach for better performance
+    const data = allData.map((d) => {
+      const result: Record<string, unknown> = {};
+      for (const scope of scopes) {
+        result[scope] = d[scope];
+      }
+      return result;
     });
-    data.push(result);
-  });
 
-  client.close();
-  res.send({ data });
+    res.send({ data });
+  } catch (error) {
+    res.status(500).json({ message: "An error occurred while fetching data" });
+  } finally {
+    await client.close();
+  }
 }
 
-function checkForInfoOrLeave(res: NextApiResponse, info: any) {
-  if (info == undefined)
+function checkForInfoOrLeave(
+  res: NextApiResponse,
+  info: string[] | undefined
+): string[] {
+  if (info === undefined) {
     res.status(400).json({ message: "Information wasn't supplied" });
+    return [];
+  }
   return info;
 }
