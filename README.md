@@ -4,7 +4,7 @@
 
 ## The MHSF Project
 
-A modern, third-party server list that is completely open-source, built using top of the line web technologies. Not built to take your money or time, find a server in minutes. Completely ad-free.
+A modern, third-party Minehut server list that is completely open-source, built using top of the line web technologies. Not built to take your money or time, find a server in minutes. Completely ad-free.
 
 ## Security
 Please privately disclose any security problems with a support email or via GitHub (`Security` tab -> `Report a vulnerability`).
