@@ -26,7 +26,6 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { GeistSans } from "geist/font/sans";
 import "../globals.css";
@@ -41,6 +40,7 @@ import { Inter as interFont } from "next/font/google";
 import LayoutPart from "@/components/feat/LayoutPart";
 import AllBanners from "@/components/feat/AllBanners";
 import Footer from "@/components/misc/Footer";
+import { PostHogProvider } from "@/components/misc/PosthogProvider";
 
 export const viewport: Viewport = {
   themeColor: "black",
@@ -57,14 +57,15 @@ export default async function RootLayout({
     <ClerkThemeProvider className={GeistSans.className}>
       <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
         <TooltipProvider>
-          <AllBanners />
-          <LayoutPart>{children}</LayoutPart>
-          <ThemedToaster />
-          <CommandBarer />
-          <SpeedInsights />
-          <Analytics />
-          <NewDomainDialog />
-          <Footer />
+          <PostHogProvider>
+            <AllBanners />
+            <LayoutPart>{children}</LayoutPart>
+            <ThemedToaster />
+            <CommandBarer />
+            <SpeedInsights />
+            <NewDomainDialog />
+            <Footer />
+          </PostHogProvider>
         </TooltipProvider>
       </ThemeProvider>
     </ClerkThemeProvider>
