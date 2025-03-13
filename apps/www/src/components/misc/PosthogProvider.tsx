@@ -82,6 +82,9 @@ function PostHogPageView() {
         username: user.username,
       })
     }
+    if (!isSignedIn && posthog._isIdentified()) {
+      posthog.reset()
+    }
   }, [posthog, user])
 
   return null;
