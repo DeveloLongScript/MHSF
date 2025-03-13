@@ -33,6 +33,7 @@ import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, Suspense } from "react";
 import { usePostHog } from "posthog-js/react";
 
+import { useAuth, useUser } from '@clerk/nextjs'
 import posthog from "posthog-js";
 import { PostHogProvider as PHProvider } from "posthog-js/react";
 
@@ -43,6 +44,7 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
       ui_host: "https://us.posthog.com",
       person_profiles: "identified_only", // or 'always' to create profiles for anonymous users as well
       capture_pageview: false, // Disable automatic pageview capture, as we capture manually
+      capture_pageleave: true
     });
   }, []);
 
@@ -58,6 +60,8 @@ function PostHogPageView() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const posthog = usePostHog();
+  const { isSignedIn, userId } = useAuth()
+  const { user } = useUser()
 
   // Track pageviews
   useEffect(() => {
@@ -70,6 +74,15 @@ function PostHogPageView() {
       posthog.capture("$pageview", { $current_url: url });
     }
   }, [pathname, searchParams, posthog]);
+
+  useEffect(() => {
+    if (isSignedIn && userId && user && !posthog._isIdentified()) {
+      posthog.identify(userId, {
+        email: user.primaryEmailAddress?.emailAddress,
+        username: user.username,
+      })
+    }
+  }, [posthog, user])
 
   return null;
 }
