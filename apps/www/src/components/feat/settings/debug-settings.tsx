@@ -28,50 +28,39 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { MongoClient } from "mongodb";
-import { NextApiRequest, NextApiResponse } from "next";
-import { waitUntil } from "@vercel/functions";
+import { Material } from "@/components/ui/material";
+import { Setting, SettingContent, SettingDescription, SettingMeta, SettingTitle } from "./setting";
+import { Button } from "@/components/ui/button";
+import { AnimatedText } from "@/components/ui/animated-text";
+import { useState } from "react";
+import { loadingList } from "../server-page/util";
 
-export default async function handler(
-	req: NextApiRequest,
-	res: NextApiResponse,
-) {
-	const client = new MongoClient(process.env.MONGO_DB as string);
-	const db = client.db("mhsf").collection("history");
-	const server = req.query.server as string;
+export function DebugSettings() {
+  const [randomText, setRandomText] = useState("")
 
-	const daysOfWeek = [
-		"Sunday",
-		"Monday",
-		"Tuesday",
-		"Wednesday",
-		"Thursday",
-		"Friday",
-		"Saturday",
-	];
-	const result = await Promise.all(
-		[1, 2, 3, 4, 5, 6, 7].map(async (c) => {
-			const results = await db
-				.find({
-					$and: [{ server }, { $expr: { $eq: [{ $dayOfWeek: "$date" }, c] } }],
-				})
-				.toArray();
-
-			if (results.length !== 0) {
-				const averageNums = (results as any as { player_count: number }[]).map(
-					(x: { player_count: number }) => x.player_count,
-				);
-				const average =
-					averageNums.reduce((sum, val) => sum + val, 0) / averageNums.length;
-
-				return { day: daysOfWeek[c - 1], result: Math.floor(average) };
-			}
-			return undefined;
-		}),
-	);
-
-	// Close the database, but don't close this
-	// serverless instance until it happens
-	waitUntil(client.close());
-	res.send({ result: result.filter((c) => c !== undefined) });
+  return (
+    <Material className="mt-6 grid gap-4">
+      <h2 className="text-xl font-semibold text-inherit">Debug Settings</h2>
+      <Setting>
+        <SettingContent>
+            <SettingMeta>
+                <SettingTitle>
+                    Generate loading text
+                </SettingTitle>
+                <SettingDescription>
+                    Generate a random loading text
+                </SettingDescription>
+            </SettingMeta>
+            <div className="block pb-6">
+            <Button onClick={() => {
+                setRandomText(loadingList[Math.floor(Math.random() * loadingList.length)])
+            }}>
+                Generate
+            </Button>
+            <AnimatedText className="font-bold" text={randomText + "..."}/>
+            </div>
+        </SettingContent>
+      </Setting>
+    </Material>
+  );
 }

@@ -36,11 +36,16 @@ import { Separator } from "@/components/ui/separator";
 import { Statistics } from "./statistics";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useInfiniteScrolling } from "@/lib/hooks/use-infinite-scrolling";
+import { useMHSFServer } from "@/lib/hooks/use-mhsf-multiple";
 
 export function ServerList() {
   const { servers, loading, serverCount, playerCount } = useServers();
   const { itemsLength, fetchMoreData, hasMoreData, data } =
     useInfiniteScrolling(servers);
+  const mhsfServers = useMHSFServer(
+    servers.map((s) => s.staticInfo._id),
+    true
+  );
 
   if (loading)
     return (

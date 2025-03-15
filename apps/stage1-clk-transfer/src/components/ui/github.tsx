@@ -28,7 +28,7 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { useTheme } from "next-themes";
+import { useTheme } from "@/lib/hooks/use-theme";
 import type { SVGProps } from "react";
 const Github = (props: SVGProps<SVGSVGElement>) => {
   const { resolvedTheme } = useTheme();

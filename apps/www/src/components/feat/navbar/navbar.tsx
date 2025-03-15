@@ -71,9 +71,9 @@ export function NavBar() {
   return (
     <div
       className={cn(
-        "w-screen h-[3rem] grid-cols-3 fixed backdrop-blur-xl z-10 flex",
+        "w-screen h-[3rem] grid-cols-3 fixed z-10 flex",
         "items-center justify-self-start me-auto pl-4 flex-1 transition-all justify-between",
-        showBorder ? "border-b" : "",
+        showBorder ? "border-b backdrop-blur-xl" : "",
         pathname !== null && animatedTopbarPages.includes(pathname)
           ? "[--animation-delay:1000ms] opacity-0 animate-fade-in"
           : ""

@@ -32,7 +32,7 @@
 
 import { ClerkProvider as ImportedClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
-import { useTheme } from "next-themes";
+import { useTheme } from "@/lib/hooks/use-theme";
 import { MultisessionAppSupport } from "@clerk/nextjs/internal";
 
 export const ClerkProvider = ({ children }: { children: React.ReactNode }) => {

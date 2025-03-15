@@ -33,15 +33,30 @@
 import * as React from "react";
 import { ThemeProvider as NextThemeProvider } from "next-themes";
 import type { ThemeProviderProps } from "next-themes";
+import { usePathname } from "next/navigation";
 
 export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
   const [mounted, setMounted] = React.useState(false);
+  const pathname = usePathname();
+  const [forcedDark, setForcedDark] = React.useState(false);
 
   React.useEffect(() => {
     setMounted(true);
-  }, []);
+
+    window.addEventListener("force-dark-mode", () => {
+      setForcedDark(true);
+    });
+  });
+
+  React.useEffect(() => {
+    setForcedDark(false);
+  }, [pathname]);
 
   if (!mounted) return null;
 
-  return <NextThemeProvider {...props}>{children}</NextThemeProvider>;
+  return (
+    <NextThemeProvider forcedTheme={forcedDark ? "dark" : undefined} {...props}>
+      {children}
+    </NextThemeProvider>
+  );
 }

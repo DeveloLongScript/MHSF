@@ -35,8 +35,10 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import Github from "@/components/ui/github";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Link } from "@/components/util/link";
 import { version } from "@/config/version";
+import { useSettingsStore } from "@/lib/hooks/use-settings-store";
 import { SignedIn, SignedOut, useClerk } from "@clerk/nextjs";
 import { LogIn, LogOut, Settings, Ship, User, UserCog } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -44,6 +46,7 @@ import { useRouter } from "next/navigation";
 export function MenuDropdown() {
   const clerk = useClerk();
   const router = useRouter();
+  const settings = useSettingsStore();
 
   return (
     <>
@@ -105,14 +108,33 @@ export function MenuDropdown() {
       <DropdownMenuSeparator />
       <li className="flex flex-col px-2 py-1 mx-auto my-1 text-xs w-full">
         <div className="flex flex-row gap-2 w-full items-center">
-          <div className="flex-1">
-            <button
-              className="hover:brightness-110 transition-all"
-              type="button"
-            >
-              <Badge variant="blue-subtle">v{version}</Badge>
-            </button>
-          </div>
+          {settings.get("debug-mode") === "true" ? (
+            <Tooltip>
+              <TooltipTrigger>
+                <div className="flex-1">
+                  <button
+                    className="hover:brightness-110 transition-all"
+                    type="button"
+                  >
+                    <Badge variant="blue-subtle">v{version}d</Badge>
+                  </button>
+                </div>
+              </TooltipTrigger>
+              <TooltipContent>
+                You're in debug mode! Are you a dev?
+              </TooltipContent>
+            </Tooltip>
+          ) : (
+            <div className="flex-1">
+              <button
+                className="hover:brightness-110 transition-all"
+                type="button"
+              >
+                <Badge variant="blue-subtle">v{version}</Badge>
+              </button>
+            </div>
+          )}
+
           <Link href="Special:GitHub">
             <Button
               variant="tertiary"

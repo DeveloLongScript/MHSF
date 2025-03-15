@@ -32,14 +32,15 @@ import type { ServerResponse } from "@/lib/types/mh-server";
 import useClipboard from "@/lib/useClipboard";
 import { MOTDRow } from "./motd/motd-row";
 import { StatisticsMainRow } from "./stats/stats-main-row";
+import type { useMHSFServer } from "@/lib/hooks/use-mhsf-server";
 
-export function ServerRows({ server }: { server: ServerResponse }) {
+export function ServerRows({ server, mhsfData }: { server: ServerResponse, mhsfData: ReturnType<typeof useMHSFServer> }) {
   const clipboard = useClipboard();
 
   return (
     <span className="lg:grid lg:grid-cols-3 w-full gap-3">
       <MOTDRow server={server} />
-      <StatisticsMainRow server={server} />
+      <StatisticsMainRow server={server} mhsfData={mhsfData} />
     </span>
   );
 }

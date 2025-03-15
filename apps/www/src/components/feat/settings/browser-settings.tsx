@@ -52,10 +52,12 @@ export function BrowserSettings() {
   const settingsStore = useSettingsStore();
   const [fontFamily, setFontFamily] = useState("inter");
   const [mcFont, setMcFont] = useState(true);
+  const [debugMode, setDebugMode] = useState(false);
 
   useEffect(() => {
     setFontFamily((settingsStore.get("font-family") ?? "inter") as string);
     setMcFont((settingsStore.get("mc-font") === "true") as boolean);
+    setDebugMode((settingsStore.get("debug-mode") === "true") as boolean);
   }, []);
 
   return (
@@ -117,6 +119,22 @@ export function BrowserSettings() {
               <SelectItem value="roboto">Roboto</SelectItem>
             </SelectContent>
           </Select>
+        </SettingContent>
+      </Setting>
+      <Setting>
+        <SettingContent>
+          <SettingMeta>
+            <SettingTitle>Debug Mode</SettingTitle>
+            <SettingDescription>Enable debug mode to show debug options</SettingDescription>
+          </SettingMeta>
+          <Switch
+            checked={debugMode}
+            onCheckedChange={(c) => {
+              settingsStore.set("debug-mode", c, false);
+              window.dispatchEvent(new Event("debug-mode-change"));
+              setDebugMode(c);
+            }}
+          />
         </SettingContent>
       </Setting>
     </Material>

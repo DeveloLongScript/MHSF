@@ -28,56 +28,34 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { NextApiRequest, NextApiResponse } from "next";
-import { getAuth } from "@clerk/nextjs/server";
+import type { NextApiResponse, NextApiRequest } from "next";
 import { MongoClient } from "mongodb";
-import { inngest } from "../inngest";
+import { getAuth } from "@clerk/nextjs/server";
 import { waitUntil } from "@vercel/functions";
 
 export default async function handler(
-	req: NextApiRequest,
-	res: NextApiResponse,
+  req: NextApiRequest,
+  res: NextApiResponse
 ) {
-	const { userId } = getAuth(req);
-	const { server } = req.body;
+  const { userId } = getAuth(req);
 
-	if (server == null) {
-		res.status(400).send({ message: "Couldn't find data" });
-		return;
-	}
-	const { reason } = req.body;
+  if (!userId) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+  const client = new MongoClient(process.env.MONGO_DB as string);
+  await client.connect();
 
-	if (reason == null) {
-		res.status(400).send({ message: "Couldn't find data" });
-		return;
-	}
+  const db = client.db(process.env.CUSTOM_MONGO_DB ?? "mhsf");
+  const collection = db.collection("favorites");
+  const find = await collection.find({ user: userId }).toArray();
 
-	if (!userId) {
-		return res.status(401).json({ error: "Unauthorized" });
-	}
-	const client = new MongoClient(process.env.MONGO_DB as string);
-	await client.connect();
+  // Close the database, but don't close this
+  // serverless instance until it happens
+  waitUntil(client.close());
 
-	const db = client.db("mhsf");
-	const collection = db.collection("reports");
-	const entry = await collection.insertOne({
-		server: server,
-		reason: reason,
-		userId: userId,
-	});
-	// Don't wait for this to finish, just continue anyway
-	inngest.send({
-		name: "report-server",
-		data: {
-			_id: entry.insertedId.toString(),
-			server,
-			reason,
-			userId,
-		},
-	});
-
-	// Close the database, but don't close this
-	// serverless instance until it happens
-	waitUntil(client.close());
-	res.send({ msg: "Successfully reported server!" });
+  if (find.length == 0) {
+    res.send({ favorites: [] });
+  } else {
+    res.send({ favorites: find[0].favorites });
+  }
 }

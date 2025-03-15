@@ -32,9 +32,24 @@ import type { MHSFData } from "@/lib/types/data";
 import { MongoClient } from "mongodb";
 import type { NextApiRequest, NextApiResponse } from "next";
 
+export type RouteParams = {
+  actions: {
+    favorite: string;
+    customize: string;
+    own: string;
+    report: string;
+    history: {
+      dailyData: string;
+      monthlyData: string;
+      relativeData: string;
+      historicalData: string;
+    };
+  };
+};
+
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<{ server: MHSFData | null }>
+  res: NextApiResponse<{ server: (MHSFData & RouteParams) | null }>
 ) {
   const {
     server,
@@ -81,13 +96,24 @@ export default async function handler(
         }),
       ]);
 
-    // Ignore the linter error as requested
     res.send({
       server: {
         favoriteData,
         customizationData,
         playerData,
         achievements,
+        actions: {
+          history: {
+            dailyData: `/api/v1/server/get/${server}/history/daily-data`,
+            monthlyData: `/api/v1/server/get/${server}/history/monthly-data`,
+            relativeData: `/api/v1/server/get/${server}/history/relative-data`,
+            historicalData: `/api/v1/server/get/${server}/history/historical-data`,
+          },
+          favorite: `/api/v1/server/get/${server}/favorite-server`,
+          customize: `/api/v1/server/get/${server}/customize`,
+          own: `/api/v1/server/get/${server}/own-server`,
+          report: `/api/v1/server/get/${server}/report-server`,
+        },
       },
     });
   } catch (error) {

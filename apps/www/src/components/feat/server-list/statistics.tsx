@@ -63,7 +63,7 @@ export function Statistics({
   useEffect(() => {
     try {
       (async () => {
-        const fetchRes = await fetch("/api/v0/history/meta-daily-avg");
+        const fetchRes = await fetch("/api/v1/server/minehut/daily-avg");
         const fetchJson: {
           totalServerAverage: number;
           totalPlayerAverage: number;

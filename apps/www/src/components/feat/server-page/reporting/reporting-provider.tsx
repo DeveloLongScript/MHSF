@@ -28,38 +28,29 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { MongoClient } from "mongodb";
-import { NextApiRequest, NextApiResponse } from "next";
-import { waitUntil } from "@vercel/functions";
+import { type ReactNode, useEffect, useState } from "react";
+import { ReportingDialog } from "./reporting-dialog";
+import type { useMHSFServer } from "@/lib/hooks/use-mhsf-server";
 
-export default async function handler(
-	req: NextApiRequest,
-	res: NextApiResponse,
-) {
-	const client = new MongoClient(process.env.MONGO_DB as string);
-	const db = client.db("mhsf").collection("historical");
-	const server = req.query.server as string;
-	const scopes: Array<string> = checkForInfoOrLeave(res, req.body.scopes);
+export function ReportingProvider({
+  children,
+  server,
+}: {
+  children: ReactNode | ReactNode[];
+  server: ReturnType<typeof useMHSFServer>;
+}) {
+  const [open, setOpen] = useState(false);
 
-	const allData = await db.find({ server }).toArray();
-	const data: any[] = [];
+  useEffect(() => {
+    window.addEventListener("open-report-menu", () => {
+      setOpen(true);
+    });
+  });
 
-	allData.forEach((d) => {
-		const result: any = {};
-		scopes.forEach((b) => {
-			result[b] = d[b];
-		});
-		data.push(result);
-	});
-
-	// Close the database, but don't close this
-	// serverless instance until it happens
-	waitUntil(client.close());
-	res.send({ data });
-}
-
-function checkForInfoOrLeave(res: NextApiResponse, info: any) {
-	if (info == undefined)
-		res.status(400).json({ message: "Information wasn't supplied" });
-	return info;
+  return (
+    <>
+      <ReportingDialog server={server} open={open} setOpen={setOpen} />{" "}
+      {children}
+    </>
+  );
 }

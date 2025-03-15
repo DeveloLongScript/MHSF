@@ -29,7 +29,7 @@
  */
 
 "use client";
-import { useTheme } from "next-themes";
+import { useTheme } from "@/lib/hooks/use-theme";
 import type { SVGProps } from "react";
 
 export const brandingIconClipboard = `<svg width="266" height="265" viewBox="0 0 266 265" fill="none" xmlns="http://www.w3.org/2000/svg">

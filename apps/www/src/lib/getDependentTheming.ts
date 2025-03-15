@@ -28,10 +28,10 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { useTheme } from "next-themes";
+import { useTheme } from "@/lib/hooks/use-theme";
 
 export function useDepTheme() {
-	const { resolvedTheme } = useTheme();
+  const { resolvedTheme } = useTheme();
 
-	return resolvedTheme === "dark" ? "black" : "white";
+  return resolvedTheme === "dark" ? "black" : "white";
 }

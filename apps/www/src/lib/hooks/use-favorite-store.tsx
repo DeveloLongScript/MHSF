@@ -1,13 +1,9 @@
 import { useClerk } from "@clerk/nextjs";
 import { useState, useEffect } from "react";
-import {
-  favoriteServer,
-  getAccountFavorites,
-  getCommunityServerFavorites,
-  isFavorited,
-} from "../api";
+import { getAccountFavorites } from "../api";
+import { useMHSFServer } from "./use-mhsf-server";
 
-export function useFavoriteStore(server?: string) {
+export function useFavoriteStore(server?: ReturnType<typeof useMHSFServer>) {
   const [favorites, setFavorites] = useState<string[] | null>(null);
   const [isFavorite, setIsFavorite] = useState<boolean | null>(null);
   const [favoriteNumber, setFavoriteNumber] = useState<number | null>(null);
@@ -17,12 +13,20 @@ export function useFavoriteStore(server?: string) {
     if (isSignedIn) {
       getAccountFavorites().then((favorites) => setFavorites(favorites));
     }
-    if (server) {
-      getCommunityServerFavorites(server).then((number) =>
-        setFavoriteNumber(number)
-      );
+    if (
+      server !== null &&
+      server?.loading === false &&
+      server?.server !== null
+    ) {
+      setFavoriteNumber(server.server.favoriteData.favoriteNumber);
       if (isFavorite === null) {
-        isFavorited(server).then((isFavorite) => setIsFavorite(isFavorite));
+        server
+          .reloadServerData()
+          .then(() =>
+            setIsFavorite(
+              server.server?.favoriteData.favoritedByAccount ?? false
+            )
+          );
       }
     }
   }, [isSignedIn, server, isFavorite]);
@@ -38,12 +42,24 @@ export function useFavoriteStore(server?: string) {
     loadingNumber: favoriteNumber === null,
     favoriteNumber,
     isFavorite,
-    toggleFavorite: async (server: string) => {
+    toggleFavorite: async () => {
       if (isFavorite === null) throw new Error("Hold up lemme load rq");
       if (favoriteNumber === null) throw new Error("Nah");
-      await favoriteServer(server);
+      const favoriteSync = await server?.favoriteServer();
 
       // Resolve remote differences
+      await server?.reloadServerData();
+
+      if (
+        favoriteSync?.favorited !==
+        (server?.server?.favoriteData.favoritedByAccount ?? false)
+      )
+        throw new Error(
+          "Server is not synced between server data & server favorite response."
+        );
+
+      setIsFavorite(server?.server?.favoriteData.favoritedByAccount ?? false);
+
       if (isFavorite === true) {
         setIsFavorite(false);
         setFavoriteNumber(favoriteNumber - 1);
@@ -53,7 +69,5 @@ export function useFavoriteStore(server?: string) {
         setFavoriteNumber(favoriteNumber + 1);
       }
     },
-    getServerFavoritesNumber: async (server: string) =>
-      await getCommunityServerFavorites(server),
   };
 }

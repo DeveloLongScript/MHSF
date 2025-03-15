@@ -34,7 +34,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useClerk, useUser } from "@clerk/nextjs";
 import { ArrowDown, GalleryVertical } from "lucide-react";
-import { useTheme } from "next-themes";
+import { useTheme } from "@/lib/hooks/use-theme";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Gradient } from "stripe-gradient";

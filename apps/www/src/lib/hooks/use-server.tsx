@@ -1,11 +1,11 @@
 import { useState } from "react";
-import type { OnlineServer } from "../types/mh-server";
+import type { OnlineServer, ServerResponse } from "../types/mh-server";
 import { useEffectOnce } from "../useEffectOnce";
 
 export function useServer(serverSpecifier: { id?: string; name?: string }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [server, setServer] = useState<OnlineServer | null>(null);
+  const [server, setServer] = useState<ServerResponse | null>(null);
 
   useEffectOnce(() => {
     try {

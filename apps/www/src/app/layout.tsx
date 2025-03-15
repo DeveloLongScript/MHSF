@@ -47,7 +47,6 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <noscript>{children}</noscript>
-        <script src="https://unpkg.com/react-scan/dist/auto.global.js" />
         {children}
       </body>
     </html>

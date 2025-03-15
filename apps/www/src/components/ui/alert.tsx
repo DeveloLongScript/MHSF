@@ -48,34 +48,36 @@ function Alert({
     <Material
       padding="sm"
       className={cn(
-        "flex flex-row space-x-2 items-center",
+        "flex flex-row items-center",
         variant === "error"
           ? "bg-[#fdeded_!important] dark:bg-[#160b0b_!important]"
           : variant === "warning"
-          ? "bg-[#fef4e5_!important] dark:bg-[#191209_!important]"
-          : variant === "info"
-          ? "bg-[#e5f6fd_!important] dark:bg-[#091418_!important]"
-          : "",
+            ? "bg-[#fef4e5_!important] dark:bg-[#191209_!important]"
+            : variant === "info"
+              ? "bg-[#e5f6fd_!important] dark:bg-[#091418_!important]"
+              : "",
         className
       )}
     >
       {icon ? (
         icon
       ) : (
-        <CircleAlert
-          size={18}
-          className={
-            variant === "error"
-              ? "text-[#d76463] dark:text-[#df2317]"
-              : variant === "warning"
-              ? "text-[#eea065] dark:text-[#e3920a]"
-              : variant === "info"
-              ? "text-[#67b1d5] dark:text-[#1a97e3]"
-              : ""
-          }
-        />
-      )}{" "}
-      <p>{children}</p>
+        <div className="flex items-center justify-center h-full">
+          <CircleAlert
+            size={16}
+            className={
+              variant === "error"
+                ? "text-[#d76463] dark:text-[#df2317]"
+                : variant === "warning"
+                  ? "text-[#eea065] dark:text-[#e3920a]"
+                  : variant === "info"
+                    ? "text-[#67b1d5] dark:text-[#1a97e3]"
+                    : ""
+            }
+          />
+        </div>
+      )}
+      <p className="flex-1">{children}</p>
     </Material>
   );
 }

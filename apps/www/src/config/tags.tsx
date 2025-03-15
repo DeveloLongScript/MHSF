@@ -29,7 +29,7 @@
  */
 
 import type { BadgeColor } from "@/components/feat/server-list/server-card";
-import { isFavorited } from "@/lib/api";
+import { MHSFData } from "@/lib/types/data";
 import type { OnlineServer, ServerResponse } from "@/lib/types/mh-server";
 import { Cake, ServerCog } from "lucide-react";
 import type { ReactNode } from "react";
@@ -56,6 +56,7 @@ export const allTags: Array<{
   condition?: (server: {
     online?: OnlineServer;
     server?: ServerResponse;
+    mhsfData?: MHSFData;
   }) => Promise<boolean>;
   tooltipDesc: string;
   htmlDocs: string;
@@ -200,12 +201,9 @@ export const allTags: Array<{
   },
   {
     name: async (s) => "Favorited",
-    condition: async (s) => {
-      const favorited = await isFavorited(
-        (s.online ?? s.server ?? { name: "" }).name
-      );
-      return favorited;
-    },
+    condition: async (s) =>
+      (s.mhsfData ?? { favoriteData: { favoritedByAccount: false } })
+        .favoriteData.favoritedByAccount ?? false,
     tooltipDesc: "This tag represents that you favorited this server.",
     docsName: "Favorited",
     htmlDocs:

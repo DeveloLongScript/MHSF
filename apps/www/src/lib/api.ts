@@ -168,7 +168,7 @@ export async function isFavorited(server: string): Promise<boolean> {
 export async function getAccountFavorites(): Promise<Array<string>> {
   try {
     const response = await fetch(
-      connector(`/favorites/account-favorites`, { version: 0 }),
+      connector(`/user/favorites`, { version: 1 }),
       {
         method: "POST",
         headers: {

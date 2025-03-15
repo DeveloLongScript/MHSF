@@ -35,12 +35,13 @@ import useClipboard from "@/lib/useClipboard";
 import { miniMessage } from "minimessage-js";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { Material } from "@/components/ui/material";
 
 export function MOTDRow({ server }: { server: ServerResponse }) {
   const clipboard = useClipboard();
 
   return (
-    <div className="border rounded-xl p-4 relative max-h-[250px] ">
+    <Material className="p-4 relative h-[250px]">
       <strong className="text-lg">MOTD</strong>
       <br />
       <Separator className="my-2" />
@@ -66,6 +67,6 @@ export function MOTDRow({ server }: { server: ServerResponse }) {
           click to copy HTML
         </button>
       </small>
-    </div>
+    </Material>
   );
 }

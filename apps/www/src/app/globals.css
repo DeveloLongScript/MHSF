@@ -249,6 +249,10 @@
   }
 }
 
+.shiki {
+  @apply p-4 rounded max-w-[530px] overflow-x-auto;
+}
+
 .system-ui-font--font-boundary {
   font-family:
     system-ui,

@@ -31,6 +31,7 @@
 import type { MHSFData } from "@/lib/types/data";
 import { MongoClient } from "mongodb";
 import type { NextApiRequest, NextApiResponse } from "next";
+import { RouteParams } from "./get/[server]";
 
 // Type definitions for query parameters
 type QueryParams = {
@@ -43,6 +44,7 @@ type QueryParams = {
   maxAchievementEntries?: string | string[];
   achievementTimespanStart?: string | string[];
   achievementTimespanEnd?: string | string[];
+  noStatistics?: string | string[];
 };
 
 // Type for customization data
@@ -91,8 +93,10 @@ export default async function handler(
     return res.status(400).json({ servers: {} });
   }
 
+  let serverList = servers;
+
   // Limit the number of servers to prevent abuse (max 25 servers per request)
-  const serverList = servers.slice(0, 25);
+  if (req.query.noStatistics !== "true") serverList = servers.slice(0, 25);
 
   // Extract query parameters
   const queryOptions: QueryParams = {
@@ -105,6 +109,7 @@ export default async function handler(
     maxAchievementEntries: req.query.maxAchievementEntries,
     achievementTimespanStart: req.query.achievementTimespanStart,
     achievementTimespanEnd: req.query.achievementTimespanEnd,
+    noStatistics: req.query.noStatistics,
   };
 
   // Determine which data to fetch based on options
@@ -158,7 +163,7 @@ export default async function handler(
             );
           }
 
-          if (fetchOptions.players) {
+          if (fetchOptions.players && queryOptions.noStatistics !== "true") {
             promises.push(
               findPlayerData(serverData.name, db, queryOptions).then(
                 (data: PlayerData) => {
@@ -168,7 +173,10 @@ export default async function handler(
             );
           }
 
-          if (fetchOptions.achievements) {
+          if (
+            fetchOptions.achievements &&
+            queryOptions.noStatistics !== "true"
+          ) {
             promises.push(
               findAchievements(serverData.name, db, queryOptions).then(
                 (data: AchievementsData) => {
@@ -182,7 +190,7 @@ export default async function handler(
           await Promise.all(promises);
 
           // Create default values for any missing data
-          const serverResult: MHSFData = {
+          const serverResult: MHSFData & RouteParams = {
             favoriteData: promiseResults.favoriteData || {
               favoritedByAccount: null,
               favoriteNumber: 0,
@@ -204,6 +212,18 @@ export default async function handler(
             achievements: promiseResults.achievements || {
               historically: [],
               currently: [],
+            },
+            actions: {
+              history: {
+                dailyData: `/api/v1/server/get/${server}/history/daily-data`,
+                monthlyData: `/api/v1/server/get/${server}/history/monthly-data`,
+                relativeData: `/api/v1/server/get/${server}/history/relative-data`,
+                historicalData: `/api/v1/server/get/${server}/history/historical-data`,
+              },
+              favorite: `/api/v1/server/get/${server}/favorite-server`,
+              customize: `/api/v1/server/get/${server}/customize`,
+              own: `/api/v1/server/get/${server}/own-server`,
+              report: `/api/v1/server/get/${server}/report-server`,
             },
           };
 
@@ -287,7 +307,9 @@ async function findFavoriteData(
   const [userFavorites, metaData, historyData] = await Promise.all([
     userId ? db.collection("favorites").findOne({ user: userId }) : null,
     db.collection("meta").findOne({ server: serverName }),
-    fetchHistoryData(db, serverName, query),
+    query.noStatistics !== "true"
+      ? fetchHistoryData(db, serverName, query)
+      : [],
   ]);
 
   // Process user favorites

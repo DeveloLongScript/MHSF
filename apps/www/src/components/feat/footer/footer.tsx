@@ -53,7 +53,7 @@ export function Footer() {
             Rules
           </Link>
           , <Link href="https://minehut.com/terms-of-service">ToS</Link> &{" "}
-          <Link href="https://support.mhsf.app/ECA">ECA</Link>.
+          <Link href="https://t.mhsf.app/pr">Platform Rules</Link>.
         </small>
       </span>
     </footer>

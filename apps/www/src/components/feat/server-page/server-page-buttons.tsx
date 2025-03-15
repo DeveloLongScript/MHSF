@@ -31,25 +31,38 @@
 import { Button } from "@/components/ui/button";
 import { ServerResponse } from "@/lib/types/mh-server";
 import { SignedIn, SignedOut, useClerk } from "@clerk/nextjs";
-import { Heart, Star } from "lucide-react";
+import { EllipsisVertical, Flag, Heart, Star } from "lucide-react";
 import { useFavoriteStore } from "@/lib/hooks/use-favorite-store";
 import { useState } from "react";
-import { Spinner } from "@/components/ui/spinner";
+import type { useMHSFServer } from "@/lib/hooks/use-mhsf-server";
+import NumberFlow from "@number-flow/react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
-export function ServerPageButtons({ server }: { server: ServerResponse }) {
+export function ServerPageButtons({
+  server,
+  mhsfData,
+}: {
+  server: ServerResponse;
+  mhsfData: ReturnType<typeof useMHSFServer>;
+}) {
   const clerk = useClerk();
-  const favoritesStore = useFavoriteStore(server.name);
+  const favoritesStore = useFavoriteStore(mhsfData);
   const [loading, setLoading] = useState(false);
 
   return (
-    <>
+    <span className="flex items-center gap-2">
       <SignedIn>
         <Button
           className="flex items-center gap-2 text-sm"
           variant={favoritesStore.isFavorite ? "secondary" : "default"}
           onClick={async () => {
             setLoading(true);
-            await favoritesStore.toggleFavorite(server.name);
+            await favoritesStore.toggleFavorite();
             setLoading(false);
           }}
           disabled={loading || favoritesStore.isFavorite === null}
@@ -61,9 +74,10 @@ export function ServerPageButtons({ server }: { server: ServerResponse }) {
           />
           Favorite
           {favoritesStore.favoriteNumber !== null && (
-            <code>{favoritesStore.favoriteNumber}</code>
+            <code>
+              <NumberFlow value={favoritesStore.favoriteNumber} />{" "}
+            </code>
           )}
-          {loading && <Spinner />}
         </Button>
       </SignedIn>
       <SignedOut>
@@ -78,6 +92,28 @@ export function ServerPageButtons({ server }: { server: ServerResponse }) {
           )}
         </Button>
       </SignedOut>
-    </>
+      <DropdownMenu>
+        <DropdownMenuTrigger>
+          <Button
+            className="flex items-center"
+            size="square-md"
+            variant="secondary"
+          >
+            <EllipsisVertical size={16} />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuItem
+            className="text-red-400 flex items-center gap-2"
+            onClick={() => {
+              window.dispatchEvent(new Event("open-report-menu"));
+            }}
+          >
+            <Flag size={16} />
+            Report
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </span>
   );
 }

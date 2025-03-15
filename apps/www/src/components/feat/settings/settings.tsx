@@ -37,9 +37,21 @@ import { cn } from "@/lib/utils";
 import { SignedIn, SignedOut, useClerk } from "@clerk/nextjs";
 import { ExternalLink, Globe, TabletSmartphone } from "lucide-react";
 import { BrowserSettings } from "./browser-settings";
+import { useSettingsStore } from "@/lib/hooks/use-settings-store";
+import { useEffect, useState } from "react";
+import { DebugSettings } from "./debug-settings";
 
 export function Settings() {
+  const settingsStore = useSettingsStore();
+  const [debugEnabled, setDebugEnabled] = useState(false);
   const clerk = useClerk();
+
+  useEffect(() => {
+    setDebugEnabled((settingsStore.get("debug-mode") === "true") as boolean);
+    window.addEventListener("debug-mode-change", () => {
+      setDebugEnabled((settingsStore.get("debug-mode") === "true") as boolean);
+    });
+  });
 
   return (
     <main className="lg:px-[10rem] px-4">
@@ -62,6 +74,15 @@ export function Settings() {
             <TabletSmartphone size={16} />
             User stored settings
           </TabsTrigger>
+          {debugEnabled && (
+            <TabsTrigger
+              value="debug-settings"
+              className="flex items-center gap-2"
+            >
+              Debug settings
+            </TabsTrigger>
+          )}
+
           <SignedIn>
             <TabsTrigger
               value="account-settings"
@@ -74,6 +95,10 @@ export function Settings() {
         </TabsList>
         <TabsContent value="browser-settings">
           <BrowserSettings />
+        </TabsContent>
+        
+        <TabsContent value="debug-settings">
+          <DebugSettings />
         </TabsContent>
         <TabsContent value="user-settings">
           <SignedOut>

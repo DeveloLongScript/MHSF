@@ -30,7 +30,7 @@
 
 "use client";
 import { Moon, Sun } from "lucide-react";
-import { useTheme } from "next-themes";
+import { useTheme } from "@/lib/hooks/use-theme";
 
 import { Button } from "@/components/ui/button";
 import {
