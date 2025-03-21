@@ -40,6 +40,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
@@ -103,6 +104,9 @@ export function ServerPageButtons({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
+          <DropdownMenuSeparator>
+            Destructive
+          </DropdownMenuSeparator>
           <DropdownMenuItem
             className="text-red-400 flex items-center gap-2"
             onClick={() => {

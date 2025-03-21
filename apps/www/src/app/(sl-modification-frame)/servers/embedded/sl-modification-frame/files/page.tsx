@@ -28,52 +28,27 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { NextApiRequest, NextApiResponse } from "next";
-import { getAuth } from "@clerk/nextjs/server";
-import { MongoClient } from "mongodb";
-import { waitUntil } from "@vercel/functions";
-import { getServerName } from "@/lib/history-util";
-import { sendDiscordReport } from "@/lib/discord";
+"use client";
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  const { userId } = getAuth(req);
-  const { server } = req.query;
+import { ClerkCustomModification } from "@/components/feat/server-list/modification/modification-file-creation-dialog";
+import { Link } from "@/components/util/link";
+import { useUser } from "@clerk/nextjs";
+import { File, FileCode } from "lucide-react";
 
-  if (server == null) {
-    res.status(400).send({ message: "Couldn't find data" });
-    return;
-  }
-  const { reason } = req.body;
-
-  if (reason == null) {
-    res.status(400).send({ message: "Couldn't find data" });
-    return;
-  }
-
-  if (!userId) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
-  const client = new MongoClient(process.env.MONGO_DB as string);
-  await client.connect();
-
-  const db = client.db("mhsf");
-  const collection = db.collection("reports");
-  const entry = await collection.insertOne({
-    server: server,
-    reason: reason,
-    userId: userId,
-  });
-
-  // Don't wait for this to finish, just continue anyway
-  waitUntil(
-    sendDiscordReport(await getServerName(server as string), userId, reason)
+export default function ServerListModificationFrame() {
+  const { user } = useUser();
+  const files =
+    (user?.unsafeMetadata.customFiles as Array<ClerkCustomModification>) ?? [];
+  return (
+    <main className="max-w-[800px] p-4">
+      <h1 className="text-xl font-bold w-full">Files</h1>
+      <div className="grid gap-1">
+        {files.map((c) => (
+          <Link href={`/servers/embedded/sl-modification-frame/file/${c.name}`} className="w-full py-1 px-2 rounded-xl flex items-center gap-1 hover:bg-slate-100" key={c.name}>
+            <FileCode size={16}/>{c.name}.ts
+          </Link>
+        ))}
+      </div>
+    </main>
   );
-
-  // Close the database, but don't close this
-  // serverless instance until it happens
-  waitUntil(client.close());
-  res.send({ msg: "Successfully reported server!" });
 }

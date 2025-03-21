@@ -28,30 +28,10 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { withContentlayer } from "next-contentlayer";
+import type { OnlineServer } from "./mh-server";
 
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  images: {
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "img.clerk.com",
-      },
-    ],
-  },
-  async redirects() {
-    return [
-      {
-        source: '/docs',
-        destination: '/docs/getting-started',
-        permanent: true,
-      },
-    ]
-  },
-  webpack: (config) => {
-    return config;
-  },
-};
-
-export default withContentlayer(nextConfig);
+export interface Sort {
+    toIdentifier(): string;
+    fromIdentifier(identifier: string): Sort;
+    sortToServers(serverA: OnlineServer, serverB: OnlineServer): number;
+}

@@ -44,8 +44,10 @@ const overflowXHiddenPages = ["/home"];
 
 export function FontBoundary({
   children,
+  className
 }: {
   children?: ReactNode | ReactNode[];
+  className?: string;
 }) {
   const settingsStore = useSettingsStore();
   const [fontFamily, setFontFamily] = useState("inter");
@@ -71,7 +73,7 @@ export function FontBoundary({
           default:
             return "system-ui-font--font-boundary";
         }
-      })()} ${pathname !== null && overflowXHiddenPages.includes(pathname) ? "overflow-x-hidden" : ""}`}
+      })()} ${pathname !== null && overflowXHiddenPages.includes(pathname) ? "overflow-x-hidden" : ""} ${className}`}
     >
       {children}
     </body>

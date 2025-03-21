@@ -28,52 +28,32 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { NextApiRequest, NextApiResponse } from "next";
-import { getAuth } from "@clerk/nextjs/server";
-import { MongoClient } from "mongodb";
-import { waitUntil } from "@vercel/functions";
-import { getServerName } from "@/lib/history-util";
-import { sendDiscordReport } from "@/lib/discord";
+"use client";
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  const { userId } = getAuth(req);
-  const { server } = req.query;
+import { useIframeCommunication } from "@/lib/hooks/use-iframe-communication";
+import { useEffectOnce } from "@/lib/useEffectOnce";
+import { type ReactNode, useState } from "react";
+import { Spinner } from "../ui/spinner";
 
-  if (server == null) {
-    res.status(400).send({ message: "Couldn't find data" });
-    return;
-  }
-  const { reason } = req.body;
+export function IframeProtector({ children }: { children: ReactNode }) {
+  const [loading, setLoading] = useState(true);
+  const iframeCommunication = useIframeCommunication();
 
-  if (reason == null) {
-    res.status(400).send({ message: "Couldn't find data" });
-    return;
-  }
-
-  if (!userId) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
-  const client = new MongoClient(process.env.MONGO_DB as string);
-  await client.connect();
-
-  const db = client.db("mhsf");
-  const collection = db.collection("reports");
-  const entry = await collection.insertOne({
-    server: server,
-    reason: reason,
-    userId: userId,
+  useEffectOnce(() => {
+    // Make sure top layer frames are actually coming from MHSF
+    iframeCommunication.fromIframe.send("ping", { from: "iframe" });
+    iframeCommunication.fromIframe.handle("ping", (obj) => {
+      if (obj.from === "top-layer") setLoading(false);
+    });
   });
 
-  // Don't wait for this to finish, just continue anyway
-  waitUntil(
-    sendDiscordReport(await getServerName(server as string), userId, reason)
-  );
-
-  // Close the database, but don't close this
-  // serverless instance until it happens
-  waitUntil(client.close());
-  res.send({ msg: "Successfully reported server!" });
+  if (loading)
+    return (
+      <div className="max-w-[800px]">
+        <div className="absolute top-[50%] left-[50%]">
+          <Spinner />
+        </div>
+      </div>
+    );
+  return children;
 }

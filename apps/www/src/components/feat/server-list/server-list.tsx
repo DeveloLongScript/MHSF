@@ -37,15 +37,12 @@ import { Statistics } from "./statistics";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useInfiniteScrolling } from "@/lib/hooks/use-infinite-scrolling";
 import { useMHSFServer } from "@/lib/hooks/use-mhsf-multiple";
+import { ModificationButton } from "./modification/modification-button";
 
 export function ServerList() {
   const { servers, loading, serverCount, playerCount } = useServers();
   const { itemsLength, fetchMoreData, hasMoreData, data } =
     useInfiniteScrolling(servers);
-  const mhsfServers = useMHSFServer(
-    servers.map((s) => s.staticInfo._id),
-    true
-  );
 
   if (loading)
     return (
@@ -68,6 +65,7 @@ export function ServerList() {
       <h1 className="scroll-m-20 text-2xl font-extrabold tracking-tight lg:text-4xl">
         Servers
       </h1>
+      <ModificationButton />
       <InfiniteScroll
         dataLength={itemsLength}
         next={fetchMoreData}

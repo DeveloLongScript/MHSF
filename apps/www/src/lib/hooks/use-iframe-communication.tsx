@@ -28,52 +28,37 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { NextApiRequest, NextApiResponse } from "next";
-import { getAuth } from "@clerk/nextjs/server";
-import { MongoClient } from "mongodb";
-import { waitUntil } from "@vercel/functions";
-import { getServerName } from "@/lib/history-util";
-import { sendDiscordReport } from "@/lib/discord";
+import type { RefObject } from "react";
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  const { userId } = getAuth(req);
-  const { server } = req.query;
-
-  if (server == null) {
-    res.status(400).send({ message: "Couldn't find data" });
-    return;
-  }
-  const { reason } = req.body;
-
-  if (reason == null) {
-    res.status(400).send({ message: "Couldn't find data" });
-    return;
-  }
-
-  if (!userId) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
-  const client = new MongoClient(process.env.MONGO_DB as string);
-  await client.connect();
-
-  const db = client.db("mhsf");
-  const collection = db.collection("reports");
-  const entry = await collection.insertOne({
-    server: server,
-    reason: reason,
-    userId: userId,
-  });
-
-  // Don't wait for this to finish, just continue anyway
-  waitUntil(
-    sendDiscordReport(await getServerName(server as string), userId, reason)
-  );
-
-  // Close the database, but don't close this
-  // serverless instance until it happens
-  waitUntil(client.close());
-  res.send({ msg: "Successfully reported server!" });
+export function useIframeCommunication(bottomIframe?: RefObject<HTMLIFrameElement | null>) {
+    return {
+        toIframe: {
+            send: (key: string, object: any) => {
+                if (!bottomIframe) {
+                    throw new Error("No hook Iframe")
+                }
+                bottomIframe.current?.contentWindow?.postMessage({__key: key, ...object}, '*');
+            },
+            handle: (key: string, callback: (object: any) => void) => {
+                window.addEventListener('message', (e) => {
+                    if (e.data.__key === key) {
+                        callback(e.data)
+                    }
+                })
+            }
+        },
+        fromIframe: {
+            send: (key: string, object: any) => {
+                window.top?.postMessage({__key: key, ...object}, '*')
+            },
+            handle: (key: string, callback: (object: any) => void) => {
+                window.addEventListener('message', (e) => {
+                    console.log(e);
+                    if (e.data.__key === key) {
+                        callback(e.data)
+                    }
+                })
+            }
+        }
+    }
 }

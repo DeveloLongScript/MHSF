@@ -28,30 +28,20 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { withContentlayer } from "next-contentlayer";
+import { useIframeCommunication } from "@/lib/hooks/use-iframe-communication"
+import { useEffectOnce } from "@/lib/useEffectOnce"
+import { useEffect, useRef } from "react"
 
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  images: {
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "img.clerk.com",
-      },
-    ],
-  },
-  async redirects() {
-    return [
-      {
-        source: '/docs',
-        destination: '/docs/getting-started',
-        permanent: true,
-      },
-    ]
-  },
-  webpack: (config) => {
-    return config;
-  },
-};
+export function ModificationFrame() {
+    const ref = useRef<HTMLIFrameElement>(null)
+    const communication = useIframeCommunication(ref);
 
-export default withContentlayer(nextConfig);
+    useEffect(() => {
+        communication.toIframe.handle("ping", (c) => {
+            if (c.from === "iframe")
+                communication.toIframe.send("ping", {from: "top-layer"})
+        })
+    }, [ref])
+
+    return <iframe ref={ref} src="/servers/embedded/sl-modification-frame" height={800} width={800} title="Server-list Modification Frame" />
+}

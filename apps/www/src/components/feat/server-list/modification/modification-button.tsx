@@ -28,52 +28,20 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { NextApiRequest, NextApiResponse } from "next";
-import { getAuth } from "@clerk/nextjs/server";
-import { MongoClient } from "mongodb";
-import { waitUntil } from "@vercel/functions";
-import { getServerName } from "@/lib/history-util";
-import { sendDiscordReport } from "@/lib/discord";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { ModificationFrame } from "./modification-frame";
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  const { userId } = getAuth(req);
-  const { server } = req.query;
+export function ModificationButton() {
+  return (
+    <Dialog>
+      <DialogTrigger>
+        <Button>Filters & Sorting</Button>
+      </DialogTrigger>
 
-  if (server == null) {
-    res.status(400).send({ message: "Couldn't find data" });
-    return;
-  }
-  const { reason } = req.body;
-
-  if (reason == null) {
-    res.status(400).send({ message: "Couldn't find data" });
-    return;
-  }
-
-  if (!userId) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
-  const client = new MongoClient(process.env.MONGO_DB as string);
-  await client.connect();
-
-  const db = client.db("mhsf");
-  const collection = db.collection("reports");
-  const entry = await collection.insertOne({
-    server: server,
-    reason: reason,
-    userId: userId,
-  });
-
-  // Don't wait for this to finish, just continue anyway
-  waitUntil(
-    sendDiscordReport(await getServerName(server as string), userId, reason)
+      <DialogContent className="p-0 h-[600px] w-[1000px] !max-w-[800px] overflow-x-hidden">
+        <ModificationFrame />
+      </DialogContent>
+    </Dialog>
   );
-
-  // Close the database, but don't close this
-  // serverless instance until it happens
-  waitUntil(client.close());
-  res.send({ msg: "Successfully reported server!" });
 }

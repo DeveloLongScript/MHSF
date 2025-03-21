@@ -62,11 +62,11 @@ export default function ServerCard({ server }: { server: OnlineServer }) {
   return (
     <Material
       className="min-h-[250px] max-h-[250px] cursor-pointer outline-0 group hover:drop-shadow-card-hover focus:drop-shadow-card-hover transition-all"
-      onClick={() => router.push(`/server/${server.staticInfo._id}`)}
+      onClick={() => router.push(`/server/v2/minehut/${server.staticInfo._id}`)}
       tabIndex={0}
       onKeyDown={(e) => {
         // Only send user when they hit "Enter"
-        if (e.key === "Enter") router.push(`/server/${server.staticInfo._id}`);
+        if (e.key === "Enter") router.push(`/server/v2/minehut/${server.staticInfo._id}`);
       }}
     >
       <span className="text-sm hidden group-focus-visible:block text-muted-foreground mb-2">

@@ -109,6 +109,7 @@ export function useMHSFServer(id: string) {
 
       const response = await fetch(server.actions.report, {
         body: JSON.stringify({ reason }),
+        headers: { "Content-Type": "application/json" },
         method: "POST",
       });
 

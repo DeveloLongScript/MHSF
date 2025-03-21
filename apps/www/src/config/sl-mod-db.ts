@@ -28,52 +28,49 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { NextApiRequest, NextApiResponse } from "next";
-import { getAuth } from "@clerk/nextjs/server";
-import { MongoClient } from "mongodb";
-import { waitUntil } from "@vercel/functions";
-import { getServerName } from "@/lib/history-util";
-import { sendDiscordReport } from "@/lib/discord";
+import {
+	ArrowDownUpIcon,
+	SlidersHorizontal,
+	type LucideIcon,
+} from "lucide-react";
+import type { Filter } from "../lib/types/filter";
+import type { Sort } from "../lib/types/sort";
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  const { userId } = getAuth(req);
-  const { server } = req.query;
+type ModDBCategory = {
+	displayTitle: string;
+	description: string;
+    __custom?: boolean;
+	entries: {
+		name: string;
+		icon: LucideIcon;
+        color: string;
+		value: Filter | Sort | { customAction: string };
+        description: string;
+	}[];
+};
 
-  if (server == null) {
-    res.status(400).send({ message: "Couldn't find data" });
-    return;
-  }
-  const { reason } = req.body;
-
-  if (reason == null) {
-    res.status(400).send({ message: "Couldn't find data" });
-    return;
-  }
-
-  if (!userId) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
-  const client = new MongoClient(process.env.MONGO_DB as string);
-  await client.connect();
-
-  const db = client.db("mhsf");
-  const collection = db.collection("reports");
-  const entry = await collection.insertOne({
-    server: server,
-    reason: reason,
-    userId: userId,
-  });
-
-  // Don't wait for this to finish, just continue anyway
-  waitUntil(
-    sendDiscordReport(await getServerName(server as string), userId, reason)
-  );
-
-  // Close the database, but don't close this
-  // serverless instance until it happens
-  waitUntil(client.close());
-  res.send({ msg: "Successfully reported server!" });
-}
+export const serverModDB: ModDBCategory[] = [
+	{
+		displayTitle: "Custom Files",
+        __custom: true,
+		description:
+			`Create custom TypeScript-based filter or sorting systems, completely from the comfort of your own browser.
+            Types used are *builtin* and you can see live type definitions and IntelliSense in the editor.`,
+		entries: [
+			{
+				name: "Create Sort",
+				icon: ArrowDownUpIcon,
+				value: { customAction: "custom-sort" },
+                color: "#a3a68b",
+                description: "Create a new custom sort system using TypeScript, completely from the comfort of your own browser."
+			},
+			{
+				name: "Create Filter",
+				icon: SlidersHorizontal,
+				value: { customAction: "custom-filter" },
+                color: "#a3a68b",
+                description: "Create a new custom filtering system using TypeScript, completely from the comfort of your own browser."
+			},
+		],
+	},
+];

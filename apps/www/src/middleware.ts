@@ -28,21 +28,62 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
-import { NextRequest, NextResponse } from "next/server";
+import {
+	clerkClient,
+	clerkMiddleware,
+	createRouteMatcher,
+} from "@clerk/nextjs/server";
+import { type NextRequest, NextResponse } from "next/server";
+import { ServerResponse } from "./lib/types/mh-server";
 
 // Thanks for the router matcher API Clerk <3
 const isRootRoute = createRouteMatcher(["/"]);
+const isOldServerRoute = createRouteMatcher([
+	"/server/:serverName",
+	"/server/:serverName/statistics",
+]);
+const apiRoute = createRouteMatcher(["/api/(.*)"]);
 
 export default process.env.NEXT_PUBLIC_IS_AUTH === "true"
 	? clerkMiddleware(async (auth, req) => {
+			const authRes = await auth();
+			const client = await clerkClient();
+
 			if (isRootRoute(req)) {
-				switch ((await auth()).userId === null) {
+				switch (authRes.userId === null) {
 					case false:
 						return NextResponse.redirect(new URL("/servers", req.url));
 					case true:
 						return NextResponse.redirect(new URL("/home", req.url));
 				}
+			}
+			// If user is banned, disable all API routes
+			if (authRes.userId !== null) {
+				// User exists
+				const user = await client.users.getUser(authRes.userId);
+				const userBannedMetadata = user.publicMetadata.banned;
+
+				if (userBannedMetadata !== undefined) {
+					// User is banned
+					if (apiRoute(req)) {
+						return NextResponse.json({
+							banned:
+								"You were banned. (and I'm not telling you why) Why are you trying to use the API. Huh? Tell me. Now. You're not funny.",
+						});
+					}
+				}
+			}
+			if (isOldServerRoute(req)) {
+				const minehut = await fetch(
+					`https://api.minehut.com/server/${req.url.split("/server/")[1].split("/")[0]}?byName=true`,
+				);
+				const minehutRes: { server: ServerResponse | null } =
+					await minehut.json();
+
+				if (minehutRes.server !== null)
+					return NextResponse.redirect(
+						new URL(`/server/v2/minehut/${minehutRes.server._id}`, req.url),
+					);
 			}
 		})
 	: (request: NextRequest) => {};
