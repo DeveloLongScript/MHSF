@@ -31,9 +31,27 @@
 "use client";
 
 import { ClerkCustomModification } from "@/components/feat/server-list/modification/modification-file-creation-dialog";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Material } from "@/components/ui/material";
+import { Placeholder } from "@/components/ui/placeholder";
 import { Link } from "@/components/util/link";
 import { useUser } from "@clerk/nextjs";
-import { File, FileCode } from "lucide-react";
+import {
+  ArrowLeft,
+  Braces,
+  EllipsisVertical,
+  File,
+  FileCode,
+  Pencil,
+  Trash,
+} from "lucide-react";
+import { toast } from "sonner";
 
 export default function ServerListModificationFrame() {
   const { user } = useUser();
@@ -41,14 +59,72 @@ export default function ServerListModificationFrame() {
     (user?.unsafeMetadata.customFiles as Array<ClerkCustomModification>) ?? [];
   return (
     <main className="max-w-[800px] p-4">
-      <h1 className="text-xl font-bold w-full">Files</h1>
-      <div className="grid gap-1">
-        {files.map((c) => (
-          <Link href={`/servers/embedded/sl-modification-frame/file/${c.name}`} className="w-full py-1 px-2 rounded-xl flex items-center gap-1 hover:bg-slate-100" key={c.name}>
-            <FileCode size={16}/>{c.name}.ts
+      <h1 className="text-xl font-bold w-full flex items-center gap-2">
+        <Link href="/servers/embedded/sl-modification-frame">
+          <ArrowLeft size={16} />
+        </Link>
+        Files
+      </h1>
+      <Material className="grid gap-1 mt-4">
+        {files.length === 0 && (
+          <Placeholder
+            icon={<Braces />}
+            title="We couldn't find any files"
+            description="Try creating a filter!"
+          />
+        )}
+        {files.map((c, i) => (
+          <Link
+            href={`/servers/embedded/sl-modification-frame/file/${c.name}`}
+            className="w-full py-1 px-2 rounded-xl flex items-center gap-1 justify-between hover:bg-slate-100"
+            key={c.name}
+          >
+            <span className="flex items-center gap-1">
+              <FileCode size={16} />
+              {c.name}.ts
+            </span>
+            <span>
+              <DropdownMenu>
+                <DropdownMenuTrigger>
+                  <Button
+                    variant="tertiary"
+                    className="flex items-center justify-center hover:bg-slate-200"
+                    size="square-sm"
+                  >
+                    <EllipsisVertical
+                      size={16}
+                      className="text-muted-foreground"
+                    />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuItem
+                    className="flex items-center gap-2"
+                    onClick={async (e) => {
+                      e.stopPropagation();
+                      const startTime = Date.now();
+                      files.splice(i, 1);
+                      await user?.update({
+                        unsafeMetadata: {
+                          customFiles: files,
+                        },
+                      });
+                      toast.success(
+                        "Deleted file in " + (Date.now() - startTime) + "ms"
+                      );
+                    }}
+                  >
+                    <Trash size={16} /> Delete
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="flex items-center gap-2">
+                    <Pencil size={16} /> Rename
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </span>
           </Link>
         ))}
-      </div>
+      </Material>
     </main>
   );
 }

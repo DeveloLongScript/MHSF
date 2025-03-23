@@ -42,16 +42,16 @@ import { useUser } from "@clerk/nextjs";
 import { useState, type ReactNode } from "react";
 import { toast } from "sonner";
 
-const sortTemplate = `import type { Server } from "mhsf";
+const sortTemplate = `import type { Minehut } from "mhsf";
 
-export function sort(serverA: Server, serverB: Server): number {
+export function sort(serverA: Minehut.OnlineServer, serverB: Minehut.OnlineServer): number {
     // Your code here
     // Use logic like \`Array.sort\` or <V>(a: V, b: V) => number
 }`;
 
-const filterTemplate = `import type { Server } from "mhsf";
+const filterTemplate = `import type { Minehut } from "mhsf";
 
-export function filter(server: Server): boolean {
+export function filter(server: Minehut.OnlineServer): boolean {
     // Your code here
     // Returning true indicates the server will stay, while returning false will remove the server from the queue.
 }`;
@@ -60,6 +60,7 @@ export type ClerkCustomModification = {
   name: string; // Add .ts to the end
   active: boolean;
   contents: string;
+  testId?: string;
 };
 
 export function ModificationFileCreationDialog({

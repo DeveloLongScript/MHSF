@@ -81,7 +81,7 @@ export default function RootLayout({
               <FontBoundary className="max-w-[800px]">
                 <IframeProtector>
                   <TooltipProvider>
-                    <Toaster richColors position="top-center" />
+                    <Toaster richColors position="bottom-center" />
                     <div className="overflow-x-hidden">{children}</div>
                   </TooltipProvider>
                 </IframeProtector>

@@ -56,8 +56,7 @@ export default function ServerListModificationFrame() {
         viewing experience. We frequently add new filters in accordance to new
         features, as well.
       </span>
-      <Separator className="mt-4" />
-      <div className="pt-10 p-4">
+      <Material className="mt-10 p-4">
         {serverModDB.map((c) => (
           <span key={c.displayTitle}>
             <h2 className="text-lg font-bold pb-3 flex justify-between">
@@ -73,6 +72,7 @@ export default function ServerListModificationFrame() {
             <div className="grid grid-cols-6 gap-2">
               {c.entries.map((m) => (
                 <Material
+                  elevation="high"            
                   className="p-2 hover:drop-shadow-card-hover cursor-pointer"
                   key={m.name}
                   onClick={() =>
@@ -95,7 +95,7 @@ export default function ServerListModificationFrame() {
             </div>
           </span>
         ))}
-      </div>
+      </Material>
     </main>
   );
 }

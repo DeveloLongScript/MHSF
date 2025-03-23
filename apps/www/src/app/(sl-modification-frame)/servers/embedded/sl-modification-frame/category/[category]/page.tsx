@@ -53,18 +53,19 @@ export default function ServerListCategoryFrame({
 
   return (
     <main className="max-w-[800px] p-4">
-      <h1 className="text-xl font-bold w-full">
+      <h1 className="text-xl font-bold w-full flex items-center gap-2">
         <Link href="/servers/embedded/sl-modification-frame">
-          <ArrowLeft />
+          <ArrowLeft size={20} />
         </Link>
         {categoryObj?.displayTitle}
       </h1>
       <Markdown className="text-wrap pt-2">{categoryObj?.description}</Markdown>
 
-      <div className="pt-10 p-4 grid grid-cols-6 gap-2">
+      <Material className="mt-10 p-4 grid grid-cols-6 gap-2">
         {categoryObj?.entries.map((m) => (
           <Material
             className="p-2 hover:drop-shadow-card-hover cursor-pointer"
+            elevation="high"
             onClick={() =>
               router.push(
                 `/servers/embedded/sl-modification-frame/category/${category}/modification/${btoa(m.name)}?b=${encodeURIComponent(`/servers/embedded/sl-modification-frame/category/${category}`)}`
@@ -85,7 +86,7 @@ export default function ServerListCategoryFrame({
             </span>
           </Material>
         ))}
-      </div>
+      </Material>
     </main>
   );
 }

@@ -34,7 +34,7 @@ import {
 	createRouteMatcher,
 } from "@clerk/nextjs/server";
 import { type NextRequest, NextResponse } from "next/server";
-import { ServerResponse } from "./lib/types/mh-server";
+import type { ServerResponse } from "./lib/types/mh-server";
 
 // Thanks for the router matcher API Clerk <3
 const isRootRoute = createRouteMatcher(["/"]);
