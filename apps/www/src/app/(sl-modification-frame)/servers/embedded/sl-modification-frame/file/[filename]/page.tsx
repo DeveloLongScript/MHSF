@@ -76,7 +76,7 @@ export namespace Minehut {
 }
 `;
 
-const transpileTypeScript = (code: string) => {
+export const transpileTypeScript = (code: string) => {
   try {
     const result = ts.transpileModule(typeDefs + code, {
       compilerOptions: {
@@ -304,13 +304,18 @@ export default function CustomFilePage({
               <Button
                 disabled={!successfullyLinted}
                 onClick={() => {
-                  const array =
-                    (user?.unsafeMetadata
-                      .customFiles as Array<ClerkCustomModification>) ?? [];
-                  array[file].testId = guidGenerator();
-                  user?.update({
-                    unsafeMetadata: { customFiles: array },
-                  });
+                  const t = btoa(value);
+
+                  const newTab = window.open(`/servers?tm=${encodeURIComponent(t)}`)
+                  const interval = setInterval(() => {
+                    newTab?.dispatchEvent(new Event("test-mode.enable"))
+                  }, 500)
+                  toast.info("Waiting for server tab to pick up thread...")
+
+                  newTab?.addEventListener("test-mode.enabled", () => {
+                    clearInterval(interval);
+                    toast.success("Connected to new tab; continue.")
+                  })
                 }}
               >
                 Test

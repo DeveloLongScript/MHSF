@@ -38,11 +38,13 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { useInfiniteScrolling } from "@/lib/hooks/use-infinite-scrolling";
 import { useMHSFServer } from "@/lib/hooks/use-mhsf-multiple";
 import { ModificationButton } from "./modification/modification-button";
+import { useFilters } from "@/lib/hooks/use-filters";
 
 export function ServerList() {
   const { servers, loading, serverCount, playerCount } = useServers();
+  const { filteredData } = useFilters(servers);
   const { itemsLength, fetchMoreData, hasMoreData, data } =
-    useInfiniteScrolling(servers);
+    useInfiniteScrolling(filteredData);
 
   if (loading)
     return (

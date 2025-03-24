@@ -33,7 +33,7 @@ import type { OnlineServer } from "../types/mh-server";
 
 const itemsPerScroll = 40;
 
-export function useInfiniteScrolling(servers: OnlineServer[]) {
+export function  useInfiniteScrolling(servers: OnlineServer[]) {
   const [currentOffset, setCurrentOffset] = useState(itemsPerScroll);
   const [data, setData] = useState<OnlineServer[]>([]);
   const [hasMoreData, setHasMoreData] = useState(true);
