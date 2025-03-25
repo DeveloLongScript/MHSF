@@ -16,7 +16,7 @@ body:
      placeholder: Custom filters built in TypeScript is a great featur...
    validations:
      required: true
- - type: input
+ - type: textarea
    attributes:
     label: Screenshots, art, or any other information
-    description: You could create a screenshot or Figma design showing how you invisioned that.
+    description: You could create a screenshot or Figma design showing how you invision your feature.
