@@ -1,0 +1,22 @@
+name: Suggestion
+title: '[sug]: '
+labels: ['suggestion']
+description: Suggest a feature that could be added to MHSF
+body:
+ - type: markdown
+   attributes:
+      value: |
+        Thank you! Filling out this suggestion will help improve MHSF and to make it usable by all users.
+
+        Try and be as descriptive as possible & type in a way thats able to understood by other contributors.
+ - type: textarea
+   attributes:
+     label: Your Idea
+     description: Tell us what you want! Be specific!
+     placeholder: Custom filters built in TypeScript is a great featur...
+   validations:
+     required: true
+ - type: input
+   attributes:
+    label: Screenshots, art, or any other information
+    description: You could create a screenshot or Figma design showing how you invisioned that.
