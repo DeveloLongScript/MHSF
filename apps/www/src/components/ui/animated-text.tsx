@@ -6,9 +6,10 @@ import { cn } from "@/lib/utils";
 interface AnimatedTextProps {
   text: string;
   className?: string;
+  glimmer?: boolean;
 }
 
-export function AnimatedText({ text, className }: AnimatedTextProps) {
+export function AnimatedText({ text, className, glimmer }: AnimatedTextProps) {
   const [currentText, setCurrentText] = useState(text);
 
   useEffect(() => {
@@ -24,7 +25,9 @@ export function AnimatedText({ text, className }: AnimatedTextProps) {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: -20, opacity: 0 }}
           transition={{ duration: 0.3 }}
-          className={cn("absolute left-0", className)}
+          className={cn("absolute left-0", className, {
+            "loading-shimmer": glimmer,
+          })}
         >
           {currentText}
         </motion.span>

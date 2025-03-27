@@ -39,6 +39,8 @@ export function useFilters(data: OnlineServer[]) {
   const [filteredData, setFilteredData] = useState<OnlineServer[]>(data);
   const [t] = useQueryState("tm");
   const [testModeEnabled, setTestModeEnabled] = useState(false);
+  const [testModeStatus, setTestModeStatus] = useState("Haven't connected thread yet (if stuck, select the other tab, and come back)");
+  const [testModeLoading, setTestModeLoading] = useState(true);
 
   useEffect(() => {
     if (filteredData.length === 0) setFilteredData(data);
@@ -54,68 +56,91 @@ export function useFilters(data: OnlineServer[]) {
           setTestModeEnabled(true);
           const code = atob(t);
           (async () => {
-            toast.info("Transpiling TypeScript...");
+            setTestModeStatus("Transpiling TypeScript...");
             const startTime = Date.now();
             const { error, data: transpiledCode } = await tryCatch(
               (async () => transpileTypeScript(code))()
             );
             if (error) {
-              toast.error(
+              setTestModeStatus(
                 "Failed to transpile TypeScript! Error: " + error.message
               );
+              setTestModeLoading(false);
               return;
             }
             if (transpiledCode === null) {
-              toast.error("Cannot continue.");
+              setTestModeStatus("Cannot continue.");
+              setTestModeLoading(false);
               return;
             }
             console.log(
               "[MHSF Filters] Transpiled TypeScript:",
               transpiledCode ?? ""
             );
-            toast.info("Generating function...");
-            const functionBody = transpiledCode.match(
-              /function\s+filter\s*\([^)]*\)\s*\{([\s\S]*)\}/
-            )?.[1];
+            setTestModeStatus("Generating function...");
+            if (
+              !transpiledCode.includes("export default") &&
+              !transpiledCode.includes("export")
+            ) {
+              setTestModeStatus(
+                "Transpiled code does not contain any export statements."
+              );
+              setTestModeLoading(false);
+              return;
+            }
+            const functionBody = transpiledCode
+              .replace(/export default(?!.*[;])/g, "") // Avoid replacing if followed by a semicolon
+              .replace(/export(?!.*[;])/g, ""); // Avoid replacing if followed by a semicolon
             const { error: filterErr, data: filterFunc } = await tryCatch(
-              (async () => new Function("server", functionBody as string))()
+              (async () =>
+                new Function(
+                  "server",
+                  `${functionBody}
+                
+                return filter(server)`
+                ))()
             );
             if (filterErr) {
-              toast.error(
+              setTestModeStatus(
                 `Failed to generate function! Error: ${filterErr.message}`
               );
+              setTestModeLoading(false);
               return;
             }
             if (typeof filterFunc === "function") {
-              toast.success("Compiled in " + (Date.now() - startTime) + "ms");
+              setTestModeStatus(
+                "Compiled in " + (Date.now() - startTime) + "ms"
+              );
               toast.promise(
                 async () => {
                   let newServers = [];
                   newServers = data.filter((c) => filterFunc(c));
-                  toast.info(
+                  setTestModeStatus(
                     "Server count " + data.length + " -> " + newServers.length
                   );
                   setFilteredData(() => [...newServers]);
+                  setTestModeLoading(false);
                 },
                 {
                   loading: "Manipulating data...",
                   success: "Manipulated data; test mode finished!",
                   error: (e) =>
-                    `Error while manipulating data; go back to your editor and run again. ${es}`,
+                    `Error while manipulating data; go back to your editor and run again. ${e}`,
                 }
               );
             } else {
-              toast.error(
+              setTestModeStatus(
                 "Code doesn't have a 'filter' function. Cannot be tested."
               );
-              toast.error(typeof filterFunc);
+              setTestModeLoading(false);
             }
           })();
         }
       });
   }, [t, data]);
 
-  console.log(filteredData);
+  console.log(filteredData, testModeStatus);
 
-  return { filteredData, testModeEnabled };
+  return { filteredData, testModeEnabled, testModeLoading, testModeStatus };
 }
+ 

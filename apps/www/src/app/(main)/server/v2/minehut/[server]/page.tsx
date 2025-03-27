@@ -1,5 +1,5 @@
 import { ServerProvider } from "@/components/feat/server-page/server-provider";
-import { ServerResponse } from "@/lib/types/mh-server";
+import type { ServerResponse } from "@/lib/types/mh-server";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 

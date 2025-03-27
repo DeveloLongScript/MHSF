@@ -46,7 +46,6 @@ import {
   ArrowLeft,
   Braces,
   EllipsisVertical,
-  File,
   FileCode,
   Pencil,
   Trash,
@@ -76,7 +75,7 @@ export default function ServerListModificationFrame() {
         {files.map((c, i) => (
           <Link
             href={`/servers/embedded/sl-modification-frame/file/${c.name}`}
-            className="w-full py-1 px-2 rounded-xl flex items-center gap-1 justify-between hover:bg-slate-100"
+            className="w-full py-1 px-2 rounded-xl flex items-center gap-1 justify-between hover:bg-slate-100 dark:hover:bg-zinc-700/30"
             key={c.name}
           >
             <span className="flex items-center gap-1">
@@ -88,7 +87,7 @@ export default function ServerListModificationFrame() {
                 <DropdownMenuTrigger>
                   <Button
                     variant="tertiary"
-                    className="flex items-center justify-center hover:bg-slate-200"
+                    className="flex items-center justify-center hover:bg-slate-200 dark:hover:bg-zinc-700/60"
                     size="square-sm"
                   >
                     <EllipsisVertical

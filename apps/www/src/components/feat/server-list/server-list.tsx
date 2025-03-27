@@ -36,13 +36,14 @@ import { Separator } from "@/components/ui/separator";
 import { Statistics } from "./statistics";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useInfiniteScrolling } from "@/lib/hooks/use-infinite-scrolling";
-import { useMHSFServer } from "@/lib/hooks/use-mhsf-multiple";
 import { ModificationButton } from "./modification/modification-button";
 import { useFilters } from "@/lib/hooks/use-filters";
+import { ServerTestModeSelector } from "./server-test-mode-selector";
 
 export function ServerList() {
   const { servers, loading, serverCount, playerCount } = useServers();
-  const { filteredData } = useFilters(servers);
+  const { filteredData, testModeEnabled, testModeLoading, testModeStatus } =
+    useFilters(servers);
   const { itemsLength, fetchMoreData, hasMoreData, data } =
     useInfiniteScrolling(filteredData);
 
@@ -67,7 +68,14 @@ export function ServerList() {
       <h1 className="scroll-m-20 text-2xl font-extrabold tracking-tight lg:text-4xl">
         Servers
       </h1>
-      <ModificationButton />
+      <div className="flex items-center">
+        <ModificationButton disabled={testModeEnabled} />
+        <ServerTestModeSelector
+          testModeStatus={testModeStatus}
+          testModeEnabled={testModeEnabled}
+          testModeLoading={testModeLoading}
+        />
+      </div>
       <InfiniteScroll
         dataLength={itemsLength}
         next={fetchMoreData}

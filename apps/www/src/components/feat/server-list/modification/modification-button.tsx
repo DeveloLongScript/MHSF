@@ -32,11 +32,11 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { ModificationFrame } from "./modification-frame";
 
-export function ModificationButton() {
+export function ModificationButton({disabled}: {disabled?: boolean}) {
   return (
     <Dialog>
       <DialogTrigger>
-        <Button>Filters & Sorting</Button>
+        <Button disabled={disabled}>Filters & Sorting</Button>
       </DialogTrigger>
 
       <DialogContent className="p-0 h-[600px] w-[1000px] !max-w-[800px] overflow-x-hidden">

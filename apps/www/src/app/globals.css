@@ -225,6 +225,34 @@
   }
 }
 
+@keyframes loading-shimmer {
+  0% {
+    background-position: 125% 0;
+  }
+  100% {
+    background-position: -150% 0;
+  }
+}
+
+.loading-shimmer {
+  -webkit-text-fill-color: transparent;
+  animation-duration: 2.5s;
+  animation-iteration-count: infinite;
+  animation-name: loading-shimmer;
+  background: var(--color-muted-foreground)
+    linear-gradient(
+      90deg,
+      var(--color-muted-foreground) 0%,
+      var(--color-shadcn-primary) 50%,
+      var(--color-muted-foreground) 100%
+    );
+  background-clip: text;
+  -webkit-background-clip: text;
+  background-repeat: no-repeat;
+  background-size: 50% 200%;
+  display: inline-block;
+}
+
 /*
   The default border color has changed to `currentColor` in Tailwind CSS v4,
   so we've added these compatibility styles to make sure everything still
