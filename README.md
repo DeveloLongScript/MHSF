@@ -4,6 +4,9 @@
 
 ## The MHSF Project
 
+> [!IMPORTANT]
+> You are on the `v2` branch. Features may be broken as MHSF is getting rebuilt from the ground up.
+
 A modern, third-party Minehut server list that is completely open-source, built using top of the line web technologies. Not built to take your money or time, find a server in minutes. Completely ad-free.
 
 ## Security
