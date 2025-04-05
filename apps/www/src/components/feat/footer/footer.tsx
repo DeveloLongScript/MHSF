@@ -1,12 +1,15 @@
-import { BrandingGenericIcon } from "../icons/branding-icons";
+import { BrandingGenericIcon, Discord } from "../icons/branding-icons";
 import { Link } from "../../util/link";
 import { FooterStatus } from "./status";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import Github from "@/components/ui/github";
+import Image from "next/image"
 
 export function Footer() {
   return (
     <footer className="w-full border-t p-[20px] mt-15">
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-start">
         <span className="flex items-center gap-4 text-muted-foreground">
           <Link href="Special:Root">
             <BrandingGenericIcon className="max-w-[32px] max-h-[32px]" />
@@ -36,32 +39,48 @@ export function Footer() {
                 Contact
               </Link>
             </li>
-            <li className="text-sm">
-              <DropdownMenu
-
-              >
-                <DropdownMenuTrigger>
-                  <a className="text-muted-foreground hover:text-shadcn-primary transition-colors cursor-pointer">Discord</a>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <Link href="https://t.mhsf.app/d/m" noExtraIcons>
-                    <DropdownMenuItem className="block py-2">
-                      Minehut Discord
-                      <small className="flex">Not officially owned by MHSF, however conversations about MHSF and related take place there.</small>
-                    </DropdownMenuItem>
-                  </Link>
-                  <Link href="https://t.mhsf.app/d/u" noExtraIcons>
-                    <DropdownMenuItem className="block py-2">
-                      MHSF Discord
-                      <small className="flex">A read-only server for updates related to MHSF.</small>
-                    </DropdownMenuItem>
-                  </Link>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </li>
           </ul>
         </span>
-        <FooterStatus />
+        <div className="block">
+          <div className="flex items-center mb-2 justify-end gap-2">
+
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <Button variant="tertiary" size="square-md" className="flex items-center">
+                  <Discord className="w-[1.25em] h-[1.25em]" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <Link href="https://t.mhsf.app/d/m" noExtraIcons>
+                  <DropdownMenuItem className="py-2 flex items-center gap-2">
+                    <Image className="max-w-[30px] max-h-[30px] rounded border border-muted-foreground" src="https://avatars.githubusercontent.com/u/16529253?s=200&v=4" alt="Minehut" width={30} height={30} />
+                    <span className="block">
+                      Minehut Discord
+                      <small className="flex">Not officially owned by MHSF, however conversations about MHSF and related take place there.</small>
+                    </span>
+                  </DropdownMenuItem>
+                </Link>
+                <Link href="https://t.mhsf.app/d/u" noExtraIcons>
+                  <DropdownMenuItem className="py-2 flex items-center gap-2">
+                    <BrandingGenericIcon className="max-w-[30px] max-h-[30px] rounded border border-muted-foreground" width={30} height={30} />
+                    <span className="block">
+                      MHSF Discord
+                      <small className="flex">A read-only server for updates related to MHSF.</small>
+                    </span>
+                  </DropdownMenuItem>
+                </Link>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <Link href="https://github.com/DeveloLongScript/MHSF" noExtraIcons>
+              <Button variant="tertiary" size="square-md" className="flex items-center">
+                <Github className="w-[1.25em] h-[1.25em]" />
+              </Button>
+            </Link>
+
+          </div>
+          <FooterStatus />
+
+        </div>
       </div>
       <span className="block mt-4">
         <small className="text-muted-foreground text-[0.75rem]">

@@ -28,9 +28,8 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-"use client";
-
 import { ModificationAction } from "@/components/feat/server-list/modification/modification-action";
+import { ModificationCustomModificationRow } from "@/components/feat/server-list/modification/modification-custom-modification-row";
 import { ClerkCustomActivatedModification } from "@/components/feat/server-list/modification/modification-file-creation-dialog";
 import { Material } from "@/components/ui/material";
 import { Separator } from "@/components/ui/separator";
@@ -43,17 +42,15 @@ import { ArrowLeft, Binary } from "lucide-react";
 import { use } from "react";
 import Markdown from "react-markdown";
 
-export default function ServerListCategoryFrame({
+export default async function ServerListCategoryFrame({
 	params,
 }: {
 	params: Promise<{ category: string }>;
 }) {
-	const { user } = useUser();
-	const { category } = use(params);
+	const { category } = await params;
 	const categoryObj = serverModDB.find(
-		(c) => c.displayTitle === atob(category),
+		(c) => c.displayTitle === atob(decodeURIComponent(category)),
 	);
-	const router = useRouter();
 
 	return (
 		<main className="max-w-[800px] p-4">
@@ -67,57 +64,32 @@ export default function ServerListCategoryFrame({
 
 			<Material className="mt-10 p-4 grid grid-cols-6 gap-2">
 				{categoryObj?.entries.map((m) => (
-					<Material
-						className="p-2 hover:drop-shadow-card-hover cursor-pointer"
-						elevation="high"
-						onClick={() =>
-							router.push(
-								`/servers/embedded/sl-modification-frame/category/${category}/modification/${btoa(m.name)}?b=${encodeURIComponent(`/servers/embedded/sl-modification-frame/category/${category}`)}`,
-							)
-						}
+					<Link
 						key={m.name}
+						href={`/servers/embedded/sl-modification-frame/category/${category}/modification/${btoa(m.name)}?b=${encodeURIComponent(`/servers/embedded/sl-modification-frame/category/${category}`)}`}
 					>
-						<div
-							className={cn(
-								"w-full h-[40px] mb-2 rounded-lg items-center text-center justify-center",
-							)}
-							style={{ backgroundColor: m.color }}
+						<Material
+							className="p-2 hover:drop-shadow-card-hover cursor-pointer"
+							elevation="high"
 						>
-							<m.icon className="relative top-[calc(50%-12px)] items-center w-full text-center justify-center" />
-						</div>
-						<span className="text-sm text-center w-full flex items-center justify-center">
-							{m.name}
-						</span>
-					</Material>
+							<div
+								className={cn(
+									"w-full h-[40px] mb-2 rounded-lg items-center text-center justify-center",
+								)}
+								style={{ backgroundColor: m.color }}
+							>
+								<m.icon className="relative top-[calc(50%-12px)] items-center w-full text-center justify-center" />
+							</div>
+							<span className="text-sm text-center w-full flex items-center justify-center">
+								{m.name}
+							</span>
+						</Material>
+					</Link>
 				))}
 				<SignedIn>
-					{categoryObj?.__custom &&
-						(
-							(user?.unsafeMetadata
-								.activatedModifications as ClerkCustomActivatedModification[]) ??
-							[]
-						).map((m) => (
-							<Material
-								elevation="high"
-								className="p-2 hover:drop-shadow-card-hover cursor-pointer"
-								key={m.friendlyName}
-								onClick={() =>
-									router.push(
-										`/servers/embedded/sl-modification-frame/category/${category}/modification/_custom/${btoa(m.friendlyName)}`,
-									)
-								}
-							>
-								<div
-									className="w-full h-[40px] mb-2 rounded-lg items-center text-center justify-center"
-									style={{ backgroundColor: m.color }}
-								>
-									<Binary className="relative top-[calc(50%-12px)] items-center w-full text-center justify-center" />
-								</div>
-								<span className="text-sm text-center w-full flex items-center justify-center">
-									{m.friendlyName}
-								</span>
-							</Material>
-						))}
+					{categoryObj?.__custom && (
+						<ModificationCustomModificationRow category={category} />
+					)}
 				</SignedIn>
 			</Material>
 		</main>

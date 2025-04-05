@@ -112,11 +112,10 @@ export const allTags: Array<{
       </>
     ),
     condition: async (c) =>
-      (c.online === undefined ? c.server?.playerCount : c.online.playerData) ===
+      (c.online === undefined ? c.server?.playerCount: c.online.playerData.playerCount) ===
       0,
     htmlDocs: "Nobody is online this server.",
     tooltipDesc: "Nobody is online this server.",
-
     role: "gray-subtle",
     docsName: "Nobody Online",
     __filter: true,

@@ -28,22 +28,39 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { createContext } from "@/server/context";
-import { appRouter } from "@/server/router/_app";
-import { getAuth } from "@clerk/nextjs/server";
-import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
-// I still have no clue why this works.
-import type { NextRequest } from "../../../../../../../node_modules/@clerk/nextjs/node_modules/next/dist/server/web/spec-extension/request";
+"use client";
 
-const handler = (request: NextRequest) => {
-  const {userId} = getAuth(request);
+import { useUser } from "@clerk/nextjs";
+import { ClerkCustomActivatedModification } from "./modification-file-creation-dialog";
+import { Link } from "@/components/util/link";
+import { Material } from "@/components/ui/material";
+import { Binary } from "lucide-react";
 
-  return fetchRequestHandler({
-    endpoint: "/api/trpc",
-    req: request,
-    router: appRouter,
-    createContext: createContext(userId),
-  });
-};
+export function ModificationCustomModificationRow({category}: {category: string}) {
+	const { user } = useUser();
 
-export { handler as GET, handler as POST };
+	return (
+		(user?.unsafeMetadata
+			.activatedModifications as ClerkCustomActivatedModification[]) ?? []
+	).map((m) => (
+		<Link
+			href={`/servers/embedded/sl-modification-frame/category/${category}/modification/_custom/${btoa(m.friendlyName)}`}
+			key={m.friendlyName}
+		>
+			<Material
+				elevation="high"
+				className="p-2 hover:drop-shadow-card-hover cursor-pointer"
+			>
+				<div
+					className="w-full h-[40px] mb-2 rounded-lg items-center text-center justify-center"
+					style={{ backgroundColor: m.color }}
+				>
+					<Binary className="relative top-[calc(50%-12px)] items-center w-full text-center justify-center" />
+				</div>
+				<span className="text-sm text-center w-full flex items-center justify-center">
+					{m.friendlyName}
+				</span>
+			</Material>
+		</Link>
+	));
+}

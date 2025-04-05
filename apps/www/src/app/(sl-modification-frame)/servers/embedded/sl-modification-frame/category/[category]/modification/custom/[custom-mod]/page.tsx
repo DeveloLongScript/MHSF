@@ -30,8 +30,7 @@
 
 "use client";
 
-import { ModificationAction } from "@/components/feat/server-list/modification/modification-action";
-import { ClerkCustomActivatedModification } from "@/components/feat/server-list/modification/modification-file-creation-dialog";
+import type { ClerkCustomActivatedModification } from "@/components/feat/server-list/modification/modification-file-creation-dialog";
 import {
 	Setting,
 	SettingContent,
@@ -40,15 +39,30 @@ import {
 	SettingTitle,
 } from "@/components/feat/settings/setting";
 import { Button } from "@/components/ui/button";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Material } from "@/components/ui/material";
+import { Placeholder } from "@/components/ui/placeholder";
 import { Separator } from "@/components/ui/separator";
 import { Link } from "@/components/util/link";
 import { serverModDB } from "@/config/sl-mod-db";
 import { useUser } from "@clerk/nextjs";
-import { ArrowLeft, Filter, SortAsc } from "lucide-react";
+import {
+	ArrowLeft,
+	EllipsisVertical,
+	FileQuestion,
+	Filter,
+	SortAsc,
+	Trash,
+} from "lucide-react";
 import { useQueryState } from "nuqs";
 import { use } from "react";
 import Markdown from "react-markdown";
+import { toast } from "sonner";
 
 export default function ModificationPage({
 	params,
@@ -61,13 +75,28 @@ export default function ModificationPage({
 		defaultValue: "/servers/embedded/sl-modification-frame",
 	});
 	console.log(mod);
-	const modObj = (
+	const modIndex = (
 		(user?.unsafeMetadata
 			.activatedModifications as ClerkCustomActivatedModification[]) ?? []
-	).find((c) => c.friendlyName === atob(decodeURIComponent(mod)));
+	).findIndex((c) => c.friendlyName === atob(decodeURIComponent(mod)));
 
-	if (modObj === undefined)
-		return <>We couldn't find the modification you were looking for.</>;
+	if (modIndex === -1)
+		return (
+			<div className="w-full h-full flex justify-center items-center absolute top-[0%]">
+				<Link href={backRoute}>
+					<ArrowLeft className="absolute left-[10px] top-[10px]" />
+				</Link>
+				<Placeholder
+					title="We couldn't find the file you were looking for."
+					icon={<FileQuestion />}
+				/>
+			</div>
+		);
+
+	const modObj = ((user?.unsafeMetadata
+		.activatedModifications as ClerkCustomActivatedModification[]) ?? [])[
+		modIndex
+	];
 
 	return (
 		<main className="max-w-[800px] p-4">
@@ -86,13 +115,48 @@ export default function ModificationPage({
 					This is a custom modification. Enable it! (or not) It's your own! (are
 					you proud?)
 				</Markdown>
-				<Button className="mt-2">
-					{modObj?.active ? "Disable" : "Enable"}
-				</Button>
+				<div className="flex justify-between items-center">
+					<Button className="mt-2">
+						{modObj?.active ? "Disable" : "Enable"}
+					</Button>
+					<DropdownMenu>
+						<DropdownMenuTrigger>
+							<Button
+								variant="secondary"
+								className="flex items-center"
+								size="sm"
+							>
+								<EllipsisVertical size={16} />
+							</Button>
+						</DropdownMenuTrigger>
+						<DropdownMenuContent>
+							<DropdownMenuItem
+								className="gap-2"
+								onClick={async () => {
+									const time = Date.now();
+									const array =
+										(user?.unsafeMetadata
+											.activatedModifications as ClerkCustomActivatedModification[]) ??
+										[];
+									array.splice(modIndex, 1);
+									await user?.update({
+										unsafeMetadata: {
+											...user.unsafeMetadata,
+											activatedModifications: array,
+										},
+									});
+									toast.success(`Deleted in ${Date.now() - time}ms`);
+								}}
+							>
+								<Trash size={16} /> Delete
+							</DropdownMenuItem>
+						</DropdownMenuContent>
+					</DropdownMenu>
+				</div>
 
 				<Separator className="mt-3" />
 
-				<Material className="mt-6">
+				<Material className="mt-6 grid gap-3">
 					<Setting>
 						<SettingContent className="flex items-center">
 							<SettingMeta>
@@ -113,6 +177,23 @@ export default function ModificationPage({
 									</div>
 								)}
 							</div>
+						</SettingContent>
+					</Setting>
+					<Setting>
+						<SettingContent className="flex items-center">
+							<SettingMeta>
+								<SettingTitle>File name</SettingTitle>
+							</SettingMeta>
+							<Link
+								href={
+									`"/servers/embedded/sl-modification-frame/file/${modObj.originalFileName}`
+								}
+								className="text-blue-600"
+							>
+								<code className="flex items-center">
+									{modObj.originalFileName}.ts
+								</code>
+							</Link>
 						</SettingContent>
 					</Setting>
 				</Material>
