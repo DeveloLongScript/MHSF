@@ -36,111 +36,135 @@ import { tryCatch } from "../try-catch";
 import { transpileTypeScript } from "@/app/(sl-modification-frame)/servers/embedded/sl-modification-frame/file/[filename]/page";
 
 export function useFilters(data: OnlineServer[]) {
-  const [filteredData, setFilteredData] = useState<OnlineServer[]>(data);
-  const [t] = useQueryState("tm");
-  const [testModeEnabled, setTestModeEnabled] = useState(false);
-  const [testModeStatus, setTestModeStatus] = useState("Haven't connected thread yet (if stuck, select the other tab, and come back)");
-  const [testModeLoading, setTestModeLoading] = useState(true);
+	const [filteredData, setFilteredData] = useState<OnlineServer[]>(data);
+	const [t] = useQueryState("tm");
+	const [testModeEnabled, setTestModeEnabled] = useState(false);
+	const [testModeStatus, setTestModeStatus] = useState(
+		"Haven't connected thread yet (if stuck, select the other tab, and come back)",
+	);
+	const [testModeLoading, setTestModeLoading] = useState(true);
 
-  useEffect(() => {
-    if (filteredData.length === 0) setFilteredData(data);
-  }, [data, filteredData.length]);
+	useEffect(() => {
+		if (filteredData.length === 0) setFilteredData(data);
+	}, [data, filteredData.length]);
 
-  useEffect(() => {
-    if (data.length !== 0)
-      window.addEventListener("test-mode.enable", (c) => {
-        window.dispatchEvent(new Event("test-mode.enabled"));
-        if (!t) {
-          toast.error("Couldn't enable test mode; no query variable.");
-        } else {
-          setTestModeEnabled(true);
-          const code = atob(t);
-          (async () => {
-            setTestModeStatus("Transpiling TypeScript...");
-            const startTime = Date.now();
-            const { error, data: transpiledCode } = await tryCatch(
-              (async () => transpileTypeScript(code))()
-            );
-            if (error) {
-              setTestModeStatus(
-                "Failed to transpile TypeScript! Error: " + error.message
-              );
-              setTestModeLoading(false);
-              return;
-            }
-            if (transpiledCode === null) {
-              setTestModeStatus("Cannot continue.");
-              setTestModeLoading(false);
-              return;
-            }
-            console.log(
-              "[MHSF Filters] Transpiled TypeScript:",
-              transpiledCode ?? ""
-            );
-            setTestModeStatus("Generating function...");
-            if (
-              !transpiledCode.includes("export default") &&
-              !transpiledCode.includes("export")
-            ) {
-              setTestModeStatus(
-                "Transpiled code does not contain any export statements."
-              );
-              setTestModeLoading(false);
-              return;
-            }
-            const functionBody = transpiledCode
-              .replace(/export default(?!.*[;])/g, "") // Avoid replacing if followed by a semicolon
-              .replace(/export(?!.*[;])/g, ""); // Avoid replacing if followed by a semicolon
-            const { error: filterErr, data: filterFunc } = await tryCatch(
-              (async () =>
-                new Function(
-                  "server",
-                  `${functionBody}
-                
-                return filter(server)`
-                ))()
-            );
-            if (filterErr) {
-              setTestModeStatus(
-                `Failed to generate function! Error: ${filterErr.message}`
-              );
-              setTestModeLoading(false);
-              return;
-            }
-            if (typeof filterFunc === "function") {
-              setTestModeStatus(
-                "Compiled in " + (Date.now() - startTime) + "ms"
-              );
-              toast.promise(
-                async () => {
-                  let newServers = [];
-                  newServers = data.filter((c) => filterFunc(c));
-                  setTestModeStatus(
-                    "Server count " + data.length + " -> " + newServers.length
-                  );
-                  setFilteredData(() => [...newServers]);
-                  setTestModeLoading(false);
-                },
-                {
-                  loading: "Manipulating data...",
-                  success: "Manipulated data; test mode finished!",
-                  error: (e) =>
-                    `Error while manipulating data; go back to your editor and run again. ${e}`,
-                }
-              );
-            } else {
-              setTestModeStatus(
-                "Code doesn't have a 'filter' function. Cannot be tested."
-              );
-              setTestModeLoading(false);
-            }
-          })();
-        }
-      });
-  }, [t, data]);
+	const testModeInit = (type: "filter" | "sort") => {
+		window.dispatchEvent(new Event("test-mode.enabled"));
+		if (!t) {
+			toast.error("Couldn't enable test mode; no query variable.");
+		} else {
+			setTestModeEnabled(true);
+			const code = atob(t);
+			(async () => {
+				setTestModeStatus("Transpiling TypeScript...");
+				const startTime = Date.now();
+				const { error, data: transpiledCode } = await tryCatch(
+					(async () => transpileTypeScript(code))(),
+				);
+				if (error) {
+					setTestModeStatus(
+						"Failed to transpile TypeScript! Error: " + error.message,
+					);
+					setTestModeLoading(false);
+					return;
+				}
+				if (transpiledCode === null) {
+					setTestModeStatus("Cannot continue.");
+					setTestModeLoading(false);
+					return;
+				}
+				setTestModeStatus("Generating function...");
+				if (
+					!transpiledCode.includes("export default") &&
+					!transpiledCode.includes("export")
+				) {
+					setTestModeStatus(
+						"Transpiled code does not contain any export statements.",
+					);
+					setTestModeLoading(false);
+					return;
+				}
+				const functionBody = transpiledCode
+					.replace(/export default(?!.*[;])/g, "") // Avoid replacing if followed by a semicolon
+					.replace(/export(?!.*[;])/g, ""); // Avoid replacing if followed by a semicolon
+				const { error: filterErr, data: filterFunc } = await tryCatch(
+					(async () =>
+						type === "filter"
+							? new Function(
+									"server",
+									`${functionBody}
+            
+                  return filter(server)`,
+								)
+							: new Function(
+									"serverA",
+									"serverB",
+									`${functionBody}
+            
+                  return sort(serverA, serverB)`,
+								))(),
+				);
+				if (filterErr) {
+					setTestModeStatus(
+						`Failed to generate function! Error: ${filterErr.message}`,
+					);
+					setTestModeLoading(false);
+					return;
+				}
+				if (typeof filterFunc === "function") {
+					setTestModeStatus("Compiled in " + (Date.now() - startTime) + "ms");
+					toast.promise(
+						async () => {
+							let newServers = [];
+							if (type === "filter") {
+								newServers = data.filter((c) => filterFunc(c));
+								setTestModeStatus(
+									"Server count " + data.length + " -> " + newServers.length,
+								);
+								if (newServers.length === 0)
+									setTestModeStatus(
+										"No servers were specified in the criteria; showing all servers instead",
+									);
+								setFilteredData(() => [...newServers]);
+							}
+							if (type === "sort") {
+								newServers = data.sort((a, b) => filterFunc(a, b));
+								setTestModeStatus("Sorted " + newServers.length + " servers.");
+								console.log(newServers, data.sort((a, b) => filterFunc(a, b)))
+								console.log(filterFunc)
+								setFilteredData(() => [...newServers]);
+							}
 
-  console.log(filteredData, testModeStatus);
+							setTestModeLoading(false);
+							window.dispatchEvent(new Event("test-mode.success"));
+						},
+						{
+							loading: "Manipulating data...",
+							success: "Manipulated data; test mode finished!",
+							error: (e) =>
+								`Error while manipulating data; go back to your editor and run again. ${e}`,
+						},
+					);
+				} else {
+					setTestModeStatus(
+						"Code doesn't have a 'filter' function. Cannot be tested.",
+					);
+					setTestModeLoading(false);
+				}
+			})();
+		}
+	};
 
-  return { filteredData, testModeEnabled, testModeLoading, testModeStatus };
+	useEffect(() => {
+		if (data.length !== 0) {
+			window.addEventListener("test-mode.enable.filter", () =>
+				testModeInit("filter"),
+			);
+			window.addEventListener("test-mode.enable.sort", () =>
+				testModeInit("sort"),
+			);
+		}
+	}, [t, data]);
+
+	return { filteredData, testModeEnabled, testModeLoading, testModeStatus };
 }
- 

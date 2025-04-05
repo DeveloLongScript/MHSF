@@ -28,26 +28,22 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-"use client";
+import { createContext } from "@/server/context";
+import { appRouter } from "@/server/router/_app";
+import { getAuth } from "@clerk/nextjs/server";
+import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
+// I still have no clue why this works.
+import type { NextRequest } from "../../../../../../../node_modules/@clerk/nextjs/node_modules/next/dist/server/web/spec-extension/request";
 
-import { ClerkProvider as ImportedClerkProvider } from "@clerk/nextjs";
-import { dark } from "@clerk/themes";
-import { useTheme } from "@/lib/hooks/use-theme";
-import { MultisessionAppSupport } from "@clerk/nextjs/internal";
+const handler = (request: NextRequest) => {
+  const {userId} = getAuth(request);
 
-export const ClerkProvider = ({ children }: { children: React.ReactNode }) => {
-  const { resolvedTheme } = useTheme();
-  if (resolvedTheme === "dark") {
-    return (
-      <ImportedClerkProvider appearance={{ baseTheme: dark }}>
-        <MultisessionAppSupport>{children}</MultisessionAppSupport>
-      </ImportedClerkProvider>
-    );
-  }
-
-  return (
-    <ImportedClerkProvider>
-      <MultisessionAppSupport>{children}</MultisessionAppSupport>
-    </ImportedClerkProvider>
-  );
+  return fetchRequestHandler({
+    endpoint: "/api/trpc",
+    req: request,
+    router: appRouter,
+    createContext: createContext(userId),
+  });
 };
+
+export { handler as GET, handler as POST };

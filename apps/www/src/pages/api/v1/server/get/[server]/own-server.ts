@@ -33,11 +33,18 @@ import { clerkClient, getAuth } from "@clerk/nextjs/server";
 import { MongoClient } from "mongodb";
 import { OnlineServer } from "@/lib/types/mh-server";
 import { waitUntil } from "@vercel/functions";
+import { getBackendProcedure } from "@/lib/backend-procedure";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+	const backendProcedure = await getBackendProcedure(req);
+
+	if (backendProcedure.status !== "OK")
+		return res.status(403).json({
+			error: `Backend procedure marked request as '${backendProcedure.status}' instead of required 'OK'`,
+		});
   const { userId } = getAuth(req);
   const { server } = req.query;
 

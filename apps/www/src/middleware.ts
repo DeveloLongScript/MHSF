@@ -35,6 +35,7 @@ import {
 } from "@clerk/nextjs/server";
 import { type NextRequest, NextResponse } from "next/server";
 import type { ServerResponse } from "./lib/types/mh-server";
+import { getBackendProcedure } from "./lib/backend-procedure";
 
 // Thanks for the router matcher API Clerk <3
 const isRootRoute = createRouteMatcher(["/"]);
@@ -55,22 +56,6 @@ export default process.env.NEXT_PUBLIC_IS_AUTH === "true"
 						return NextResponse.redirect(new URL("/servers", req.url));
 					case true:
 						return NextResponse.redirect(new URL("/home", req.url));
-				}
-			}
-			// If user is banned, disable all API routes
-			if (authRes.userId !== null) {
-				// User exists
-				const user = await client.users.getUser(authRes.userId);
-				const userBannedMetadata = user.publicMetadata.banned;
-
-				if (userBannedMetadata !== undefined) {
-					// User is banned
-					if (apiRoute(req)) {
-						return NextResponse.json({
-							banned:
-								"You were banned. (and I'm not telling you why) Why are you trying to use the API. Huh? Tell me. Now. You're not funny.",
-						});
-					}
 				}
 			}
 			if (isOldServerRoute(req)) {

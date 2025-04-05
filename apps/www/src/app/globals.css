@@ -236,7 +236,7 @@
 
 .loading-shimmer {
   -webkit-text-fill-color: transparent;
-  animation-duration: 2.5s;
+  animation-duration: 2s;
   animation-iteration-count: infinite;
   animation-name: loading-shimmer;
   background: var(--color-muted-foreground)

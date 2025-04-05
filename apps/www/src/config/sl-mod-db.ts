@@ -51,8 +51,7 @@ type ModDBCategory = {
 
 export const serverModDB: ModDBCategory[] = [
 	{
-		displayTitle: "Custom Files",
-        __custom: true,
+		displayTitle: "Create Custom Files",
 		description:
 			`Create custom TypeScript-based filter or sorting systems, completely from the comfort of your own browser.
             Types used are *builtin* and you can see live type definitions and IntelliSense in the editor.`,
@@ -73,4 +72,11 @@ export const serverModDB: ModDBCategory[] = [
 			},
 		],
 	},
+	{
+		displayTitle: "Custom Files",
+		description: "These are all of your activated modifications made in the editor.",
+		__custom: true,
+		// Entries are already pre-loaded.
+		entries: []
+	}
 ];

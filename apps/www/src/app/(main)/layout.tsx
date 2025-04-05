@@ -74,22 +74,22 @@ export default function RootLayout({
         enableSystem
         disableTransitionOnChange
       >
-        <ClerkProvider>
-          <IsScript>
-            <NuqsAdapter>
-              <FontBoundary>
-                <TooltipProvider>
-                  <Toaster richColors position="top-center" />
-                  <ClerkProvider>
-                    <NavBar />
-                    <div className="pt-16 min-h-screen">{children}</div>
-                    <Footer />
-                  </ClerkProvider>
-                </TooltipProvider>
-              </FontBoundary>
-            </NuqsAdapter>
-          </IsScript>
-        </ClerkProvider>
+          <ClerkProvider>
+            <IsScript>
+              <NuqsAdapter>
+                <FontBoundary>
+                  <TooltipProvider>
+                    <Toaster richColors position="top-center" />
+                    <ClerkProvider>
+                      <NavBar />
+                      <div className="pt-16 min-h-screen">{children}</div>
+                      <Footer />
+                    </ClerkProvider>
+                  </TooltipProvider>
+                </FontBoundary>
+              </NuqsAdapter>
+            </IsScript>
+          </ClerkProvider>
       </ThemeProvider>
     </html>
   );

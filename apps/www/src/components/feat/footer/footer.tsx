@@ -1,6 +1,7 @@
 import { BrandingGenericIcon } from "../icons/branding-icons";
 import { Link } from "../../util/link";
 import { FooterStatus } from "./status";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 export function Footer() {
   return (
@@ -34,6 +35,29 @@ export function Footer() {
               >
                 Contact
               </Link>
+            </li>
+            <li className="text-sm">
+              <DropdownMenu
+
+              >
+                <DropdownMenuTrigger>
+                  <a className="text-muted-foreground hover:text-shadcn-primary transition-colors cursor-pointer">Discord</a>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <Link href="https://t.mhsf.app/d/m" noExtraIcons>
+                    <DropdownMenuItem className="block py-2">
+                      Minehut Discord
+                      <small className="flex">Not officially owned by MHSF, however conversations about MHSF and related take place there.</small>
+                    </DropdownMenuItem>
+                  </Link>
+                  <Link href="https://t.mhsf.app/d/u" noExtraIcons>
+                    <DropdownMenuItem className="block py-2">
+                      MHSF Discord
+                      <small className="flex">A read-only server for updates related to MHSF.</small>
+                    </DropdownMenuItem>
+                  </Link>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </li>
           </ul>
         </span>

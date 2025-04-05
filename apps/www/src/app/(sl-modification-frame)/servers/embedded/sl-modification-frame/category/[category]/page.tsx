@@ -31,62 +31,95 @@
 "use client";
 
 import { ModificationAction } from "@/components/feat/server-list/modification/modification-action";
+import { ClerkCustomActivatedModification } from "@/components/feat/server-list/modification/modification-file-creation-dialog";
 import { Material } from "@/components/ui/material";
+import { Separator } from "@/components/ui/separator";
 import { Link } from "@/components/util/link";
 import { serverModDB } from "@/config/sl-mod-db";
 import { useRouter } from "@/lib/useRouter";
 import { cn } from "@/lib/utils";
-import { ArrowLeft } from "lucide-react";
+import { SignedIn, useUser } from "@clerk/nextjs";
+import { ArrowLeft, Binary } from "lucide-react";
 import { use } from "react";
 import Markdown from "react-markdown";
 
 export default function ServerListCategoryFrame({
-  params,
+	params,
 }: {
-  params: Promise<{ category: string }>;
+	params: Promise<{ category: string }>;
 }) {
-  const { category } = use(params);
-  const categoryObj = serverModDB.find(
-    (c) => c.displayTitle === atob(category)
-  );
-  const router = useRouter();
+	const { user } = useUser();
+	const { category } = use(params);
+	const categoryObj = serverModDB.find(
+		(c) => c.displayTitle === atob(category),
+	);
+	const router = useRouter();
 
-  return (
-    <main className="max-w-[800px] p-4">
-      <h1 className="text-xl font-bold w-full flex items-center gap-2">
-        <Link href="/servers/embedded/sl-modification-frame">
-          <ArrowLeft size={20} />
-        </Link>
-        {categoryObj?.displayTitle}
-      </h1>
-      <Markdown className="text-wrap pt-2">{categoryObj?.description}</Markdown>
+	return (
+		<main className="max-w-[800px] p-4">
+			<h1 className="text-xl font-bold w-full flex items-center gap-2">
+				<Link href="/servers/embedded/sl-modification-frame">
+					<ArrowLeft size={20} />
+				</Link>
+				{categoryObj?.displayTitle}
+			</h1>
+			<Markdown className="text-wrap pt-2">{categoryObj?.description}</Markdown>
 
-      <Material className="mt-10 p-4 grid grid-cols-6 gap-2">
-        {categoryObj?.entries.map((m) => (
-          <Material
-            className="p-2 hover:drop-shadow-card-hover cursor-pointer"
-            elevation="high"
-            onClick={() =>
-              router.push(
-                `/servers/embedded/sl-modification-frame/category/${category}/modification/${btoa(m.name)}?b=${encodeURIComponent(`/servers/embedded/sl-modification-frame/category/${category}`)}`
-              )
-            }
-            key={m.name}
-          >
-            <div
-              className={cn(
-                "w-full h-[40px] mb-2 rounded-lg items-center text-center justify-center"
-              )}
-              style={{ backgroundColor: m.color }}
-            >
-              <m.icon className="relative top-[calc(50%-12px)] items-center w-full text-center justify-center" />
-            </div>
-            <span className="text-sm text-center w-full flex items-center justify-center">
-              {m.name}
-            </span>
-          </Material>
-        ))}
-      </Material>
-    </main>
-  );
+			<Material className="mt-10 p-4 grid grid-cols-6 gap-2">
+				{categoryObj?.entries.map((m) => (
+					<Material
+						className="p-2 hover:drop-shadow-card-hover cursor-pointer"
+						elevation="high"
+						onClick={() =>
+							router.push(
+								`/servers/embedded/sl-modification-frame/category/${category}/modification/${btoa(m.name)}?b=${encodeURIComponent(`/servers/embedded/sl-modification-frame/category/${category}`)}`,
+							)
+						}
+						key={m.name}
+					>
+						<div
+							className={cn(
+								"w-full h-[40px] mb-2 rounded-lg items-center text-center justify-center",
+							)}
+							style={{ backgroundColor: m.color }}
+						>
+							<m.icon className="relative top-[calc(50%-12px)] items-center w-full text-center justify-center" />
+						</div>
+						<span className="text-sm text-center w-full flex items-center justify-center">
+							{m.name}
+						</span>
+					</Material>
+				))}
+				<SignedIn>
+					{categoryObj?.__custom &&
+						(
+							(user?.unsafeMetadata
+								.activatedModifications as ClerkCustomActivatedModification[]) ??
+							[]
+						).map((m) => (
+							<Material
+								elevation="high"
+								className="p-2 hover:drop-shadow-card-hover cursor-pointer"
+								key={m.friendlyName}
+								onClick={() =>
+									router.push(
+										`/servers/embedded/sl-modification-frame/category/${category}/modification/_custom/${btoa(m.friendlyName)}`,
+									)
+								}
+							>
+								<div
+									className="w-full h-[40px] mb-2 rounded-lg items-center text-center justify-center"
+									style={{ backgroundColor: m.color }}
+								>
+									<Binary className="relative top-[calc(50%-12px)] items-center w-full text-center justify-center" />
+								</div>
+								<span className="text-sm text-center w-full flex items-center justify-center">
+									{m.friendlyName}
+								</span>
+							</Material>
+						))}
+				</SignedIn>
+			</Material>
+		</main>
+	);
 }

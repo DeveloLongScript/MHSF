@@ -47,15 +47,21 @@ import {
   Braces,
   EllipsisVertical,
   FileCode,
+  Filter,
   Pencil,
+  SortAsc,
   Trash,
 } from "lucide-react";
+import { use } from "react";
 import { toast } from "sonner";
+import { findSupportedOperations } from "../file/[filename]/page";
 
 export default function ServerListModificationFrame() {
   const { user } = useUser();
   const files =
     (user?.unsafeMetadata.customFiles as Array<ClerkCustomModification>) ?? [];
+  const operations = use((async () => await Promise.all(files.map(async (c) => await findSupportedOperations(c.contents))))())
+  console.log(operations)
   return (
     <main className="max-w-[800px] p-4">
       <h1 className="text-xl font-bold w-full flex items-center gap-2">
@@ -80,6 +86,8 @@ export default function ServerListModificationFrame() {
           >
             <span className="flex items-center gap-1">
               <FileCode size={16} />
+              {operations[i].filter && <Filter size={16}/>}
+              {operations[i].sort && <SortAsc size={16}/>}
               {c.name}.ts
             </span>
             <span>
@@ -105,6 +113,7 @@ export default function ServerListModificationFrame() {
                       files.splice(i, 1);
                       await user?.update({
                         unsafeMetadata: {
+                          ...user.unsafeMetadata,
                           customFiles: files,
                         },
                       });

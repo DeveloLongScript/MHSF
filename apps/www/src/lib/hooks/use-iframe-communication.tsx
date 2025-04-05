@@ -53,7 +53,6 @@ export function useIframeCommunication(bottomIframe?: RefObject<HTMLIFrameElemen
             },
             handle: (key: string, callback: (object: any) => void) => {
                 window.addEventListener('message', (e) => {
-                    console.log(e);
                     if (e.data.__key === key) {
                         callback(e.data)
                     }

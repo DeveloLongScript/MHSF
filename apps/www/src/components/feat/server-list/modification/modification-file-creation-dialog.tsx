@@ -63,6 +63,15 @@ export type ClerkCustomModification = {
   testId?: string;
 };
 
+export type ClerkCustomActivatedModification = {
+  originalFileName: string;
+  friendlyName: string;
+  transpiledContents: string;
+  active: boolean;
+  testMode: "filter" | "sort";
+  color: string;
+}
+
 export function ModificationFileCreationDialog({
   children,
   type,
@@ -98,10 +107,11 @@ export function ModificationFileCreationDialog({
         <DialogTrigger>
           <Button
             className="w-full"
-            onClick={(e) => {
+            onClick={async (e) => {
               if (!isSignedIn) return toast.error("Please login.");
-              user?.update({
+              await user?.update({
                 unsafeMetadata: {
+                  ...user.unsafeMetadata,
                   customFiles: [
                     ...((user.unsafeMetadata
                       .customFiles as Array<ClerkCustomModification>) ?? []),
