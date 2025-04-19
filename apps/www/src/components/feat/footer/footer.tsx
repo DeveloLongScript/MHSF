@@ -8,8 +8,8 @@ import Image from "next/image"
 
 export function Footer() {
   return (
-    <footer className="w-full border-t p-[20px] mt-15">
-      <div className="flex justify-between items-start">
+    <footer className="w-full border-t mt-15">
+      <div className="flex justify-between items-start p-[20px]">
         <span className="flex items-center gap-4 text-muted-foreground">
           <Link href="Special:Root">
             <BrandingGenericIcon className="max-w-[32px] max-h-[32px]" />
@@ -82,8 +82,8 @@ export function Footer() {
 
         </div>
       </div>
-      <span className="block mt-4">
-        <small className="text-muted-foreground text-[0.75rem]">
+      <span className="block border-t border-neutral-500/20 bg-neutral-100 px-7 py-10 dark:border-neutral-700/50 dark:bg-neutral-900">
+        <small className="text-[0.75rem]">
           MHSF is an open-source project licensed under the MIT license. MHSF is
           not officially affiliated with with Minehut, Super League Enterprise,
           or GamerSafer in any way. <br className="spacing-3" />

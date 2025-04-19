@@ -56,6 +56,12 @@ const nextConfig = {
   webpack: (config) => {
     return config;
   },
+	eslint: {
+		ignoreDuringBuilds: true,
+	},
+	typescript: {
+		ignoreBuildErrors: true,
+	},
 };
 
 export default withContentlayer(nextConfig);

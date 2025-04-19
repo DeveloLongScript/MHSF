@@ -9367,4 +9367,10 @@ body {
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
   --animate-aurora: aurora 8s ease-in-out infinite alternate;
+  --animate-ripple: ripple var(--duration,2s) ease calc(var(--i, 0)*.2s) infinite;
+  @keyframes ripple {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(1);}
+  50% {
+    transform: translate(-50%, -50%) scale(0.9);}}
 }

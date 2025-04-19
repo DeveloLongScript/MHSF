@@ -45,17 +45,26 @@ import { AnimatedList } from "./animated-list";
 import { cn } from "@/lib/utils";
 import { ExampleChart } from "./example-chart";
 import { Link } from "@/components/util/link";
-import {type Avatar, AvatarCircles } from "./avatar-circles";
+import { type Avatar, AvatarCircles } from "./avatar-circles";
+import { Ripple } from "./ripple";
 
 const getGitHubDetails = async () => {
-  const githubRepo = await (await fetch("https://api.github.com/repos/DeveloLongScript/mhsf")).json()
-  const githubStargazers = await (await fetch("https://api.github.com/repos/DeveloLongScript/mhsf/stargazers")).json()
+	const githubRepo = await (
+		await fetch("https://api.github.com/repos/DeveloLongScript/mhsf")
+	).json();
+	const githubStargazers = await (
+		await fetch("https://api.github.com/repos/DeveloLongScript/mhsf/stargazers")
+	).json();
 
-  return {
-    stars: githubRepo.stargazers_count as number,
-    stargazers: (githubStargazers as Array<{avatar_url: string, html_url: string}>).map((c) => {return {imageUrl: c.avatar_url, profileUrl: c.html_url}})
-  }
-}
+	return {
+		stars: githubRepo.stargazers_count as number,
+		stargazers: (
+			githubStargazers as Array<{ avatar_url: string; html_url: string }>
+		).map((c) => {
+			return { imageUrl: c.avatar_url, profileUrl: c.html_url };
+		}),
+	};
+};
 
 export default function HomePageComponent() {
 	const clerk = useClerk();
@@ -63,8 +72,8 @@ export default function HomePageComponent() {
 	const { isSignedIn } = useUser();
 	const theme = useTheme();
 	const { resolvedTheme } = useTheme();
-  const [stars, setStars] = useState(0);
-  const [stargazers, setStargazers] = useState<Avatar[]>([]);
+	const [stars, setStars] = useState(0);
+	const [stargazers, setStargazers] = useState<Avatar[]>([]);
 	const [gradientId, setGradientId] = useState("gradient-banner");
 
 	useEffect(() => {
@@ -73,12 +82,12 @@ export default function HomePageComponent() {
 		gradient.initGradient(`#${gradientId}`);
 	}, [gradientId]);
 
-  useEffect(() => {
-    getGitHubDetails().then((c) => {
-      setStars(c.stars);
-      setStargazers(c.stargazers);
-    })
-  }, [])
+	useEffect(() => {
+		getGitHubDetails().then((c) => {
+			setStars(c.stars);
+			setStargazers(c.stargazers);
+		});
+	}, []);
 
 	return (
 		<div className="lg:pt-10">
@@ -108,8 +117,7 @@ export default function HomePageComponent() {
 				<div className="absolute pointer-events-none inset-0 flex items-center justify-center dark:bg-[rgb(10,10,10)] bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)] " />
 
 				<h1 className="bg-clip-text animate-fade-in -translate-y-4 bg-gradient-to-br from-black from-30% to-black/40 pb-6 text-5xl font-semibold tracking-tighter text-transparent opacity-0 [--animation-delay:200ms] sm:text-5xl md:text-6xl lg:text-7xl dark:from-white dark:to-white/40">
-					Meet MHSF, <br />
-					the modern server list
+					The missing half of Minehut
 				</h1>
 				<p className="animate-fade-in mb-12 -translate-y-4 text-balance text-lg tracking-tight text-neutral-400 opacity-0 [--animation-delay:400ms] md:text-xl ">
 					MHSF is the next generation Minehut server list wrapper, with <br />
@@ -217,10 +225,13 @@ export default function HomePageComponent() {
 											code: "2367",
 										},
 									])
-										.flat()
 										.reverse()
+										.flat()
 										.map((c) => (
-											<TypeScriptError name={c.name} code={c.code} key={c.code} />
+											<TypeScriptError
+												name={c.name}
+												code={c.code}
+											/>
 										))}
 								</AnimatedList>
 
@@ -282,7 +293,7 @@ export default function HomePageComponent() {
 							For data hunters
 						</Badge>
 					</div>
-					<section className="md:flex mt-15 md:justify-center md:items-center px-8 w-full text-center border-b">
+					<section className="block mt-15 px-8 w-full text-center border-b">
 						<span>
 							<h1 className="animate-fade-in text-balance bg-gradient-to-br from-black from-30% to-black/40 bg-clip-text pb-6 text-2xl font-semibold leading-none tracking-tighter text-transparent opacity-0 [--animation-delay:200ms] sm:text-2xl md:text-3xl lg:text-4xl dark:from-white dark:to-white/40">
 								Your data? <AuroraText>No problem.</AuroraText>
@@ -294,11 +305,13 @@ export default function HomePageComponent() {
 								<br />
 								entries.
 							</p>
-							<ExampleChart />
-							<br />
 						</span>
+							<div className="w-full">
+								<ExampleChart />
+							</div>
+              <br />
 					</section>
-					<section className="md:flex mt-15 md:justify-center md:items-center px-8 w-full text-center border-b">
+					<section className="md:flex relative overflow-hidden h-[500px] md:justify-center md:items-center px-8 w-full text-center border-b">
 						<span>
 							<h1 className="animate-fade-in text-balance bg-gradient-to-br from-black from-30% to-black/40 bg-clip-text pb-6 text-2xl font-semibold leading-none tracking-tighter text-transparent opacity-0 [--animation-delay:200ms] sm:text-2xl md:text-3xl lg:text-4xl dark:from-white dark:to-white/40">
 								Don't trust us? <AuroraText>We're open-source.</AuroraText>
@@ -308,16 +321,23 @@ export default function HomePageComponent() {
 								completely open-source under the MIT License.
 							</p>
 							<span className="flex items-center justify-center gap-2">
-                <Link href="Special:GitHub">
-                  <Button>Check it out!</Button>
-                </Link>
-                <span className="flex items-center gap-2 border rounded-lg px-2 py-1">
-                <Star size={16} />
-                <AvatarCircles numPeople={stars} avatarUrls={stargazers}/>
-                </span>
+								<Link href="Special:GitHub">
+									<Button size="lg">Check it out!</Button>
+								</Link>
+								<span className="flex items-center gap-2 border rounded-lg px-2 py-1">
+									<Star size={16} />
+									<AvatarCircles numPeople={stars} avatarUrls={stargazers} />
+								</span>
 							</span>
+              <br />
 						</span>
+            <Ripple mainCircleSize={700}/>
 					</section>
+					<div className="flex items-center justify-center border-b text-shadcn-primary/5 min-h-[50px] z-0">
+						<Badge className="animate-fade-in my-2 rounded-xl px-4 py-2 relative z-1 text-shadcn-primary">
+							For server <AuroraText>owners</AuroraText>
+						</Badge>
+					</div>
 				</section>
 			</span>
 		</div>
