@@ -1,3 +1,32 @@
+/*
+ * MHSF, Minehut Server List
+ * All external content is rather licensed under the ECA Agreement
+ * located here: https://mhsf.app/docs/legal/external-content-agreement
+ *
+ * All code under MHSF is licensed under the MIT License
+ * by open source contributors
+ *
+ * Copyright (c) 2025 dvelo
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to
+ * deal in the Software without restriction, including without limitation the
+ * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+ * sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ */
 "use client";
 
 import { use, useEffect, useRef, useState } from "react";
@@ -20,7 +49,7 @@ import { cn } from "@/lib/utils";
 import { debounce } from "lodash";
 import { tryCatch } from "@/lib/try-catch";
 import { Placeholder } from "@/components/ui/placeholder";
-import { CustomErrors } from "@/components/feat/server-list/modification/custom-files/custom-errors";
+import { CustomErrors, validateCode } from "@/components/feat/server-list/modification/custom-files/custom-errors";
 import { CustomLint } from "@/components/feat/server-list/modification/custom-files/custom-lint";
 import { CustomTest } from "@/components/feat/server-list/modification/custom-files/custom-test";
 
@@ -148,15 +177,18 @@ export default function CustomFilePage({
 				"Whoa! We encountered an error while auto-saving. Please copy your code locally to ensure you'll keep your code changes.",
 			);
 	}, 300);
+    
+    (async () => setSyntaxErrors(await validateCode(monacoRef, filename)))();
 
 	// biome-ignore lint: L
 	useEffect(() => {
 		setSuccessfullyLinted(false);
 		debouncedSave();
+        (async () => setSyntaxErrors(await validateCode(monacoRef, filename)))();
 	}, [value]);
 
 	return (
-		<main className="max-w-[800px] p-4">
+		<main className=" p-4">
 			<div className="w-full justify-between flex items-center gap-2 my-2">
 				<strong className="flex items-center gap-1">
 					<Link href="/servers/embedded/sl-modification-frame/files">
@@ -167,9 +199,7 @@ export default function CustomFilePage({
 				<span className="flex items-center gap-2">
 					{syntaxErrors !== null && syntaxErrors.length !== 0 && (
 						<CustomErrors
-							filename={filename}
-							value={value}
-							monacoRef={monacoRef}
+                            syntaxErrors={syntaxErrors}
 						/>
 					)}
 					<Tooltip>
@@ -192,6 +222,7 @@ export default function CustomFilePage({
 							<CustomTest
 								value={value}
 								successfullyLinted={successfullyLinted}
+                                filename={filename}
 							/>
 						</TooltipTrigger>
 						<TooltipContent>

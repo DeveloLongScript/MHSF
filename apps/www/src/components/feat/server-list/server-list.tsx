@@ -39,59 +39,81 @@ import { useInfiniteScrolling } from "@/lib/hooks/use-infinite-scrolling";
 import { ModificationButton } from "./modification/modification-button";
 import { useFilters } from "@/lib/hooks/use-filters";
 import { ServerTestModeSelector } from "./server-test-mode-selector";
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export function ServerList() {
-  const { servers, loading, serverCount, playerCount } = useServers();
-  const { filteredData, testModeEnabled, testModeLoading, testModeStatus } =
-    useFilters(servers);
-  const { itemsLength, fetchMoreData, hasMoreData, data } =
-    useInfiniteScrolling(filteredData);
+	const { servers, loading, serverCount, playerCount } = useServers();
+	const {
+		filteredData,
+		testModeEnabled,
+		testModeLoading,
+		testModeStatus,
+		filterCount,
+		loading: filterLoading,
+	} = useFilters(servers);
+	const { itemsLength, fetchMoreData, hasMoreData, data } =
+		useInfiniteScrolling(filteredData);
 
-  if (loading)
-    return (
-      <div className="absolute top-[50%] left-[50%]">
-        <Spinner />
-      </div>
-    );
+	if (loading)
+		return (
+			<div className="absolute top-[50%] left-[50%]">
+				<Spinner />
+			</div>
+		);
 
-  return (
-    <main className="px-3 lg:px-16">
-      <h1 className="scroll-m-20 text-2xl font-extrabold tracking-tight lg:text-4xl mb-3">
-        Statistics
-      </h1>
-      <Statistics
-        totalServers={serverCount}
-        totalPlayers={playerCount}
-        topServer={servers[0]}
-      />
-      <Separator className="my-6" />
-      <h1 className="scroll-m-20 text-2xl font-extrabold tracking-tight lg:text-4xl">
-        Servers
-      </h1>
-      <div className="flex items-center">
-        <ModificationButton disabled={testModeEnabled} />
-        <ServerTestModeSelector
-          testModeStatus={testModeStatus}
-          testModeEnabled={testModeEnabled}
-          testModeLoading={testModeLoading}
-        />
-      </div>
-      <InfiniteScroll
-        dataLength={itemsLength}
-        next={fetchMoreData}
-        hasMore={hasMoreData}
-        loader={
-          <span className="mt-2 left-[50%] right-[50%] absolute">
-            <Spinner />
-          </span>
-        }
-      >
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 mt-3">
-          {data.map((c) => (
-            <ServerCard server={c} key={c.staticInfo._id} />
-          ))}
-        </div>
-      </InfiniteScroll>
-    </main>
-  );
+	return (
+		<main className="px-3 lg:px-16">
+			<h1 className="scroll-m-20 text-2xl font-extrabold tracking-tight lg:text-4xl mb-3">
+				Statistics
+			</h1>
+			<Statistics
+				totalServers={serverCount}
+				totalPlayers={playerCount}
+				topServer={servers[0]}
+			/>
+			<Separator className="my-6" />
+			<h1 className="scroll-m-20 text-2xl font-extrabold tracking-tight lg:text-4xl">
+				Servers
+			</h1>
+			<div className="flex items-center">
+				<Tooltip>
+					<TooltipTrigger>
+						<ModificationButton disabled={testModeEnabled} />
+					</TooltipTrigger>
+					<TooltipContent side="bottom" className="backdrop-blur bg-transparent text-black dark:text-white ">{filterCount} modification(s) enabled</TooltipContent>
+				</Tooltip>
+				<ServerTestModeSelector
+					testModeStatus={testModeStatus}
+					testModeEnabled={testModeEnabled}
+					testModeLoading={testModeLoading}
+				/>
+			</div>
+			{filterLoading ? (
+				<span className="mt-2 left-[50%] right-[50%] absolute">
+					<Spinner />
+				</span>
+			) : (
+				<InfiniteScroll
+					dataLength={itemsLength}
+					next={fetchMoreData}
+					hasMore={hasMoreData}
+					loader={
+						<span className="mt-2 left-[50%] right-[50%] absolute">
+							<Spinner />
+						</span>
+					}
+				>
+					<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 mt-3">
+						{data.map((c) => (
+							<ServerCard server={c} key={c.staticInfo._id} />
+						))}
+					</div>
+				</InfiniteScroll>
+			)}
+		</main>
+	);
 }

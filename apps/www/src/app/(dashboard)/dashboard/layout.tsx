@@ -1,0 +1,148 @@
+/*
+ * MHSF, Minehut Server List
+ * All external content is rather licensed under the ECA Agreement
+ * located here: https://mhsf.app/docs/legal/external-content-agreement
+ *
+ * All code under MHSF is licensed under the MIT License
+ * by open source contributors
+ *
+ * Copyright (c) 2025 dvelo
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to
+ * deal in the Software without restriction, including without limitation the
+ * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+ * sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+"use client";
+import "../../globals.css";
+import { useSearchParams } from "next/navigation";
+import { Placeholder } from "@/components/ui/placeholder";
+import { Command, X } from "lucide-react";
+import { IsScript } from "@/components/util/is-script";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { NavBar } from "@/components/feat/navbar/navbar";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { ThemeProvider } from "@/components/util/theme-provider";
+import { FontBoundary } from "@/components/util/font-boundary";
+import { ClerkProvider } from "@/components/util/clerk-provider";
+import { Toaster } from "sonner";
+import { Footer } from "@/components/feat/footer/footer";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
+import { IframeProtector } from "@/components/util/iframe-protector";
+import {
+	Sidebar,
+	SidebarContent,
+	SidebarFooter,
+	SidebarGroup,
+	SidebarGroupContent,
+	SidebarHeader,
+	SidebarInset,
+	SidebarMenu,
+	SidebarMenuButton,
+	SidebarMenuItem,
+	SidebarProvider,
+} from "@/components/ui/sidebar";
+
+export default function RootLayout({
+	children,
+}: {
+	children: React.ReactNode;
+}) {
+	const searchParams = useSearchParams();
+	const search = searchParams?.get("theme") || "light";
+
+	return (
+		<html lang="en">
+			<noscript>
+				<main className="flex justify-center items-center text-center min-h-screen h-max">
+					<Placeholder
+						icon={<X />}
+						title="JavaScript is required for MHSF"
+						description="MHSF cannot grab servers or do other external requests without JavaScript."
+					>
+						<Link href="https://www.enable-javascript.com/">
+							<Button>Here's how</Button>
+						</Link>
+					</Placeholder>
+				</main>
+			</noscript>
+			<ThemeProvider
+				attribute="class"
+				defaultTheme="system"
+				enableSystem
+				disableTransitionOnChange
+			>
+				<ClerkProvider>
+					<IsScript>
+						<NuqsAdapter>
+							<FontBoundary>
+								<TooltipProvider>
+									<SidebarProvider>
+										<Sidebar variant="inset">
+											<SidebarHeader>
+												<SidebarMenu>
+													<SidebarMenuItem>
+														<SidebarMenuButton size="lg" asChild>
+															<a href="#">
+																<div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+																	<Command className="size-4" />
+																</div>
+																<div className="grid flex-1 text-left text-sm leading-tight">
+																	<span className="truncate font-semibold">
+																		Acme Inc
+																	</span>
+																	<span className="truncate text-xs">
+																		Enterprise
+																	</span>
+																</div>
+															</a>
+														</SidebarMenuButton>
+													</SidebarMenuItem>
+												</SidebarMenu>
+											</SidebarHeader>
+											<SidebarContent>
+												<SidebarGroup>
+													<SidebarGroupContent>
+														<SidebarMenu>
+															<SidebarMenuItem>
+																<SidebarMenuButton asChild size="sm">
+																	<a href="#">
+																		<span>a</span>
+																	</a>
+																</SidebarMenuButton>
+															</SidebarMenuItem>
+														</SidebarMenu>
+													</SidebarGroupContent>
+												</SidebarGroup>
+											</SidebarContent>
+										</Sidebar>
+										<SidebarInset>
+											<Toaster richColors position="bottom-center" />
+											<div className="overflow-x-hidden">{children}</div>
+										</SidebarInset>
+									</SidebarProvider>
+								</TooltipProvider>
+							</FontBoundary>
+						</NuqsAdapter>
+					</IsScript>
+				</ClerkProvider>
+			</ThemeProvider>
+		</html>
+	);
+}

@@ -77,28 +77,29 @@ export default async function handler(
 	const serverData = await findServerData(server as string);
 	if (!serverData.exists) return res.status(404).send({ server: null });
 
-	const mongo = new MongoClient(process.env.MONGO_DB as string);
+	const mongo = new MongoClient(process.env.MONGO_DB as string); 
 
 	try {
 		await mongo.connect();
 		const db = mongo.db(process.env.CUSTOM_MONGO_DB ?? "mhsf");
+		const stats = mongo.db("mhsf")
 		const userId = req.cookies.userId;
 
 		// Run queries in parallel
 		const [favoriteData, customizationData, playerData, achievements] =
 			await Promise.all([
-				findFavoriteData(serverData.name, userId, db, {
+				findFavoriteData(serverData.name, userId, stats, {
 					maxFavoriteEntries,
 					favoriteTimespanStart,
 					favoriteTimespanEnd,
 				}),
 				findCustomizationData(serverData.name, userId, db),
-				findPlayerData(serverData.name, db, {
+				findPlayerData(serverData.name, stats, {
 					maxPlayerEntries,
 					playerTimespanStart,
 					playerTimespanEnd,
 				}),
-				findAchievements(serverData.name, db, {
+				findAchievements(serverData.name, stats, {
 					maxAchievementEntries,
 					achievementTimespanStart,
 					achievementTimespanEnd,

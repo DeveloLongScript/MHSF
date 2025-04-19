@@ -42,11 +42,11 @@ export function ServerMainPage({
         />
       )}
       <span className="flex items-center gap-2 w-full relative">
-        <div className="bg-secondary p-4 rounded-lg ml-4">
+        <div className="bg-secondary p-4 rounded-lg lg:ml-4">
           <IconDisplay server={server} />
         </div>
         <p className="w-full">
-          <div className="flex justify-between w-full">
+          <div className="lg:flex justify-between w-full">
             <h1 className="text-2xl font-bold">{server.name}</h1>
             <span>
               <ServerPageButtons server={server} mhsfData={mhsfData} />

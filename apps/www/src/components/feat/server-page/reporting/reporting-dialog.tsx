@@ -25,7 +25,7 @@ export function ReportingDialog({
 
   return (
     <Drawer direction="left" open={open} onOpenChange={setOpen}>
-      <DrawerContent className="p-4 min-w-[600px] overflow-x-hidden max-h-screen overflow-y-auto">
+      <DrawerContent className="p-4 lg:min-w-[600px] max-lg:min-w-[400px] max-lg:max-w-[400px] overflow-x-hidden max-h-screen overflow-y-auto">
         <DrawerTitle className="text-lg mb-3 flex items-center gap-2">
           Report server
         </DrawerTitle>

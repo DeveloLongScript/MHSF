@@ -39,7 +39,7 @@ export function ModificationButton({disabled}: {disabled?: boolean}) {
         <Button disabled={disabled}>Filters & Sorting</Button>
       </DialogTrigger>
 
-      <DialogContent className="p-0 h-[600px] w-[1000px] !max-w-[800px] overflow-x-hidden">
+      <DialogContent className="p-0 h-[600px] lg:w-[1000px] lg:!max-w-[800px] overflow-x-hidden">
         <ModificationFrame />
       </DialogContent>
     </Dialog>

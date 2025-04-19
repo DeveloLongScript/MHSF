@@ -51,9 +51,9 @@ export default async function ServerListCategoryFrame({
 	const categoryObj = serverModDB.find(
 		(c) => c.displayTitle === atob(decodeURIComponent(category)),
 	);
-
+``
 	return (
-		<main className="max-w-[800px] p-4">
+		<main className=" p-4">
 			<h1 className="text-xl font-bold w-full flex items-center gap-2">
 				<Link href="/servers/embedded/sl-modification-frame">
 					<ArrowLeft size={20} />
@@ -62,7 +62,7 @@ export default async function ServerListCategoryFrame({
 			</h1>
 			<Markdown className="text-wrap pt-2">{categoryObj?.description}</Markdown>
 
-			<Material className="mt-10 p-4 grid grid-cols-6 gap-2">
+			<Material className="mt-10 p-4 grid lg:grid-cols-3 grid-cols-6 gap-2">
 				{categoryObj?.entries.map((m) => (
 					<Link
 						key={m.name}

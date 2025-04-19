@@ -40,12 +40,11 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { CustomTestSuccess } from "./custom-test-success";
 
-export function CustomTest({value, successfullyLinted}: {value: string, successfullyLinted: boolean}) {
+export function CustomTest({value, successfullyLinted, filename}: {value: string, successfullyLinted: boolean; filename: string}) {
 	const [open, setOpen] = useState(false);
 	const [filterEnabled, setFilterEnabled] = useState(true);
 	const [sortEnabled, setSortEnabled] = useState(true);
 	const [success, setSuccess] = useState(false);
-	const [fileName, setFileName] = useState("");
     const [testMode, setTestMode] = useState<"filter" | "sort" | "">("");
 
     // biome-ignore lint: values needed (but not shown by linter)
@@ -173,7 +172,7 @@ export function CustomTest({value, successfullyLinted}: {value: string, successf
 						{success && <Check size={16} />}Test
 					</Button>
 					{success && (
-						<CustomTestSuccess filename={fileName} testMode={testMode} value={value} />
+						<CustomTestSuccess filename={filename} testMode={testMode} value={value} />
 					)}
 				</DrawerContent>
 			</Drawer>

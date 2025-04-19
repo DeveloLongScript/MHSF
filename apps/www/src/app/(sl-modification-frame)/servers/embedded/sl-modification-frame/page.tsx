@@ -45,7 +45,7 @@ export default function ServerListModificationFrame() {
 	const { user } = useUser();
 
 	return (
-		<main className="max-w-[800px] p-4">
+		<main className=" p-4">
 			<h1 className="text-xl font-bold w-full">Filters & Sorting</h1>
 			<div className="flex items-center gap-2 my-2">
 				<Button size="sm">Active modifications</Button>
@@ -60,55 +60,35 @@ export default function ServerListModificationFrame() {
 				features, as well.
 			</span>
 			<Material className="mt-10 p-4">
-				{serverModDB.map((c) => (
-					<div key={c.displayTitle} className="my-4">
-						<h2 className="text-lg font-bold pb-3 flex justify-between">
-							{c.displayTitle}
-							<Link
-								href={`/servers/embedded/sl-modification-frame/category/${btoa(c.displayTitle)}`}
-								className="flex gap-2 text-sm font-normal items-center"
-							>
-								<ArrowRight size={16} />
-								View more
-							</Link>
-						</h2>
-						<div className="grid grid-cols-6 gap-2">
-							{c.entries.map((m) => (
-								<Material
-									elevation="high"
-									className="p-2 hover:drop-shadow-card-hover cursor-pointer"
-									key={m.name}
-									onClick={() =>
-										router.push(
-											`/servers/embedded/sl-modification-frame/category/${btoa(c.displayTitle)}/modification/${btoa(m.name)}`,
-										)
-									}
-								>
-									<div
-										className="w-full h-[40px] mb-2 rounded-lg items-center text-center justify-center"
-										style={{ backgroundColor: m.color }}
+				{serverModDB.map(
+					(c) =>
+						(!c.__custom ||
+							(c.__custom &&
+								(
+									(user?.unsafeMetadata
+										.activatedModifications as ClerkCustomActivatedModification[]) ??
+									[]
+								).length !== 0)) && (
+							<div key={c.displayTitle} className="my-4">
+								<h2 className="text-lg font-bold pb-3 flex justify-between">
+									{c.displayTitle}
+									<Link
+										href={`/servers/embedded/sl-modification-frame/category/${btoa(c.displayTitle)}`}
+										className="flex gap-2 text-sm font-normal items-center"
 									>
-										<m.icon className="relative top-[calc(50%-12px)] items-center w-full text-center justify-center" />
-									</div>
-									<span className="text-sm text-center w-full flex items-center justify-center">
-										{m.name}
-									</span>
-								</Material>
-							))}
-							<SignedIn>
-								{c.__custom &&
-									(
-										(user?.unsafeMetadata
-											.activatedModifications as ClerkCustomActivatedModification[]) ??
-										[]
-									).map((m) => (
+										<ArrowRight size={16} />
+										View more
+									</Link>
+								</h2>
+								<div className="grid grid-cols-6 lg:grid-cols-3 gap-2">
+									{c.entries.map((m) => (
 										<Material
 											elevation="high"
 											className="p-2 hover:drop-shadow-card-hover cursor-pointer"
-											key={m.friendlyName}
+											key={m.name}
 											onClick={() =>
 												router.push(
-													`/servers/embedded/sl-modification-frame/category/${btoa(c.displayTitle)}/modification/custom/${btoa(m.friendlyName)}`,
+													`/servers/embedded/sl-modification-frame/category/${btoa(c.displayTitle)}/modification/${btoa(m.name)}`,
 												)
 											}
 										>
@@ -116,17 +96,46 @@ export default function ServerListModificationFrame() {
 												className="w-full h-[40px] mb-2 rounded-lg items-center text-center justify-center"
 												style={{ backgroundColor: m.color }}
 											>
-												<Binary className="relative top-[calc(50%-12px)] items-center w-full text-center justify-center" />
+												<m.icon className="relative top-[calc(50%-12px)] items-center w-full text-center justify-center" />
 											</div>
 											<span className="text-sm text-center w-full flex items-center justify-center">
-												{m.friendlyName}
+												{m.name}
 											</span>
 										</Material>
 									))}
-							</SignedIn>
-						</div>
-					</div>
-				))}
+									<SignedIn>
+										{c.__custom &&
+											(
+												(user?.unsafeMetadata
+													.activatedModifications as ClerkCustomActivatedModification[]) ??
+												[]
+											).map((m) => (
+												<Material
+													elevation="high"
+													className="p-2 hover:drop-shadow-card-hover cursor-pointer"
+													key={m.friendlyName}
+													onClick={() =>
+														router.push(
+															`/servers/embedded/sl-modification-frame/category/${btoa(c.displayTitle)}/modification/custom/${btoa(m.friendlyName)}`,
+														)
+													}
+												>
+													<div
+														className="w-full h-[40px] mb-2 rounded-lg items-center text-center justify-center"
+														style={{ backgroundColor: m.color }}
+													>
+														<Binary className="relative top-[calc(50%-12px)] items-center w-full text-center justify-center" />
+													</div>
+													<span className="text-sm text-center w-full flex items-center justify-center">
+														{m.friendlyName}
+													</span>
+												</Material>
+											))}
+									</SignedIn>
+								</div>
+							</div>
+						),
+				)}
 			</Material>
 		</main>
 	);

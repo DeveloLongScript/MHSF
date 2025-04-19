@@ -55,6 +55,8 @@ import {
 import { use, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { findSupportedOperations } from "../file/[filename]/page";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 
 export default function ServerListModificationFrame() {
 	const { user } = useUser();
@@ -62,9 +64,8 @@ export default function ServerListModificationFrame() {
 		(user?.unsafeMetadata.customFiles as Array<ClerkCustomModification>) ?? [];
 	const operations = usePlatforms(files);
 
-
 	return (
-		<main className="max-w-[800px] p-4">
+		<main className="p-4">
 			<h1 className="text-xl font-bold w-full flex items-center gap-2">
 				<Link href="/servers/embedded/sl-modification-frame">
 					<ArrowLeft size={16} />
@@ -81,20 +82,23 @@ export default function ServerListModificationFrame() {
 				)}
 				{files.map((c, i) => (
 					<Link
-						href={`/servers/embedded/sl-modification-frame/file/${c.name}`}
+						href={`/servers/embedded/sl-modification-frame/file/${encodeURIComponent(c.name)}`}
 						className="w-full py-1 px-2 rounded-xl flex items-center gap-1 justify-between hover:bg-slate-100 dark:hover:bg-zinc-700/30"
 						key={c.name}
 					>
 						<span className="flex items-center gap-1">
 							<FileCode size={16} />
-							{operations[i].filter && <Filter size={16} />}
-							{operations[i].sort && <SortAsc size={16} />}
+							{operations.length !== 0 && (
+								<>
+									{operations[i].filter && <Filter size={16} />}
+									{operations[i].sort && <SortAsc size={16} />}
+								</>
+							)}
 							{c.name}.ts
 						</span>
 						<span>
 							<DropdownMenu>
 								<DropdownMenuTrigger>
-									<DropdownMenu></DropdownMenu>
 									<Button
 										variant="tertiary"
 										className="flex items-center justify-center hover:bg-slate-200 dark:hover:bg-zinc-700/60"
@@ -126,9 +130,38 @@ export default function ServerListModificationFrame() {
 									>
 										<Trash size={16} /> Delete
 									</DropdownMenuItem>
-									<DropdownMenuItem className="flex items-center gap-2">
-										<Pencil size={16} /> Rename
-									</DropdownMenuItem>
+									{(() => {
+										const [name, setName] = useState("");
+										const [dialogOpen, setDialogOpen] = useState(false);
+
+										return (
+											<>
+												<DropdownMenuItem
+													className="flex items-center gap-2"
+													onClick={() => setDialogOpen(true)}
+												>
+													<Pencil size={16} /> Rename
+												</DropdownMenuItem>
+												<Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+													<DialogContent>
+														<DialogTitle>Rename file</DialogTitle>
+
+														<div className="flex items-center w-full">
+															<Input
+																className="rounded-r-none w-full"
+																placeholder="you-should-use-this-format-for-typescript-files-please"
+																onChange={(e) => setName(e.target.value)}
+																value={name}
+															/>
+															<span className="px-4 text-sm py-2 border border-l-none rounded-r-md">
+																.ts
+															</span>
+														</div>
+													</DialogContent>
+												</Dialog>
+											</>
+										);
+									})()}
 								</DropdownMenuContent>
 							</DropdownMenu>
 						</span>
@@ -154,5 +187,5 @@ function usePlatforms(files: Array<ClerkCustomModification>) {
 		})();
 	}, [files]);
 
-  return result;
+	return result;
 }

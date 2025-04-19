@@ -16,5 +16,11 @@
 		"node": ">=18"
 	},
 	"packageManager": "yarn@1.22.22",
-	"workspaces": ["apps/*", "packages/*"]
+	"workspaces": [
+		"apps/*",
+		"packages/*"
+	],
+	"dependencies": {
+		"cloc": "^2.4.0-cloc"
+	}
 }

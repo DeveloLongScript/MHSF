@@ -51,18 +51,8 @@ import type { MonacoRefType } from "@/app/(sl-modification-frame)/servers/embedd
 
 export type SyntaxErrorInterface = languages.typescript.Diagnostic[] | null;
 
-export function CustomErrors({
-	value,
-	monacoRef,
-    filename
-}: {
-	value: string;
-	monacoRef: RefObject<MonacoRefType | null>;
-    filename: string;
-}) {
-	const [syntaxErrors, setSyntaxErrors] = useState<SyntaxErrorInterface>();
-
-	const validateCode = () => {
+export const validateCode = (monacoRef: RefObject<MonacoRefType | null>, filename: string) => {
+	return new Promise<SyntaxErrorInterface>((re, rj) => {
 		if (!monacoRef.current) return;
 
 		monacoRef.current.languages.typescript
@@ -78,16 +68,20 @@ export function CustomErrors({
 							).toString(),
 						)
 						.then((diags) => {
-							setSyntaxErrors(diags);
+							re(diags);
 						});
 				});
 			});
-	};
+	})
+	
+};
 
-    validateCode();
+export function CustomErrors({
+	syntaxErrors
+}: {
+	syntaxErrors: SyntaxErrorInterface;
+}) {
 
-	// biome-ignore lint: L
-	useEffect(validateCode, [value]);
 
 	if (syntaxErrors !== null && syntaxErrors !== undefined)
 		return (
@@ -149,5 +143,5 @@ export function CustomErrors({
 			</Drawer>
 		);
 
-	return null;
+	return <></>;
 }

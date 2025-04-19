@@ -28,12 +28,21 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { OnlineServer } from "../types/mh-server";
 import { useQueryState } from "nuqs";
 import { toast } from "sonner";
 import { tryCatch } from "../try-catch";
 import { transpileTypeScript } from "@/app/(sl-modification-frame)/servers/embedded/sl-modification-frame/file/[filename]/page";
+import { useUser } from "@clerk/nextjs";
+import type { ClerkCustomActivatedModification } from "@/components/feat/server-list/modification/modification-file-creation-dialog";
+
+type EmbeddedFilter = {
+	identifier: string;
+	functionFilter: (server: OnlineServer) => boolean;
+};
+
+type SortFunction<K> = (object1: K, object2: K) => number;
 
 export function useFilters(data: OnlineServer[]) {
 	const [filteredData, setFilteredData] = useState<OnlineServer[]>(data);
@@ -43,9 +52,38 @@ export function useFilters(data: OnlineServer[]) {
 		"Haven't connected thread yet (if stuck, select the other tab, and come back)",
 	);
 	const [testModeLoading, setTestModeLoading] = useState(true);
+	const [loading, setLoading] = useState(true);
+	const [filters, setFilters] = useState<EmbeddedFilter[]>([]);
+	const [sort, setSort] = useState<SortFunction<OnlineServer> | null>(null);
+	const { user, isSignedIn } = useUser();
+
+	const updateServers = (newFilters: EmbeddedFilter[]) => {
+		const modificationMap = data.map((v) =>
+			newFilters.map((c) => c.functionFilter(v)),
+		);
+		const resultData = data.filter(
+			(_, i) => !modificationMap[i].includes(false),
+		);
+		const sortedData = sort === null ? resultData : resultData.sort(sort);
+
+		console.table({ sortedData, modificationMap, resultData, data });
+
+
+		if (sortedData.length !== 0)
+			setFilteredData(sortedData);
+	};
+
+	// biome-ignore lint: bruh
+	useEffect(() => {
+		if (filteredData.length === 0 || data.length === 0) {
+			window.dispatchEvent(new Event("update-modification-stack"));
+		} else setLoading(false);
+	}, [data, filteredData.length]);
 
 	useEffect(() => {
-		if (filteredData.length === 0) setFilteredData(data);
+		if (data.length === 0) {
+			window.dispatchEvent(new Event("update-modification-stack"));
+		} else setLoading(false);
 	}, [data, filteredData.length]);
 
 	const testModeInit = (type: "filter" | "sort") => {
@@ -63,7 +101,7 @@ export function useFilters(data: OnlineServer[]) {
 				);
 				if (error) {
 					setTestModeStatus(
-						"Failed to transpile TypeScript! Error: " + error.message,
+						`Failed to transpile TypeScript! Error: ${error.message},`,
 					);
 					setTestModeLoading(false);
 					return;
@@ -91,18 +129,18 @@ export function useFilters(data: OnlineServer[]) {
 					(async () =>
 						type === "filter"
 							? new Function(
-									"server",
-									`${functionBody}
+								"server",
+								`${functionBody}
             
                   return filter(server)`,
-								)
+							)
 							: new Function(
-									"serverA",
-									"serverB",
-									`${functionBody}
+								"serverA",
+								"serverB",
+								`${functionBody}
             
                   return sort(serverA, serverB)`,
-								))(),
+							))(),
 				);
 				if (filterErr) {
 					setTestModeStatus(
@@ -112,14 +150,14 @@ export function useFilters(data: OnlineServer[]) {
 					return;
 				}
 				if (typeof filterFunc === "function") {
-					setTestModeStatus("Compiled in " + (Date.now() - startTime) + "ms");
+					setTestModeStatus(`Compiled in ${Date.now() - startTime} ms`);
 					toast.promise(
 						async () => {
-							let newServers = [];
+							let newServers: OnlineServer[] = [];
 							if (type === "filter") {
 								newServers = data.filter((c) => filterFunc(c));
 								setTestModeStatus(
-									"Server count " + data.length + " -> " + newServers.length,
+									`Server count ${data.length} -> ${newServers.length}`,
 								);
 								if (newServers.length === 0)
 									setTestModeStatus(
@@ -129,9 +167,12 @@ export function useFilters(data: OnlineServer[]) {
 							}
 							if (type === "sort") {
 								newServers = data.sort((a, b) => filterFunc(a, b));
-								setTestModeStatus("Sorted " + newServers.length + " servers.");
-								console.log(newServers, data.sort((a, b) => filterFunc(a, b)))
-								console.log(filterFunc)
+								setTestModeStatus(`Sorted ${newServers.length} servers.`);
+								console.log(
+									newServers,
+									data.sort((a, b) => filterFunc(a, b)),
+								);
+								console.log(filterFunc);
 								setFilteredData(() => [...newServers]);
 							}
 
@@ -155,6 +196,7 @@ export function useFilters(data: OnlineServer[]) {
 		}
 	};
 
+	// biome-ignore lint: I'm gonna turn this off :sob:
 	useEffect(() => {
 		if (data.length !== 0) {
 			window.addEventListener("test-mode.enable.filter", () =>
@@ -166,5 +208,92 @@ export function useFilters(data: OnlineServer[]) {
 		}
 	}, [t, data]);
 
-	return { filteredData, testModeEnabled, testModeLoading, testModeStatus };
+	// biome-ignore lint: I'm gonna turn this off :sob:
+	useEffect(() => {
+		if (!t)
+			window.addEventListener("update-modification-stack", async () => {
+				await user?.reload();
+				let newFilters: EmbeddedFilter[] = [];
+				if (isSignedIn) {
+					const activatedModifications =
+						(user.unsafeMetadata
+							.activatedModifications as ClerkCustomActivatedModification[]) ??
+						[];
+					const activeModifications = activatedModifications.filter(
+						(c) => c.active && c.testMode === "filter",
+					);
+
+					const resolvedModifications = (await Promise.all(
+						activeModifications.map(async (c) => {
+							const functionBody = c.transpiledContents
+								.replace(/export default(?!.*[;])/g, "") // Avoid replacing if followed by a semicolon
+								.replace(/export(?!.*[;])/g, ""); // Avoid replacing if followed by a semicolon
+							const { error: filterErr, data: filterFunc } = await tryCatch(
+								(async () =>
+									c.testMode === "filter"
+										? new Function(
+											"server",
+											`${functionBody}
+            
+                  return filter(server)`,
+										)
+										: new Function(
+											"serverA",
+											"serverB",
+											`${functionBody}
+            
+                  return sort(serverA, serverB)`,
+										))(),
+							);
+
+							if (filterErr) {
+								toast.error(
+									`Couldn't enable modification '${c.friendlyName}'. Please lint and test again.`,
+								);
+								return { identifier: `file-${c.originalFileName}.ts`, functionFilter: () => true };
+							}
+
+							if (typeof filterFunc === "function") {
+								return { identifier: `file-${c.originalFileName}.ts`, functionFilter: filterFunc };
+							}
+
+							toast.error(
+								`Couldn't enable modification '${c.friendlyName}'. Please lint and test again.`,
+							);
+							return { identifier: `file-${c.originalFileName}.ts`, functionFilter: () => true };
+						}),
+					)) as EmbeddedFilter[];
+
+					// avoid duplicates
+					resolvedModifications.forEach((item) => {
+						setFilters((c) => {
+							if (c.findIndex((i) => i.identifier === item.identifier) === -1)
+								return [
+									...c,
+									item
+								]
+							else return c;
+						});
+					})
+
+					newFilters = resolvedModifications.map((item) => {
+						return item;
+					});
+				}
+
+				console.log(newFilters);
+
+				updateServers(newFilters);
+			});
+	}, [data]);
+	console.log(filters);
+
+	return {
+		filteredData,
+		testModeEnabled,
+		testModeLoading,
+		testModeStatus,
+		filterCount: filters.filter((item, index, array) => array.indexOf(item) === index).length + (sort === null ? 1 : 0),
+		loading,
+	};
 }

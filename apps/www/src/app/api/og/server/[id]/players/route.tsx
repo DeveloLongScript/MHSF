@@ -100,7 +100,7 @@ export async function GET(
     // Connect to MongoDB
     const mongo = new MongoClient(process.env.MONGO_DB as string);
     await mongo.connect();
-    const db = mongo.db(process.env.CUSTOM_MONGO_DB ?? "mhsf");
+    const db = mongo.db("mhsf");
 
     // Get player data (last 60 entries)
     const historyCollection = db.collection("history");

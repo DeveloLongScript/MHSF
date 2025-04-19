@@ -27,17 +27,15 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  * OTHER DEALINGS IN THE SOFTWARE.
  */
-
-// NextTopLoader.tsx
 'use client';
 
 import Loader from 'nextjs-toploader';
 import { usePathname } from 'next/navigation';
-import {useEffect} from "react"
+import {ComponentProps, useEffect} from "react"
 import * as NProgress from "nprogress";
 import { useTheme } from 'next-themes';
 
-export default function NextTopLoader() {
+export default function NextTopLoader(props: ComponentProps<typeof Loader>) {
   const pathname = usePathname();
   const theme = useTheme()
 
@@ -46,6 +44,6 @@ export default function NextTopLoader() {
   }, [pathname]);
 
   return (
-    <Loader color={theme.resolvedTheme == "dark" ? "white" : "black"} shadow={false}/>
+    <Loader height={3} color={theme.resolvedTheme === "dark" ? "white" : "black"} shadow={false} {...props}/>
   )
 }

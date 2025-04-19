@@ -59,7 +59,7 @@ export default function ModificationPage({
     );
 
   return (
-    <main className="max-w-[800px] p-4">
+    <main className="p-4">
       <div
         className="h-[150px] w-full rounded-xl p-2"
         style={{ backgroundColor: modObj?.color }}

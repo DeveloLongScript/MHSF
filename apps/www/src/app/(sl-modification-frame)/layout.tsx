@@ -45,6 +45,7 @@ import { Toaster } from "sonner";
 import { Footer } from "@/components/feat/footer/footer";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { IframeProtector } from "@/components/util/iframe-protector";
+import NextTopLoader from "@/components/util/top-loader";
 
 export default function RootLayout({
   children,
@@ -78,10 +79,12 @@ export default function RootLayout({
         <ClerkProvider>
           <IsScript>
             <NuqsAdapter>
-              <FontBoundary className="max-w-[800px]">
+              <FontBoundary>
                 <IframeProtector>
                   <TooltipProvider>
                     <Toaster richColors position="bottom-center" />
+
+                    <NextTopLoader showSpinner={false} />
                     <div className="overflow-x-hidden">{children}</div>
                   </TooltipProvider>
                 </IframeProtector>

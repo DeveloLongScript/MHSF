@@ -37,7 +37,7 @@ export function StatisticsMainRow({
 		>
 			<div className="p-4">
 				<span className="flex gap-4 mb-2">
-					<strong className="text-lg">Statistics</strong>
+					<strong className="text-lg max-lg:hidden">Statistics</strong>
 					<button
 						type="button"
 						className={cn(
@@ -75,7 +75,7 @@ export function StatisticsMainRow({
 				</span>
 				<Separator />
 			</div>
-			<div className="mt-2">
+			<div className="mt-2 max-lg:mt-9">
 				{!mhsfData.loading ? (
 					<>
 						{(statisticType === "playerCount"

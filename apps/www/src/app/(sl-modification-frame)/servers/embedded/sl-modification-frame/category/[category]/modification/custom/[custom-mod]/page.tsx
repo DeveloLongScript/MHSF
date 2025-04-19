@@ -50,6 +50,8 @@ import { Placeholder } from "@/components/ui/placeholder";
 import { Separator } from "@/components/ui/separator";
 import { Link } from "@/components/util/link";
 import { serverModDB } from "@/config/sl-mod-db";
+import { useIframeCommunication } from "@/lib/hooks/use-iframe-communication";
+import { useRouter } from "@/lib/useRouter";
 import { useUser } from "@clerk/nextjs";
 import {
 	ArrowLeft,
@@ -71,6 +73,8 @@ export default function ModificationPage({
 }) {
 	const { category, "custom-mod": mod } = use(params);
 	const { user } = useUser();
+	const router = useRouter();
+	const { fromIframe: communicator } = useIframeCommunication();
 	const [backRoute] = useQueryState("b", {
 		defaultValue: "/servers/embedded/sl-modification-frame",
 	});
@@ -99,7 +103,7 @@ export default function ModificationPage({
 	];
 
 	return (
-		<main className="max-w-[800px] p-4">
+		<main className=" p-4">
 			<div
 				className="h-[150px] w-full rounded-xl p-2"
 				style={{ backgroundColor: modObj?.color }}
@@ -116,7 +120,21 @@ export default function ModificationPage({
 					you proud?)
 				</Markdown>
 				<div className="flex justify-between items-center">
-					<Button className="mt-2">
+					<Button className="mt-2" onClick={async () => {
+						const newModObj = {
+							...modObj,
+							active: !modObj.active
+						}
+						const modificationArray = (user?.unsafeMetadata
+							.activatedModifications as ClerkCustomActivatedModification[]) ?? [];
+						modificationArray[modIndex] = newModObj;
+						await user?.update({
+							unsafeMetadata: {
+								...user.unsafeMetadata,
+								activatedModifications: modificationArray
+							}
+						});
+					}}>
 						{modObj?.active ? "Disable" : "Enable"}
 					</Button>
 					<DropdownMenu>
@@ -146,6 +164,7 @@ export default function ModificationPage({
 										},
 									});
 									toast.success(`Deleted in ${Date.now() - time}ms`);
+									router.push(backRoute);
 								}}
 							>
 								<Trash size={16} /> Delete
@@ -185,9 +204,7 @@ export default function ModificationPage({
 								<SettingTitle>File name</SettingTitle>
 							</SettingMeta>
 							<Link
-								href={
-									`"/servers/embedded/sl-modification-frame/file/${modObj.originalFileName}`
-								}
+								href={`/servers/embedded/sl-modification-frame/file/${encodeURIComponent(modObj.originalFileName)}`}
 								className="text-blue-600"
 							>
 								<code className="flex items-center">

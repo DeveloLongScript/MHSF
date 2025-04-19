@@ -43,5 +43,5 @@ export function ModificationFrame() {
         })
     }, [ref])
 
-    return <iframe ref={ref} src="/servers/embedded/sl-modification-frame" height={800} width={800} title="Server-list Modification Frame" />
+    return <iframe ref={ref} src="/servers/embedded/sl-modification-frame" height={800} title="Server-list Modification Frame" />
 }
