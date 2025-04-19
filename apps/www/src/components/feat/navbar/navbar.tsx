@@ -187,7 +187,7 @@ export function NavBar() {
         </DropdownMenu>
         <SignedIn>
           <div
-            className="absolute right-0 -z-10 h-full
+            className="absolute right-0 z-10 h-full
        overflow-hidden w-full ml-auto"
             style={{ borderRadius: "inherit" }}
           >
