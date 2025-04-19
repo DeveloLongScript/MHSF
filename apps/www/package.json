@@ -117,7 +117,7 @@
 		"react-hook-form": "^7.52.2",
 		"react-hotkeys-hook": "^4.5.0",
 		"react-infinite-scroll-component": "^6.1.0",
-		"react-markdown": "^9.0.1",
+		"react-markdown": "^10.1.0",
 		"react-resizable-panels": "^2.0.23",
 		"recharts": "^2.12.7",
 		"shiki": "^1.23.0",
