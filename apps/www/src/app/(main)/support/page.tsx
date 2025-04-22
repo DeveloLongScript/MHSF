@@ -1,5 +1,6 @@
 import { Support } from "@/components/feat/support/support";
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   applicationName: "MHSF",
@@ -9,7 +10,9 @@ export const metadata: Metadata = {
 export default function SupportPage() {
   return (
     <div>
-      <Support />
+      <Suspense>
+        <Support />
+      </Suspense>
     </div>
   );
 }
