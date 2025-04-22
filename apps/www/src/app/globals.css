@@ -9354,6 +9354,15 @@ body {
     transform: rotate(-5deg) scale(0.9);
   }
 }
+
+@keyframes ripple {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(0.9);
+  }
+}
 /*
  ---break---
  */
@@ -9368,9 +9377,15 @@ body {
   --color-sidebar-ring: var(--sidebar-ring);
   --animate-aurora: aurora 8s ease-in-out infinite alternate;
   --animate-ripple: ripple var(--duration,2s) ease calc(var(--i, 0)*.2s) infinite;
-  @keyframes ripple {
-  0%, 100% {
-    transform: translate(-50%, -50%) scale(1);}
-  50% {
-    transform: translate(-50%, -50%) scale(0.9);}}
+
+  --animate-line-shadow: line-shadow 15s linear infinite;
+ 
+  @keyframes line-shadow {
+    0% {
+      background-position: 0 0;
+    }
+    100% {
+      background-position: 100% -100%;
+    }
+  }
 }

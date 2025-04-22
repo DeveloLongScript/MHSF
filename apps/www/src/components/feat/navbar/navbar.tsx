@@ -73,7 +73,8 @@ export function NavBar() {
       className={cn(
         "w-screen h-[3rem] grid-cols-3 fixed z-10 flex",
         "items-center justify-self-start me-auto pl-4 flex-1 transition-all justify-between",
-        showBorder ? "border-b backdrop-blur-xl" : "",
+        "lg:top-0 max-lg:bottom-0",
+        showBorder ? "border-b backdrop-blur-xl" : "max-lg:border-b max-lg:backdrop-blur-xl",
         pathname !== null && animatedTopbarPages.includes(pathname)
           ? "[--animation-delay:1000ms] opacity-0 animate-fade-in"
           : ""
@@ -187,7 +188,7 @@ export function NavBar() {
         </DropdownMenu>
         <SignedIn>
           <div
-            className="absolute right-0 z-10 h-full
+            className="absolute right-0 -z-10 h-full
        overflow-hidden w-full ml-auto"
             style={{ borderRadius: "inherit" }}
           >

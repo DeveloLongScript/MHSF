@@ -47,6 +47,13 @@ import { ExampleChart } from "./example-chart";
 import { Link } from "@/components/util/link";
 import { type Avatar, AvatarCircles } from "./avatar-circles";
 import { Ripple } from "./ripple";
+import { FontChanger } from "./font-changer";
+import { FlickeringGrid } from "./flickering-grid";
+import { DiscordWordmark } from "@/components/ui/discord";
+import { Separator } from "@/components/ui/separator";
+import { LineShadowText } from "@/components/feat/home-page/line-shadow-text";
+import { FlipText } from "./flip-text";
+import { InteractiveHoverButton } from "./interactive-hover-button";
 
 const getGitHubDetails = async () => {
 	const githubRepo = await (
@@ -71,6 +78,7 @@ export default function HomePageComponent() {
 	const router = useRouter();
 	const { isSignedIn } = useUser();
 	const theme = useTheme();
+	const shadowColor = theme.resolvedTheme === "dark" ? "white" : "black";
 	const { resolvedTheme } = useTheme();
 	const [stars, setStars] = useState(0);
 	const [stargazers, setStargazers] = useState<Avatar[]>([]);
@@ -117,7 +125,10 @@ export default function HomePageComponent() {
 				<div className="absolute pointer-events-none inset-0 flex items-center justify-center dark:bg-[rgb(10,10,10)] bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)] " />
 
 				<h1 className="bg-clip-text animate-fade-in -translate-y-4 bg-gradient-to-br from-black from-30% to-black/40 pb-6 text-5xl font-semibold tracking-tighter text-transparent opacity-0 [--animation-delay:200ms] sm:text-5xl md:text-6xl lg:text-7xl dark:from-white dark:to-white/40">
-					The missing half of Minehut
+					The missing half of{" "}
+					<LineShadowText shadowColor="#407ce5" className="text-[#488aff]">
+						Minehut
+					</LineShadowText>
 				</h1>
 				<p className="animate-fade-in mb-12 -translate-y-4 text-balance text-lg tracking-tight text-neutral-400 opacity-0 [--animation-delay:400ms] md:text-xl ">
 					MHSF is the next generation Minehut server list wrapper, with <br />
@@ -150,8 +161,18 @@ export default function HomePageComponent() {
 						<br />
 						<br />
 						<br />
-						<p className="text-center w-full font-bold text-sm">
-							An open-source unofficial project brought to you by dvelo
+						<p className="text-center w-full font-bold justify-center text-sm flex items-center gap-2">
+							An open-source unofficial project brought to you by{" "}
+							<Link
+								href="https://giftedly.dev"
+								className="flex gap-1 items-center"
+							>
+								<img
+									src="https://avatars.githubusercontent.com/u/52332868?v=4"
+									className="w-[24px] h-[24px] rounded-full border"
+								/>
+								dvelo
+							</Link>
 						</p>
 					</section>
 					<div className="flex items-center justify-center border-b text-shadcn-primary/5 min-h-[50px] z-0">
@@ -228,10 +249,7 @@ export default function HomePageComponent() {
 										.reverse()
 										.flat()
 										.map((c) => (
-											<TypeScriptError
-												name={c.name}
-												code={c.code}
-											/>
+											<TypeScriptError name={c.name} code={c.code} />
 										))}
 								</AnimatedList>
 
@@ -306,10 +324,10 @@ export default function HomePageComponent() {
 								entries.
 							</p>
 						</span>
-							<div className="w-full">
-								<ExampleChart />
-							</div>
-              <br />
+						<div className="w-full">
+							<ExampleChart />
+						</div>
+						<br />
 					</section>
 					<section className="md:flex relative overflow-hidden h-[500px] md:justify-center md:items-center px-8 w-full text-center border-b">
 						<span>
@@ -329,17 +347,145 @@ export default function HomePageComponent() {
 									<AvatarCircles numPeople={stars} avatarUrls={stargazers} />
 								</span>
 							</span>
-              <br />
+							<br />
 						</span>
-            <Ripple mainCircleSize={700}/>
+						<Ripple mainCircleSize={700} />
 					</section>
 					<div className="flex items-center justify-center border-b text-shadcn-primary/5 min-h-[50px] z-0">
 						<Badge className="animate-fade-in my-2 rounded-xl px-4 py-2 relative z-1 text-shadcn-primary">
 							For server <AuroraText>owners</AuroraText>
 						</Badge>
 					</div>
+					<section className="md:flex mt-15 md:justify-center md:items-center px-8 w-full text-center border-b">
+						<span>
+							<h1 className="animate-fade-in text-balance bg-gradient-to-br from-black from-30% to-black/40 bg-clip-text pb-6 text-2xl font-semibold leading-none tracking-tighter text-transparent opacity-0 [--animation-delay:200ms] sm:text-2xl md:text-3xl lg:text-4xl dark:from-white dark:to-white/40">
+								Showcase <FontChanger>your server</FontChanger>
+							</h1>
+							<p className="animate-fade-in mb-6 mt-6 -translate-y-4 text-balance text-md tracking-tight text-gray-400 opacity-0 [--animation-delay:400ms] md:text-xl">
+								Make your server stand out from the crowd with options to <br />
+								display what your server is.
+							</p>
+						</span>
+					</section>
+					<section className="flex w-full border-b">
+						<div className="lg:flex hidden border-r w-[50px] h-[350px] text-shadcn-primary/5 bg-[size:10px_10px] [background-image:repeating-linear-gradient(315deg,currentColor_0_1px,#0000_0_50%)] " />
+						<div className="lg:grid grid-cols-3 max-h-[350px] max-lg:h-full w-full">
+							<Material className="border-0 relative p-0! max-h-[350px] overflow-hidden rounded-none bg-transparent! hover:bg-white! hover:dark:bg-zinc-900! max-lg:h-[200px] transition-all">
+								<img
+									src="https://i.imgur.com/5dUxh0c.png"
+									style={{
+										maskImage: "linear-gradient(to top, transparent, black)",
+									}}
+								/>
+								<span className="mt-auto absolute bottom-0 backdrop-blur-lg px-4 pt-2">
+									<strong className="animate-fade-in text-balance bg-gradient-to-br from-black from-30% to-black/40 bg-clip-text pb-6 font-semibold leading-none tracking-tighter text-transparent opacity-0 [--animation-delay:200ms] dark:from-white dark:to-white/40">
+										Show. Not tell.
+									</strong>
+									<p className="animate-fade-in mb-6 text-balance tracking-tight text-gray-400 opacity-0 [--animation-delay:400ms]">
+										Use a static banner that can show what your server is about.
+									</p>
+								</span>
+							</Material>
+							<Material className="border-0 p-4 relative rounded-none border-r border-l bg-transparent! hover:bg-white! hover:dark:bg-zinc-900! max-lg:h-[200px] transition-all">
+								<div className="h-[calc(100%-100px)] w-[calc(100%-32px)] mx-4 my-2 rounded-lg bg-[#5865F2] max-2xl:hidden">
+									<span className="flex items-center justify-between text-white p-4">
+										<DiscordWordmark fill="white" className="h-[16px]" />
+										<Separator orientation="vertical" />
+										<span>
+											<strong>300k+</strong> online currently
+										</span>
+									</span>
+									<div className="bg-[#454FBF] h-[calc(100%-50px)] w-full p-4 rounded-lg grid">
+										<Skeleton className="w-full h-[20px]" />
+										<Skeleton className="w-full h-[20px]" />
+										<Skeleton className="w-full h-[20px]" />
+										<Skeleton className="w-full h-[20px]" />
+									</div>
+								</div>
+								<span className="mt-auto absolute bottom-0 backdrop-blur-lg">
+									<strong className="animate-fade-in text-balance bg-gradient-to-br from-black from-30% to-black/40 bg-clip-text pb-6 font-semibold leading-none tracking-tighter text-transparent opacity-0 [--animation-delay:200ms] dark:from-white dark:to-white/40">
+										Link your community.
+									</strong>
+									<p className="animate-fade-in mb-6 text-balance tracking-tight text-gray-400 opacity-0 [--animation-delay:400ms]">
+										Quickly enable a embed of your Discord server to show
+										directly on your server page.
+									</p>
+								</span>
+							</Material>
+							<Material className="!p-0 z-0 relative border-0 rounded-none bg-transparent! hover:bg-white! hover:dark:bg-zinc-900! max-lg:h-[200px] transition-all">
+								<span className="h-[calc(100%-100px)] flex justify-center items-center my-auto">
+									<FlickeringGrid
+										className="absolute inset-0 z-0 w-full h-full"
+										squareSize={2}
+										gridGap={4}
+										color="#6B7280"
+										maxOpacity={0.5}
+										flickerChance={0.1}
+									/>
+									<Material className="relative z-0 w-[300px]">
+										<span className="text-2xl">
+											<FontChanger nounderline>
+												<AuroraText>My Server</AuroraText>
+											</FontChanger>
+										</span>
+										Lorem ipsum dolor sit amet consectetur adipiscing elit.
+										Consectetur adipiscing elit quisque faucibus ex sapien
+										vitae.
+									</Material>
+								</span>
+
+								<span className="mt-auto absolute bottom-0 backdrop-blur-lg pl-4 pt-2">
+									<strong className="animate-fade-in text-balance bg-gradient-to-br from-black from-30% to-black/40 bg-clip-text pb-6 font-semibold leading-none tracking-tighter text-transparent opacity-0 [--animation-delay:200ms] dark:from-white dark:to-white/40">
+										Whats your server?
+									</strong>
+									<p className="animate-fade-in mb-6 text-balance tracking-tight text-gray-400 opacity-0 [--animation-delay:400ms]">
+										Describe your server using Markdown to include bold, italic
+										& images directly in the description of your server.
+									</p>
+								</span>
+							</Material>
+						</div>
+						<div className="border-l lg:flex hidden w-[50px] h-[350px] text-shadcn-primary/5 bg-[size:10px_10px] [background-image:repeating-linear-gradient(315deg,currentColor_0_1px,#0000_0_50%)] " />
+					</section>
+
+					<section className="flex w-full items-center justify-center py-16 text-center">
+						<span>
+							<h1>
+								<FlipText className="text-balance bg-gradient-to-br pb-6 text-2xl font-semibold leading-none tracking-tighter sm:text-2xl md:text-3xl lg:text-4xl text-black dark:text-white">
+									The modern server list
+								</FlipText>
+							</h1>
+							<p className="mb-6 text-balance tracking-tight text-gray-400">
+								Whether you are a player, data hunter or server owner, MHSF{" "}
+								<br />
+								always has a solution to the community side of Minehut.
+							</p>
+							<Link href="/servers">
+								<InteractiveHoverButton>Find servers</InteractiveHoverButton>
+							</Link>
+						</span>
+					</section>
 				</section>
 			</span>
+
+			<div className="hidden md:block relative sm:max-w-[1158px] mx-auto w-full -z-10 h-[300px] overflow-clip mt-[100px]">
+				<div
+					className={cn(
+						"hidden md:block absolute left-1/2 z-10 -translate-x-1/2 translate-y-[125px]",
+						"text-center text-[255px] font-bold leading-none before:bg-gradient-to-b before:from-gray-200 before:dark:from-gray-700",
+						"before:to-gray-100/30 before:dark:to-gray-500/30 before:to-80% before:bg-clip-text before:text-transparent before:content-['MHSF']",
+						"after:absolute after:inset-0 after:bg-gray-300/70 after:dark:bg-gray-700/70 after:bg-clip-text after:text-transparent after:mix-blend-darken",
+						"after:content-['MHSF'] after:[text-shadow:0_1px_0_white] after:dark:[text-shadow:0_1px_0_black] dark:text-gray-700",
+					)}
+				/>
+				<FlickeringGrid
+					className="opacity-80 absolute z-5 translate-y-[8px]"
+					color="#6B7280"
+					style={{
+						maskImage: "linear-gradient(to bottom, transparent, black)",
+					}}
+				/>
+			</div>
 		</div>
 	);
 }
