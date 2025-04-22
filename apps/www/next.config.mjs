@@ -62,7 +62,9 @@ const nextConfig = {
 	typescript: {
 		ignoreBuildErrors: true,
 	},
-  staticPageGenerationTimeout: 0,
+  experimental: {
+    missingSuspenseWithCSRBailout: false,
+  },
 };
 
 export default withContentlayer(nextConfig);
