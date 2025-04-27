@@ -178,7 +178,7 @@ export default function EmbedSelector({ server }: { server: string }) {
               id="static"
               checked={noMinehutBranding}
               onCheckedChange={(c) => {
-                setNoMinehutBranding(c == "indeterminate" ? true : c);
+                setNoMinehutBranding(c === "indeterminate" ? true : c);
                 setURL(
                   `https://mhsf.app/embed/${server}?${embedStatic ? "&static=true" : ""}${
                     c ? "&branding=false" : ""
