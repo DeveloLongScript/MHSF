@@ -49,6 +49,8 @@ export default process.env.NEXT_PUBLIC_IS_AUTH === "true"
 	? clerkMiddleware(async (auth, req) => {
 			const authRes = await auth();
 			const client = await clerkClient();
+			const requestHeaders = new Headers(req.headers);
+			requestHeaders.set("x-url", req.url);
 
 			if (isRootRoute(req)) {
 				switch (authRes.userId === null) {
@@ -70,6 +72,12 @@ export default process.env.NEXT_PUBLIC_IS_AUTH === "true"
 						new URL(`/server/v2/minehut/${minehutRes.server._id}`, req.url),
 					);
 			}
+			
+			return NextResponse.next({
+				request: {
+					headers: requestHeaders,
+				},
+			});
 		})
 	: (request: NextRequest) => {};
 

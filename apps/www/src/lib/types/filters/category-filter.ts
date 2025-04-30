@@ -28,6 +28,37 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export default function Dashboard() {
-    return <>Hello world</>
+import { allCategories } from "@/config/tags";
+import type { MHSFData } from "../data";
+import type { Filter } from "../filter";
+import type { OnlineServer, ServerResponse } from "../mh-server";
+
+export class CategoryFilter implements Filter {
+    categoryIndex: number;
+
+    type(): "filter" {
+        return "filter";
+    }
+
+	toIdentifier(): { [key: string]: string | number | boolean } {
+		return { categoryIndex: this.categoryIndex };
+	}
+
+    fromIdentifier(identifier: { [key: string]: string | number | boolean; }): Filter {
+        return new CategoryFilter(identifier.categoryIndex as number);
+    }
+
+    getSpecificFilterId(): string {
+        return "app.mhsf.filter.categoryFilter";
+    }
+
+    applyToServer(server: { online?: OnlineServer; server?: ServerResponse; mhsfData?: MHSFData; }): Promise<boolean> {
+        if (server.online !== undefined)
+            return allCategories[this.categoryIndex].condition(server.online);
+        return new Promise((r) => r(true));
+    }
+
+    constructor(categoryIndex: number) {
+        this.categoryIndex = categoryIndex;
+    }
 }

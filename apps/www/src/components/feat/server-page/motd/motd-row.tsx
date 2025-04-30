@@ -89,28 +89,6 @@ export function MOTDRow({
 						</button>
 					)}
 				</span>
-
-				<DropdownMenu>
-					<DropdownMenuContent>
-						<DropdownMenuItem
-							className="flex gap-2"
-							onSelect={() =>
-								window.dispatchEvent(new Event("open-rearrange-menu"))
-							}
-						>
-							<Shuffle size={16} /> Rearrange server items
-						</DropdownMenuItem>
-					</DropdownMenuContent>
-					<DropdownMenuTrigger>
-						<Button
-							className="flex items-center"
-							size="square-md"
-							variant="secondary"
-						>
-							<EllipsisVertical size={16} />
-						</Button>
-					</DropdownMenuTrigger>
-				</DropdownMenu>
 			</span>
 			<Separator className="my-2" />
 			{tab === "motd" && (

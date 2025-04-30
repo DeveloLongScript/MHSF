@@ -35,13 +35,14 @@ import type { Filter } from "../filter";
 
 export class TagFilter implements Filter {
 	tagId: string;
+	opposite: boolean;
 
     type(): "filter" {
         return "filter";
     }
 
 	toIdentifier(): { [key: string]: string | number | boolean } {
-		return { tagId: this.tagId };
+		return { tagId: this.tagId, opposite: this.opposite };
 	}
 
 	getSpecificFilterId(): string {
@@ -51,12 +52,13 @@ export class TagFilter implements Filter {
 	fromIdentifier(identifier: {
 		[key: string]: string | number | boolean;
 	}): Filter {
-		return new TagFilter(identifier.tagId as string);
+		return new TagFilter(identifier.tagId as string, identifier.opposite as boolean);
 	}
 
-	constructor(tagIndex: number | string) {
+	constructor(tagIndex: number | string, opposite: boolean) {
 		if (typeof tagIndex === "string") this.tagId = tagIndex;
 		else this.tagId = btoa(allTags[tagIndex].docsName);
+		this.opposite = opposite;
 	}
 
 	applyToServer(server: {
@@ -72,8 +74,14 @@ export class TagFilter implements Filter {
 			).condition ?? (() => true)
 		)(server);
 
+		console.log(result, server.online?.name, (
+			allTags.find((c) => btoa(c.docsName) === this.tagId) ?? {
+				condition: () => true,
+			}
+		));
+
         if (typeof result === "boolean")
-            return new Promise((r) => r(result))
+            return new Promise((r) => r(!result))
 
 		return result;
 	}

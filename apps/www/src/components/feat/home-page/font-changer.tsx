@@ -90,8 +90,6 @@ export function FontChanger({
 		return () => clearInterval(interval);
 	}, []);
 
-	console.log(position);
-
 	return (
 		<div className="h-[1.2em] overflow-hidden flex items-center justify-center">
 			<span

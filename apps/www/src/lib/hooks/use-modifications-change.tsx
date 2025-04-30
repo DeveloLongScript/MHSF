@@ -28,25 +28,17 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { NextApiRequest, NextApiResponse } from "next";
-import { getAuth, clerkClient } from "@clerk/nextjs/server";
-import { MongoClient } from "mongodb";
-import { waitUntil } from "@vercel/functions";
-import { supportedFilters } from "@/lib/types/filter";
+import { allTags } from "@/config/tags"
+import { useUser } from "@clerk/nextjs"
 
-const supportedNamespaces = supportedFilters.map((c) => c.ns);
+export function useModificationsChange() {
+    const {isSignedIn} = useUser()
 
-export default async function handler(
-	req: NextApiRequest,
-	res: NextApiResponse,
-) {
-	const { userId } = getAuth(req);
-
-	if (!userId) {
-		return res.status(401).json({ error: "Unauthorized" });
-	}
-	const client = new MongoClient(process.env.MONGO_DB as string);
-	await client.connect();
-
-
+    return {
+        addFilterData: async (namespace: string, identifier:  { [key: string]: string | number | boolean }) => {
+            if (isSignedIn) {
+                
+            }
+        }
+    }
 }

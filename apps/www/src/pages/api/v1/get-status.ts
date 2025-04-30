@@ -45,8 +45,6 @@ export default async function handler(
 	const result = await betterStackResult.json();
 	const url = await betterStackURL.json();
 
-	console.log(result) 
-
 	const filtered = result.data.filter(
 		(c: any) =>
 			c.attributes.ends_at === null &&

@@ -106,13 +106,13 @@ export default function HomePageComponent() {
 				style={
 					{
 						"--gradient-color-1":
-							resolvedTheme === "dark" ? "#043D5D" : "#1F9EA3",
+							resolvedTheme === "dark" ? "#470061" : "#610034",
 						"--gradient-color-2":
-							resolvedTheme === "dark" ? "#032E46" : "#F8BD97",
+							resolvedTheme === "dark" ? "#001299" : "#700099",
 						"--gradient-color-3":
-							resolvedTheme === "dark" ? "#23B684" : "#9E5428",
+							resolvedTheme === "dark" ? "#8d00eb" : "#eb00ac",
 						"--gradient-color-4":
-							resolvedTheme === "dark" ? "#0F595E" : "#EEEEEE",
+							resolvedTheme === "dark" ? "#009de0" : "#0007e0",
 						webKitMaskImage:
 							"linear-gradient(to top, black, black, transparent)",
 						maskImage: "linear-gradient(to top, black, black, transparent)",

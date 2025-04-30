@@ -32,6 +32,7 @@ import { allTags } from "@/config/tags";
 import type { OnlineServer, ServerResponse } from "./mh-server";
 import type { MHSFData } from "./data";
 import { TagFilter } from "./filters/tag-filter";
+import { CategoryFilter } from "./filters/category-filter";
 
 /* Any filter that can be converted back and forth from a string or a Filter object */
 export interface Filter {
@@ -49,11 +50,17 @@ export interface Filter {
 }
 
 export const supportedFilters: {
-	t: (implementation: unknown) => Filter;
 	ns: string;
+	fi: (identifier: {
+		[key: string]: string | number | boolean;
+	}) => Filter;
 }[] = [
 	{
-		t: (i) => new TagFilter(i as string | number),
 		ns: "app.mhsf.filter.tagFilter",
+		fi: new TagFilter(0, false).fromIdentifier
 	},
+	{
+		ns: "app.mhsf.filter.categoryFilter",
+		fi: new CategoryFilter(0).fromIdentifier
+	}
 ];

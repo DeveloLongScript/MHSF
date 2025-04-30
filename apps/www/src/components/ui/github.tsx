@@ -28,6 +28,8 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
+"use client";
+
 import { useTheme } from "@/lib/hooks/use-theme";
 import type { SVGProps } from "react";
 const Github = (props: SVGProps<SVGSVGElement>) => {

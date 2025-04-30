@@ -28,14 +28,8 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-"use client";
 import "../globals.css";
-import { useSearchParams } from "next/navigation";
-import { Placeholder } from "@/components/ui/placeholder";
-import { X } from "lucide-react";
 import { IsScript } from "@/components/util/is-script";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { NavBar } from "@/components/feat/navbar/navbar";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/util/theme-provider";
@@ -50,8 +44,6 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const searchParams = useSearchParams();
-  const search = searchParams?.get("theme") || "light";
 
   return (
     <>

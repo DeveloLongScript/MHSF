@@ -1,3 +1,4 @@
+"use client";
 import { BrandingGenericIcon, Discord } from "../icons/branding-icons";
 import { Link } from "../../util/link";
 import { FooterStatus } from "./status";
@@ -7,10 +8,11 @@ import Github from "@/components/ui/github";
 import Image from "next/image"
 import { usePathname } from "next/navigation";
 
-const hideFooterPages = ["/home"];
+const hideFooterPages = ["/home"]
 
 export function Footer() {
   const pathname = usePathname();
+
   if (!hideFooterPages.includes(pathname ?? ""))
     return (
       <footer className="w-full mt-15 border-t border-neutral-500/20 bg-neutral-100 dark:border-neutral-700/50 dark:bg-neutral-900 text-muted-foreground">
@@ -50,7 +52,7 @@ export function Footer() {
             <div className="flex items-center mb-2 justify-end gap-2">
 
               <DropdownMenu>
-                <DropdownMenuTrigger>
+                <DropdownMenuTrigger asChild>
                   <Button variant="tertiary" size="square-md" className="flex items-center">
                     <Discord className="w-[1.25em] h-[1.25em]" />
                   </Button>

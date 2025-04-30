@@ -29,38 +29,77 @@
  */
 
 import { Material } from "@/components/ui/material";
-import { Setting, SettingContent, SettingDescription, SettingMeta, SettingTitle } from "./setting";
+import {
+	Setting,
+	SettingContent,
+	SettingDescription,
+	SettingMeta,
+	SettingTitle,
+} from "./setting";
 import { Button } from "@/components/ui/button";
 import { AnimatedText } from "@/components/ui/animated-text";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { loadingList } from "../server-page/util";
+import { ClerkMetadataPopup } from "./clerk-metadata-popup";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Switch } from "@/components/ui/switch";
+import { Link } from "@/components/util/link";
+import { useSettingsStore } from "@/lib/hooks/use-settings-store";
 
 export function DebugSettings() {
-  const [randomText, setRandomText] = useState("")
+	const [randomText, setRandomText] = useState("");
 
-  return (
-    <Material className="mt-6 grid gap-4">
-      <h2 className="text-xl font-semibold text-inherit">Debug Settings</h2>
-      <Setting>
-        <SettingContent>
-            <SettingMeta>
-                <SettingTitle>
-                    Generate loading text
-                </SettingTitle>
-                <SettingDescription>
-                    Generate a random loading text
-                </SettingDescription>
-            </SettingMeta>
-            <div className="block pb-6">
-            <Button onClick={() => {
-                setRandomText(loadingList[Math.floor(Math.random() * loadingList.length)])
-            }}>
-                Generate
-            </Button>
-            <AnimatedText className="font-bold" text={randomText + "..."}/>
-            </div>
-        </SettingContent>
-      </Setting>
-    </Material>
-  );
+	return (
+		<Material className="mt-6 grid gap-4">
+			<h2 className="text-xl font-semibold text-inherit">Debug Settings</h2>
+			<Setting>
+				<SettingContent>
+					<SettingMeta>
+						<SettingTitle>Generate loading text</SettingTitle>
+						<SettingDescription>
+							Generate a random loading text
+						</SettingDescription>
+					</SettingMeta>
+					<div className="block pb-6">
+						<Button
+							onClick={() => {
+								setRandomText(
+									loadingList[Math.floor(Math.random() * loadingList.length)],
+								);
+							}}
+						>
+							Generate
+						</Button>
+						<AnimatedText className="font-bold" text={randomText + "..."} />
+					</div>
+				</SettingContent>
+			</Setting>
+			<ClerkMetadataPopup>
+				<Setting>
+					<SettingContent>
+						<SettingMeta>
+							<SettingTitle>View Clerk metadata</SettingTitle>
+							<SettingDescription>
+								View any Clerk metadata for your user.
+							</SettingDescription>
+						</SettingMeta>
+						<DropdownMenu>
+							<DropdownMenuTrigger>
+								<Button>Open metadata</Button>
+							</DropdownMenuTrigger>
+							<DropdownMenuContent>
+								<DropdownMenuItem onClick={() => window.dispatchEvent(new Event("open-public-clerkmd"))}>Public</DropdownMenuItem>
+								<DropdownMenuItem onClick={() => window.dispatchEvent(new Event("open-unsafe-clerkmd"))}>Unsafe</DropdownMenuItem>
+							</DropdownMenuContent>
+						</DropdownMenu>
+					</SettingContent>
+				</Setting>
+			</ClerkMetadataPopup>
+		</Material>
+	);
 }

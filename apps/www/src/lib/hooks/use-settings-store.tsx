@@ -74,3 +74,24 @@ export function useSettingsStore() {
     },
   };
 }
+
+// An exact copy of the API without Clerk
+export function useNoClerkSettingsStore() {
+  return {
+    get: (key: string) => {
+      if (localStorage.getItem(key) === "true")
+        return true;
+      if (localStorage.getItem(key) === "false")
+        return false;
+      return localStorage.getItem(key);
+    },
+    set: async (
+      key: string,
+      value: string | boolean,
+      userEntry: boolean,
+      __unsafeMetadata = false
+    ) => {
+        localStorage.setItem(key, value.toString());
+    },
+  };
+}

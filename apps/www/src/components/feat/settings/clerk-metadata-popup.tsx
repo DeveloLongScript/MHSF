@@ -28,23 +28,35 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { useIframeCommunication } from "@/lib/hooks/use-iframe-communication"
-import { useEffectOnce } from "@/lib/useEffectOnce"
-import { useEffect, useRef } from "react"
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { useUser } from "@clerk/nextjs";
+import { Editor } from "@monaco-editor/react";
+import { useEffect, useState, type ReactNode } from "react";
 
-export function ModificationFrame() {
-    const ref = useRef<HTMLIFrameElement>(null)
-    const communication = useIframeCommunication(ref);
+export function ClerkMetadataPopup({children}: {children: ReactNode | ReactNode[] | undefined}) {
+    const [mdType, setMDType] = useState<"public" | "unsafe" | null>(null)
+    const [open, setOpen] = useState(false);
+    const {user} = useUser();
 
     useEffect(() => {
-        communication.toIframe.handle("ping", (c) => {
-            if (c.from === "iframe")
-                communication.toIframe.send("ping", {from: "top-layer"})
+        window.addEventListener("open-public-clerkmd", () => {
+            setMDType("public")
+            setOpen(true);
         })
-        communication.toIframe.handle("rerender-servers", (c) => {
-            window.dispatchEvent(new Event("update-modification-stack"))
+        window.addEventListener("open-unsafe-clerkmd", () => {
+            setMDType("unsafe")
+            setOpen(true);
         })
-    }, [ref])
+    })
 
-    return <iframe ref={ref} src="/servers/embedded/sl-modification-frame" height={800} title="Server-list Modification Frame" />
+    return <>
+        {children}
+
+        <Dialog open={open} onOpenChange={setOpen}>
+            <DialogContent className="min-w-[850px]">
+                <DialogTitle>{mdType?.toLocaleUpperCase()} metadata</DialogTitle>
+                <Editor options={{domReadOnly: true, readOnly: true}} height={500} width={800} language="json" value={JSON.stringify(mdType === "public" ? user?.publicMetadata : user?.unsafeMetadata, null, 2)}/>
+            </DialogContent>
+        </Dialog>
+    </>
 }

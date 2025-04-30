@@ -134,6 +134,7 @@ export default function ModificationPage({
 								activatedModifications: modificationArray
 							}
 						});
+						communicator.send("rerender-servers", {});
 					}}>
 						{modObj?.active ? "Disable" : "Enable"}
 					</Button>
@@ -165,6 +166,7 @@ export default function ModificationPage({
 									});
 									toast.success(`Deleted in ${Date.now() - time}ms`);
 									router.push(backRoute);
+									communicator.send("rerender-servers", {});
 								}}
 							>
 								<Trash size={16} /> Delete

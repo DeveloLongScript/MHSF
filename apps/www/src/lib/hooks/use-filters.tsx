@@ -36,10 +36,12 @@ import { tryCatch } from "../try-catch";
 import { transpileTypeScript } from "@/app/(sl-modification-frame)/servers/embedded/sl-modification-frame/file/[filename]/page";
 import { useUser } from "@clerk/nextjs";
 import type { ClerkCustomActivatedModification } from "@/components/feat/server-list/modification/modification-file-creation-dialog";
+import { ClerkEmbeddedFilter } from "@/components/feat/server-list/modification/modification-action";
+import { supportedFilters } from "../types/filter";
 
 type EmbeddedFilter = {
 	identifier: string;
-	functionFilter: (server: OnlineServer) => boolean;
+	functionFilter: (server: OnlineServer) => (boolean | Promise<boolean>);
 };
 
 type SortFunction<K> = (object1: K, object2: K) => number;
@@ -57,23 +59,20 @@ export function useFilters(data: OnlineServer[]) {
 	const [sort, setSort] = useState<SortFunction<OnlineServer> | null>(null);
 	const { user, isSignedIn } = useUser();
 
-	const updateServers = (newFilters: EmbeddedFilter[]) => {
-		const modificationMap = data.map((v) =>
-			newFilters.map((c) => c.functionFilter(v)),
-		);
+	const updateServers = async (newFilters: EmbeddedFilter[]) => {
+		const modificationMap = await Promise.all(data.map((v) =>
+			Promise.all(newFilters.map(async (c) => c.functionFilter(v))),
+		));
 		const resultData = data.filter(
 			(_, i) => !modificationMap[i].includes(false),
 		);
 		const sortedData = sort === null ? resultData : resultData.sort(sort);
 
-		console.table({ sortedData, modificationMap, resultData, data });
+		console.log({ sortedData, modificationMap, resultData, data, newFilters });
 
-
-		if (sortedData.length !== 0)
-			setFilteredData(sortedData);
+		if (sortedData.length !== 0) setFilteredData(sortedData);
 	};
 
-	// biome-ignore lint: bruh
 	useEffect(() => {
 		if (filteredData.length === 0 || data.length === 0) {
 			window.dispatchEvent(new Event("update-modification-stack"));
@@ -129,18 +128,18 @@ export function useFilters(data: OnlineServer[]) {
 					(async () =>
 						type === "filter"
 							? new Function(
-								"server",
-								`${functionBody}
+									"server",
+									`${functionBody}
             
                   return filter(server)`,
-							)
+								)
 							: new Function(
-								"serverA",
-								"serverB",
-								`${functionBody}
+									"serverA",
+									"serverB",
+									`${functionBody}
             
                   return sort(serverA, serverB)`,
-							))(),
+								))(),
 				);
 				if (filterErr) {
 					setTestModeStatus(
@@ -213,7 +212,13 @@ export function useFilters(data: OnlineServer[]) {
 		if (!t)
 			window.addEventListener("update-modification-stack", async () => {
 				await user?.reload();
+				setLoading(true);
 				let newFilters: EmbeddedFilter[] = [];
+				const filters =
+					((isSignedIn ? user.unsafeMetadata.filters : JSON.parse(localStorage.getItem("mhsf__filters") ?? "[]")) as Array<
+						ClerkEmbeddedFilter<unknown>
+					>) ?? [];
+					
 				if (isSignedIn) {
 					const activatedModifications =
 						(user.unsafeMetadata
@@ -232,58 +237,84 @@ export function useFilters(data: OnlineServer[]) {
 								(async () =>
 									c.testMode === "filter"
 										? new Function(
-											"server",
-											`${functionBody}
+												"server",
+												`${functionBody}
             
                   return filter(server)`,
-										)
+											)
 										: new Function(
-											"serverA",
-											"serverB",
-											`${functionBody}
+												"serverA",
+												"serverB",
+												`${functionBody}
             
                   return sort(serverA, serverB)`,
-										))(),
+											))(),
 							);
 
 							if (filterErr) {
 								toast.error(
 									`Couldn't enable modification '${c.friendlyName}'. Please lint and test again.`,
 								);
-								return { identifier: `file-${c.originalFileName}.ts`, functionFilter: () => true };
+								return {
+									identifier: `file-${c.originalFileName}.ts`,
+									functionFilter: () => true,
+								};
 							}
 
 							if (typeof filterFunc === "function") {
-								return { identifier: `file-${c.originalFileName}.ts`, functionFilter: filterFunc };
+								return {
+									identifier: `file-${c.originalFileName}.ts`,
+									functionFilter: filterFunc,
+								};
 							}
 
 							toast.error(
 								`Couldn't enable modification '${c.friendlyName}'. Please lint and test again.`,
 							);
-							return { identifier: `file-${c.originalFileName}.ts`, functionFilter: () => true };
+							return {
+								identifier: `file-${c.originalFileName}.ts`,
+								functionFilter: () => true,
+							};
 						}),
 					)) as EmbeddedFilter[];
 
 					// avoid duplicates
+					// biome-ignore lint/complexity/noForEach:
 					resolvedModifications.forEach((item) => {
 						setFilters((c) => {
 							if (c.findIndex((i) => i.identifier === item.identifier) === -1)
-								return [
-									...c,
-									item
-								]
-							else return c;
+								return [...c, item];
+							return c;
 						});
-					})
+					});
 
 					newFilters = resolvedModifications.map((item) => {
 						return item;
 					});
 				}
 
+				// biome-ignore lint/complexity/noForEach:
+				filters.forEach((filter) => {
+					// Get back the filter type from the namespace
+					const filterType = supportedFilters.find(
+						(t) => filter.type === t.ns,
+					);
+					// Get back a filter with associated metadata
+					const parsedFilter = filterType?.fi(
+						filter.metadata as {
+							[key: string]: string | number | boolean;
+						},
+					);
+
+					newFilters.push({
+						identifier: filterType?.ns + (Math.random() * Math.random() * Math.random()).toString(),
+						functionFilter: (server: OnlineServer) => parsedFilter?.applyToServer({ online: server }) ?? true
+					})
+				});
+
 				console.log(newFilters);
 
-				updateServers(newFilters);
+				await updateServers(newFilters);
 			});
 	}, [data]);
 	console.log(filters);
@@ -293,7 +324,9 @@ export function useFilters(data: OnlineServer[]) {
 		testModeEnabled,
 		testModeLoading,
 		testModeStatus,
-		filterCount: filters.filter((item, index, array) => array.indexOf(item) === index).length + (sort === null ? 1 : 0),
+		filterCount:
+			filters.filter((item, index, array) => array.indexOf(item) === index)
+				.length + (sort === null ? 1 : 0),
 		loading,
 	};
 }
