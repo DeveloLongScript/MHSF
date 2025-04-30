@@ -68,20 +68,7 @@ export default function RootLayout({
 	const search = searchParams?.get("theme") || "light";
 
 	return (
-		<html lang="en">
-			<noscript>
-				<main className="flex justify-center items-center text-center min-h-screen h-max">
-					<Placeholder
-						icon={<X />}
-						title="JavaScript is required for MHSF"
-						description="MHSF cannot grab servers or do other external requests without JavaScript."
-					>
-						<Link href="https://www.enable-javascript.com/">
-							<Button>Here's how</Button>
-						</Link>
-					</Placeholder>
-				</main>
-			</noscript>
+		<>
 			<ThemeProvider
 				attribute="class"
 				defaultTheme="system"
@@ -143,6 +130,6 @@ export default function RootLayout({
 					</IsScript>
 				</ClerkProvider>
 			</ThemeProvider>
-		</html>
+		</>
 	);
 }

@@ -61,7 +61,7 @@ const badgeVariants = cva(
         "purple-subtle": `bg-purple-100 dark:bg-purple-500/20 text-purple-700 dark:text-purple-400
 		ring-purple-400 dark:ring-purple-500/30`,
         rainbow:
-          "text-white ring-transparent [background:_linear-gradient(45deg,rgba(255,_0,_0,_1)_0%,rgba(255,_154,_0,_1)_10%,rgba(208,_222,_33,_1)_20%,rgba(79,_220,_74,_1)_30%,rgba(63,_218,_216,_1)_40%,rgba(47,_201,_226,_1)_50%,rgba(28,_127,_238,_1)_60%,rgba(95,_21,_242,_1)_70%,rgba(186,_12,_248,_1)_80%,rgba(251,_7,_217,_1)_90%,rgba(255,_0,_0,_1)_100%);] backdrop-blur-sm opacity-60 ",
+          "text-white ring-transparent z-10 [background:_linear-gradient(45deg,rgba(255,_0,_0,_1)_0%,rgba(255,_154,_0,_1)_10%,rgba(208,_222,_33,_1)_20%,rgba(79,_220,_74,_1)_30%,rgba(63,_218,_216,_1)_40%,rgba(47,_201,_226,_1)_50%,rgba(28,_127,_238,_1)_60%,rgba(95,_21,_242,_1)_70%,rgba(186,_12,_248,_1)_80%,rgba(251,_7,_217,_1)_90%,rgba(255,_0,_0,_1)_100%);] backdrop-blur-sm opacity-60 ",
         custom: "",
       },
       allowIconOnly: {

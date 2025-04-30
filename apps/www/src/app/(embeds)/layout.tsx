@@ -46,8 +46,7 @@ export default function RootLayout({
   const search = searchParams?.get("theme") || "light";
 
   return (
-    <html lang="en">
-      <body className={inter.className}>
+    <>
         <ThemeProvider
           attribute="class"
           disableTransitionOnChange
@@ -55,7 +54,6 @@ export default function RootLayout({
         >
           <TooltipProvider>{children}</TooltipProvider>
         </ThemeProvider>
-      </body>
-    </html>
+    </>
   );
 }

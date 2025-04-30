@@ -28,27 +28,38 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-"use client";
+import { Placeholder } from "@/components/ui/placeholder";
 import "./globals.css";
-import { useSearchParams } from "next/navigation";
 import { Inter } from "next/font/google";
+import { X } from "lucide-react";
+import { Link } from "@/components/util/link";
+import { Button } from "@/components/ui/button";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function RootLayout({
-  children,
+	children,
 }: {
-  children: React.ReactNode;
+	children: React.ReactNode;
 }) {
-  const searchParams = useSearchParams();
-  const search = searchParams?.get("theme") || "light";
-
-  return (
-    <html lang="en">
-      <body className={inter.className}>
-        <noscript>{children}</noscript>
-        {children}
-      </body>
-    </html>
-  );
+	return (
+		<html lang="en">
+			<body className={inter.className}>
+				<noscript>
+					<main className="flex justify-center items-center text-center min-h-screen h-max">
+						<Placeholder
+							icon={<X />}
+							title="JavaScript is required for MHSF"
+							description="MHSF cannot grab servers or do other external requests without JavaScript."
+						>
+							<Link href="https://www.enable-javascript.com/" noExtraIcons>
+								<Button>Here's how</Button>
+							</Link>
+						</Placeholder>
+					</main>
+				</noscript>
+				{children}
+			</body>
+		</html>
+	);
 }

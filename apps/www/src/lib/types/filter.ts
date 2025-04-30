@@ -28,10 +28,32 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import type { OnlineServer } from "./mh-server";
+import { allTags } from "@/config/tags";
+import type { OnlineServer, ServerResponse } from "./mh-server";
+import type { MHSFData } from "./data";
+import { TagFilter } from "./filters/tag-filter";
 
+/* Any filter that can be converted back and forth from a string or a Filter object */
 export interface Filter {
-    toIdentifier(): string;
-    fromIdentifier(identifier: string): Filter;
-    applyToServer(server: OnlineServer): boolean;
+	type(): "filter";
+	toIdentifier(): { [key: string]: string | number | boolean };
+	getSpecificFilterId(): string;
+	fromIdentifier(identifier: {
+		[key: string]: string | number | boolean;
+	}): Filter;
+	applyToServer(server: {
+		online?: OnlineServer;
+		server?: ServerResponse;
+		mhsfData?: MHSFData;
+	}): Promise<boolean>;
 }
+
+export const supportedFilters: {
+	t: (implementation: unknown) => Filter;
+	ns: string;
+}[] = [
+	{
+		t: (i) => new TagFilter(i as string | number),
+		ns: "app.mhsf.filter.tagFilter",
+	},
+];

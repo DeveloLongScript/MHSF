@@ -38,8 +38,8 @@ export function ServerRows({ server, mhsfData }: { server: ServerResponse, mhsfD
   const clipboard = useClipboard();
 
   return (
-    <span className="lg:grid lg:grid-cols-3 w-full gap-3">
-      <MOTDRow server={server} />
+    <span className="lg:grid lg:grid-cols-2 w-full gap-3">
+      <MOTDRow server={server} mhsfData={mhsfData}/>
       <StatisticsMainRow server={server} mhsfData={mhsfData} />
     </span>
   );

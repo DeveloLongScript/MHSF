@@ -36,37 +36,114 @@ import { miniMessage } from "minimessage-js";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { Material } from "@/components/ui/material";
+import { useState } from "react";
+import { useMHSFServer } from "@/lib/hooks/use-mhsf-server";
+import Markdown from "react-markdown";
+import { Button } from "@/components/ui/button";
+import { Ellipsis, EllipsisVertical, Shuffle } from "lucide-react";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { RearrangeDrawer } from "../rearrange/rearrange-drawer";
 
-export function MOTDRow({ server }: { server: ServerResponse }) {
-  const clipboard = useClipboard();
+export function MOTDRow({
+	server,
+	mhsfData,
+}: { server: ServerResponse; mhsfData: ReturnType<typeof useMHSFServer> }) {
+	const clipboard = useClipboard();
+	const [tab, setTab] = useState("motd");
 
-  return (
-    <Material className="p-4 relative h-[250px]">
-      <strong className="text-lg">MOTD</strong>
-      <br />
-      <Separator className="my-2" />
-      <MOTDRenderer
-        className={cn("mt-2 break-all overflow-y-auto max-h-[150px]")}
-        minecraftFont
-      >
-        {server.motd}
-      </MOTDRenderer>
-      <br />
-      <small className="absolute bottom-[10px]">
-        {server.motd.length} characters,{" "}
-        <button
-          className="cursor-pointer underline"
-          type="button"
-          onClick={() => {
-            clipboard.writeText(
-              miniMessage().toHTML(miniMessage().deserialize(server.motd))
-            );
-            toast.success("Copied to clipboard.");
-          }}
-        >
-          click to copy HTML
-        </button>
-      </small>
-    </Material>
-  );
+	return (
+		<Material className="p-4 relative h-[250px]">
+			<span className="flex gap-4 justify-between items-center">
+				<span className="flex gap-4 items-center">
+					<strong className="text-lg max-lg:hidden">
+						{tab === "motd" ? "MOTD" : "Description"}
+					</strong>
+					<button
+						type="button"
+						className={cn(
+							"text-sm cursor-pointer hover:bg-slate-100 dark:hover:bg-zinc-700/30 transition-all duration-75 disabled:opacity-50 disabled:pointer-events-none",
+							"rounded-xl px-2 flex items-center gap-2",
+							tab === "motd" && "bg-slate-100 dark:bg-zinc-700/30 font-medium",
+						)}
+						onClick={() => setTab("motd")}
+					>
+						MOTD
+					</button>
+					{mhsfData.server?.customizationData.description !== undefined && (
+						<button
+							type="button"
+							className={cn(
+								"text-sm cursor-pointer hover:bg-slate-100 dark:hover:bg-zinc-700/30 transition-all duration-75 disabled:opacity-50 disabled:pointer-events-none",
+								"rounded-xl px-2 flex items-center gap-2",
+								tab === "description" &&
+									"bg-slate-100 dark:bg-zinc-700/30 font-medium",
+							)}
+							onClick={() => setTab("description")}
+						>
+							Description
+						</button>
+					)}
+				</span>
+
+				<DropdownMenu>
+					<DropdownMenuContent>
+						<DropdownMenuItem
+							className="flex gap-2"
+							onSelect={() =>
+								window.dispatchEvent(new Event("open-rearrange-menu"))
+							}
+						>
+							<Shuffle size={16} /> Rearrange server items
+						</DropdownMenuItem>
+					</DropdownMenuContent>
+					<DropdownMenuTrigger>
+						<Button
+							className="flex items-center"
+							size="square-md"
+							variant="secondary"
+						>
+							<EllipsisVertical size={16} />
+						</Button>
+					</DropdownMenuTrigger>
+				</DropdownMenu>
+			</span>
+			<Separator className="my-2" />
+			{tab === "motd" && (
+				<>
+					<MOTDRenderer
+						className={cn("mt-2 break-all overflow-y-auto max-h-[150px]")}
+						minecraftFont
+					>
+						{server.motd}
+					</MOTDRenderer>
+					<br />
+					<small className="absolute bottom-[10px]">
+						{server.motd.length} characters,{" "}
+						<button
+							className="cursor-pointer underline"
+							type="button"
+							onClick={() => {
+								clipboard.writeText(
+									miniMessage().toHTML(miniMessage().deserialize(server.motd)),
+								);
+								toast.success("Copied to clipboard.");
+							}}
+						>
+							click to copy HTML
+						</button>
+					</small>
+				</>
+			)}
+			{tab === "description" && (
+				<div className="prose mt-2 break-words overflow-y-auto max-h-[175px] dark:prose-invert">
+					<Markdown>{mhsfData.server?.customizationData.description}</Markdown>
+				</div>
+			)}
+		</Material>
+	);
 }

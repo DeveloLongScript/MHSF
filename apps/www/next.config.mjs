@@ -63,7 +63,6 @@ const nextConfig = {
 		ignoreBuildErrors: true,
 	},
   experimental: {
-    missingSuspenseWithCSRBailout: false,
   },
 };
 

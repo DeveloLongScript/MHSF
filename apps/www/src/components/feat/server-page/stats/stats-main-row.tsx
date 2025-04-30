@@ -32,7 +32,7 @@ export function StatisticsMainRow({
 
 	return (
 		<Material
-			className="relative col-span-2 h-[250px] max-lg:mt-3"
+			className="relative h-[250px] max-lg:mt-3"
 			padding="none"
 		>
 			<div className="p-4">

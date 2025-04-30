@@ -57,7 +57,7 @@ export default async function handler(
     return res.status(401).json({ error: "Unauthorized" });
   }
   if (
-    (await (await clerkClient()).users.getUser(userId)).publicMetadata.player ==
+    (await (await clerkClient()).users.getUser(userId)).publicMetadata.player ===
     undefined
   ) {
     return res.status(401).json({ error: "Account not linked" });
@@ -68,7 +68,7 @@ export default async function handler(
   const db = client.db(process.env.CUSTOM_MONGO_DB ?? "mhsf");
   const collection = db.collection("owned-servers");
 
-  if ((await collection.findOne({ server: server })) == undefined) {
+  if ((await collection.findOne({ server: server })) === undefined) {
     const mh = await fetch(
       process.env.MHSF_BACKEND_API_LOCATION ??
         "https://api.minehut.com/servers",
@@ -116,7 +116,7 @@ export default async function handler(
             .send({ message: "The linked account doesn't own the server." });
         }
       }
-      if (i == servers.length) {
+      if (i === servers.length) {
         // Close the database, but don't close this
         // serverless instance until it happens
         waitUntil(client.close());

@@ -30,11 +30,13 @@
 
 import {
 	ArrowDownUpIcon,
+	ServerCog,
 	SlidersHorizontal,
 	type LucideIcon,
 } from "lucide-react";
-import type { Filter } from "../lib/types/filter";
+import { type Filter } from "../lib/types/filter";
 import type { Sort } from "../lib/types/sort";
+import { TagFilter } from "@/lib/types/filters/tag-filter";
 
 type ModDBCategory = {
 	displayTitle: string;
@@ -78,5 +80,18 @@ export const serverModDB: ModDBCategory[] = [
 		__custom: true,
 		// Entries are already pre-loaded.
 		entries: []
+	},
+	{
+		displayTitle: "Tag Filters",
+		description: "These are filters that are associated with an assortment of tags.",
+		entries: [
+			{
+				name: "Always Online",
+				description: "All servers that are always online.",
+				color: "#a380e0",
+				value: new TagFilter(0),
+				icon: ServerCog
+			}
+		]
 	}
 ];

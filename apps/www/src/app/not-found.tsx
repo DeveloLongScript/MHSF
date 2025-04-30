@@ -27,6 +27,7 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  * OTHER DEALINGS IN THE SOFTWARE.
  */
+"use client";
 
 import { NotFoundComponent } from "@/components/util/not-found";
 import type { Metadata } from "next";

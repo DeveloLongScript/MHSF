@@ -28,14 +28,53 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import type { OnlineServer } from "./mh-server";
+import { allTags } from "@/config/tags";
+import type { MHSFData } from "../data";
+import type { OnlineServer, ServerResponse } from "../mh-server";
+import type { Filter } from "../filter";
 
-export interface Sort {
-    type(): "sort";
-	toIdentifier(): { [key: string]: string | number | boolean };
-	getSpecificSortId(): string;
+export class TagFilter implements Filter {
+	tagId: string;
+
+    type(): "filter" {
+        return "filter";
+    }
+
+	toIdentifier(): { [key: string]: string | number | boolean } {
+		return { tagId: this.tagId };
+	}
+
+	getSpecificFilterId(): string {
+		return "app.mhsf.filter.tagFilter";
+	}
+
 	fromIdentifier(identifier: {
 		[key: string]: string | number | boolean;
-	}): Sort;
-    sortToServers(serverA: OnlineServer, serverB: OnlineServer): number;
+	}): Filter {
+		return new TagFilter(identifier.tagId as string);
+	}
+
+	constructor(tagIndex: number | string) {
+		if (typeof tagIndex === "string") this.tagId = tagIndex;
+		else this.tagId = btoa(allTags[tagIndex].docsName);
+	}
+
+	applyToServer(server: {
+		online?: OnlineServer;
+		server?: ServerResponse;
+		mhsfData?: MHSFData;
+	}): Promise<boolean> {
+        const result = (
+			(
+				allTags.find((c) => btoa(c.docsName) === this.tagId) ?? {
+					condition: () => true,
+				}
+			).condition ?? (() => true)
+		)(server);
+
+        if (typeof result === "boolean")
+            return new Promise((r) => r(result))
+
+		return result;
+	}
 }

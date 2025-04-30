@@ -32,6 +32,7 @@
 
 @plugin 'tailwindcss-animate';
 @config '../../tailwind-hero.config.ts';
+@plugin "@tailwindcss/typography";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -78,8 +79,10 @@
     border-color: hsl(214.3 31.8% 91.4%);
   }
 
-  --sidebar: hsl(0 0% 98%)
+  --sidebar: hsl(0 0% 98%);
+  
 }
+
 .dark {
   --border: 216 34% 17%;
   --background: 0 0% 3.9%;
@@ -403,6 +406,9 @@ body {
   margin-left: auto;
   padding-left: 20px;
   color: var(--mauve-11);
+}
+.slot[data-swapy-highlighted] {
+  @apply bg-muted rounded transition-all
 }
 .icon-minecraft,
 .icon-minecraft-sm {
