@@ -89,7 +89,7 @@ export const serverModDB: ModDBCategory[] = [
 				name: "Always Online",
 				description: "All servers that are always online.",
 				color: "#a380e0",
-				value: new TagFilter(2),
+				value: new TagFilter(2, false),
 				icon: ServerCog
 			}
 		]

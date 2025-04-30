@@ -81,8 +81,10 @@ export class TagFilter implements Filter {
 		));
 
         if (typeof result === "boolean")
-            return new Promise((r) => r(!result))
+            return new Promise((r) => r(this.opposite ? !result : result))
 
-		return result;
+		return new Promise((r) => {
+			result.then((c) => r(this.opposite ? !c : c))
+		});
 	}
 }
