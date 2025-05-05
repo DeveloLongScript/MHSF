@@ -222,7 +222,7 @@ export async function GET(
             position: "relative",
             overflow: "hidden",
             fontFamily: "Inter",
-            backgroundImage: `url(${new URL("/branding/bg-banner.png", request.url).toString()})`,
+            backgroundColor: "white",
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
@@ -448,11 +448,7 @@ export async function GET(
             justifyContent: "center",
             alignItems: "center",
             fontFamily: "Inter",
-            ...(bannerImageData && {
-              backgroundImage: `url(data:image/png;base64,${Buffer.from(bannerImageData).toString("base64")})`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-            }),
+            backgroundColor: "white",
           }}
         >
           <div style={{ display: "flex" }}>
