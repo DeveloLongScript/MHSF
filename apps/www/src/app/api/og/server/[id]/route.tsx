@@ -128,10 +128,6 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // Load banner image
-    const bannerImageData = await fetch(
-      new URL("/branding/bg-banner.png", request.url)
-    ).then((res) => res.arrayBuffer());
 
     const id = (await params).id;
 
@@ -158,7 +154,7 @@ export async function GET(
               textAlign: "center",
               justifyContent: "center",
               alignItems: "center",
-              backgroundImage: `url(data:image/png;base64,${Buffer.from(bannerImageData).toString("base64")})`,
+              backgroundImage: `url(${new URL("/branding/bg-banner.png", request.url).toString()})`,
               backgroundSize: "cover",
               backgroundPosition: "center",
               fontFamily: "Inter",
@@ -226,7 +222,7 @@ export async function GET(
             position: "relative",
             overflow: "hidden",
             fontFamily: "Inter",
-            backgroundImage: `url(data:image/png;base64,${Buffer.from(bannerImageData).toString("base64")})`,
+            backgroundImage: `url(${new URL("/branding/bg-banner.png", request.url).toString()})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
