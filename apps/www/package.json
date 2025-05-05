@@ -74,7 +74,7 @@
 		"tailwindcss-animate": "^1.0.7",
 		"tailwindcss-patch": "^4.0.0",
 		"turbo": "^2.4.0",
-		"unplugin-tailwindcss-mangle": "^3.0.1"
+		"unplugin-tailwindcss-mangle": "^4.1.1"
 	},
 	"devDependencies": {
 		"@clerk/themes": "^2.1.19",
