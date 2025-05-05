@@ -154,7 +154,6 @@ export async function GET(
               textAlign: "center",
               justifyContent: "center",
               alignItems: "center",
-              backgroundImage: `url(${new URL("/branding/bg-banner.png", request.url).toString()})`,
               backgroundSize: "cover",
               backgroundPosition: "center",
               fontFamily: "Inter",
@@ -422,16 +421,6 @@ export async function GET(
     const [interRegular, interBold] = await loadFonts();
     console.error("Error generating OG image:", error);
 
-    // Try to load the banner image again in case it failed earlier
-    let bannerImageData: ArrayBuffer | undefined;
-    try {
-      bannerImageData = await fetch(
-        new URL("/branding/dark-banner.png", request.url)
-      ).then((res) => res.arrayBuffer());
-    } catch (e) {
-      // If banner image fails to load, use a solid color background
-      console.error("Failed to load banner image for error page:", e);
-    }
 
     return new ImageResponse(
       (
@@ -440,7 +429,7 @@ export async function GET(
             display: "flex",
             fontSize: 60,
             color: "white",
-            background: bannerImageData ? undefined : "#121212",
+            background:  "#121212",
             width: "100%",
             height: "100%",
             padding: "50px 50px",
