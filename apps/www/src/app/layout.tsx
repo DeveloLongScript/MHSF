@@ -52,7 +52,7 @@ export default function RootLayout({
 							title="JavaScript is required for MHSF"
 							description="MHSF cannot grab servers or do other external requests without JavaScript."
 						>
-							<Link href="https://www.enable-javascript.com/" noExtraIcons>
+							<Link href="https://www.enable-javascript.com/" noextraicons>
 								<Button>Here's how</Button>
 							</Link>
 						</Placeholder>

@@ -40,7 +40,7 @@ import { cn } from "@/lib/utils";
 import { useState, useEffect } from "react";
 
 export default function IconDisplay(props: {
-  server: OnlineServer | ServerResponse;
+  server: OnlineServer | ServerResponse | { icon: string };
   className?: string;
 }) {
   return (

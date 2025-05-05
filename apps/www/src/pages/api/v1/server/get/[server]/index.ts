@@ -30,6 +30,7 @@
 
 import { getBackendProcedure } from "@/lib/backend-procedure";
 import type { MHSFData } from "@/lib/types/data";
+import { clerkClient, getAuth } from "@clerk/nextjs/server";
 import { MongoClient } from "mongodb";
 import type { NextApiRequest, NextApiResponse } from "next";
 
@@ -83,17 +84,17 @@ export default async function handler(
 		await mongo.connect();
 		const db = mongo.db(process.env.CUSTOM_MONGO_DB ?? "mhsf");
 		const stats = mongo.db("mhsf")
-		const userId = req.cookies.userId;
+		const {userId} = getAuth(req);
 
 		// Run queries in parallel
 		const [favoriteData, customizationData, playerData, achievements] =
 			await Promise.all([
-				findFavoriteData(serverData.name, userId, stats, {
+				findFavoriteData(serverData.name, userId ?? undefined, stats, {
 					maxFavoriteEntries,
 					favoriteTimespanStart,
 					favoriteTimespanEnd,
 				}),
-				findCustomizationData(serverData.name, userId, db),
+				findCustomizationData(serverData.name, userId ?? undefined, stats),
 				findPlayerData(serverData.name, stats, {
 					maxPlayerEntries,
 					playerTimespanStart,
@@ -147,6 +148,7 @@ async function findCustomizationData(
 	isOwned: boolean;
 	isOwnedByUser: boolean;
 }> {
+	const clerk = await clerkClient();
 	// Run queries in parallel
 	const [customizationData, ownedServerData] = await Promise.all([
 		db.collection("customization").findOne({ server: serverName }),
@@ -160,6 +162,7 @@ async function findCustomizationData(
 			...(customizationData as any),
 			isOwned: true,
 			isOwnedByUser: ownedServerData?.author === userId,
+			userProfilePicture: userId ? (await clerk.users.getUser(ownedServerData?.author)).imageUrl : 'no user'
 		};
 	}
 

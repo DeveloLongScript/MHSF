@@ -33,14 +33,25 @@ import useClipboard from "@/lib/useClipboard";
 import { MOTDRow } from "./motd/motd-row";
 import { StatisticsMainRow } from "./stats/stats-main-row";
 import type { useMHSFServer } from "@/lib/hooks/use-mhsf-server";
+import { GeneralInfo } from "./general-info/general-info";
+import { AchievementsView } from "./achievements/achievements";
+import { IconsRow } from "./icons/icons-row";
+import { affiliates } from "./util";
+import { AffiliateRow } from "./afilliate/affilliate-row";
+import { EmbedCreatorRow } from "./embeds/embed-creator";
 
 export function ServerRows({ server, mhsfData }: { server: ServerResponse, mhsfData: ReturnType<typeof useMHSFServer> }) {
   const clipboard = useClipboard();
 
   return (
     <span className="lg:grid lg:grid-cols-2 w-full gap-3">
+      {affiliates.includes(server.name) && <AffiliateRow />}
       <MOTDRow server={server} mhsfData={mhsfData}/>
       <StatisticsMainRow server={server} mhsfData={mhsfData} />
+      <GeneralInfo server={server} mhsfData={mhsfData} />
+      <AchievementsView server={server} mhsfData={mhsfData} />
+      <IconsRow server={server} mhsfData={mhsfData} />
+      <EmbedCreatorRow serverName={server.name} />
     </span>
   );
 }

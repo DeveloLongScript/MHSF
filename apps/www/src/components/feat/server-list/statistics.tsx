@@ -73,7 +73,6 @@ export function Statistics({
         setAverages(fetchJson);
       })();
     } catch (e) {
-      console.log(e);
       setError(true);
     }
   }, []);

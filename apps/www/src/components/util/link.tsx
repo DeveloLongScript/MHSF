@@ -35,7 +35,7 @@ export function Link(
   props: LinkProps & {
     children?: React.ReactNode;
     className?: string;
-    noExtraIcons?: boolean;
+    noextraicons?: boolean;
     target?: string;
   }
 ) {
@@ -43,7 +43,7 @@ export function Link(
 
   return (
     <NextLink {...props} href={pageFind(href || "") || "#"} title={href}>
-      {!props.noExtraIcons && (
+      {!props.noextraicons && (
         <>
           {(href || "").startsWith("Docs:") && (
             <Book size={16} className="mr-[2px] inline-flex" />
@@ -56,7 +56,7 @@ export function Link(
 
       {props.children}
 
-      {!props.noExtraIcons && (href || "").startsWith("https") && (
+      {!props.noextraicons && (href || "").startsWith("https") && (
         <ExternalLink size={12} className="ml-[2px] mb-[3px] inline-flex" />
       )}
     </NextLink>

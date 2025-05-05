@@ -39,7 +39,7 @@ import {
 import { toast } from "sonner";
 import { useEffectOnce } from "@/lib/useEffectOnce";
 import { allTags } from "@/config/tags";
-import { type ReactNode, useState } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import {
   Dialog,
@@ -176,6 +176,7 @@ export function TagShower(props: {
 
   useEffectOnce(() => {
     if (loading) {
+      // biome-ignore lint/complexity/noForEach: no.
       allTags.forEach((tag) => {
         if (!tag.condition) {
           tag.name({ online: props.server }).then((n) => {
@@ -246,7 +247,7 @@ export function TagShower(props: {
                 <DialogHeader>
                   <DialogTitle>
                     {'"'}
-                    {t.docsName == undefined ? t.name : t.docsName}
+                    {t.docsName === undefined ? t.name : t.docsName}
                     {'"'} documentation
                   </DialogTitle>
                   <DialogDescription

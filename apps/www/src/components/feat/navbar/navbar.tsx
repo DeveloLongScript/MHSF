@@ -71,12 +71,12 @@ export function NavBar() {
 	return (
 		<div
 			className={cn(
-				"w-screen h-[3rem] grid-cols-3 fixed z-10 flex",
+				"h-[3rem] grid-cols-3 fixed z-10 flex",
 				"items-center justify-self-start me-auto pl-4 flex-1 transition-all justify-between",
-				"lg:top-0 max-lg:bottom-0",
+				"lg:top-0 max-lg:bottom-0 bg-neutral-100 dark:bg-neutral-900",
 				showBorder
-					? "border-b backdrop-blur-xl"
-					: "max-lg:border-b max-lg:backdrop-blur-xl",
+					? "border-b backdrop-blur-xl w-screen"
+					: "max-lg:border-b max-lg:w-screen lg:border-b-slate-300 lg:dark:border-t-zinc-700 lg:border lg:m-2 lg:w-[calc(100vw-24px)] lg:rounded-lg lg:border-neutral-500/20 lg:bg-neutral-100 lg:dark:border-neutral-700/50 lg:dark:bg-neutral-900",
 				pathname !== null && animatedTopbarPages.includes(pathname)
 					? "[--animation-delay:1000ms] opacity-0 animate-fade-in"
 					: "",
@@ -192,8 +192,10 @@ export function NavBar() {
 				</DropdownMenu>
 				<SignedIn>
 					<div
-						className="absolute right-0 -z-10 h-full
-       overflow-hidden w-full ml-auto"
+						className={cn(
+							"absolute right-0 -z-10 h-full transition-all overflow-hidden w-full ml-auto",
+							showBorder ? "" : "hidden",
+						)}
 						style={{ borderRadius: "inherit" }}
 					>
 						<img

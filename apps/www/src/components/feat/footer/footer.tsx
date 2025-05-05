@@ -58,7 +58,7 @@ export function Footer() {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
-                  <Link href="https://t.mhsf.app/d/m" noExtraIcons>
+                  <Link href="https://t.mhsf.app/d/m" noextraicons>
                     <DropdownMenuItem className="py-2 flex items-center gap-2">
                       <Image className="max-w-[30px] max-h-[30px] rounded border border-muted-foreground" src="https://avatars.githubusercontent.com/u/16529253?s=200&v=4" alt="Minehut" width={30} height={30} />
                       <span className="block">
@@ -67,7 +67,7 @@ export function Footer() {
                       </span>
                     </DropdownMenuItem>
                   </Link>
-                  <Link href="https://t.mhsf.app/d/u" noExtraIcons>
+                  <Link href="https://t.mhsf.app/d/u" noextraicons>
                     <DropdownMenuItem className="py-2 flex items-center gap-2">
                       <BrandingGenericIcon className="max-w-[30px] max-h-[30px] rounded border border-muted-foreground" width={30} height={30} />
                       <span className="block">
@@ -78,7 +78,7 @@ export function Footer() {
                   </Link>
                 </DropdownMenuContent>
               </DropdownMenu>
-              <Link href="https://github.com/DeveloLongScript/MHSF" noExtraIcons>
+              <Link href="https://github.com/DeveloLongScript/MHSF" noextraicons>
                 <Button variant="tertiary" size="square-md" className="flex items-center">
                   <Github className="w-[1.25em] h-[1.25em]" />
                 </Button>
@@ -89,7 +89,7 @@ export function Footer() {
 
           </div>
         </div>
-        <span className="block px-4 -translate-y-12">
+        <span className="block px-4 lg:-translate-y-12">
           <small className="text-[0.75rem]">
             MHSF is an open-source project licensed under the MIT license. MHSF is
             not officially affiliated with with Minehut, Super League Enterprise,

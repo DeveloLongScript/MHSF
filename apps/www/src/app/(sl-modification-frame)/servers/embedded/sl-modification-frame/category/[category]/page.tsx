@@ -51,7 +51,6 @@ export default async function ServerListCategoryFrame({
 	const categoryObj = serverModDB.find(
 		(c) => c.displayTitle === atob(decodeURIComponent(category)),
 	);
-``
 	return (
 		<main className=" p-4">
 			<h1 className="text-xl font-bold w-full flex items-center gap-2">
@@ -78,7 +77,10 @@ export default async function ServerListCategoryFrame({
 								)}
 								style={{ backgroundColor: m.color }}
 							>
-								<m.icon className="relative top-[calc(50%-12px)] items-center w-full text-center justify-center" />
+								<m.icon
+									className="relative top-[calc(50%-12px)] items-center w-full text-center justify-center"
+									color={invertHex(m.color)}
+								/>
 							</div>
 							<span className="text-sm text-center w-full flex items-center justify-center">
 								{m.name}
@@ -94,4 +96,28 @@ export default async function ServerListCategoryFrame({
 			</Material>
 		</main>
 	);
+}
+
+export function invertHex(hex: string) {
+	if (hex.indexOf("#") === 0) {
+		hex = hex.slice(1);
+	}
+	// convert 3-digit hex to 6-digits.
+	if (hex.length === 3) {
+		hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+	}
+	if (hex.length !== 6) {
+		throw new Error("Invalid HEX color.");
+	}
+	// invert color components
+	const r = (255 - parseInt(hex.slice(0, 2), 16)).toString(16),
+		g = (255 - parseInt(hex.slice(2, 4), 16)).toString(16),
+		b = (255 - parseInt(hex.slice(4, 6), 16)).toString(16);
+	// pad each with zeros and return
+	return "#" + padZero(r) + padZero(g) + padZero(b);
+}
+function padZero(str: string, len: number) {
+	len = len || 2;
+	const zeros = new Array(len).join("0");
+	return (zeros + str).slice(-len);
 }

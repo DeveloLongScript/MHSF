@@ -114,7 +114,6 @@ export default async function handler(
 
     res.send({ data });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ message: "An error occurred while fetching data" });
   } finally {
     await client.close();

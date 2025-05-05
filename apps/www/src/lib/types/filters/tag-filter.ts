@@ -31,7 +31,7 @@
 import { allTags } from "@/config/tags";
 import type { MHSFData } from "../data";
 import type { OnlineServer, ServerResponse } from "../mh-server";
-import type { Filter } from "../filter";
+import type { Filter, FilterIdentifier } from "../filter";
 
 export class TagFilter implements Filter {
 	tagId: string;
@@ -41,7 +41,7 @@ export class TagFilter implements Filter {
         return "filter";
     }
 
-	toIdentifier(): { [key: string]: string | number | boolean } {
+	toIdentifier(): FilterIdentifier {
 		return { tagId: this.tagId, opposite: this.opposite };
 	}
 
@@ -49,9 +49,7 @@ export class TagFilter implements Filter {
 		return "app.mhsf.filter.tagFilter";
 	}
 
-	fromIdentifier(identifier: {
-		[key: string]: string | number | boolean;
-	}): Filter {
+	fromIdentifier(identifier: FilterIdentifier): Filter {
 		return new TagFilter(identifier.tagId as string, identifier.opposite as boolean);
 	}
 
@@ -74,17 +72,17 @@ export class TagFilter implements Filter {
 			).condition ?? (() => true)
 		)(server);
 
-		console.log(result, server.online?.name, (
-			allTags.find((c) => btoa(c.docsName) === this.tagId) ?? {
-				condition: () => true,
-			}
-		));
-
         if (typeof result === "boolean")
             return new Promise((r) => r(this.opposite ? !result : result))
 
 		return new Promise((r) => {
 			result.then((c) => r(this.opposite ? !c : c))
 		});
+	}
+
+	getTagStrings(): string[] {
+		if (this.opposite)
+			return [`Server does not have the '${allTags.find((c) => btoa(c.docsName) === this.tagId)?.docsName}' filter`]
+		return [`Server has the '${allTags.find((c) => btoa(c.docsName) === this.tagId)?.docsName}' filter`]
 	}
 }

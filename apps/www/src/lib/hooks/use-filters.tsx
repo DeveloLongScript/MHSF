@@ -37,7 +37,7 @@ import { transpileTypeScript } from "@/app/(sl-modification-frame)/servers/embed
 import { useUser } from "@clerk/nextjs";
 import type { ClerkCustomActivatedModification } from "@/components/feat/server-list/modification/modification-file-creation-dialog";
 import { ClerkEmbeddedFilter } from "@/components/feat/server-list/modification/modification-action";
-import { supportedFilters } from "../types/filter";
+import { supportedFilters } from "../types/supportedFilters";
 
 type EmbeddedFilter = {
 	identifier: string;
@@ -56,6 +56,7 @@ export function useFilters(data: OnlineServer[]) {
 	const [testModeLoading, setTestModeLoading] = useState(true);
 	const [loading, setLoading] = useState(true);
 	const [filters, setFilters] = useState<EmbeddedFilter[]>([]);
+	const [tagStrings, setTagStrings] = useState<string[]>([]);
 	const [sort, setSort] = useState<SortFunction<OnlineServer> | null>(null);
 	const { user, isSignedIn } = useUser();
 
@@ -67,8 +68,6 @@ export function useFilters(data: OnlineServer[]) {
 			(_, i) => !modificationMap[i].includes(false),
 		);
 		const sortedData = sort === null ? resultData : resultData.sort(sort);
-
-		console.log({ sortedData, modificationMap, resultData, data, newFilters });
 
 		if (sortedData.length !== 0) setFilteredData(sortedData);
 	};
@@ -167,11 +166,6 @@ export function useFilters(data: OnlineServer[]) {
 							if (type === "sort") {
 								newServers = data.sort((a, b) => filterFunc(a, b));
 								setTestModeStatus(`Sorted ${newServers.length} servers.`);
-								console.log(
-									newServers,
-									data.sort((a, b) => filterFunc(a, b)),
-								);
-								console.log(filterFunc);
 								setFilteredData(() => [...newServers]);
 							}
 
@@ -209,15 +203,16 @@ export function useFilters(data: OnlineServer[]) {
 
 	// biome-ignore lint: I'm gonna turn this off :sob:
 	useEffect(() => {
+		window.addEventListener("start-loading-server-view", () => setLoading(true))
 		if (!t)
 			window.addEventListener("update-modification-stack", async () => {
 				await user?.reload();
-				setLoading(true);
 				let newFilters: EmbeddedFilter[] = [];
 				const filters =
 					((isSignedIn ? user.unsafeMetadata.filters : JSON.parse(localStorage.getItem("mhsf__filters") ?? "[]")) as Array<
 						ClerkEmbeddedFilter<unknown>
 					>) ?? [];
+				setTagStrings([]);
 					
 				if (isSignedIn) {
 					const activatedModifications =
@@ -309,15 +304,13 @@ export function useFilters(data: OnlineServer[]) {
 					newFilters.push({
 						identifier: filterType?.ns + (Math.random() * Math.random() * Math.random()).toString(),
 						functionFilter: (server: OnlineServer) => parsedFilter?.applyToServer({ online: server }) ?? true
-					})
+					});
+					setTagStrings((c) => [...c, ...(parsedFilter?.getTagStrings() as string[])])
 				});
-
-				console.log(newFilters);
 
 				await updateServers(newFilters);
 			});
 	}, [data]);
-	console.log(filters);
 
 	return {
 		filteredData,
@@ -328,5 +321,6 @@ export function useFilters(data: OnlineServer[]) {
 			filters.filter((item, index, array) => array.indexOf(item) === index)
 				.length + (sort === null ? 1 : 0),
 		loading,
+		tagStrings
 	};
 }

@@ -44,19 +44,34 @@ import {
 	TooltipContent,
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { Badge } from "@/components/ui/badge";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuSeparator,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import { ServerRandomServerProvider } from "./server-random-server-provider";
+import { Dice2, Dices, EllipsisIcon, RefreshCcw, ShareIcon } from "lucide-react";
+import { toast } from "sonner";
+import useClipboard from "@/lib/useClipboard";
 
 export function ServerList() {
-	const { servers, loading, serverCount, playerCount } = useServers();
+	const { servers, loading, serverCount, playerCount, refresh } = useServers();
 	const {
 		filteredData,
 		testModeEnabled,
 		testModeLoading,
 		testModeStatus,
 		filterCount,
+		tagStrings,
 		loading: filterLoading,
 	} = useFilters(servers);
 	const { itemsLength, fetchMoreData, hasMoreData, data } =
 		useInfiniteScrolling(filteredData);
+	const clipboard = useClipboard();
 
 	if (loading)
 		return (
@@ -67,53 +82,119 @@ export function ServerList() {
 
 	return (
 		<main className="px-3 lg:px-16">
-			<h1 className="scroll-m-20 text-2xl font-extrabold tracking-tight lg:text-4xl mb-3">
-				Statistics
-			</h1>
-			<Statistics
-				totalServers={serverCount}
-				totalPlayers={playerCount}
-				topServer={servers[0]}
-			/>
-			<Separator className="my-6" />
-			<h1 className="scroll-m-20 text-2xl font-extrabold tracking-tight lg:text-4xl">
-				Servers
-			</h1>
-			<div className="flex items-center">
-				<Tooltip>
-					<TooltipTrigger>
-						<ModificationButton disabled={testModeEnabled} />
-					</TooltipTrigger>
-					<TooltipContent side="bottom" className="backdrop-blur bg-transparent text-black dark:text-white ">{filterCount} modification(s) enabled</TooltipContent>
-				</Tooltip>
-				<ServerTestModeSelector
-					testModeStatus={testModeStatus}
-					testModeEnabled={testModeEnabled}
-					testModeLoading={testModeLoading}
+			<ServerRandomServerProvider servers={filteredData}>
+				<h1 className="scroll-m-20 text-2xl font-extrabold tracking-tight lg:text-4xl mb-3">
+					Statistics
+				</h1>
+				<Statistics
+					totalServers={serverCount}
+					totalPlayers={playerCount}
+					topServer={servers[0]}
 				/>
-			</div>
-			{filterLoading ? (
-				<span className="mt-2 left-[50%] right-[50%] absolute">
-					<Spinner />
-				</span>
-			) : (
-				<InfiniteScroll
-					dataLength={itemsLength}
-					next={fetchMoreData}
-					hasMore={hasMoreData}
-					loader={
-						<span className="mt-2 left-[50%] right-[50%] absolute">
-							<Spinner />
-						</span>
-					}
-				>
-					<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 mt-3">
-						{data.map((c) => (
-							<ServerCard server={c} key={c.staticInfo._id} />
-						))}
-					</div>
-				</InfiniteScroll>
-			)}
+				<Separator className="my-6" />
+				<h1 className="scroll-m-20 text-2xl font-extrabold tracking-tight lg:text-4xl">
+					Servers
+				</h1>
+				<div className="flex items-center justify-between">
+					<span className="flex items-center">
+						<Tooltip>
+							<TooltipTrigger>
+								<ModificationButton disabled={testModeEnabled} />
+							</TooltipTrigger>
+							<TooltipContent
+								side="bottom"
+								className="backdrop-blur bg-transparent text-black dark:text-white "
+							>
+								{filterCount} modification(s) enabled
+							</TooltipContent>
+						</Tooltip>
+						<ServerTestModeSelector
+							testModeStatus={testModeStatus}
+							testModeEnabled={testModeEnabled}
+							testModeLoading={testModeLoading}
+						/>
+						<div className="flex items-center gap-1 ml-3 max-w-[calc(100vw-200px)] overflow-auto max-lg:pb-2">
+							{tagStrings.map((c) => (
+								<Badge
+									key={c}
+									className="flex px-3 break-keep whitespace-nowrap"
+									variant="gray-subtle"
+								>
+									{c}
+								</Badge>
+							))}
+						</div>
+					</span>
+					<DropdownMenu>
+						<DropdownMenuTrigger>
+							<Button
+								className="flex items-center"
+								size="square-md"
+								variant="secondary"
+							>
+								<EllipsisIcon size={16} />
+							</Button>
+						</DropdownMenuTrigger>
+						<DropdownMenuContent>
+							<DropdownMenuSeparator>Servers</DropdownMenuSeparator>
+							<DropdownMenuItem
+								onClick={() =>
+									window.dispatchEvent(new Event("open-random-server"))
+								}
+								className="flex items-center gap-2"
+							>
+								<Dices size={16} />
+								Pick random server
+							</DropdownMenuItem>
+							<DropdownMenuItem
+								className="flex items-center gap-2"
+								onClick={() => refresh()}
+							>
+								<RefreshCcw size={16} />
+								Reload
+							</DropdownMenuItem>
+							<DropdownMenuSeparator>Share</DropdownMenuSeparator>
+							<DropdownMenuItem
+								className="flex items-center gap-2"
+								onClick={() => {
+									const data = { url: "https://mhsf.app", text: "Check out MHSF, the modern server finder!" };
+									if (navigator.canShare(data))
+										navigator.share(data)
+									else {
+										clipboard.writeText("https://mhsf.app")
+										toast.success("Sent to clipboard!")
+									} 
+								}}
+							>
+								<ShareIcon size={16} />
+								Share MHSF!
+							</DropdownMenuItem>
+						</DropdownMenuContent>
+					</DropdownMenu>
+				</div>
+				{filterLoading ? (
+					<span className="mt-2 left-[50%] right-[50%] absolute">
+						<Spinner />
+					</span>
+				) : (
+					<InfiniteScroll
+						dataLength={itemsLength}
+						next={fetchMoreData}
+						hasMore={hasMoreData}
+						loader={
+							<span className="mt-2 left-[50%] right-[50%] absolute">
+								<Spinner />
+							</span>
+						}
+					>
+						<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 mt-3">
+							{data.map((c) => (
+								<ServerCard server={c} key={c.staticInfo._id} />
+							))}
+						</div>
+					</InfiniteScroll>
+				)}
+			</ServerRandomServerProvider>
 		</main>
 	);
 }

@@ -38,4 +38,5 @@ export interface Sort {
 		[key: string]: string | number | boolean;
 	}): Sort;
     sortToServers(serverA: OnlineServer, serverB: OnlineServer): number;
+	getTagStrings(): string[];
 }

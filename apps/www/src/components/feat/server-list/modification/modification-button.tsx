@@ -35,7 +35,7 @@ import { ModificationFrame } from "./modification-frame";
 export function ModificationButton({disabled}: {disabled?: boolean}) {
   return (
     <Dialog>
-      <DialogTrigger>
+      <DialogTrigger asChild>
         <Button disabled={disabled}>Filters & Sorting</Button>
       </DialogTrigger>
 

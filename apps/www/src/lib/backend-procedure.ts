@@ -67,7 +67,6 @@ export async function getBackendProcedure(request: NextApiRequest): Promise<Back
 
     if (detectedIp !== null) {
         const collection = defaultDatabase.collection("blocked-ips");
-        console.log(await collection.findOne({ ip: detectedIp }), detectedIp)
 
         if (await collection.findOne({ ip: detectedIp }) !== null) {
             await mongoClient.close()

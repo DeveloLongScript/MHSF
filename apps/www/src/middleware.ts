@@ -43,7 +43,11 @@ const isOldServerRoute = createRouteMatcher([
 	"/server/:serverName",
 	"/server/:serverName/statistics",
 ]);
-const apiRoute = createRouteMatcher(["/api/(.*)"]);
+const isWaitlistPage = createRouteMatcher(["/waitlist", "/waitlist(.*)"]);
+const apiWaitlistPage = createRouteMatcher([
+	"/api/v1/user/waitlist(.*)",
+	"/api/v1/get-status",
+]);
 
 export default process.env.NEXT_PUBLIC_IS_AUTH === "true"
 	? clerkMiddleware(async (auth, req) => {
@@ -51,6 +55,19 @@ export default process.env.NEXT_PUBLIC_IS_AUTH === "true"
 			const client = await clerkClient();
 			const requestHeaders = new Headers(req.headers);
 			requestHeaders.set("x-url", req.url);
+
+			if (!isWaitlistPage(req) && !apiWaitlistPage(req)) {
+				if (process.env.NEXT_PUBLIC_WAITLIST_ENABLED === "true") {
+					if (authRes.userId === null)
+						return NextResponse.redirect(new URL("/waitlist", req.url));
+
+					const metadata = (await client.users.getUser(authRes.userId))
+						.publicMetadata;
+					if (metadata.v2allowed !== true)
+						return NextResponse.redirect(new URL("/waitlist", req.url));
+				}
+			}
+
 
 			if (isRootRoute(req)) {
 				switch (authRes.userId === null) {
@@ -72,7 +89,7 @@ export default process.env.NEXT_PUBLIC_IS_AUTH === "true"
 						new URL(`/server/v2/minehut/${minehutRes.server._id}`, req.url),
 					);
 			}
-			
+
 			return NextResponse.next({
 				request: {
 					headers: requestHeaders,

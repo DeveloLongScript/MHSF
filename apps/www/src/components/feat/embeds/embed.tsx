@@ -99,9 +99,7 @@ export default function Embed({ params }: { params: { server: string } }) {
       <div className="px-4 pt-2 flex items-center group overflow-hidden">
         <div
           className={cn(
-            staticMode ? "block" : "opacity-0 group-hover:opacity-100",
-            "transform transition-all duration-300 ease-in-out",
-            "group-hover:translate-x-0 -translate-x-full",
+            staticMode ? "block" : "opacity-0 group-hover:opacity-100 transform transition-all duration-300 ease-in-out group-hover:translate-x-0 -translate-x-full",
             "absolute left-[10px] w-0 group-hover:w-[64px]"
           )}
         >

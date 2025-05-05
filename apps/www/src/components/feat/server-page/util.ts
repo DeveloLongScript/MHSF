@@ -40,6 +40,8 @@ export function convert(value: number) {
   return result;
 }
 
+export const affiliates = ["CoreBoxx"]
+
 export const loadingList = [
   "Making gamer's safer",
   "Finding why Apple is so expensive",

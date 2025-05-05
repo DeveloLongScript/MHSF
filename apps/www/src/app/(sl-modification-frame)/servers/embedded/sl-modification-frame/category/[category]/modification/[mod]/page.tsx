@@ -38,6 +38,7 @@ import { ArrowLeft } from "lucide-react";
 import { useQueryState } from "nuqs";
 import { use } from "react";
 import Markdown from "react-markdown";
+import { invertHex } from "../../page";
 
 export default function ModificationPage({
   params,
@@ -48,7 +49,6 @@ export default function ModificationPage({
   const [backRoute] = useQueryState("b", {
     defaultValue: "/servers/embedded/sl-modification-frame",
   });
-  console.log(mod);
   const categoryObj = serverModDB.find(
     (c) => c.displayTitle === atob(decodeURIComponent(category))
   );
@@ -65,7 +65,7 @@ export default function ModificationPage({
         style={{ backgroundColor: modObj?.color }}
       >
         <Link href={backRoute}>
-          <ArrowLeft />
+          <ArrowLeft style={{color: invertHex(modObj?.color ?? "")}} />
         </Link>
       </div>
 

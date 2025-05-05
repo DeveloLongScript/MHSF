@@ -30,7 +30,7 @@
 
 import { allCategories } from "@/config/tags";
 import type { MHSFData } from "../data";
-import type { Filter } from "../filter";
+import type { Filter, FilterIdentifier } from "../filter";
 import type { OnlineServer, ServerResponse } from "../mh-server";
 
 export class CategoryFilter implements Filter {
@@ -40,11 +40,11 @@ export class CategoryFilter implements Filter {
         return "filter";
     }
 
-	toIdentifier(): { [key: string]: string | number | boolean } {
+	toIdentifier(): FilterIdentifier {
 		return { categoryIndex: this.categoryIndex };
 	}
 
-    fromIdentifier(identifier: { [key: string]: string | number | boolean; }): Filter {
+    fromIdentifier(identifier: FilterIdentifier): Filter {
         return new CategoryFilter(identifier.categoryIndex as number);
     }
 
@@ -60,5 +60,9 @@ export class CategoryFilter implements Filter {
 
     constructor(categoryIndex: number) {
         this.categoryIndex = categoryIndex;
+    }
+
+    getTagStrings(): string[] {
+        return [`Server is a ${allCategories[this.categoryIndex].name} server`]
     }
 }

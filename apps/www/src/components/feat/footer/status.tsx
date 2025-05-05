@@ -27,7 +27,7 @@ export function FooterStatus() {
     return (
       <Link
         href={`https://${statusURL as string}${determineIfOutage() ? `/incident/${determineWhatOutage()?.id}` : ""}`}
-        noExtraIcons
+        noextraicons
         target="_blank"
       >
         <Button variant="tertiary">

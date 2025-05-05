@@ -40,8 +40,6 @@ export function useMHSFServer(id: string) {
       const response = await fetch("/api/v1/server/get/" + id);
       const json = await response.json();
 
-      console.log(json.server);
-
       setServer(json.server);
     })();
   }, [id]);

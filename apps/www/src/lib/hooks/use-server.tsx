@@ -14,7 +14,6 @@ export function useServer(serverSpecifier: { id?: string; name?: string }) {
           `https://api.minehut.com/server/${serverSpecifier.id || serverSpecifier.name}${serverSpecifier.name ? "?byName=true" : ""}`
         );
         const json = await res.json();
-        console.log(json);
         if (json.server === null) throw new Error("Server not found");
 
         setServer(json.server);

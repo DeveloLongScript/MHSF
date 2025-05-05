@@ -28,15 +28,40 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { SVGProps } from "react";
+"use client";
 
-export const affiliates: {
-  name: string;
-  shop: string;
-  line: string;
-  mode: string[];
-  otherLinks: {
-    name: string;
-    icon: (props: SVGProps<SVGSVGElement>) => JSX.Element;
-  }[];
-}[] = [];
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import type { OnlineServer } from "@/lib/types/mh-server";
+import { type ReactNode, useEffect, useState } from "react";
+import { MOTDRenderer } from "../server-page/motd/motd-renderer";
+import IconDisplay from "../icons/minecraft-icon-display";
+import ServerCard, { TagShower } from "./server-card";
+
+export function ServerRandomServerProvider({
+	servers,
+	children,
+}: { servers: OnlineServer[]; children: ReactNode | ReactNode[] }) {
+	const [open, setOpen] = useState(false);
+	const [selectedServer, setSelectedServer] = useState<OnlineServer | null>();
+
+	useEffect(() => {
+		if (servers.length !== 0)
+			window.addEventListener("open-random-server", () => {
+				setSelectedServer(servers[Math.floor(Math.random() * servers.length)]);
+				setOpen(true);
+			});
+	}, [servers]);
+
+	return (
+		<>
+			<Dialog open={open} onOpenChange={setOpen}>
+				<DialogContent>
+					{selectedServer !== null && selectedServer !== undefined && (
+						<ServerCard server={selectedServer}/>
+					)}
+				</DialogContent>
+			</Dialog>
+			{children}
+		</>
+	);
+}

@@ -37,45 +37,69 @@ import { usePathname } from "next/navigation";
 
 const inter = Inter({ subsets: ["latin"] });
 const roboto = Roboto({
-  subsets: ["latin"],
-  weight: ["100", "300", "400", "500", "700", "900"],
+	subsets: ["latin"],
+	weight: ["100", "300", "400", "500", "700", "900"],
 });
 const overflowXHiddenPages = ["/home"];
 
 export function FontBoundary({
-  children,
-  className
+	children,
+	className,
 }: {
-  children?: ReactNode | ReactNode[];
-  className?: string;
+	children?: ReactNode | ReactNode[];
+	className?: string;
 }) {
-  const settingsStore = useSettingsStore();
-  const [fontFamily, setFontFamily] = useState("inter");
-  const pathname = usePathname();
+	const settingsStore = useSettingsStore();
+	const [fontFamily, setFontFamily] = useState("inter");
+	const pathname = usePathname();
 
-  useEffect(() => {
-    setFontFamily((settingsStore.get("font-family") ?? "inter") as string);
-    window.addEventListener("font-family-change", () => {
-      setFontFamily((settingsStore.get("font-family") ?? "inter") as string);
-    });
-  }, [settingsStore]);
+	useEffect(() => {
+		setFontFamily((settingsStore.get("font-family") ?? "inter") as string);
+		window.addEventListener("font-family-change", () => {
+			setFontFamily((settingsStore.get("font-family") ?? "inter") as string);
+		});
+	}, [settingsStore]);
 
-  return (
-    <body
-      className={`font-${fontFamily} ${(() => {
-        switch (fontFamily) {
-          case "geist-sans":
-            return GeistSans.className;
-          case "roboto":
-            return roboto.className;
-          case "inter":
-            return inter.className;
-          default:
-            return "system-ui-font--font-boundary";
-        }
-      })()} ${pathname !== null && overflowXHiddenPages.includes(pathname) ? "overflow-x-hidden" : ""} ${className}`}
-    >
-      {children}
-    </body>
-  );
+	useEffect(() => {
+		const classes = [
+			`font-${fontFamily}`,
+			(() => {
+				switch (fontFamily) {
+					case "geist-sans":
+						return GeistSans.className;
+					case "roboto":
+						return roboto.className;
+					case "inter":
+						return inter.className;
+					default:
+						return "system-ui-font--font-boundary";
+				}
+			})() as string,
+			"overflow-x-hidden",
+			className,
+		] as string[];
+
+    document.body.classList.add(...classes);
+
+    return () => document.body.classList.remove(...classes)
+	});
+
+	return (
+		<div
+			className={`font-${fontFamily} ${(() => {
+				switch (fontFamily) {
+					case "geist-sans":
+						return GeistSans.className;
+					case "roboto":
+						return roboto.className;
+					case "inter":
+						return inter.className;
+					default:
+						return "system-ui-font--font-boundary";
+				}
+			})()} overflow-x-hidden ${className}`}
+		>
+			{children}
+		</div>
+	);
 }

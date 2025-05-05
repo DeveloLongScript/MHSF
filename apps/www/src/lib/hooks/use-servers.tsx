@@ -61,6 +61,23 @@ export function useServers() {
     serverCount,
     loading,
     error,
+    refresh: () => {
+      setLoading(true);
+      try {
+        (async () => {
+          const serversFetch = await fetch("https://api.minehut.com/servers");
+          const serversJson: ServersAPIResponse = await serversFetch.json();
+  
+          setPlayerCount(serversJson.total_players);
+          setServerCount(serversJson.total_servers);
+          setServers(serversJson.servers);
+          setLoading(false);
+        })();
+      } catch (e) {
+        console.error(e);
+        setError(true);
+      }
+    }
   };
 }
 

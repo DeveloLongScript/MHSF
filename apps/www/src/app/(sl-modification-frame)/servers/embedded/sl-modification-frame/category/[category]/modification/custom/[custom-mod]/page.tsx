@@ -65,6 +65,7 @@ import { useQueryState } from "nuqs";
 import { use } from "react";
 import Markdown from "react-markdown";
 import { toast } from "sonner";
+import { invertHex } from "../../../page";
 
 export default function ModificationPage({
 	params,
@@ -78,7 +79,6 @@ export default function ModificationPage({
 	const [backRoute] = useQueryState("b", {
 		defaultValue: "/servers/embedded/sl-modification-frame",
 	});
-	console.log(mod);
 	const modIndex = (
 		(user?.unsafeMetadata
 			.activatedModifications as ClerkCustomActivatedModification[]) ?? []
@@ -109,7 +109,7 @@ export default function ModificationPage({
 				style={{ backgroundColor: modObj?.color }}
 			>
 				<Link href={backRoute}>
-					<ArrowLeft />
+					<ArrowLeft color={invertHex(modObj?.color)} />
 				</Link>
 			</div>
 
@@ -120,22 +120,27 @@ export default function ModificationPage({
 					you proud?)
 				</Markdown>
 				<div className="flex justify-between items-center">
-					<Button className="mt-2" onClick={async () => {
-						const newModObj = {
-							...modObj,
-							active: !modObj.active
-						}
-						const modificationArray = (user?.unsafeMetadata
-							.activatedModifications as ClerkCustomActivatedModification[]) ?? [];
-						modificationArray[modIndex] = newModObj;
-						await user?.update({
-							unsafeMetadata: {
-								...user.unsafeMetadata,
-								activatedModifications: modificationArray
-							}
-						});
-						communicator.send("rerender-servers", {});
-					}}>
+					<Button
+						className="mt-2"
+						onClick={async () => {
+							const newModObj = {
+								...modObj,
+								active: !modObj.active,
+							};
+							const modificationArray =
+								(user?.unsafeMetadata
+									.activatedModifications as ClerkCustomActivatedModification[]) ??
+								[];
+							modificationArray[modIndex] = newModObj;
+							await user?.update({
+								unsafeMetadata: {
+									...user.unsafeMetadata,
+									activatedModifications: modificationArray,
+								},
+							});
+							communicator.send("rerender-servers", {});
+						}}
+					>
 						{modObj?.active ? "Disable" : "Enable"}
 					</Button>
 					<DropdownMenu>

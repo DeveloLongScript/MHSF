@@ -31,93 +31,96 @@
 import { Button } from "@/components/ui/button";
 import { ServerResponse } from "@/lib/types/mh-server";
 import { SignedIn, SignedOut, useClerk } from "@clerk/nextjs";
-import { EllipsisVertical, Flag, Heart, Star } from "lucide-react";
+import { EllipsisVertical, Flag, Heart, Share, Star } from "lucide-react";
 import { useFavoriteStore } from "@/lib/hooks/use-favorite-store";
 import { useState } from "react";
 import type { useMHSFServer } from "@/lib/hooks/use-mhsf-server";
 import NumberFlow from "@number-flow/react";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuSeparator,
+	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
 export function ServerPageButtons({
-  server,
-  mhsfData,
+	server,
+	mhsfData,
 }: {
-  server: ServerResponse;
-  mhsfData: ReturnType<typeof useMHSFServer>;
+	server: ServerResponse;
+	mhsfData: ReturnType<typeof useMHSFServer>;
 }) {
-  const clerk = useClerk();
-  const favoritesStore = useFavoriteStore(mhsfData);
-  const [loading, setLoading] = useState(false);
+	const clerk = useClerk();
+	const favoritesStore = useFavoriteStore(mhsfData);
+	const [loading, setLoading] = useState(false);
 
-  return (
-    <span className="flex items-center gap-2">
-      <SignedIn>
-        <Button
-          className="flex items-center gap-2 text-sm"
-          variant={favoritesStore.isFavorite ? "secondary" : "default"}
-          onClick={async () => {
-            setLoading(true);
-            await favoritesStore.toggleFavorite();
-            setLoading(false);
-          }}
-          disabled={loading || favoritesStore.isFavorite === null}
-        >
-          <Heart
-            size={16}
-            fill={favoritesStore.isFavorite ? "red" : "transparent"}
-            color="red"
-          />
-          Favorite
-          {favoritesStore.favoriteNumber !== null && (
-            <code>
-              <NumberFlow value={favoritesStore.favoriteNumber} />{" "}
-            </code>
-          )}
-        </Button>
-      </SignedIn>
-      <SignedOut>
-        <Button
-          className="flex items-center gap-2 text-sm"
-          onClick={() => clerk.openSignUp()}
-        >
-          <Star size={16} />
-          Favorite
-          {favoritesStore.favoriteNumber !== null && (
-            <code>{favoritesStore.favoriteNumber}</code>
-          )}
-        </Button>
-      </SignedOut>
-      <DropdownMenu>
-        <DropdownMenuTrigger>
-          <Button
-            className="flex items-center"
-            size="square-md"
-            variant="secondary"
-          >
-            <EllipsisVertical size={16} />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent>
-          <DropdownMenuSeparator>
-            Destructive
-          </DropdownMenuSeparator>
-          <DropdownMenuItem
-            className="text-red-400 flex items-center gap-2"
-            onClick={() => {
-              window.dispatchEvent(new Event("open-report-menu"));
-            }}
-          >
-            <Flag size={16} />
-            Report
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </span>
-  );
+	return (
+		<span className="flex items-center gap-2">
+			<SignedIn>
+				<Button
+					className="flex items-center gap-2 text-sm"
+					variant={favoritesStore.isFavorite ? "secondary" : "default"}
+					onClick={async () => {
+						setLoading(true);
+						await favoritesStore.toggleFavorite();
+						setLoading(false);
+					}}
+					disabled={loading || favoritesStore.isFavorite === null}
+				>
+					<Heart
+						size={16}
+						fill={favoritesStore.isFavorite ? "red" : "transparent"}
+						color="red"
+					/>
+					Favorite
+					{favoritesStore.favoriteNumber !== null && (
+						<code>
+							<NumberFlow value={favoritesStore.favoriteNumber} />{" "}
+						</code>
+					)}
+				</Button>
+			</SignedIn>
+			<SignedOut>
+				<Button
+					className="flex items-center gap-2 text-sm"
+					onClick={() => clerk.openSignUp()}
+				>
+					<Star size={16} />
+					Favorite
+					{favoritesStore.favoriteNumber !== null && (
+						<code>{favoritesStore.favoriteNumber}</code>
+					)}
+				</Button>
+			</SignedOut>
+			<DropdownMenu>
+				<DropdownMenuTrigger>
+					<Button
+						className="flex items-center"
+						size="square-md"
+						variant="secondary"
+					>
+						<EllipsisVertical size={16} />
+					</Button>
+				</DropdownMenuTrigger>
+				<DropdownMenuContent>
+					<DropdownMenuSeparator>Server</DropdownMenuSeparator>
+					<DropdownMenuItem className="flex items-center gap-2">
+						<Share size={16} />
+						Share
+					</DropdownMenuItem>
+					<DropdownMenuSeparator>Destructive</DropdownMenuSeparator>
+					<DropdownMenuItem
+						className="text-red-400 flex items-center gap-2"
+						onClick={() => {
+							window.dispatchEvent(new Event("open-report-menu"));
+						}}
+					>
+						<Flag size={16} />
+						Report
+					</DropdownMenuItem>
+				</DropdownMenuContent>
+			</DropdownMenu>
+		</span>
+	);
 }

@@ -40,7 +40,8 @@ export function ModificationAction({ value }: { value?: Action }) {
 					>) ?? []
 				).findIndex(
 					(c) =>
-						JSON.stringify(c.metadata) === JSON.stringify(filter.toIdentifier()) &&
+						JSON.stringify(c.metadata) ===
+							JSON.stringify(filter.toIdentifier()) &&
 						c.type === filter.getSpecificFilterId(),
 				);
 			return existing;
@@ -48,7 +49,7 @@ export function ModificationAction({ value }: { value?: Action }) {
 		return -1;
 	};
 
-	useEffect(() => setApplied(findExisting()))
+	useEffect(() => setApplied(findExisting()));
 
 	return (
 		<>
@@ -68,15 +69,17 @@ export function ModificationAction({ value }: { value?: Action }) {
 					className="mt-1"
 					onClick={async () => {
 						if (value?.type() === "filter") {
+							const updatedUser = await user?.reload();
 							const filter = value as Filter;
 							const existing = findExisting();
 
 							if (isSignedIn) {
 								const existingArray =
-									(user.unsafeMetadata.filters as Array<
+									(updatedUser?.unsafeMetadata.filters as Array<
 										ClerkEmbeddedFilter<unknown>
 									>) ?? [];
-								existingArray.splice(existing, 1);
+								const previousFilters = updatedUser?.unsafeMetadata
+									.filters as Array<ClerkEmbeddedFilter<unknown>>;
 								if (existing === -1)
 									await user.update({
 										unsafeMetadata: {
@@ -86,19 +89,19 @@ export function ModificationAction({ value }: { value?: Action }) {
 													type: filter.getSpecificFilterId(),
 													metadata: filter.toIdentifier(),
 												},
-												...((user.unsafeMetadata.filters as Array<
-													ClerkEmbeddedFilter<unknown>
-												>) ?? []),
+												...previousFilters,
 											] as Array<ClerkEmbeddedFilter<unknown>>,
 										},
 									});
-								else
+								else {
+									existingArray.splice(existing, 1);
 									await user.update({
 										unsafeMetadata: {
-											filters: existingArray,
 											...user.unsafeMetadata,
+											filters: existingArray,
 										},
 									});
+								}
 							} else {
 								const existingArray =
 									(JSON.parse(
@@ -110,17 +113,20 @@ export function ModificationAction({ value }: { value?: Action }) {
 									localStorage.setItem(
 										"mhsf__filters",
 										JSON.stringify([
+											...((JSON.parse(
+												localStorage.getItem("mhsf__filters") ?? "[]",
+											) as Array<ClerkEmbeddedFilter<unknown>>) ?? []),
 											{
 												type: filter.getSpecificFilterId(),
 												metadata: filter.toIdentifier(),
 											},
-											...((JSON.parse(
-												localStorage.getItem("mhsf__filters") ?? "[]",
-											) as Array<ClerkEmbeddedFilter<unknown>>) ?? []),
 										]),
 									);
 								else
-									localStorage.setItem("mhsf__filters", JSON.stringify(existingArray));
+									localStorage.setItem(
+										"mhsf__filters",
+										JSON.stringify(existingArray),
+									);
 							}
 
 							setApplied(findExisting());

@@ -28,6 +28,7 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import { cn } from "@/lib/utils";
 import type { ReactNode } from "react";
 
 function Placeholder({
@@ -35,14 +36,16 @@ function Placeholder({
   title,
   description,
   children,
+  className
 }: {
   icon?: ReactNode;
   title?: ReactNode | string;
   description?: ReactNode | string;
+  className?: string;
   children?: ReactNode;
 }) {
   return (
-    <div className="text-slate-700 dark:text-zinc-300 flex flex-col justify-center items-center gap-2">
+    <div className={cn("text-slate-700 dark:text-zinc-300 flex flex-col justify-center items-center gap-2", className)}>
       {icon && (
         <div className="border border-slate-200 dark:border-zinc-700 dark:bg-zinc-800 p-3 rounded-full">
           {icon}

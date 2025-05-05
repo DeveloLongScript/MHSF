@@ -121,14 +121,14 @@ export function CustomErrors({
 									</DropdownMenuTrigger>
 									<DropdownMenuContent>
 										<Link
-											noExtraIcons
+											noextraicons
 											target="_blank"
 											href={`https://typescript.tv/errors/#ts${c.code}`}
 										>
 											<DropdownMenuItem>typescript.tv</DropdownMenuItem>
 										</Link>
 										<Link
-											noExtraIcons
+											noextraicons
 											target="_blank"
 											href={`https://ts-error-translator.vercel.app/?error=${compressToEncodedURIComponent(c.messageText.toString())}`}
 										>

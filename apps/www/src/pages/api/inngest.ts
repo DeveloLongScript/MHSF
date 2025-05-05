@@ -95,7 +95,6 @@ export default serve({
                 server: server.name,
                 date: new Date(),
               });
-              console.log(i, mh.servers.length);
             });
             return true;
           });

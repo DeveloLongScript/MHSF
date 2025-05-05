@@ -126,9 +126,8 @@ export function StatisticsChart({
 	data: any;
 	mainDataPoint: string;
 }) {
-	console.log(data);
 	return (
-		<ChartContainer config={chartConfig} className="max-h-[202px] min-w-full">
+		<ChartContainer config={chartConfig} className="max-h-[202px] max-lg:max-h-[177px] min-w-full">
 			<AreaChart
 				accessibilityLayer
 				data={data.slice(data.length - 30, data.length)}

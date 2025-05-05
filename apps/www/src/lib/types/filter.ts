@@ -31,36 +31,22 @@
 import { allTags } from "@/config/tags";
 import type { OnlineServer, ServerResponse } from "./mh-server";
 import type { MHSFData } from "./data";
-import { TagFilter } from "./filters/tag-filter";
-import { CategoryFilter } from "./filters/category-filter";
+
+export type FilterIdentifier = {
+	[key: string]: string | number | boolean | null | Array<FilterIdentifier> | FilterIdentifier
+}
 
 /* Any filter that can be converted back and forth from a string or a Filter object */
 export interface Filter {
 	type(): "filter";
-	toIdentifier(): { [key: string]: string | number | boolean };
+	toIdentifier(): FilterIdentifier;
 	getSpecificFilterId(): string;
-	fromIdentifier(identifier: {
-		[key: string]: string | number | boolean;
-	}): Filter;
+	fromIdentifier(identifier: FilterIdentifier): Filter;
 	applyToServer(server: {
 		online?: OnlineServer;
 		server?: ServerResponse;
 		mhsfData?: MHSFData;
 	}): Promise<boolean>;
+	getTagStrings(): string[];
 }
 
-export const supportedFilters: {
-	ns: string;
-	fi: (identifier: {
-		[key: string]: string | number | boolean;
-	}) => Filter;
-}[] = [
-	{
-		ns: "app.mhsf.filter.tagFilter",
-		fi: new TagFilter(0, false).fromIdentifier
-	},
-	{
-		ns: "app.mhsf.filter.categoryFilter",
-		fi: new CategoryFilter(0).fromIdentifier
-	}
-];

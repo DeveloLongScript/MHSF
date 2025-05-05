@@ -12,7 +12,7 @@ export function StatusButton() {
   if (loading) return <Spinner />;
 
   return (
-    <Link href={`https://${statusURL as string}`} noExtraIcons target="_blank">
+    <Link href={`https://${statusURL as string}`} noextraicons target="_blank">
       <Button variant="secondary" className="rounded-xl">
         <span
           className={cn(

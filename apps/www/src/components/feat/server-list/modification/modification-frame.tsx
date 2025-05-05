@@ -42,6 +42,7 @@ export function ModificationFrame() {
                 communication.toIframe.send("ping", {from: "top-layer"})
         })
         communication.toIframe.handle("rerender-servers", (c) => {
+            window.dispatchEvent(new Event("start-loading-server-view"))
             window.dispatchEvent(new Event("update-modification-stack"))
         })
     }, [ref])

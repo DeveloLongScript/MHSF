@@ -39,22 +39,13 @@ import { Material } from "@/components/ui/material";
 import { useState } from "react";
 import { useMHSFServer } from "@/lib/hooks/use-mhsf-server";
 import Markdown from "react-markdown";
-import { Button } from "@/components/ui/button";
-import { Ellipsis, EllipsisVertical, Shuffle } from "lucide-react";
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { RearrangeDrawer } from "../rearrange/rearrange-drawer";
 
 export function MOTDRow({
 	server,
 	mhsfData,
 }: { server: ServerResponse; mhsfData: ReturnType<typeof useMHSFServer> }) {
 	const clipboard = useClipboard();
-	const [tab, setTab] = useState("motd");
+	const [tab, setTab] = useState(mhsfData.server?.customizationData.description !== undefined ? "description" : "motd");
 
 	return (
 		<Material className="p-4 relative h-[250px]">
@@ -81,7 +72,7 @@ export function MOTDRow({
 								"text-sm cursor-pointer hover:bg-slate-100 dark:hover:bg-zinc-700/30 transition-all duration-75 disabled:opacity-50 disabled:pointer-events-none",
 								"rounded-xl px-2 flex items-center gap-2",
 								tab === "description" &&
-									"bg-slate-100 dark:bg-zinc-700/30 font-medium",
+								"bg-slate-100 dark:bg-zinc-700/30 font-medium",
 							)}
 							onClick={() => setTab("description")}
 						>
@@ -118,8 +109,8 @@ export function MOTDRow({
 				</>
 			)}
 			{tab === "description" && (
-				<div className="prose mt-2 break-words overflow-y-auto max-h-[175px] dark:prose-invert">
-					<Markdown>{mhsfData.server?.customizationData.description}</Markdown>
+				<div className="prose mt-2 break-words overflow-y-auto max-h-[175px] min-w-full dark:prose-invert">
+					<Markdown className="min-w-full">{mhsfData.server?.customizationData.description}</Markdown>
 				</div>
 			)}
 		</Material>

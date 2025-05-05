@@ -30,7 +30,6 @@
 
 export async function getMinehutIcons(): Promise<MinehutIcon[] | undefined> {
 	const icons = await fetch("https://api.minehut.com/servers/icons");
-	console.log(icons);
 	if (!icons.ok) return undefined;
 	return await icons.json();
 }

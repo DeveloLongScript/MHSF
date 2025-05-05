@@ -39,6 +39,7 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "@/lib/useRouter";
 import { SignedIn, useUser } from "@clerk/nextjs";
 import { ClerkCustomActivatedModification } from "@/components/feat/server-list/modification/modification-file-creation-dialog";
+import { invertHex } from "./category/[category]/page";
 
 export default function ServerListModificationFrame() {
 	const router = useRouter();
@@ -81,7 +82,7 @@ export default function ServerListModificationFrame() {
 									</Link>
 								</h2>
 								<div className="grid grid-cols-6 lg:grid-cols-3 gap-2">
-									{c.entries.map((m) => (
+									{c.entries.slice(0, 6).map((m) => (
 										<Material
 											elevation="high"
 											className="p-2 hover:drop-shadow-card-hover cursor-pointer"
@@ -96,7 +97,10 @@ export default function ServerListModificationFrame() {
 												className="w-full h-[40px] mb-2 rounded-lg items-center text-center justify-center"
 												style={{ backgroundColor: m.color }}
 											>
-												<m.icon className="relative top-[calc(50%-12px)] items-center w-full text-center justify-center" />
+												<m.icon
+													className="relative top-[calc(50%-12px)] items-center w-full text-center justify-center"
+													color={invertHex(m.color)}
+												/>
 											</div>
 											<span className="text-sm text-center w-full flex items-center justify-center">
 												{m.name}
@@ -124,7 +128,10 @@ export default function ServerListModificationFrame() {
 														className="w-full h-[40px] mb-2 rounded-lg items-center text-center justify-center"
 														style={{ backgroundColor: m.color }}
 													>
-														<Binary className="relative top-[calc(50%-12px)] items-center w-full text-center justify-center" />
+														<Binary
+															className="relative top-[calc(50%-12px)] items-center w-full text-center justify-center"
+															color={invertHex(m.color)}
+														/>
 													</div>
 													<span className="text-sm text-center w-full flex items-center justify-center">
 														{m.friendlyName}
