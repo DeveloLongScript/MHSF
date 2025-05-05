@@ -28,6 +28,8 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
+"use client";
+
 import { X } from "lucide-react";
 import { Placeholder } from "../ui/placeholder";
 import Link from "next/link";

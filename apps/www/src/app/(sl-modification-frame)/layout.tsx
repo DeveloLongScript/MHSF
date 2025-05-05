@@ -27,22 +27,13 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  * OTHER DEALINGS IN THE SOFTWARE.
  */
-
-"use client";
 import "../globals.css";
-import { useSearchParams } from "next/navigation";
-import { Placeholder } from "@/components/ui/placeholder";
-import { X } from "lucide-react";
 import { IsScript } from "@/components/util/is-script";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { NavBar } from "@/components/feat/navbar/navbar";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/util/theme-provider";
 import { FontBoundary } from "@/components/util/font-boundary";
 import { ClerkProvider } from "@/components/util/clerk-provider";
 import { Toaster } from "sonner";
-import { Footer } from "@/components/feat/footer/footer";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { IframeProtector } from "@/components/util/iframe-protector";
 import NextTopLoader from "@/components/util/top-loader";
@@ -52,8 +43,6 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const searchParams = useSearchParams();
-  const search = searchParams?.get("theme") || "light";
 
   return (
     <>

@@ -35,12 +35,11 @@ import {
 	SignedIn,
 	SignedOut,
 	useReverification,
-	useSignIn,
 	useUser,
 } from "@clerk/nextjs";
 import type { CreateExternalAccountParams, OAuthStrategy } from "@clerk/types";
 import { UserInformation } from "./waitlist-page";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Spinner } from "@/components/ui/spinner";
 import { useEffectOnce } from "@/lib/useEffectOnce";
 import { Button } from "@/components/ui/button";
@@ -80,7 +79,7 @@ function SignedInBoundary() {
 	const [loading, setLoading] = useState(true);
 
 	const router = useRouter();
-	const { isLoaded, user } = useUser();
+	const { user } = useUser();
 	const createExternalAccount = useReverification(
 		(params: CreateExternalAccountParams) =>
 			user?.createExternalAccount(params),

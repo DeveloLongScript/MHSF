@@ -28,8 +28,9 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/** @type {import('next-sitemap').IConfig} */
-module.exports = {
+const obj = {
     siteUrl: "https://mhsf.app",
     generateRobotsTxt: true
 }
+
+export default obj;
