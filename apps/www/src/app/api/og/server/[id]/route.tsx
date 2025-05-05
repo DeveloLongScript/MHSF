@@ -136,7 +136,7 @@ export async function GET(
     const id = (await params).id;
 
     // Load fonts
-    const [interRegular, interMedium, interBold] = await loadFonts();
+    const [interRegular, interBold] = await loadFonts();
 
     // Fetch server data
     const response = await fetch(`https://api.minehut.com/server/${id}`);
@@ -417,18 +417,13 @@ export async function GET(
             data: interBold,
             style: "normal",
             weight: 700,
-          },
-          {
-            name: "Inter",
-            data: interMedium,
-            style: "normal",
-            weight: 500,
-          },
+          }
+          
         ],
       }
     );
   } catch (error) {
-    const [interRegular, interMedium, interBold] = await loadFonts();
+    const [interRegular, interBold] = await loadFonts();
     console.error("Error generating OG image:", error);
 
     // Try to load the banner image again in case it failed earlier
