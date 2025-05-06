@@ -26,6 +26,7 @@ async function loadLocalFonts() {
 
   return [
     fs.readFileSync(path.join(fontPath, "Inter-Regular.ttf")),
+    fs.readFileSync(path.join(fontPath, "Inter-Medium.ttf")),
     fs.readFileSync(path.join(fontPath, "Inter-Bold.ttf")),
   ];
 }
@@ -47,7 +48,7 @@ export async function GET(
     const id = (await params).id;
 
     // Load fonts
-    const [interRegular, interBold] = await loadLocalFonts();
+    const [interRegular, interMedium, interBold] = await loadLocalFonts();
 
     // Verify server exists
     const serverResponse = await fetch(`https://api.minehut.com/server/${id}`);
@@ -547,6 +548,12 @@ export async function GET(
             data: interBold,
             style: "normal",
             weight: 700,
+          },
+          {
+            name: "Inter",
+            data: interMedium,
+            style: "normal",
+            weight: 500,
           },
         ],
       }
