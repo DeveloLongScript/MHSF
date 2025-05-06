@@ -61,6 +61,7 @@ export function useFilters(data: OnlineServer[]) {
 	const { user, isSignedIn } = useUser();
 
 	const updateServers = async (newFilters: EmbeddedFilter[]) => {
+		if (newFilters.length === 0) setFilteredData(data);
 		const modificationMap = await Promise.all(data.map((v) =>
 			Promise.all(newFilters.map(async (c) => c.functionFilter(v))),
 		));
