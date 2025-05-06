@@ -555,6 +555,21 @@ export async function GET(
       console.error("Failed to load fonts for error page:", e);
     }
 
+    // Try to load the banner image
+    let bannerImageData: Buffer | null = null;
+    try {
+      const bannerPath = path.join(
+        process.cwd(),
+        "public",
+        "branding",
+        "dark-banner.png"
+      );
+      bannerImageData = fs.readFileSync(bannerPath);
+    } catch (e) {
+      // If banner image fails to load, use a solid color background
+      console.error("Failed to load banner image for error page:", e);
+    }
+
     return new ImageResponse(
       (
         <div
@@ -562,6 +577,7 @@ export async function GET(
             display: "flex",
             fontSize: 60,
             color: "white",
+            background: bannerImageData ? undefined : "#121212",
             width: "100%",
             height: "100%",
             padding: "50px 50px",
@@ -569,7 +585,11 @@ export async function GET(
             justifyContent: "center",
             alignItems: "center",
             fontFamily: "Inter",
-            backgroundColor: "white"
+            ...(bannerImageData && {
+              backgroundImage: `url(data:image/png;base64,${bannerImageData.toString("base64")})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }),
           }}
         >
           <div
