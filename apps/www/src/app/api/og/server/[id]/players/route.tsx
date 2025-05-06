@@ -35,6 +35,14 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    // Load banner image from filesystem
+    const bannerPath = path.join(
+      process.cwd(),
+      "public",
+      "branding",
+      "bg-banner.png"
+    );
+    const bannerImageData = fs.readFileSync(bannerPath);
 
     const id = (await params).id;
 
@@ -60,7 +68,7 @@ export async function GET(
               textAlign: "center",
               justifyContent: "center",
               alignItems: "center",
-              backgroundImage: `url(${new URL("/branding/bg-banner.png", request.url).toString()})`,
+              backgroundImage: `url(data:image/png;base64,${bannerImageData.toString("base64")})`,
               backgroundSize: "cover",
               backgroundPosition: "center",
               fontFamily: "Inter",
@@ -248,7 +256,7 @@ export async function GET(
             position: "relative",
             overflow: "hidden",
             fontFamily: "Inter",
-            backgroundImage: `url(${new URL("/branding/bg-banner.png", request.url).toString()})`,
+            backgroundImage: `url(data:image/png;base64,${bannerImageData.toString("base64")})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
