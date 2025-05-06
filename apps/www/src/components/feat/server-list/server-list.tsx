@@ -103,7 +103,6 @@ export function ServerList() {
 							</TooltipTrigger>
 							<TooltipContent
 								side="bottom"
-								className="backdrop-blur bg-transparent text-black dark:text-white "
 							>
 								{filterCount} modification(s) enabled
 							</TooltipContent>
