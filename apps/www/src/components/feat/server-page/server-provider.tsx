@@ -72,7 +72,7 @@ export function ServerProvider({ serverId }: { serverId: string }) {
         </div>
       ) : (
         <div className="px-10">
-          <ServerEditorProvider>
+          <ServerEditorProvider serverData={mhsf}>
             <ReportingProvider server={mhsf}>
               <ServerMainPage
                 server={server as ServerResponse}

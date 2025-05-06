@@ -25,7 +25,7 @@
     "@milkdown/plugin-listener": "^7.9.0",
     "@milkdown/preset-commonmark": "^7.9.0",
     "@milkdown/react": "^7.9.0",
-    "@milkdown/theme-nord": "^7.9.0",
+    "@milkdown/theme-nord": "^7.9.1",
     "@monaco-editor/react": "^4.6.0",
     "@number-flow/react": "^0.5.7",
     "@radix-ui/react-aspect-ratio": "1.1.1",

@@ -2147,6 +2147,20 @@
     tslib "^2.8.1"
     unified "^11.0.3"
 
+"@milkdown/core@7.9.1":
+  version "7.9.1"
+  resolved "https://registry.yarnpkg.com/@milkdown/core/-/core-7.9.1.tgz#896df4c51f9739f05f5f780955130e7f8539fa64"
+  integrity sha512-5U9Wncb7YtLqxDFQpHKwa2smIfnmecYPx1D00tgzGqU0Mw9wa/b1bdqIUV1Mlmc5sXZcvoErrEP74AJoApgDUA==
+  dependencies:
+    "@milkdown/ctx" "7.9.1"
+    "@milkdown/exception" "7.9.1"
+    "@milkdown/prose" "7.9.1"
+    "@milkdown/transformer" "7.9.1"
+    remark-parse "^11.0.0"
+    remark-stringify "^11.0.0"
+    tslib "^2.8.1"
+    unified "^11.0.3"
+
 "@milkdown/crepe@7.9.0":
   version "7.9.0"
   resolved "https://registry.yarnpkg.com/@milkdown/crepe/-/crepe-7.9.0.tgz#f089439fe6add2dd56d68583533676162824d290"
@@ -2177,10 +2191,25 @@
     "@milkdown/exception" "7.9.0"
     tslib "^2.8.1"
 
+"@milkdown/ctx@7.9.1":
+  version "7.9.1"
+  resolved "https://registry.yarnpkg.com/@milkdown/ctx/-/ctx-7.9.1.tgz#469858fe3fb7c4e2135f959eb29d0a0b611a1ae5"
+  integrity sha512-GGUvLYmOylzz8RhVkNFl3EpSfyOHY+87ggj49oIbiD7F8rAp9ZOCtR/FOJa4jw8tvLi/18vswffRbt150hsXCw==
+  dependencies:
+    "@milkdown/exception" "7.9.1"
+    tslib "^2.8.1"
+
 "@milkdown/exception@7.9.0":
   version "7.9.0"
   resolved "https://registry.yarnpkg.com/@milkdown/exception/-/exception-7.9.0.tgz#eeeb18f7c675d8c1f2f0582af60e3530b2df94a8"
   integrity sha512-F5bxlHFtlI6q5fhKrGbtDvIlmTx7bdFWMWYHdSAPkJsiTIIT4hmAGOx/j8fFczQZ6hg3vWi/CtvYhF1MUpIEjQ==
+  dependencies:
+    tslib "^2.8.1"
+
+"@milkdown/exception@7.9.1":
+  version "7.9.1"
+  resolved "https://registry.yarnpkg.com/@milkdown/exception/-/exception-7.9.1.tgz#72ef74b4f86ba19a30e212ea9b92d62dc7983629"
+  integrity sha512-AdEM7ahwHx1pLOgP0taIK52aizuwwQRGJ9KiABPbGDVWznhBAL9FlifUs9B1afh34GJytrtqa3jPLU7Qjotf8w==
   dependencies:
     tslib "^2.8.1"
 
@@ -2386,6 +2415,27 @@
     prosemirror-view "^1.37.1"
     tslib "^2.8.1"
 
+"@milkdown/prose@7.9.1":
+  version "7.9.1"
+  resolved "https://registry.yarnpkg.com/@milkdown/prose/-/prose-7.9.1.tgz#9a9709c9a11a5f80613fe01f9df6e4a43b080b4c"
+  integrity sha512-NZaJtAqCtX8AHHXME80VGIFyeYk0E4UWFxO5TBoCf89WSnidvLjOcohD+w3sB1e6356dePr7p2RxYVOh3VvNMw==
+  dependencies:
+    "@milkdown/exception" "7.9.1"
+    prosemirror-changeset "^2.2.1"
+    prosemirror-commands "^1.6.2"
+    prosemirror-dropcursor "^1.8.1"
+    prosemirror-gapcursor "^1.3.2"
+    prosemirror-history "^1.4.1"
+    prosemirror-inputrules "^1.4.0"
+    prosemirror-keymap "^1.2.2"
+    prosemirror-model "^1.24.1"
+    prosemirror-schema-list "^1.5.0"
+    prosemirror-state "^1.4.3"
+    prosemirror-tables "^1.7.0"
+    prosemirror-transform "^1.10.2"
+    prosemirror-view "^1.37.1"
+    tslib "^2.8.1"
+
 "@milkdown/react@^7.9.0":
   version "7.9.0"
   resolved "https://registry.yarnpkg.com/@milkdown/react/-/react-7.9.0.tgz#2527d767c6e498c97dc7fe1d88a3d6cf36470521"
@@ -2395,14 +2445,14 @@
     "@milkdown/kit" "7.9.0"
     tslib "^2.8.1"
 
-"@milkdown/theme-nord@^7.9.0":
-  version "7.9.0"
-  resolved "https://registry.yarnpkg.com/@milkdown/theme-nord/-/theme-nord-7.9.0.tgz#f50a8876f3c25e46018ab9e8d73288fed5aca639"
-  integrity sha512-t7w92bKU1lt6HJGKlA/EhQnN1VmQfsKdnchk7wPkxLIiOiiQlYDhYhqjHP1bdqm1wkROBQhfzsxtxcK6672FHA==
+"@milkdown/theme-nord@^7.9.1":
+  version "7.9.1"
+  resolved "https://registry.yarnpkg.com/@milkdown/theme-nord/-/theme-nord-7.9.1.tgz#7a24380a90c16ea72b9f3678422609cc34a1f8b2"
+  integrity sha512-/IjyoANeUm6Ncs3Uaw1nQarnEZyYap8MFwHxuInZB9eftzU2roDNk/Hy9RL524C7fOPPGKDTdNl22DLuiyuFug==
   dependencies:
-    "@milkdown/core" "7.9.0"
-    "@milkdown/ctx" "7.9.0"
-    "@milkdown/prose" "7.9.0"
+    "@milkdown/core" "7.9.1"
+    "@milkdown/ctx" "7.9.1"
+    "@milkdown/prose" "7.9.1"
     clsx "^2.0.0"
     tslib "^2.8.1"
 
@@ -2413,6 +2463,19 @@
   dependencies:
     "@milkdown/exception" "7.9.0"
     "@milkdown/prose" "7.9.0"
+    remark "^15.0.1"
+    remark-parse "^11.0.0"
+    remark-stringify "^11.0.0"
+    tslib "^2.8.1"
+    unified "^11.0.3"
+
+"@milkdown/transformer@7.9.1":
+  version "7.9.1"
+  resolved "https://registry.yarnpkg.com/@milkdown/transformer/-/transformer-7.9.1.tgz#fef822a752951bfca473006c79e9c4ae3215702d"
+  integrity sha512-9tN5xy/v/G8QY3kuMn4MkX5c4UlPdfbkq+5VlmofsbH0bPFJjEG7ityQ0muAMQopVqqqdugoU9pgya9FPJX4Cw==
+  dependencies:
+    "@milkdown/exception" "7.9.1"
+    "@milkdown/prose" "7.9.1"
     remark "^15.0.1"
     remark-parse "^11.0.0"
     remark-stringify "^11.0.0"

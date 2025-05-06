@@ -83,24 +83,23 @@ export default async function handler(
 	try {
 		await mongo.connect();
 		const db = mongo.db(process.env.CUSTOM_MONGO_DB ?? "mhsf");
-		const stats = mongo.db("mhsf")
 		const {userId} = getAuth(req);
 
 		// Run queries in parallel
 		const [favoriteData, customizationData, playerData, achievements] =
 			await Promise.all([
-				findFavoriteData(serverData.name, userId ?? undefined, stats, {
+				findFavoriteData(serverData.name, userId ?? undefined, db, {
 					maxFavoriteEntries,
 					favoriteTimespanStart,
 					favoriteTimespanEnd,
 				}),
-				findCustomizationData(serverData.name, userId ?? undefined, stats),
-				findPlayerData(serverData.name, stats, {
+				findCustomizationData(serverData.name, userId ?? undefined, db),
+				findPlayerData(serverData.name, db, {
 					maxPlayerEntries,
 					playerTimespanStart,
 					playerTimespanEnd,
 				}),
-				findAchievements(serverData.name, stats, {
+				findAchievements(serverData.name, db, {
 					maxAchievementEntries,
 					achievementTimespanStart,
 					achievementTimespanEnd,
