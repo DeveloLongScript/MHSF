@@ -1,5 +1,5 @@
 import { ImageResponse } from "@vercel/og";
-import { NextRequest } from "next/server";
+import type { NextRequest } from "next/server";
 import { MongoClient } from "mongodb";
 import fs from "node:fs";
 import path from "node:path";

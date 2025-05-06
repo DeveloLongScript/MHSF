@@ -4,7 +4,7 @@ import { NextRequest } from "next/server";
 import { miniMessage } from "minimessage-js";
 import { loadFonts } from "../../fonts";
 
-export const runtime = "edge";
+// export const runtime = "edge";
 
 // Function to parse MiniMessage and create JSX elements with styling
 function parseMotdToJsx(text: string) {
