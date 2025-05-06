@@ -60,7 +60,7 @@ export async function GET(
               textAlign: "center",
               justifyContent: "center",
               alignItems: "center",
-              backgroundColor: "white",
+              backgroundImage: `url(${new URL("/branding/bg-banner.png", request.url).toString()})`,
               backgroundSize: "cover",
               backgroundPosition: "center",
               fontFamily: "Inter",
@@ -248,7 +248,7 @@ export async function GET(
             position: "relative",
             overflow: "hidden",
             fontFamily: "Inter",
-            backgroundColor: "white",
+            backgroundImage: `url(${new URL("/branding/bg-banner.png", request.url).toString()})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
