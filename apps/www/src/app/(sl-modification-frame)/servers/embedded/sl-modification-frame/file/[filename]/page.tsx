@@ -164,7 +164,7 @@ export default function CustomFilePage({
 
 		await user?.update({
 			unsafeMetadata: {
-				...user.unsafeMetadata,
+				...(user.unsafeMetadata ?? {}),
 				customFiles: metadata,
 			},
 		});

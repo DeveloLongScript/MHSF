@@ -134,7 +134,7 @@ export default function ModificationPage({
 							modificationArray[modIndex] = newModObj;
 							await user?.update({
 								unsafeMetadata: {
-									...user.unsafeMetadata,
+									...(user.unsafeMetadata ?? {}),
 									activatedModifications: modificationArray,
 								},
 							});
@@ -165,7 +165,7 @@ export default function ModificationPage({
 									array.splice(modIndex, 1);
 									await user?.update({
 										unsafeMetadata: {
-											...user.unsafeMetadata,
+											...(user.unsafeMetadata ?? {}),
 											activatedModifications: array,
 										},
 									});

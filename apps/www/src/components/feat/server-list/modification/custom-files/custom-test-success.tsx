@@ -133,7 +133,7 @@ export function CustomTestSuccess({
 
 						await user?.update({
 							unsafeMetadata: {
-								...user.unsafeMetadata,
+								...(user.unsafeMetadata ?? {}),
 								activatedModifications: array,
 							},
 						});

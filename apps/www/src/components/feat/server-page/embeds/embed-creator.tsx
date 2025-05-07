@@ -45,7 +45,6 @@ import { useEmbedGenerator } from "@/lib/hooks/use-embed-generator";
 import { cn } from "@/lib/utils";
 import { EllipsisVertical } from "lucide-react";
 import { useEffect, useState } from "react";
-import { ShikiRenderer } from "./embed-shiki-renderer";
 import { codeToHtml } from "shiki";
 import { useTheme } from "@/lib/hooks/use-theme";
 import useClipboard from "@/lib/useClipboard";

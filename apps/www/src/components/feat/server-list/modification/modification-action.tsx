@@ -83,7 +83,7 @@ export function ModificationAction({ value }: { value?: Action }) {
 								if (existing === -1)
 									await user.update({
 										unsafeMetadata: {
-											...user.unsafeMetadata,
+											...(user.unsafeMetadata ?? {}),
 											filters: [
 												{
 													type: filter.getSpecificFilterId(),
@@ -97,7 +97,7 @@ export function ModificationAction({ value }: { value?: Action }) {
 									existingArray.splice(existing, 1);
 									await user.update({
 										unsafeMetadata: {
-											...user.unsafeMetadata,
+											...(user.unsafeMetadata ?? {}),
 											filters: existingArray,
 										},
 									});

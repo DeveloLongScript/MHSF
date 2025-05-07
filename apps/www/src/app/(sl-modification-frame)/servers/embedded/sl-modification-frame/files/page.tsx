@@ -119,7 +119,7 @@ export default function ServerListModificationFrame() {
 											files.splice(i, 1);
 											await user?.update({
 												unsafeMetadata: {
-													...user.unsafeMetadata,
+													...(user.unsafeMetadata ?? {}),
 													customFiles: files,
 												},
 											});

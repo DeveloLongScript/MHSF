@@ -111,7 +111,7 @@ export function ModificationFileCreationDialog({
               if (!isSignedIn) return toast.error("Please login.");
               await user?.update({
                 unsafeMetadata: {
-                  ...user.unsafeMetadata,
+                  ...(user.unsafeMetadata ?? {}),
                   customFiles: [
                     ...((user.unsafeMetadata
                       .customFiles as Array<ClerkCustomModification>) ?? []),
