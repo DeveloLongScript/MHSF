@@ -89,7 +89,7 @@ export function ModificationAction({ value }: { value?: Action }) {
 													type: filter.getSpecificFilterId(),
 													metadata: filter.toIdentifier(),
 												},
-												...previousFilters,
+												...(previousFilters ?? []),
 											] as Array<ClerkEmbeddedFilter<unknown>>,
 										},
 									});
