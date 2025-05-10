@@ -156,9 +156,9 @@ async function findCustomizationData(
 	const clerk = await clerkClient();
 	// Run queries in parallel
 	const [customizationData, ownedServerData] = await Promise.all([
-		db.collection("customization").findOne({ server: serverId }),
+		db.collection("customization").findOne({ $or: [{ serverId: serverId }, { server: serverName }] }),
 		userId
-			? db.collection("owned-servers").findOne({ server: serverId })
+		  ? db.collection("owned-servers").findOne({ $or: [{ serverId: serverId }, { server: serverName }] })
 			: null,
 	]);
 	let user: User | undefined = undefined;

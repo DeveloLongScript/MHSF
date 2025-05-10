@@ -101,7 +101,7 @@ export default async function handler(
 				.send({ message: "The server needs to be online." });
 
 		if (minecraftUsername === serverObj.author) {
-			await collection.insertOne({ server, author: userId });
+			await collection.insertOne({ serverId: server, author: userId });
 
 			// Close the database, but don't close this
 			// serverless instance until it happens
