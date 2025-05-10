@@ -22,6 +22,18 @@ export function ModificationAction({ value }: { value?: Action }) {
 		if (!(value !== undefined && "customAction" in value)) {
 			const filter = value as Filter;
 			let existing = -1;
+			console.log(
+				(
+					(user?.unsafeMetadata.filters as Array<
+						ClerkEmbeddedFilter<unknown>
+					>) ?? []
+				).findIndex((c) => {
+					return (
+						JSON.stringify(c.metadata, replacer) === JSON.stringify(filter.toIdentifier(), replacer) &&
+						c.type === filter.getSpecificFilterId()
+					);
+				}),
+			);
 			if (isSignedIn)
 				existing = (
 					(user.unsafeMetadata.filters as Array<
@@ -29,8 +41,7 @@ export function ModificationAction({ value }: { value?: Action }) {
 					>) ?? []
 				).findIndex(
 					(c) =>
-						JSON.stringify(c.metadata) ===
-							JSON.stringify(filter.toIdentifier()) &&
+						JSON.stringify(c.metadata, replacer) === JSON.stringify(filter.toIdentifier(), replacer) &&
 						c.type === filter.getSpecificFilterId(),
 				);
 			else
@@ -40,8 +51,7 @@ export function ModificationAction({ value }: { value?: Action }) {
 					>) ?? []
 				).findIndex(
 					(c) =>
-						JSON.stringify(c.metadata) ===
-							JSON.stringify(filter.toIdentifier()) &&
+						JSON.stringify(c.metadata, replacer) === JSON.stringify(filter.toIdentifier(), replacer) &&
 						c.type === filter.getSpecificFilterId(),
 				);
 			return existing;
@@ -120,12 +130,12 @@ export function ModificationAction({ value }: { value?: Action }) {
 												type: filter.getSpecificFilterId(),
 												metadata: filter.toIdentifier(),
 											},
-										]),
+										], replacer),
 									);
 								else
 									localStorage.setItem(
 										"mhsf__filters",
-										JSON.stringify(existingArray),
+										JSON.stringify(existingArray, replacer),
 									);
 							}
 
@@ -140,3 +150,12 @@ export function ModificationAction({ value }: { value?: Action }) {
 		</>
 	);
 }
+const replacer = (key, value) =>
+	value instanceof Object && !(Array.isArray(value)) ? 
+		Object.keys(value)
+		.sort()
+		.reduce((sorted, key) => {
+			sorted[key] = value[key];
+			return sorted 
+		}, {}) :
+		value;

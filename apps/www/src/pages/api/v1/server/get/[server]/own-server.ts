@@ -36,8 +36,8 @@ import { waitUntil } from "@vercel/functions";
 import { getBackendProcedure } from "@/lib/backend-procedure";
 
 export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
+	req: NextApiRequest,
+	res: NextApiResponse,
 ) {
 	const backendProcedure = await getBackendProcedure(req);
 
@@ -45,90 +45,79 @@ export default async function handler(
 		return res.status(403).json({
 			error: `Backend procedure marked request as '${backendProcedure.status}' instead of required 'OK'`,
 		});
-  const { userId } = getAuth(req);
-  const { server } = req.query;
+	const { userId } = getAuth(req);
+	const { server } = req.query;
 
-  if (server == null) {
-    res.status(400).send({ message: "Couldn't find data" });
-    return;
-  }
+	if (server == null) {
+		res.status(400).send({ message: "Couldn't find data" });
+		return;
+	}
 
-  if (!userId) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
-  if (
-    (await (await clerkClient()).users.getUser(userId)).publicMetadata.player ===
-    undefined
-  ) {
-    return res.status(401).json({ error: "Account not linked" });
-  }
-  const client = new MongoClient(process.env.MONGO_DB as string);
-  await client.connect();
+	if (!userId) {
+		return res.status(401).json({ error: "Unauthorized" });
+	}
+	const client = new MongoClient(process.env.MONGO_DB as string);
+	await client.connect();
 
-  const db = client.db(process.env.CUSTOM_MONGO_DB ?? "mhsf");
-  const collection = db.collection("owned-servers");
+	const db = client.db(process.env.CUSTOM_MONGO_DB ?? "mhsf");
+	const collection = db.collection("owned-servers");
+	const users = db.collection("claimed-users");
 
-  if ((await collection.findOne({ server: server })) === undefined) {
-    const mh = await fetch(
-      process.env.MHSF_BACKEND_API_LOCATION ??
-        "https://api.minehut.com/servers",
-      {
-        headers: {
-          accept: "*/*",
-          "accept-language": Math.random().toString(),
-          priority: "u=1, i",
-          "sec-ch-ua": '"Not/A)Brand";v="8", "Chromium";v="126"',
-          "sec-ch-ua-mobile": "?0",
-          "sec-ch-ua-platform": '"macOS"',
-          "sec-fetch-dest": "empty",
-          "sec-fetch-mode": "cors",
-          "sec-fetch-site": "cross-site",
-          Referer: "http://localhost:3000/",
-          "Referrer-Policy": "strict-origin-when-cross-origin",
-          Authentication: `MHSF-Backend-Server ${process.env.MHSF_BACKEND_API_LOCATION ? process.env.MHSF_BACKEND_SECRET : "Sorry Minehut Devs."}`,
-        },
-        body: null,
-        method: "GET",
-      }
-    );
-    const servers: Array<OnlineServer> = (await mh.json()).servers;
+	if ((await users.findOne({ userId })) === null) {
+		return res.status(401).json({ error: "Account not linked" });
+	}
 
-    servers.forEach(async (c, i) => {
-      if (c.name === server) {
-        const MCUsername = (await (await clerkClient()).users.getUser(userId))
-          .publicMetadata.player;
+	const minecraftUsername = (await users.findOne({ userId }))?.player;
 
-        if (MCUsername === c.author) {
-          await collection.insertOne({ server, author: userId });
+	if ((await collection.findOne({ server })) === null) {
+		const mh = await fetch(
+			process.env.MHSF_BACKEND_API_LOCATION ??
+				"https://api.minehut.com/servers",
+			{
+				headers: {
+					accept: "*/*",
+					"accept-language": Math.random().toString(),
+					priority: "u=1, i",
+					"sec-ch-ua": '"Not/A)Brand";v="8", "Chromium";v="126"',
+					"sec-ch-ua-mobile": "?0",
+					"sec-ch-ua-platform": '"macOS"',
+					"sec-fetch-dest": "empty",
+					"sec-fetch-mode": "cors",
+					"sec-fetch-site": "cross-site",
+					Referer: "http://localhost:3000/",
+					"Referrer-Policy": "strict-origin-when-cross-origin",
+					Authentication: `MHSF-Backend-Server ${process.env.MHSF_BACKEND_API_LOCATION ? process.env.MHSF_BACKEND_SECRET : "Sorry Minehut Devs."}`,
+				},
+				body: null,
+				method: "GET",
+			},
+		);
+		const servers: Array<OnlineServer> = (await mh.json()).servers;
+		const serverObj = servers.find((c) => c.staticInfo._id === server);
 
-          // Close the database, but don't close this
-          // serverless instance until it happens
-          waitUntil(client.close());
+		if (serverObj === undefined)
+			return res
+				.status(400)
+				.send({ message: "The server needs to be online." });
 
-          res.send({ message: "Successfully owned server!" });
-        } else {
-          // Close the database, but don't close this
-          // serverless instance until it happens
-          waitUntil(client.close());
+		if (minecraftUsername === serverObj.author) {
+			await collection.insertOne({ server, author: userId });
 
-          res
-            .status(400)
-            .send({ message: "The linked account doesn't own the server." });
-        }
-      }
-      if (i === servers.length) {
-        // Close the database, but don't close this
-        // serverless instance until it happens
-        waitUntil(client.close());
+			// Close the database, but don't close this
+			// serverless instance until it happens
+			waitUntil(client.close());
 
-        res.status(400).send({ message: "The server needs to be online." });
-      }
-    });
-  } else {
-    // Close the database, but don't close this
-    // serverless instance until it happens
-    waitUntil(client.close());
+			res.send({ message: "Successfully owned server!" });
+		} else {
+			res
+				.status(400)
+				.send({ message: "The linked account doesn't own the server." });
+		}
+	} else {
+		// Close the database, but don't close this
+		// serverless instance until it happens
+		waitUntil(client.close());
 
-    res.status(400).send({ message: "This server has already been owned." });
-  }
+		res.status(400).send({ message: "This server has already been owned." });
+	}
 }

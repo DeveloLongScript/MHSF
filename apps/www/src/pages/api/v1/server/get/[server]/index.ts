@@ -30,7 +30,7 @@
 
 import { getBackendProcedure } from "@/lib/backend-procedure";
 import type { MHSFData } from "@/lib/types/data";
-import { clerkClient, getAuth } from "@clerk/nextjs/server";
+import { clerkClient, getAuth, User } from "@clerk/nextjs/server";
 import { MongoClient } from "mongodb";
 import type { NextApiRequest, NextApiResponse } from "next";
 
@@ -78,12 +78,12 @@ export default async function handler(
 	const serverData = await findServerData(server as string);
 	if (!serverData.exists) return res.status(404).send({ server: null });
 
-	const mongo = new MongoClient(process.env.MONGO_DB as string); 
+	const mongo = new MongoClient(process.env.MONGO_DB as string);
 
 	try {
 		await mongo.connect();
 		const db = mongo.db(process.env.CUSTOM_MONGO_DB ?? "mhsf");
-		const {userId} = getAuth(req);
+		const { userId } = getAuth(req);
 
 		// Run queries in parallel
 		const [favoriteData, customizationData, playerData, achievements] =
@@ -93,7 +93,12 @@ export default async function handler(
 					favoriteTimespanStart,
 					favoriteTimespanEnd,
 				}),
-				findCustomizationData(serverData.name, userId ?? undefined, db),
+				findCustomizationData(
+					serverData.name,
+					server as string,
+					userId ?? undefined,
+					db,
+				),
 				findPlayerData(serverData.name, db, {
 					maxPlayerEntries,
 					playerTimespanStart,
@@ -136,6 +141,7 @@ export default async function handler(
 
 async function findCustomizationData(
 	serverName: string,
+	serverId: string,
 	userId: string | undefined,
 	db: any,
 ): Promise<{
@@ -150,18 +156,40 @@ async function findCustomizationData(
 	const clerk = await clerkClient();
 	// Run queries in parallel
 	const [customizationData, ownedServerData] = await Promise.all([
-		db.collection("customization").findOne({ server: serverName }),
+		db.collection("customization").findOne({ server: serverId }),
 		userId
-			? db.collection("owned-servers").findOne({ server: serverName })
+			? db.collection("owned-servers").findOne({ server: serverId })
 			: null,
 	]);
+	let user: User | undefined = undefined;
+	try {
+		user = await clerk.users.getUser(ownedServerData?.author);
+	} catch (e) {
+		return {
+			isOwned: false,
+			isOwnedByUser: false,
+			description: undefined,
+			banner: undefined,
+			discord: undefined,
+			colorScheme: undefined,
+			userProfilePicture: undefined,
+		};
+	}
 
-	if (customizationData) {
+	console.log(
+		ownedServerData?.author === userId,
+		userId,
+		ownedServerData?.author,
+	);
+
+	if (customizationData || ownedServerData) {
 		return {
 			...(customizationData as any),
 			isOwned: true,
 			isOwnedByUser: ownedServerData?.author === userId,
-			userProfilePicture: userId ? (await clerk.users.getUser(ownedServerData?.author)).imageUrl : 'no user'
+			userProfilePicture: userId
+				? user.imageUrl
+				: "no user",
 		};
 	}
 

@@ -29,12 +29,29 @@
  */
 
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&display=swap');
 
 @plugin 'tailwindcss-animate';
 @config '../../tailwind-hero.config.ts';
 @plugin "@tailwindcss/typography";
 
 @custom-variant dark (&:is(.dark *));
+
+.milkdown {
+  --crepe-font-title: "Inter Tight", "Roboto" !important;
+
+  .milkdown-slash-menu {
+    position: fixed !important;
+
+  }
+  .dark .milkdown-icon {
+    fill: white !important;
+  }
+
+  .dark {
+    @import "@milkdown/crepe/theme/nord-dark.css";
+  }
+}
 
 :root {
   --background: 0 0% 100%;
