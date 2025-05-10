@@ -165,6 +165,7 @@ async function findCustomizationData(
 	try {
 		user = await clerk.users.getUser(ownedServerData?.author);
 	} catch (e) {
+    console.warn(e);
 		return {
 			isOwned: false,
 			isOwnedByUser: false,
