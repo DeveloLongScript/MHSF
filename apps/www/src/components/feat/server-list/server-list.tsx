@@ -54,7 +54,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { ServerRandomServerProvider } from "./server-random-server-provider";
-import { Dice2, Dices, EllipsisIcon, RefreshCcw, ShareIcon } from "lucide-react";
+import {
+	Dice2,
+	Dices,
+	EllipsisIcon,
+	RefreshCcw,
+	ShareIcon,
+} from "lucide-react";
 import { toast } from "sonner";
 import useClipboard from "@/lib/useClipboard";
 
@@ -101,9 +107,7 @@ export function ServerList() {
 							<TooltipTrigger>
 								<ModificationButton disabled={testModeEnabled} />
 							</TooltipTrigger>
-							<TooltipContent
-								side="bottom"
-							>
+							<TooltipContent side="bottom">
 								{filterCount} modification(s) enabled
 							</TooltipContent>
 						</Tooltip>
@@ -156,13 +160,15 @@ export function ServerList() {
 							<DropdownMenuItem
 								className="flex items-center gap-2"
 								onClick={() => {
-									const data = { url: "https://mhsf.app", text: "Check out MHSF, the modern server finder!" };
-									if (navigator.canShare(data))
-										navigator.share(data)
+									const data = {
+										url: "https://mhsf.app",
+										text: "Check out MHSF, the modern server finder!",
+									};
+									if (navigator.canShare(data)) navigator.share(data);
 									else {
-										clipboard.writeText("https://mhsf.app")
-										toast.success("Sent to clipboard!")
-									} 
+										clipboard.writeText("https://mhsf.app");
+										toast.success("Sent to clipboard!");
+									}
 								}}
 							>
 								<ShareIcon size={16} />
@@ -171,28 +177,27 @@ export function ServerList() {
 						</DropdownMenuContent>
 					</DropdownMenu>
 				</div>
-				{filterLoading ? (
+				{filterLoading && (
 					<span className="mt-2 left-[50%] right-[50%] absolute">
 						<Spinner />
 					</span>
-				) : (
-					<InfiniteScroll
-						dataLength={itemsLength}
-						next={fetchMoreData}
-						hasMore={hasMoreData}
-						loader={
-							<span className="mt-2 left-[50%] right-[50%] absolute">
-								<Spinner />
-							</span>
-						}
-					>
-						<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 mt-3">
-							{data.map((c) => (
-								<ServerCard server={c} key={c.staticInfo._id} />
-							))}
-						</div>
-					</InfiniteScroll>
 				)}
+				<InfiniteScroll
+					dataLength={itemsLength}
+					next={fetchMoreData}
+					hasMore={hasMoreData}
+					loader={
+						<span className="mt-2 left-[50%] right-[50%] absolute">
+							<Spinner />
+						</span>
+					}
+				>
+					<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 mt-3">
+						{data.map((c) => (
+							<ServerCard server={c} key={c.staticInfo._id} />
+						))}
+					</div>
+				</InfiniteScroll>
 			</ServerRandomServerProvider>
 		</main>
 	);
