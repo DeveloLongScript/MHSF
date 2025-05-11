@@ -30,7 +30,7 @@
 
 import { ServerList } from "@/components/feat/server-list/server-list";
 import type { Metadata } from "next";
-import { Suspense } from "react";
+import React, { Suspense } from "react";
 
 export const metadata: Metadata = {
 	applicationName: "MHSF",
@@ -42,7 +42,9 @@ export default function ServerListPage() {
 	return (
 		<div>
 			<Suspense>
-				<ServerList />
+				<React.StrictMode>
+					<ServerList />
+				</React.StrictMode>
 			</Suspense>
 		</div>
 	);
