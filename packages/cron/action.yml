@@ -1,0 +1,6 @@
+# action.yml
+name: 'MHSF Cron Task'
+description: 'Cronically online'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
