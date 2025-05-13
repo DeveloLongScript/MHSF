@@ -156,16 +156,28 @@ async function findCustomizationData(
 	const clerk = await clerkClient();
 	// Run queries in parallel
 	const [customizationData, ownedServerData] = await Promise.all([
-		db.collection("customization").findOne({ $or: [{ serverId: serverId }, { server: serverName }] }),
+		db
+			.collection("customization")
+			.findOne({ $or: [{ serverId: serverId }, { server: serverName }] }),
 		userId
-		  ? db.collection("owned-servers").findOne({ $or: [{ serverId: serverId }, { server: serverName }] })
+			? db
+					.collection("owned-servers")
+					.findOne({ $or: [{ serverId: serverId }, { server: serverName }] })
 			: null,
 	]);
 	let user: User | undefined = undefined;
 	try {
 		user = await clerk.users.getUser(ownedServerData?.author);
 	} catch (e) {
-    console.warn(e);
+		console.warn(e);
+		if (customizationData || ownedServerData) {
+			return {
+				...(customizationData as any),
+				isOwned: true,
+				isOwnedByUser: ownedServerData?.author === userId,
+				userProfilePicture: null,
+			};
+		}
 		return {
 			isOwned: false,
 			isOwnedByUser: false,
@@ -188,9 +200,7 @@ async function findCustomizationData(
 			...(customizationData as any),
 			isOwned: true,
 			isOwnedByUser: ownedServerData?.author === userId,
-			userProfilePicture: userId
-				? user.imageUrl
-				: "no user",
+			userProfilePicture: userId ? user.imageUrl : "no user",
 		};
 	}
 
