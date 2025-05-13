@@ -53,6 +53,12 @@ export function useMHSFServer(id: string) {
 
       setServer(json.server);
     },
+    refresh: async () => {
+      const response = await fetch("/api/v1/server/get/" + id);
+      const json = await response.json();
+
+      setServer(json.server);
+    },
     favoriteServer: async () => {
       if (!server)
         throw new Error("Server hasn't initialized, cannot continue.");

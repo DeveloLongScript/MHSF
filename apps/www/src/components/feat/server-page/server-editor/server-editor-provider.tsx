@@ -20,6 +20,11 @@ import type { OnlineServer, ServerResponse } from "@/lib/types/mh-server";
 import { useServers } from "@/lib/hooks/use-servers";
 import { Alert } from "@/components/ui/alert";
 import { toast } from "sonner";
+import { BannerUploaderRouter } from "@/pages/api/v1/server/get/[server]/settings/upload-banner";
+import {
+	generateUploadButton,
+	generateUploadDropzone,
+} from "@uploadthing/react";
 
 const successClasses =
 	"bg-green-200 border-green-400 dark:bg-green-800 dark:border-green-600";
@@ -53,7 +58,7 @@ export function ServerEditorProvider({
 				setOnlineData(server);
 			}
 		}
-	}, [open, loading]);
+	}, [open, loading, servers, minehutData.name]);
 
 	useEffect(() => {
 		(async () => {
@@ -68,13 +73,16 @@ export function ServerEditorProvider({
 	const requirementTwo = onlineData !== null;
 	const requirementThree = claimedUser === onlineData?.author;
 	const requirementFour = claimedUser !== null;
+	const UploadDropzone = generateUploadDropzone<BannerUploaderRouter>({
+		url: `/api/v1/server/get/${minehutData._id}/settings/upload-banner`,
+	});
 
 	return (
 		<>
 			{children}
 			<MilkdownProvider>
 				<Drawer open={open} onOpenChange={setOpen}>
-					<DrawerContent className="p-4 ">
+					<DrawerContent className="p-4 !max-h-[700px] !h-[700px]">
 						<br />
 						{!serverData.server?.customizationData.isOwned ? (
 							<div className="h-full overflow-y-scroll">
@@ -219,7 +227,7 @@ export function ServerEditorProvider({
 						) : (
 							<>
 								{serverData.server?.customizationData.isOwnedByUser ? (
-									<div className="max-h-[400px] overflow-y-scroll">
+									<div className="!max-h-[700px] !h-[700px] overflow-y-scroll">
 										<DrawerTitle className="scroll-m-20 text-2xl font-extrabold tracking-tight lg:text-4xl mb-3">
 											Server Settings
 										</DrawerTitle>
@@ -235,12 +243,33 @@ export function ServerEditorProvider({
 												<ServerEditorDescription
 													defaultMarkdown={
 														serverData.server?.customizationData.description ??
-														""
+														`# ${minehutData.name}`
 													}
 													onUpdate={(content) => console.log(content)}
-													
 												/>
 											)}
+										</Material>
+										<Material className="grid gap-1 mt-2 max-h-[700px]">
+											<strong>Server Banner</strong>
+											<p className="mb-3">
+												Pick out whatever represents your server best! Images
+												have a limit of 4.5MB, and the prefered aspect ratio for
+												the banner should be 10:4 to look the best on MHSF.
+											</p>
+											<UploadDropzone
+												endpoint="imageUploader"
+												className="uploadthing-dropzone"
+												onClientUploadComplete={(res) => {
+													console.log("Upload complete response:", res);
+													// Refresh the server data
+													serverData.refresh();
+													toast.success("Banner uploaded successfully!");
+												}}
+												onUploadError={(error: Error) => {
+													console.error("Upload error:", error);
+													toast.error(`Upload failed: ${error.message}`);
+												}}
+											/>
 										</Material>
 									</div>
 								) : (

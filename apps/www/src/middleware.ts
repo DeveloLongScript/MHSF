@@ -47,6 +47,8 @@ const isWaitlistPage = createRouteMatcher(["/waitlist", "/waitlist(.*)"]);
 const apiWaitlistPage = createRouteMatcher([
 	"/api/v1/user/waitlist(.*)",
 	"/api/v1/get-status",
+	// Required by UploadThing (okay fine Theo!)
+	"/api/v1/server/get/:serverId/settings/upload-banner"
 ]);
 
 export default process.env.NEXT_PUBLIC_IS_AUTH === "true"

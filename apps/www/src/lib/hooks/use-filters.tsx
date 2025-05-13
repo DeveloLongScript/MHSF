@@ -77,13 +77,13 @@ export function useFilters(data: OnlineServer[]) {
 		if (filteredData.length === 0 || data.length === 0) {
 			window.dispatchEvent(new Event("update-modification-stack"));
 		} else setLoading(false);
-	}, [data, filteredData.length]);
+	}, [data, filteredData, loading]);
 
 	useEffect(() => {
 		if (data.length === 0) {
 			window.dispatchEvent(new Event("update-modification-stack"));
 		} else setLoading(false);
-	}, [data, filteredData.length]);
+	}, [data, filteredData, loading]);
 
 	const testModeInit = (type: "filter" | "sort") => {
 		window.dispatchEvent(new Event("test-mode.enabled"));

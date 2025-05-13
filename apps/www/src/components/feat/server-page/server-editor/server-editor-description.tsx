@@ -31,23 +31,26 @@
 import { listenerCtx } from "@milkdown/kit/plugin/listener";
 import { Crepe } from "@milkdown/crepe";
 import { useEditor, type EditorInfoCtx, Milkdown } from "@milkdown/react";
-
+import { vscodeDark, vscodeDarkInit } from '@uiw/codemirror-theme-vscode';
 import "@milkdown/crepe/theme/common/style.css";
+import "@fontsource/jetbrains-mono";
 import { createContext } from "react";
 import { Spinner } from "@/components/ui/spinner";
-import { ServerDescriptionLightProvider } from "./server-light-provider";
 import { useTheme } from "@/lib/hooks/use-theme";
-import { ServerDescriptionDarkProvider } from "./server-dark-provider";
 
 export function ServerEditorDescription({
 	defaultMarkdown,
 	onUpdate,
 }: { defaultMarkdown: string; onUpdate?: (update: string) => void }) {
-	const { resolvedTheme } = useTheme();
 	const { loading } = useEditor((root) => {
 		const crepe = new Crepe({
 			root,
 			defaultValue: defaultMarkdown,
+			featureConfigs: { [Crepe.Feature.Toolbar]: {
+				latexIcon: undefined
+			}, [Crepe.Feature.CodeMirror]: {
+				theme: vscodeDark
+			}}
 		});
 		crepe.editor.config(async (ctx) => {
 			ctx.get(listenerCtx).markdownUpdated((_, markdown) => {
@@ -58,7 +61,7 @@ export function ServerEditorDescription({
 	}, []);
 
 	return (
-		<div className="h-[500px] max-h-[500px]">
+		<div>
 			{loading && (
 				<div>
 					<span className="flex items-center justify-center w-full">
@@ -69,15 +72,7 @@ export function ServerEditorDescription({
 					</span>
 				</div>
 			)}
-			{resolvedTheme === "dark" ? (
-				<ServerDescriptionLightProvider>
-					<Milkdown />
-				</ServerDescriptionLightProvider>
-			) : (
-				<ServerDescriptionDarkProvider>
-					<Milkdown />
-				</ServerDescriptionDarkProvider>
-			)}
+			<Milkdown />
 		</div>
 	);
 }

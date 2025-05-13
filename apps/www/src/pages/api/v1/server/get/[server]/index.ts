@@ -275,7 +275,7 @@ async function fetchHistoryData(
 	return await cursor.toArray();
 }
 
-async function findServerData(
+export async function findServerData(
 	server: string,
 ): Promise<{ exists: boolean; name: string }> {
 	try {
