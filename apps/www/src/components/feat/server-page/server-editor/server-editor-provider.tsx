@@ -254,7 +254,7 @@ export function ServerEditorProvider({
 											<p className="mb-3">
 												Pick out whatever represents your server best! Images
 												have a limit of 4.5MB, and the prefered aspect ratio for
-												the banner should be 10:4 to look the best on MHSF.
+												the banner should be 19:11 to look the best on MHSF.
 											</p>
 											<UploadDropzone
 												endpoint="imageUploader"
