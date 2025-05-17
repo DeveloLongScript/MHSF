@@ -150,7 +150,7 @@ export const CodeHighlight = ({
 	const language = match ? match[1] : undefined;
 
 	return (
-		<ShikiHighlighter language={language} theme="poimandres" {...props}>
+		<ShikiHighlighter language={language?.toLocaleLowerCase()} theme="poimandres" {...props}>
 			{String(children)}
 		</ShikiHighlighter>
 	);

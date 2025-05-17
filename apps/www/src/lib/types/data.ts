@@ -36,7 +36,7 @@ export type ActualCustomization = {
 	/** @version 1 @deprecated Use `colorMode` instead */
 	colorScheme: string | undefined;
 	/** @version 2 */
-	colorMode: "dark" | "light" | undefined;
+	colorMode: "dark" | "light" | null;
 	customizationVersion: number | undefined;
 } & (
 	| {

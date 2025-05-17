@@ -49,6 +49,9 @@ export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
     window.addEventListener("force-light-mode", () => {
       setForcedTheme('light');
     });
+    window.addEventListener("force-no-mode", () => {
+      setForcedTheme(undefined);
+    });
   });
 
   React.useEffect(() => {
