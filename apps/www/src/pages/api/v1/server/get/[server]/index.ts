@@ -166,41 +166,38 @@ async function findCustomizationData(
 			: null,
 	]);
 	let user: User | undefined = undefined;
-	try {
-		user = await clerk.users.getUser(ownedServerData?.author);
-	} catch (e) {
-		console.warn(e);
-		if (customizationData || ownedServerData) {
+	if (ownedServerData) {
+
+		try {
+			user = await clerk.users.getUser(ownedServerData?.author);
+		} catch (e) {
+			console.warn(e);
+			if (customizationData || ownedServerData) {
+				return {
+					...(customizationData as any),
+					isOwned: true,
+					isOwnedByUser: ownedServerData?.author === userId,
+					userProfilePicture: null,
+				};
+			}
 			return {
-				...(customizationData as any),
-				isOwned: true,
-				isOwnedByUser: ownedServerData?.author === userId,
-				userProfilePicture: null,
+				isOwned: false,
+				isOwnedByUser: false,
+				description: undefined,
+				banner: undefined,
+				discord: undefined,
+				colorScheme: undefined,
+				userProfilePicture: undefined,
 			};
 		}
-		return {
-			isOwned: false,
-			isOwnedByUser: false,
-			description: undefined,
-			banner: undefined,
-			discord: undefined,
-			colorScheme: undefined,
-			userProfilePicture: undefined,
-		};
 	}
-
-	console.log(
-		ownedServerData?.author === userId,
-		userId,
-		ownedServerData?.author,
-	);
 
 	if (customizationData || ownedServerData) {
 		return {
 			...(customizationData as any),
 			isOwned: true,
 			isOwnedByUser: ownedServerData?.author === userId,
-			userProfilePicture: userId ? user.imageUrl : "no user",
+			userProfilePicture: userId ? user?.imageUrl : "no user",
 		};
 	}
 

@@ -29,16 +29,13 @@
  */
 
 import { getAuth } from "@clerk/nextjs/server";
-import {
-	createRouteHandler,
-	createUploadthing,
-	type FileRouter,
-} from "uploadthing/next-legacy";
-import { UploadThingError } from "uploadthing/server";
+import { createRouteHandler, createUploadthing } from "uploadthing/next-legacy";
+import { UploadThingError, UTApi } from "uploadthing/server";
 import { findServerData } from "..";
 import { MongoClient } from "mongodb";
 import type { FileRoute } from "uploadthing/types";
 import type { Json } from "@uploadthing/shared";
+import { checkOwnedServerMetadata } from "@/lib/check-owned-server";
 
 const f = createUploadthing();
 
@@ -52,74 +49,96 @@ export default createRouteHandler({
 		})
 			// Set permissions and file types for this FileRoute
 			.middleware(async ({ req, res }) => {
-                // Step 1: Check authentication
+				// Step 1: Check authentication
 				const { userId } = getAuth(req);
 
 				if (!userId) throw new UploadThingError("Unauthorized");
 
-                // Step 2: Check server
-                const { server } = req.query;
-                const serverData = await findServerData(server as string);
-                const mongoClient = new MongoClient(process.env.MONGO_DB as string);
+				// Step 2: Check server
+				const { server } = req.query;
+				const serverData = await findServerData(server as string);
+				const mongoClient = new MongoClient(process.env.MONGO_DB as string);
 
-                try {
-                    if (!serverData.exists) throw new UploadThingError("Server doesn't exist");
-                    await mongoClient.connect();
-                    
-                    const db = mongoClient.db(process.env.CUSTOM_MONGO_DB ?? "mhsf");
-                    const ownedServer = await db.collection("owned-servers").findOne({ $or: [{ serverId: server }, { server: serverData.name }] });
-                    if (!ownedServer) throw new UploadThingError("Server not linked");
-                    if (ownedServer.author !== userId) throw new UploadThingError("You don't own this server.");
+				try {
+					if (!serverData.exists)
+						throw new UploadThingError("Server doesn't exist");
+					await mongoClient.connect();
 
-                    return { 
-                        userId, 
-                        ownedServer, 
-                        serverId: server, 
-                        serverName: serverData.name 
-                    };
-                } finally {
-                    await mongoClient.close();
-                }
+					const db = mongoClient.db(process.env.CUSTOM_MONGO_DB ?? "mhsf");
+					const ownedServer = await db
+						.collection("owned-servers")
+						.findOne({
+							$or: [{ serverId: server }, { server: serverData.name }],
+						});
+					if (!ownedServer) throw new UploadThingError("Server not linked");
+					if (ownedServer.author !== userId)
+						throw new UploadThingError("You don't own this server.");
+
+					return {
+						userId,
+						ownedServer,
+						serverId: server,
+						serverName: serverData.name,
+					};
+				} finally {
+					await mongoClient.close();
+				}
 			})
 			.onUploadComplete(async ({ metadata, file }) => {
 				// This code RUNS ON YOUR SERVER after upload
 				console.log("Upload complete for userId:", metadata.userId);
 				console.log("file url", file.ufsUrl);
 				console.log("metadata:", metadata);
+                const utapi = new UTApi();
 
-				// Update the server's customization data with the new banner URL
+				// Step 3: Update the server's customization data with the new banner URL
 				const mongoClient = new MongoClient(process.env.MONGO_DB as string);
 				try {
-                    await mongoClient.connect();
-                    const db = mongoClient.db(process.env.CUSTOM_MONGO_DB ?? "mhsf");
-                    
-                    // Update or insert the customization data
-                    const result = await db.collection("customization").updateOne(
-                        { $or: [{ serverId: metadata.serverId }, { server: metadata.serverName }] },
-                        { $set: { banner: file.ufsUrl } },
-                        { upsert: true }
-                    );
+					const { customizedServer } =
+						await checkOwnedServerMetadata(metadata.userId, mongoClient, {
+							id: metadata.serverId as string,
+						});
+					const db = mongoClient.db(process.env.CUSTOM_MONGO_DB ?? "mhsf");
 
-                    console.log("Database update result:", result);
+                    // Step 3.5: Delete old banner if needed
+                    if (customizedServer?.banner) {
+                        await utapi.deleteFiles(customizedServer._deletionId);
+                    }
 
-                    // !!! Whatever is returned here is sent to the clientside `onClientUploadComplete` callback
-                    return { uploadedBy: metadata.userId };
-                } catch (error) {
-                    console.error("Error updating database:", error);
-                    throw error;
-                } finally {
-                    await mongoClient.close();
-                }
+					// Step 4: Update or insert the customization data
+					const result = await db
+						.collection("customization")
+						.updateOne(
+							{
+								$or: [
+									{ serverId: metadata.serverId },
+									{ server: metadata.serverName },
+								],
+							},
+							{ $set: { banner: file.ufsUrl, customizationVersion: 2, _deletionId: file.key } },
+							{ upsert: true },
+						);
+
+					console.log("Database update result:", result);
+
+					// !!! Whatever is returned here is sent to the clientside `onClientUploadComplete` callback
+					return { uploadedBy: metadata.userId };
+				} catch (error) {
+					console.error("Error updating database:", error);
+					throw error;
+				} finally {
+					await mongoClient.close();
+				}
 			}),
 	},
 });
 
 export type BannerUploaderRouter = {
-    imageUploader: FileRoute<{
-        input: undefined;
-        output: {
-            uploadedBy: string;
-        };
-        errorShape: Json;
-    }>;
-}
+	imageUploader: FileRoute<{
+		input: undefined;
+		output: {
+			uploadedBy: string;
+		};
+		errorShape: Json;
+	}>;
+};

@@ -38,24 +38,27 @@ import { usePathname } from "next/navigation";
 export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
   const [mounted, setMounted] = React.useState(false);
   const pathname = usePathname();
-  const [forcedDark, setForcedDark] = React.useState(false);
+  const [forcedTheme, setForcedTheme] = React.useState<'dark' | 'light' | undefined>();
 
   React.useEffect(() => {
     setMounted(true);
 
     window.addEventListener("force-dark-mode", () => {
-      setForcedDark(true);
+      setForcedTheme('dark');
+    });
+    window.addEventListener("force-light-mode", () => {
+      setForcedTheme('light');
     });
   });
 
   React.useEffect(() => {
-    setForcedDark(false);
+    setForcedTheme(undefined);
   }, [pathname]);
 
   if (!mounted) return null;
 
   return (
-    <NextThemeProvider forcedTheme={forcedDark ? "dark" : undefined} {...props}>
+    <NextThemeProvider forcedTheme={forcedTheme} {...props}>
       {children}
     </NextThemeProvider>
   );

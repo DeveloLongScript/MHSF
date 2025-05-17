@@ -45,7 +45,12 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "cdn.discordapp.com"
-      }
+      },
+      {
+        protocol: "https",
+        hostname: "exh89c9lva.ufs.sh",
+        pathname: "/f/*",
+      },
     ],
   },
   async redirects() {

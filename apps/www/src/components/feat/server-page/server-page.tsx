@@ -17,8 +17,12 @@ export function ServerMainPage({
   mhsfData: ReturnType<typeof useMHSFServer>;
 }) {
   useEffect(() => {
-    if (mhsfData.server?.customizationData.banner !== undefined)
-      window.dispatchEvent(new Event("force-dark-mode"));
+    if (mhsfData.server?.customizationData.colorMode !== undefined) {
+      if (mhsfData.server?.customizationData.colorMode === "dark")
+        window.dispatchEvent(new Event("force-dark-mode"));
+      if (mhsfData.server?.customizationData.colorMode === "light")
+        window.dispatchEvent(new Event("force-light-mode"));
+    }
   });
 
   return (

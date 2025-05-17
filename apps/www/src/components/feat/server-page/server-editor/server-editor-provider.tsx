@@ -20,11 +20,15 @@ import type { OnlineServer, ServerResponse } from "@/lib/types/mh-server";
 import { useServers } from "@/lib/hooks/use-servers";
 import { Alert } from "@/components/ui/alert";
 import { toast } from "sonner";
-import { BannerUploaderRouter } from "@/pages/api/v1/server/get/[server]/settings/upload-banner";
+import type { BannerUploaderRouter } from "@/pages/api/v1/server/get/[server]/settings/upload-banner";
 import {
 	generateUploadButton,
 	generateUploadDropzone,
 } from "@uploadthing/react";
+import { ServerDescriptionBox } from "./customizations/server-description-box";
+import { ServerBannerBox } from "./customizations/server-banner-box";
+import { ServerMigrationBox } from "./customizations/server-migration-box";
+import { ServerColorModeBox } from "./customizations/server-color-mode-box";
 
 const successClasses =
 	"bg-green-200 border-green-400 dark:bg-green-800 dark:border-green-600";
@@ -228,49 +232,32 @@ export function ServerEditorProvider({
 							<>
 								{serverData.server?.customizationData.isOwnedByUser ? (
 									<div className="!max-h-[700px] !h-[700px] overflow-y-scroll">
-										<DrawerTitle className="scroll-m-20 text-2xl font-extrabold tracking-tight lg:text-4xl mb-3">
-											Server Settings
-										</DrawerTitle>
-										<Material className="grid gap-1 max-h-[700px]">
-											<strong>Server Description</strong>
-											<p className="mb-3">
-												A markdown enabled, fancy description for your server!
-												Describe what players will expect from your server and
-												why they should join; don't worry, you have more space
-												than MOTD's.
-											</p>
-											{!serverData.loading && (
-												<ServerEditorDescription
-													defaultMarkdown={
-														serverData.server?.customizationData.description ??
-														`# ${minehutData.name}`
-													}
-													onUpdate={(content) => console.log(content)}
+										{serverData.server?.customizationData
+											.customizationVersion === 2 ? (
+											<div>
+												<DrawerTitle className="scroll-m-20 text-2xl font-extrabold tracking-tight lg:text-4xl mb-3">
+													Server Settings
+												</DrawerTitle>
+												<ServerDescriptionBox
+													serverData={serverData}
+													minehutData={minehutData}
 												/>
-											)}
-										</Material>
-										<Material className="grid gap-1 mt-2 max-h-[700px]">
-											<strong>Server Banner</strong>
-											<p className="mb-3">
-												Pick out whatever represents your server best! Images
-												have a limit of 4.5MB, and the prefered aspect ratio for
-												the banner should be 19:11 to look the best on MHSF.
-											</p>
-											<UploadDropzone
-												endpoint="imageUploader"
-												className="uploadthing-dropzone"
-												onClientUploadComplete={(res) => {
-													console.log("Upload complete response:", res);
-													// Refresh the server data
-													serverData.refresh();
-													toast.success("Banner uploaded successfully!");
-												}}
-												onUploadError={(error: Error) => {
-													console.error("Upload error:", error);
-													toast.error(`Upload failed: ${error.message}`);
-												}}
+												<ServerBannerBox
+													serverData={serverData}
+													minehutData={minehutData}
+												/>
+												<ServerColorModeBox
+													serverData={serverData}
+													minehutData={minehutData}
+												/>
+											</div>
+										) : (
+											<ServerMigrationBox
+												oldVersion={1}
+												reupdate={() => serverData.refresh()}
+												id={minehutData._id}
 											/>
-										</Material>
+										)}
 									</div>
 								) : (
 									<Placeholder

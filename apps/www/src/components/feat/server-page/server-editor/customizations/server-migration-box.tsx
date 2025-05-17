@@ -28,45 +28,42 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { Achievement } from "./achievement";
+import { DrawerTitle } from "@/components/ui/drawer";
+import { Material } from "@/components/ui/material";
+import { Spinner } from "@/components/ui/spinner";
+import { useEffect } from "react";
+import { toast } from "sonner";
 
-export type ActualCustomization = {
-	description: string | undefined;
-	discord: string | undefined;
-	/** @version 1 @deprecated Use `colorMode` instead */
-	colorScheme: string | undefined;
-	/** @version 2 */
-	colorMode: "dark" | "light" | undefined;
-	customizationVersion: number | undefined;
-} & (
-	| {
-			/** @note Using non-`ufs.io` domains is deprecated */
-			banner: string;
-			_deletionId: string;
-	  }
-	| {
-			banner: undefined;
-	  }
-);
+export function ServerMigrationBox({
+	oldVersion,
+	reupdate,id
+}: { oldVersion: number | undefined, reupdate: () => void, id: string }) {
+	// biome-ignore lint/correctness/useExhaustiveDependencies: 
+	useEffect(() => {
+		(async () => {
+			const response = await fetch(`/api/v1/server/get/${id}/settings/migrate`);
 
-export type MHSFData = {
-	favoriteData: {
-		favoritedByAccount: boolean | null;
-		favoriteNumber: number;
-		favoriteHistoricalData: { date: string; favorites: number }[];
-	};
-	customizationData: {
-		userProfilePicture: string | undefined;
-		/** If undefined then this is 1. */
-		isOwned: boolean;
-		isOwnedByUser: boolean;
-	} & ActualCustomization;
-	playerData: {
-		historically: { date: string; playerCount: number }[];
-		max: number;
-	};
-	achievements: {
-		historically: { _id: string; name: string; achievements: Achievement[] }[];
-		currently: Achievement[];
-	};
-};
+			if (response.ok) {
+				reupdate();
+			} else {
+				const json = await response.json()
+				toast.error(json.error)
+			}
+		})()
+	}, [])
+
+	return (
+		<div>
+			<DrawerTitle>Migrate Server</DrawerTitle>
+			<Material className="grid gap-1 max-h-[700px]">
+				<p className="mb-3">
+					This server must be migrated from version {oldVersion ?? 1} of MHSF.
+					This is an automatic process.
+				</p>
+				<div className="w-full justify-center flex items-center">
+					<Spinner />
+				</div>
+			</Material>
+		</div>
+	);
+}

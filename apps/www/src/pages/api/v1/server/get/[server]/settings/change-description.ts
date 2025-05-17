@@ -28,45 +28,31 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { Achievement } from "./achievement";
+import { checkOwnedServerMetadata } from "@/lib/check-owned-server";
+import { getAuth } from "@clerk/nextjs/server";
+import { MongoClient } from "mongodb";
+import type { NextApiRequest, NextApiResponse } from "next";
 
-export type ActualCustomization = {
-	description: string | undefined;
-	discord: string | undefined;
-	/** @version 1 @deprecated Use `colorMode` instead */
-	colorScheme: string | undefined;
-	/** @version 2 */
-	colorMode: "dark" | "light" | undefined;
-	customizationVersion: number | undefined;
-} & (
-	| {
-			/** @note Using non-`ufs.io` domains is deprecated */
-			banner: string;
-			_deletionId: string;
-	  }
-	| {
-			banner: undefined;
-	  }
-);
+export default async function handler(
+	req: NextApiRequest,
+	res: NextApiResponse,
+) {
+    try {
+		const { server: serverId, description } = req.query;
+		const mongo = new MongoClient(process.env.MONGO_DB as string);
+        if (!description)
+            return res.status(400).send({ error: "No description provided" });
 
-export type MHSFData = {
-	favoriteData: {
-		favoritedByAccount: boolean | null;
-		favoriteNumber: number;
-		favoriteHistoricalData: { date: string; favorites: number }[];
-	};
-	customizationData: {
-		userProfilePicture: string | undefined;
-		/** If undefined then this is 1. */
-		isOwned: boolean;
-		isOwnedByUser: boolean;
-	} & ActualCustomization;
-	playerData: {
-		historically: { date: string; playerCount: number }[];
-		max: number;
-	};
-	achievements: {
-		historically: { _id: string; name: string; achievements: Achievement[] }[];
-		currently: Achievement[];
-	};
-};
+        const { changeServer } =
+			await checkOwnedServerMetadata(getAuth(req).userId ?? null, mongo, {
+				id: serverId as string,
+			});
+
+        await changeServer({
+            description: atob(decodeURIComponent(description as string)),
+        });
+    } catch (error) {
+        return res.status(400).send({ error: error });
+    }
+    return res.send({ message: "Success" });
+}
