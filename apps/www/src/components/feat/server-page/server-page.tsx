@@ -53,13 +53,19 @@ export function ServerMainPage({
 				<p className="w-full">
 					<div className="lg:flex justify-between w-full">
 						<h1 className="text-2xl font-bold flex items-center gap-1 ml-2">
-							<Avatar className="h-[32px] w-[32px]">
-								<AvatarImage
-									src={mhsfData.server?.customizationData.userProfilePicture ?? ""}
-									alt="Server Owner Image"
-								/>
-								<AvatarFallback>{server.name[0]}</AvatarFallback>
-							</Avatar>
+							{mhsfData.server?.customizationData.userProfilePicture && (
+								<Avatar className="h-[32px] w-[32px]">
+									<AvatarImage
+										src={
+											mhsfData.server?.customizationData.userProfilePicture ??
+											""
+										}
+										alt="Server Owner Image"
+									/>
+									<AvatarFallback>{server.name[0]}</AvatarFallback>
+								</Avatar>
+							)}
+
 							{server.name}
 						</h1>
 						<span>
