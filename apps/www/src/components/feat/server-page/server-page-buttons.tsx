@@ -31,7 +31,14 @@
 import { Button } from "@/components/ui/button";
 import { ServerResponse } from "@/lib/types/mh-server";
 import { SignedIn, SignedOut, useClerk } from "@clerk/nextjs";
-import { EllipsisVertical, Flag, Heart, Pencil, Share, Star } from "lucide-react";
+import {
+	EllipsisVertical,
+	Flag,
+	Heart,
+	Pencil,
+	Share,
+	Star,
+} from "lucide-react";
 import { useFavoriteStore } from "@/lib/hooks/use-favorite-store";
 import { useState } from "react";
 import type { useMHSFServer } from "@/lib/hooks/use-mhsf-server";
@@ -43,6 +50,8 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import useClipboard from "@/lib/useClipboard";
+import { toast } from "sonner";
 
 export function ServerPageButtons({
 	server,
@@ -52,6 +61,7 @@ export function ServerPageButtons({
 	mhsfData: ReturnType<typeof useMHSFServer>;
 }) {
 	const clerk = useClerk();
+	const clipboard = useClipboard();
 	const favoritesStore = useFavoriteStore(mhsfData);
 	const [loading, setLoading] = useState(false);
 
@@ -105,11 +115,29 @@ export function ServerPageButtons({
 				</DropdownMenuTrigger>
 				<DropdownMenuContent>
 					<DropdownMenuSeparator>Server</DropdownMenuSeparator>
-					<DropdownMenuItem className="flex items-center gap-2" onClick={() => window.dispatchEvent(new Event("open-server-editor"))}>
+					<DropdownMenuItem
+						className="flex items-center gap-2"
+						onClick={() =>
+							window.dispatchEvent(new Event("open-server-editor"))
+						}
+					>
 						<Pencil size={16} />
 						Edit Server
 					</DropdownMenuItem>
-					<DropdownMenuItem className="flex items-center gap-2">
+					<DropdownMenuItem
+						className="flex items-center gap-2"
+						onClick={() => {
+							const data = {
+								url: `https://mhsf.app/server/v2/minehut/${server._id}`,
+								text: "Check out MHSF, the modern server finder!",
+							};
+							if (navigator.canShare(data)) navigator.share(data);
+							else {
+								clipboard.writeText(data.url);
+								toast.success("Sent to clipboard!");
+							}
+						}}
+					>
 						<Share size={16} />
 						Share
 					</DropdownMenuItem>
