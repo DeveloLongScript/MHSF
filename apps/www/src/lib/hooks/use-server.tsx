@@ -6,6 +6,7 @@ export function useServer(serverSpecifier: { id?: string; name?: string }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [server, setServer] = useState<ServerResponse | null>(null);
+  const [onlineServer, setOnlineServer] = useState<OnlineServer | null>(null);
 
   useEffectOnce(() => {
     try {
@@ -15,6 +16,15 @@ export function useServer(serverSpecifier: { id?: string; name?: string }) {
         );
         const json = await res.json();
         if (json.server === null) throw new Error("Server not found");
+
+        if (server?.online) {
+          const res = await fetch("https://api.minehut.com/servers");
+          const json = await res.json() as {servers: OnlineServer[]};
+          const onlineServerData = json.servers.find((s) => s.staticInfo._id === server._id) ?? null;
+          if (onlineServerData) {
+            setOnlineServer(onlineServerData);
+          }
+        }
 
         setServer(json.server);
         setLoading(false);
@@ -26,5 +36,5 @@ export function useServer(serverSpecifier: { id?: string; name?: string }) {
     }
   });
 
-  return { loading, error, server };
+  return { loading, error, server, onlineServer };
 }

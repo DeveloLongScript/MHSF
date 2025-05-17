@@ -1,5 +1,5 @@
 "use client";
-import type { ServerResponse } from "@/lib/types/mh-server";
+import type { OnlineServer, ServerResponse } from "@/lib/types/mh-server";
 import IconDisplay from "../icons/minecraft-icon-display";
 import { ServerPageTags } from "./server-page-tags";
 import { Separator } from "@/components/ui/separator";
@@ -13,9 +13,11 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 export function ServerMainPage({
 	server,
 	mhsfData,
+  onlineServer
 }: {
 	server: ServerResponse;
 	mhsfData: ReturnType<typeof useMHSFServer>;
+  onlineServer?: OnlineServer;
 }) {
 	useEffect(() => {
 		if (mhsfData.server?.customizationData.colorMode !== null) {
@@ -52,21 +54,26 @@ export function ServerMainPage({
 				</div>
 				<p className="w-full">
 					<div className="lg:flex justify-between w-full">
-						<h1 className="text-2xl font-bold flex items-center gap-1 ml-2">
-							{mhsfData.server?.customizationData.userProfilePicture && (
-								<Avatar className="h-[32px] w-[32px]">
-									<AvatarImage
-										src={
-											mhsfData.server?.customizationData.userProfilePicture ??
-											""
-										}
-										alt="Server Owner Image"
-									/>
-									<AvatarFallback>{server.name[0]}</AvatarFallback>
-								</Avatar>
-							)}
-
+						<h1 className="text-2xl font-bold flex items-center gap-1">
 							{server.name}
+							{onlineServer !== undefined && onlineServer?.author && (
+								<span className="text-muted-foreground flex items-center gap-2">
+									by{" "}
+									{mhsfData.server?.customizationData.userProfilePicture && (
+										<Avatar className="h-[16px] w-[16px]">
+											<AvatarImage
+												src={
+													mhsfData.server?.customizationData
+														.userProfilePicture ?? ""
+												}
+												alt="Server Owner Image"
+											/>
+											<AvatarFallback>{onlineServer?.author[0]}</AvatarFallback>
+										</Avatar>
+									)}
+									{onlineServer?.author}
+								</span>
+							)}
 						</h1>
 						<span>
 							<ServerPageButtons server={server} mhsfData={mhsfData} />

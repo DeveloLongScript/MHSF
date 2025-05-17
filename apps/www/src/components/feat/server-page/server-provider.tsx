@@ -14,7 +14,7 @@ import { ReportingProvider } from "./reporting/reporting-provider";
 import { ServerEditorProvider } from "./server-editor/server-editor-provider";
 
 export function ServerProvider({ serverId }: { serverId: string }) {
-  const { server, error, loading } = useServer({ id: serverId });
+  const { server, error, loading, onlineServer } = useServer({ id: serverId });
   const settings = useSettingsStore();
   const mhsf = useMHSFServer(serverId);
 
@@ -77,6 +77,7 @@ export function ServerProvider({ serverId }: { serverId: string }) {
               <ServerMainPage
                 server={server as ServerResponse}
                 mhsfData={mhsf}
+                onlineServer={onlineServer ?? undefined}
               />
             </ReportingProvider>
           </ServerEditorProvider>
