@@ -131,7 +131,7 @@ export function UserInformation({ discordPage }: { discordPage?: boolean }) {
 
 				{discordData !== undefined && discordData !== null && (
 					<p className="group cursor-pointer flex items-center gap-1">
-						Discord linked as {discordData.global_name}
+						Discord linked as {discordData.global_name ?? discordData.username}
 						<span className="text-muted-foreground hidden group-hover:block">
 							@{discordData.username}
 						</span>
