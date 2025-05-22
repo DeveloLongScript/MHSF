@@ -29,4 +29,4 @@
  */
 
 "use client";
-export const version = "2.0";
+export const version = "pb1-2.0";
