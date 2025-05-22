@@ -40,6 +40,7 @@ import { BrowserSettings } from "./browser-settings";
 import { useSettingsStore } from "@/lib/hooks/use-settings-store";
 import { useEffect, useState } from "react";
 import { DebugSettings } from "./debug-settings";
+import { AccountSettings } from "./account-settings";
 
 export function Settings() {
   const settingsStore = useSettingsStore();
@@ -101,6 +102,7 @@ export function Settings() {
           <DebugSettings />
         </TabsContent>
         <TabsContent value="user-settings">
+          <SignedIn><AccountSettings /></SignedIn>
           <SignedOut>
             <Material className="mt-6 grid gap-4 py-6">
               <h3

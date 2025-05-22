@@ -61,7 +61,7 @@ export default function RootLayout({
                     <Toaster richColors position="bottom-center" />
 
                     <NextTopLoader showSpinner={false} />
-                    <div className="overflow-x-hidden">{children}</div>
+                    <div className="overflow-x-hidden" >{children}</div>
                   </TooltipProvider>
                 </IframeProtector>
               </FontBoundary>

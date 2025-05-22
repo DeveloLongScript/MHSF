@@ -100,7 +100,7 @@ const DialogContent = React.forwardRef<
           "dark:border-zinc-900 dark:border-t-zinc-800 dark:border-b-zinc-900",
           "rounded-2xl max-w-lg box-border mx-auto overscroll-contain shadow-lg overflow-auto",
           "p-5 flex flex-col gap-2 dark:bg-zinc-950 rounded-xl",
-          "bg-white fixed z-9",
+          "bg-white fixed z-100",
           className
         )}
       >

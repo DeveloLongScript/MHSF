@@ -110,7 +110,7 @@ export async function checkOwnedServerMetadata(
 						{ server: serverSelector.name ?? serverData.name },
 					],
 				},
-				{ $set: changes },
+				{ $set: { serverId: serverSelector.id, customizationVersion: 2, ...changes } },
 				{ upsert: true },
 			);
 		},

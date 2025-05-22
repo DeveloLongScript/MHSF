@@ -41,39 +41,41 @@ import Markdown from "react-markdown";
 import { invertHex } from "../../page";
 
 export default function ModificationPage({
-  params,
+	params,
 }: {
-  params: Promise<{ category: string; mod: string }>;
+	params: Promise<{ category: string; mod: string }>;
 }) {
-  const { category, mod } = use(params);
-  const [backRoute] = useQueryState("b", {
-    defaultValue: "/servers/embedded/sl-modification-frame",
-  });
-  const categoryObj = serverModDB.find(
-    (c) => c.displayTitle === atob(decodeURIComponent(category))
-  );
-  let modObj = null;
-  if (categoryObj !== undefined)
-    modObj = categoryObj?.entries.find(
-      (c) => c.name === atob(decodeURIComponent(mod))
-    );
+	const { category, mod } = use(params);
+	const [backRoute] = useQueryState("b", {
+		defaultValue: "/servers/embedded/sl-modification-frame",
+	});
+	const categoryObj = serverModDB.find(
+		(c) => c.displayTitle === atob(decodeURIComponent(category)),
+	);
+	let modObj = null;
+	if (categoryObj !== undefined)
+		modObj = categoryObj?.entries.find(
+			(c) => c.name === atob(decodeURIComponent(mod)),
+		);
 
-  return (
-    <main className="p-4">
-      <div
-        className="h-[150px] w-full rounded-xl p-2"
-        style={{ backgroundColor: modObj?.color }}
-      >
-        <Link href={backRoute}>
-          <ArrowLeft style={{color: invertHex(modObj?.color ?? "")}} />
-        </Link>
-      </div>
+	return (
+		<main className="p-4">
+			<div
+				className="h-[150px] w-full rounded-xl p-2"
+				style={{ backgroundColor: modObj?.color }}
+			>
+				<Link href={backRoute}>
+					<ArrowLeft style={{ color: invertHex(modObj?.color ?? "") }} />
+				</Link>
+			</div>
 
-      <span className="p-4">
-        <h1 className="text-xl font-bold w-full">{modObj?.name}</h1>
-        <Markdown className="text-wrap pt-2">{modObj?.description}</Markdown>
-        <ModificationAction value={modObj?.value} />
-      </span>
-    </main>
-  );
+			<span className="p-4">
+				<h1 className="text-xl font-bold w-full">{modObj?.name}</h1>
+				<div className="text-wrap pt-2">
+					<Markdown>{modObj?.description}</Markdown>
+				</div>
+				<ModificationAction value={modObj?.value} />
+			</span>
+		</main>
+	);
 }

@@ -29,6 +29,9 @@ import { ServerDescriptionBox } from "./customizations/server-description-box";
 import { ServerBannerBox } from "./customizations/server-banner-box";
 import { ServerMigrationBox } from "./customizations/server-migration-box";
 import { ServerColorModeBox } from "./customizations/server-color-mode-box";
+import { MHSFUser, useUser } from "@/lib/hooks/use-user";
+import { ServerUnownBox } from "./customizations/server-unown-box";
+import { ServerDiscordBox } from "./customizations/server-discord-box";
 
 const successClasses =
 	"bg-green-200 border-green-400 dark:bg-green-800 dark:border-green-600";
@@ -39,15 +42,16 @@ export function ServerEditorProvider({
 	children,
 	serverData,
 	minehutData,
+	mhsfUser
 }: {
 	children: ReactNode | ReactNode[];
 	serverData: ReturnType<typeof useMHSFServer>;
 	minehutData: ServerResponse;
+	mhsfUser: {user: MHSFUser | null};
 }) {
 	const [open, setOpen] = useState(false);
 	const [onlineData, setOnlineData] = useState<OnlineServer>();
 	const { servers, loading } = useServers();
-	const [claimedUser, setClaimedUser] = useState<string>();
 
 	useEffect(() => {
 		window.addEventListener("open-server-editor", () => {
@@ -64,28 +68,19 @@ export function ServerEditorProvider({
 		}
 	}, [open, loading, servers, minehutData.name]);
 
-	useEffect(() => {
-		(async () => {
-			const response = await fetch("/api/v1/user/claimed-user");
-			const json = await response.json();
-
-			setClaimedUser(json.player ?? null);
-		})();
-	});
-
 	const requirementOne = minehutData.online;
 	const requirementTwo = onlineData !== null;
-	const requirementThree = claimedUser === onlineData?.author;
-	const requirementFour = claimedUser !== null;
-	const UploadDropzone = generateUploadDropzone<BannerUploaderRouter>({
-		url: `/api/v1/server/get/${minehutData._id}/settings/upload-banner`,
-	});
+	const requirementThree = mhsfUser !== null && mhsfUser.user?.claimedUser !== null && mhsfUser.user?.claimedUser?.name === onlineData?.author;
+	const requirementFour = mhsfUser !== null && mhsfUser.user?.claimedUser !== null;
 
 	return (
 		<>
 			{children}
 			<MilkdownProvider>
-				<Drawer open={open} onOpenChange={setOpen}>
+				<Drawer open={open} onOpenChange={(c) => {
+					serverData.refresh();
+					setOpen(c);
+				}}>
 					<DrawerContent className="p-4 !max-h-[700px] !h-[700px]">
 						<br />
 						{!serverData.server?.customizationData.isOwned ? (
@@ -207,14 +202,20 @@ export function ServerEditorProvider({
 								</div>
 								<DrawerFooter>
 									<Button
-										onClick={() =>
-											toast.promise(serverData.ownServer(), {
-												success: "Successfully owned server",
-												error:
-													"There was an error while linking this server. Please contact support.",
-												loading: "Linking server...",
-											})
-										}
+										onClick={async () => {
+											toast.promise(
+												async () => {
+													await serverData.ownServer();
+													await serverData.refresh();
+												},
+												{
+													success: "Successfully owned server",
+													error:
+														"There was an error while linking this server. Please contact support.",
+													loading: "Linking server...",
+												},
+											);
+										}}
 										disabled={
 											!(
 												requirementOne &&
@@ -249,6 +250,12 @@ export function ServerEditorProvider({
 												<ServerColorModeBox
 													serverData={serverData}
 													minehutData={minehutData}
+												/>
+												<ServerDiscordBox mhsfServer={minehutData._id} defaultDiscord={serverData.server.customizationData.discord ?? ""} />
+												<ServerUnownBox
+													mhsfData={serverData}
+													serverData={minehutData}
+													reset={() => {setOpen(false); serverData.refresh();}}
 												/>
 											</div>
 										) : (

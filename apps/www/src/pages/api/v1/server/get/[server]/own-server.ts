@@ -104,7 +104,7 @@ export default async function handler(
 			await collection.insertOne({ serverId: server, author: userId });
 
 			// Close the database, but don't close this
-			// serverless instance until it happens
+			// serverless instance until it happens	
 			waitUntil(client.close());
 
 			res.send({ message: "Successfully owned server!" });

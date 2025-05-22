@@ -126,7 +126,7 @@ export function MOTDRow({
 							code: CodeHighlight,
 						}}
 					>
-						{mhsfData.server?.customizationData.description}
+						{mhsfData.server?.customizationData.description?.replaceAll("<br />", "\n")}
 					</Markdown>
 				</div>
 			)}

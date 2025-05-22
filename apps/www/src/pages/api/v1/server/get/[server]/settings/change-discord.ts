@@ -28,27 +28,48 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { NextApiRequest, NextApiResponse } from "next";
+import { checkOwnedServerMetadata } from "@/lib/check-owned-server";
+import { getAuth } from "@clerk/nextjs/server";
 import { MongoClient } from "mongodb";
-import { waitUntil } from "@vercel/functions";
+import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
 	req: NextApiRequest,
 	res: NextApiResponse,
 ) {
-	const client = new MongoClient(process.env.MONGO_DB as string);
-	await client.connect();
+	try {
+		const { server: serverId, discordServerId } = req.query;
+		const mongo = new MongoClient(process.env.MONGO_DB as string);
+		if (!discordServerId)
+			return res.status(400).send({ error: "No description provided" });
+		if (
+			!(
+				discordServerId.length <= 25 &&
+				discordServerId.length > 3 &&
+				/^\d+$/.test(discordServerId as string)
+			)
+		)
+			return res.status(400).send({ error: "Invalid value" });
 
-	const db = client.db(process.env.CUSTOM_MONGO_DB ?? "mhsf");
-	const collection = db.collection("meta");
+		const { ok } = await fetch(
+			`https://discord.com/api/guilds/${discordServerId}/widget.json`,
+		);
 
-	const all = await collection.find().toArray();
-	const sorted = all.sort((a, b) => a.favorites - b.favorites);
-	sorted.reverse();
+		if (!ok) return res.status(400).send({ error: "Invalid value" });
 
-	// Close the database, but don't close this
-	// serverless instance until it happens
-	waitUntil(client.close());
+		const { changeServer } = await checkOwnedServerMetadata(
+			getAuth(req).userId ?? null,
+			mongo,
+			{
+				id: serverId as string,
+			},
+		);
 
-	res.send({ results: sorted });
+		await changeServer({
+			discord: discordServerId as string,
+		});
+	} catch (error) {
+		return res.status(400).send({ error: error });
+	}
+	return res.send({ message: "Success" });
 }

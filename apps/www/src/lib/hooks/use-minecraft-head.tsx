@@ -28,34 +28,28 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import type { NextApiResponse, NextApiRequest } from "next";
-import { MongoClient } from "mongodb";
-import { getAuth } from "@clerk/nextjs/server";
-import { waitUntil } from "@vercel/functions";
+import { useEffect, useState } from "react";
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  const { userId } = getAuth(req);
+export function useMinecraftHead(username: string) {
+    const [loading, setLoading] = useState(true);
+    const [imageUrl, setImageUrl] = useState<string | null>(null);
+    const [uuid, setUUID] = useState<string | null>(null);
 
-  if (!userId) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
-  const client = new MongoClient(process.env.MONGO_DB as string);
-  await client.connect();
+    useEffect(() => {
+        if (username !== "")
+            fetch(`https://api.mojang.com/users/profiles/minecraft/${username}`)
+                .then((c) => c.json())
+                .then((d) => {
+                    setUUID(d.id);
+                });
+    }, [username]);
 
-  const db = client.db(process.env.CUSTOM_MONGO_DB ?? "mhsf");
-  const collection = db.collection("favorites");
-  const find = await collection.find({ user: userId }).toArray();
+    useEffect(() => {
+        if (uuid !== null) {
+            setImageUrl(`https://api.mineatar.io/face/${uuid}`);
+            setLoading(false);
+        }
+    }, [uuid])
 
-  // Close the database, but don't close this
-  // serverless instance until it happens
-  waitUntil(client.close());
-
-  if (find.length == 0) {
-    res.send({ favorites: [] });
-  } else {
-    res.send({ favorites: find[0].favorites });
-  }
+    return { loading, imageUrl, uuid };
 }

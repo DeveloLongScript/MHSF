@@ -49,11 +49,9 @@ export default function ServerListModificationFrame() {
 		<main className=" p-4">
 			<h1 className="text-xl font-bold w-full">Filters & Sorting</h1>
 			<div className="flex items-center gap-2 my-2">
-				<Button size="sm">Active modifications</Button>
 				<Link href="/servers/embedded/sl-modification-frame/files">
 					<Button size="sm">Custom files</Button>
 				</Link>
-				<Button size="sm">Settings</Button>
 			</div>
 			<span className="text-wrap pt-2">
 				Pick out different filters & sorting systems to customize your server

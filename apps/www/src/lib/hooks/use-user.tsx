@@ -28,49 +28,51 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import "../globals.css";
-import { IsScript } from "@/components/util/is-script";
-import { NavBar } from "@/components/feat/navbar/navbar";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { ThemeProvider } from "@/components/util/theme-provider";
-import { FontBoundary } from "@/components/util/font-boundary";
-import { ClerkProvider } from "@/components/util/clerk-provider";
-import { Toaster } from "sonner";
-import { Footer } from "@/components/feat/footer/footer";
-import { NuqsAdapter } from "nuqs/adapters/next/app";
+import type { WithId } from "mongodb";
+import { useEffect, useState } from "react";
+import { NullLiteral } from "typescript";
 
-export default function RootLayout({
-	children,
-}: {
-	children: React.ReactNode;
-}) {
-	return (
-		<>
-			<ThemeProvider
-				attribute="class"
-				defaultTheme="system"
-				enableSystem
-				disableTransitionOnChange
-			>
-				<ClerkProvider>
-					<IsScript>
-						<NuqsAdapter>
-							<div vaul-drawer-wrapper="">
-								<FontBoundary>
-									<TooltipProvider>
-										<Toaster richColors position="top-center" />
-										<ClerkProvider>
-											<NavBar />
-											<div className="pt-16 min-h-screen">{children}</div>
-											<Footer />
-										</ClerkProvider>
-									</TooltipProvider>
-								</FontBoundary>
-							</div>
-						</NuqsAdapter>
-					</IsScript>
-				</ClerkProvider>
-			</ThemeProvider>
-		</>
-	);
+export type MHSFUser = {
+	favorites: WithId<{
+		/** @note Not important */
+		user: string;
+		/** TODO: should be as a Id */
+		favorites: string[];
+	}> | null;
+	ownedServers: {
+		serverId: string;
+		/** @deprecated use `serverId` instead */
+		server: string;
+
+		author: string;
+	}[];
+	claimedUser: { uuid: string; name: string } | null;
+	actions: {
+		linkAccount: string;
+		unlinkAccount: string;
+	};
+};
+
+export function useUser(): {
+	user: MHSFUser | null;
+	refresh: () => Promise<void>;
+} {
+	const [user, setUser] = useState<MHSFUser | null>(null);
+
+	useEffect(() => {
+		(async () => {
+			const user = await fetch("/api/v1/user/get");
+			const json = await user.json();
+			setUser(json);
+		})();
+	}, []);
+
+	return {
+		user,
+		refresh: async () => {
+			const user = await fetch("/api/v1/user/get");
+			const json = await user.json();
+			setUser(json);
+		},
+	};
 }

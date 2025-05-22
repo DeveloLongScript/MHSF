@@ -34,6 +34,7 @@ import { Inter } from "next/font/google";
 import { X } from "lucide-react";
 import { Link } from "@/components/util/link";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -44,7 +45,7 @@ export default function RootLayout({
 }) {
 	return (
 		<html lang="en">
-			<body className={inter.className}>
+			<body className={cn(inter.className, "bg-background font-sans")}>
 				<noscript>
 					<main className="flex justify-center items-center text-center min-h-screen h-max">
 						<Placeholder

@@ -28,25 +28,61 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import type { MHSFUser } from "@/lib/hooks/use-user";
+import { getAuth } from "@clerk/nextjs/server";
+import { MongoClient, type WithId } from "mongodb";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { getAuth, clerkClient } from "@clerk/nextjs/server";
-import { MongoClient } from "mongodb";
-import { waitUntil } from "@vercel/functions";
 
 export default async function handler(
 	req: NextApiRequest,
-	res: NextApiResponse,
+	res: NextApiResponse<MHSFUser | { error: string }>,
 ) {
 	const { userId } = getAuth(req);
 
 	if (!userId) {
 		return res.status(401).json({ error: "Unauthorized" });
 	}
+
 	const client = new MongoClient(process.env.MONGO_DB as string);
 	await client.connect();
-
 	const db = client.db(process.env.CUSTOM_MONGO_DB ?? "mhsf");
-	const users = db.collection("claimed-users");
 
-	return res.send((await users.findOne({ userId })) ?? {player: null});
+	const favoriteCollection = db.collection("favorites");
+	const favorites = (await favoriteCollection.findOne({
+		user: userId,
+	})) as WithId<{ user: string; favorites: string[] }> | null;
+
+	const ownedServersCollection = db.collection("owned-servers");
+	const ownedServers = (await ownedServersCollection
+		.find({ author: userId })
+		.toArray()) as WithId<{
+		serverId: string;
+		author: string;
+		server: string;
+	}>[];
+
+	const claimedUsers = db.collection("claimed-users");
+	const claimedUser = await claimedUsers.findOne({ userId });
+
+	let uuid = "";
+
+	if (claimedUser?.player !== undefined)
+		uuid = await fetch(
+			`https://api.mojang.com/users/profiles/minecraft/${claimedUser?.player ?? ""}`,
+		)
+			.then((c) => c.json())
+			.then((d) => d.id);
+
+	return res.send({
+		favorites,
+		ownedServers,
+		claimedUser:
+			claimedUser === null
+				? null
+				: { name: (claimedUser ?? { player: undefined }).player, uuid },
+		actions: {
+			unlinkAccount: "/api/v1/user/unlink-account",
+			linkAccount: "/api/v1/user/claim-account-code",
+		},
+	});
 }

@@ -30,113 +30,139 @@
 
 import { Material } from "@/components/ui/material";
 import {
-  Setting,
-  SettingContent,
-  SettingDescription,
-  SettingMeta,
-  SettingTitle,
+	Setting,
+	SettingContent,
+	SettingDescription,
+	SettingMeta,
+	SettingTitle,
 } from "./setting";
 import { ModeToggle } from "@/components/util/mode-toggle";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
 } from "@/components/ui/select";
 import { useEffect, useState } from "react";
 import { useSettingsStore } from "@/lib/hooks/use-settings-store";
 import { Switch } from "@/components/ui/switch";
+import { Separator } from "@/components/ui/separator";
+import { Heart } from "lucide-react";
+import { useTheme } from "@/lib/hooks/use-theme";
 
 export function BrowserSettings() {
-  const settingsStore = useSettingsStore();
-  const [fontFamily, setFontFamily] = useState("inter");
-  const [mcFont, setMcFont] = useState(true);
-  const [debugMode, setDebugMode] = useState(false);
+	const settingsStore = useSettingsStore();
+	const [fontFamily, setFontFamily] = useState("inter");
+	const [mcFont, setMcFont] = useState(true);
+	const [debugMode, setDebugMode] = useState(false);
+  const { resolvedTheme } = useTheme();
 
-  useEffect(() => {
-    setFontFamily((settingsStore.get("font-family") ?? "inter") as string);
-    setMcFont((settingsStore.get("mc-font") === "true") as boolean);
-    setDebugMode((settingsStore.get("debug-mode") === "true") as boolean);
-  }, []);
+	useEffect(() => {
+		setFontFamily((settingsStore.get("font-family") ?? "inter") as string);
+		setMcFont((settingsStore.get("mc-font") === "true") as boolean);
+		setDebugMode((settingsStore.get("debug-mode") === "true") as boolean);
+	}, []);
 
-  return (
-    <Material className="mt-6 grid gap-4">
-      <h2 className="text-xl font-semibold text-inherit">Appearance</h2>
-      <Setting>
-        <SettingContent>
-          <SettingMeta>
-            <SettingTitle>Color Scheme</SettingTitle>
-            <SettingDescription>
-              Change the MHSF color scheme
-            </SettingDescription>
-          </SettingMeta>
-          <ModeToggle />
-        </SettingContent>
-      </Setting>
-      <Setting>
-        <SettingContent>
-          <SettingMeta>
-            <SettingTitle>Use Minecraft font</SettingTitle>
-            <SettingDescription>
-              Use Minecraft font for MOTD. Turning this off restores font
-              settings for MOTD's to a v1-like state.
-            </SettingDescription>
-          </SettingMeta>
-          <Switch
-            checked={mcFont}
-            onCheckedChange={(c) => {
-              settingsStore.set("mc-font", c, false);
-              setMcFont(c);
-            }}
-          />
-        </SettingContent>
-      </Setting>
-      <Setting>
-        <SettingContent>
-          <SettingMeta>
-            <SettingTitle>Font</SettingTitle>
-            <SettingDescription>
-              Change the default font used in the interface.
-            </SettingDescription>
-          </SettingMeta>
-          <Select
-            defaultValue="inter"
-            value={fontFamily}
-            onValueChange={(c) => {
-              settingsStore.set("font-family", c, false);
-              window.dispatchEvent(new Event("font-family-change"));
-              setFontFamily(c);
-            }}
-          >
-            <SelectTrigger className="max-w-[180px]">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="inter">Inter</SelectItem>
-              <SelectItem value="geist-sans">Geist Sans</SelectItem>
-              <SelectItem value="system-ui">System UI</SelectItem>
-              <SelectItem value="roboto">Roboto</SelectItem>
-            </SelectContent>
-          </Select>
-        </SettingContent>
-      </Setting>
-      <Setting>
-        <SettingContent>
-          <SettingMeta>
-            <SettingTitle>Debug Mode</SettingTitle>
-            <SettingDescription>Enable debug mode to show debug options</SettingDescription>
-          </SettingMeta>
-          <Switch
-            checked={debugMode}
-            onCheckedChange={(c) => {
-              settingsStore.set("debug-mode", c, false);
-              window.dispatchEvent(new Event("debug-mode-change"));
-              setDebugMode(c);
-            }}
-          />
-        </SettingContent>
-      </Setting>
-    </Material>
-  );
+	return (
+		<Material className="mt-6 grid gap-4">
+			<h2 className="text-xl font-semibold text-inherit">Support</h2>
+			<Setting>
+				<SettingContent>
+					<SettingMeta>
+						<SettingTitle>Donate</SettingTitle>
+						<SettingDescription>
+							Please consider supporting me if you think this project is useful
+							to you, this project is completely open-source and I do not get
+							any money from it.
+						</SettingDescription>
+					</SettingMeta>
+					<a
+						className="px-3 py-1.5 rounded-lg shadow-none flex items-center gap-2 text-sm transition-all font-medium cursor-pointer duration-75 disabled:opacity-50 disabled:pointer-events-none origin-center dark:bg-pink-400 bg-pink-600 text-white dark:text-black"
+						href="https://buymeacoffee.com/dvelo"
+					>
+						<Heart fill={resolvedTheme === "dark" ? "black" : "white"} size={16} /> Donate
+					</a>
+				</SettingContent>
+			</Setting>
+			<Separator />
+			<h2 className="text-xl font-semibold text-inherit">Appearance</h2>
+			<Setting>
+				<SettingContent>
+					<SettingMeta>
+						<SettingTitle>Color Scheme</SettingTitle>
+						<SettingDescription>
+							Change the MHSF color scheme
+						</SettingDescription>
+					</SettingMeta>
+					<ModeToggle />
+				</SettingContent>
+			</Setting>
+			<Setting>
+				<SettingContent>
+					<SettingMeta>
+						<SettingTitle>Use Minecraft font</SettingTitle>
+						<SettingDescription>
+							Use Minecraft font for MOTD. Turning this off restores font
+							settings for MOTD's to a v1-like state.
+						</SettingDescription>
+					</SettingMeta>
+					<Switch
+						checked={mcFont}
+						onCheckedChange={(c) => {
+							settingsStore.set("mc-font", c, false);
+							setMcFont(c);
+						}}
+					/>
+				</SettingContent>
+			</Setting>
+			<Setting>
+				<SettingContent>
+					<SettingMeta>
+						<SettingTitle>Font</SettingTitle>
+						<SettingDescription>
+							Change the default font used in the interface.
+						</SettingDescription>
+					</SettingMeta>
+					<Select
+						defaultValue="inter"
+						value={fontFamily}
+						onValueChange={(c) => {
+							settingsStore.set("font-family", c, false);
+							window.dispatchEvent(new Event("font-family-change"));
+							setFontFamily(c);
+						}}
+					>
+						<SelectTrigger className="max-w-[180px]">
+							<SelectValue />
+						</SelectTrigger>
+						<SelectContent>
+							<SelectItem value="inter">Inter</SelectItem>
+							<SelectItem value="geist-sans">Geist Sans</SelectItem>
+							<SelectItem value="system-ui">System UI</SelectItem>
+							<SelectItem value="roboto">Roboto</SelectItem>
+						</SelectContent>
+					</Select>
+				</SettingContent>
+			</Setting>
+			<Setting>
+				<SettingContent>
+					<SettingMeta>
+						<SettingTitle>Debug Mode</SettingTitle>
+						<SettingDescription>
+							Enable debug mode to show debug options
+						</SettingDescription>
+					</SettingMeta>
+					<Switch
+						checked={debugMode}
+						onCheckedChange={(c) => {
+							settingsStore.set("debug-mode", c, false);
+							window.dispatchEvent(new Event("debug-mode-change"));
+							setDebugMode(c);
+						}}
+					/>
+				</SettingContent>
+			</Setting>
+		</Material>
+	);
 }

@@ -36,10 +36,10 @@ import { tryCatch } from "../try-catch";
 import { transpileTypeScript } from "@/app/(sl-modification-frame)/servers/embedded/sl-modification-frame/file/[filename]/page";
 import { useUser } from "@clerk/nextjs";
 import type { ClerkCustomActivatedModification } from "@/components/feat/server-list/modification/modification-file-creation-dialog";
-import { ClerkEmbeddedFilter } from "@/components/feat/server-list/modification/modification-action";
+import type { ClerkEmbeddedFilter } from "@/components/feat/server-list/modification/modification-action";
 import { supportedFilters } from "../types/supportedFilters";
 
-type EmbeddedFilter = {
+export type EmbeddedFilter = {
 	identifier: string;
 	functionFilter: (server: OnlineServer) => (boolean | Promise<boolean>);
 };
@@ -77,13 +77,13 @@ export function useFilters(data: OnlineServer[]) {
 		if (filteredData.length === 0 || data.length === 0) {
 			window.dispatchEvent(new Event("update-modification-stack"));
 		} else setLoading(false);
-	}, [data, filteredData, loading]);
+	}, [data, filteredData]);
 
 	useEffect(() => {
 		if (data.length === 0) {
 			window.dispatchEvent(new Event("update-modification-stack"));
 		} else setLoading(false);
-	}, [data, filteredData, loading]);
+	}, [data, filteredData]);
 
 	const testModeInit = (type: "filter" | "sort") => {
 		window.dispatchEvent(new Event("test-mode.enabled"));

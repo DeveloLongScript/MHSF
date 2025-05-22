@@ -29,9 +29,10 @@
  */
 
 import { getBackendProcedure } from "@/lib/backend-procedure";
-import type { MHSFData } from "@/lib/types/data";
-import { clerkClient, getAuth, User } from "@clerk/nextjs/server";
-import { MongoClient } from "mongodb";
+import type { Achievement } from "@/lib/types/achievement";
+import type { ActualCustomization, MHSFData } from "@/lib/types/data";
+import { clerkClient, getAuth, type User } from "@clerk/nextjs/server";
+import { type Db, type Filter, type Document, MongoClient, type WithId } from "mongodb";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 export type RouteParams = {
@@ -114,6 +115,7 @@ export default async function handler(
 		res.send({
 			server: {
 				favoriteData,
+				// @ts-ignore Also don't care what you think.
 				customizationData,
 				playerData,
 				achievements,
@@ -143,15 +145,18 @@ async function findCustomizationData(
 	serverName: string,
 	serverId: string,
 	userId: string | undefined,
-	db: any,
+	db: Db,
 ): Promise<{
 	description: string | undefined;
-	banner: string | undefined;
 	discord: string | undefined;
 	colorScheme: string | undefined;
+	colorMode: "dark" | "light" | null;
+	customizationVersion: number | undefined;
 	userProfilePicture: string | undefined;
 	isOwned: boolean;
 	isOwnedByUser: boolean;
+	banner: string | undefined;
+	_deletionId: string | undefined;
 }> {
 	const clerk = await clerkClient();
 	// Run queries in parallel
@@ -167,18 +172,33 @@ async function findCustomizationData(
 	]);
 	let user: User | undefined = undefined;
 	if (ownedServerData) {
-
 		try {
 			user = await clerk.users.getUser(ownedServerData?.author);
 		} catch (e) {
 			console.warn(e);
 			if (customizationData || ownedServerData) {
-				return {
-					...(customizationData as any),
+				const baseData: {
+					description?: string;
+					discord?: string;
+					colorScheme?: string;
+					colorMode: "dark" | "light" | null;
+					customizationVersion?: number;
+					banner?: string;
+					_deletionId?: string | undefined;
+					isOwned: boolean;
+					isOwnedByUser: boolean;
+					userProfilePicture: string | undefined;
+				} = {
+					...(customizationData as WithId<ActualCustomization> | null) ?? {},
 					isOwned: true,
 					isOwnedByUser: ownedServerData?.author === userId,
-					userProfilePicture: null,
+					userProfilePicture: undefined,
+					colorMode: null,
+					customizationVersion: undefined,
+					_deletionId: undefined,
 				};
+				// @ts-ignore L
+				return baseData
 			}
 			return {
 				isOwned: false,
@@ -187,17 +207,51 @@ async function findCustomizationData(
 				banner: undefined,
 				discord: undefined,
 				colorScheme: undefined,
+				colorMode: null,
+				customizationVersion: undefined,
 				userProfilePicture: undefined,
+				_deletionId: undefined,
 			};
 		}
 	}
 
 	if (customizationData || ownedServerData) {
-		return {
-			...(customizationData as any),
+		const baseData: {
+			description?: string;
+			discord?: string;
+			colorScheme?: string;
+			colorMode: "dark" | "light" | null;
+			customizationVersion?: number;
+			banner?: string;
+			_deletionId?: string | undefined;
+			isOwned: boolean;
+			isOwnedByUser: boolean;
+			userProfilePicture: string | undefined;
+		} = {
+			...(customizationData as WithId<ActualCustomization> | null) ?? {},
 			isOwned: true,
 			isOwnedByUser: ownedServerData?.author === userId,
-			userProfilePicture: userId ? user?.imageUrl : "no user",
+			customizationVersion: customizationData === null ? 2 : customizationData?.customizationVersion,
+			userProfilePicture: undefined,
+			colorMode: customizationData?.colorMode === undefined ? null : customizationData?.colorMode,
+			_deletionId: undefined,
+		};
+		// @ts-ignore L
+		return {
+			description: baseData.description,
+			discord: baseData.discord,
+			colorScheme: baseData.colorScheme,
+			colorMode: baseData.colorMode,
+			customizationVersion: baseData.customizationVersion,
+			userProfilePicture: baseData.userProfilePicture,
+			isOwned: baseData.isOwned,
+			isOwnedByUser: baseData.isOwnedByUser,
+			...(baseData.banner ? {
+				banner: baseData.banner as string,
+				_deletionId: (baseData._deletionId || "") as string,
+			} : {
+				banner: undefined,
+			}),
 		};
 	}
 
@@ -208,14 +262,17 @@ async function findCustomizationData(
 		banner: undefined,
 		discord: undefined,
 		colorScheme: undefined,
+		colorMode: null,
+		customizationVersion: undefined,
 		userProfilePicture: undefined,
+		_deletionId: undefined,
 	};
 }
 
 async function findFavoriteData(
 	serverName: string,
 	userId: string | undefined,
-	db: any,
+	db: Db,
 	query: {
 		maxFavoriteEntries?: string | string[];
 		favoriteTimespanStart?: string | string[];
@@ -246,16 +303,16 @@ async function findFavoriteData(
 }
 
 async function fetchHistoryData(
-	db: any,
+	db: Db,
 	serverName: string,
 	query: {
 		maxFavoriteEntries?: string | string[];
 		favoriteTimespanStart?: string | string[];
 		favoriteTimespanEnd?: string | string[];
 	},
-) {
+): Promise<{ date: string; favorites: number }[]> {
 	// Build query filter
-	const filter: any = { server: serverName };
+	const filter: { server: string; date?: { $gte: Date; $lte: Date } } = { server: serverName };
 
 	// Add date range filter if provided
 	if (query.favoriteTimespanStart && query.favoriteTimespanEnd) {
@@ -279,14 +336,18 @@ async function fetchHistoryData(
 		cursor.limit(limit);
 	}
 
-	return await cursor.toArray();
+	const results = await cursor.toArray();
+	return results.map(doc => ({
+		date: doc.date.toISOString(),
+		favorites: doc.favorites || 0
+	}));
 }
 
 export async function findServerData(
 	server: string,
 ): Promise<{ exists: boolean; name: string }> {
 	try {
-		const response = await fetch("https://api.minehut.com/server/" + server);
+		const response = await fetch(`https://api.minehut.com/server/${server}`);
 
 		// Check if the response is ok before parsing JSON
 		if (!response.ok) {
@@ -305,7 +366,7 @@ export async function findServerData(
 
 async function findPlayerData(
 	serverName: string,
-	db: any,
+	db: Db,
 	query: {
 		maxPlayerEntries?: string | string[];
 		playerTimespanStart?: string | string[];
@@ -316,7 +377,7 @@ async function findPlayerData(
 	const historyCollection = db.collection("history");
 
 	// Build query filter
-	const filter: any = { server: serverName };
+	const filter: Filter<Document> = { server: serverName };
 
 	// Add date range filter if provided
 	if (query.playerTimespanStart && query.playerTimespanEnd) {
@@ -348,10 +409,11 @@ async function findPlayerData(
 	}
 
 	// Format the data to match the expected structure
+	type HistoryDocument = { date: Date; player_count?: number };
 	const formattedHistory = historically.map(
-		(item: { date: string; player_count?: number }) => ({
-			date: item.date,
-			playerCount: item.player_count || 0,
+		(item) => ({
+			date: (item as HistoryDocument).date.toISOString(),
+			playerCount: (item as HistoryDocument).player_count || 0,
 		}),
 	);
 
@@ -362,7 +424,7 @@ async function findPlayerData(
 
 async function findAchievements(
 	serverName: string,
-	db: any,
+	db: Db,
 	query: {
 		maxAchievementEntries?: string | string[];
 		achievementTimespanStart?: string | string[];
@@ -373,12 +435,10 @@ async function findAchievements(
 	const achievementsCollection = db.collection("achievements");
 
 	// Build query filter
-	const filter: any = { name: serverName };
+	const filter: Filter<Document> = { name: serverName };
 
 	// Add date range filter if provided
 	if (query.achievementTimespanStart && query.achievementTimespanEnd) {
-		// Assuming there's a timestamp or date field in the achievements collection
-		// If it's stored in _id, we might need a different approach
 		filter.timestamp = {
 			$gte: new Date(Number(query.achievementTimespanStart)),
 			$lte: new Date(Number(query.achievementTimespanEnd)),
@@ -393,11 +453,17 @@ async function findAchievements(
 		historically = historically.slice(0, Number(query.maxAchievementEntries));
 	}
 
-	const currently: any[] = [];
-	for (const a of historically)
-		a.achievements.forEach((item: any, interval: number) =>
-			currently.push({ interval, ...item }),
-		);
+	// Transform the data to match the expected shape
+	const transformedHistorically = historically.map(doc => ({
+		_id: doc._id.toString(),
+		name: doc.name,
+		achievements: doc.achievements || []
+	}));
 
-	return { historically, currently };
+	const currently: Achievement[] = [];
+	for (const a of historically)
+		for (const item of a.achievements)
+			currently.push(item);
+
+	return { historically: transformedHistorically, currently };
 }

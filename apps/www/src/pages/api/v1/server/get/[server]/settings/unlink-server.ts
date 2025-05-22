@@ -28,50 +28,34 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { NextApiRequest, NextApiResponse } from "next";
-import { getAuth, clerkClient } from "@clerk/nextjs/server";
+import { checkOwnedServerMetadata } from "@/lib/check-owned-server";
+import { getAuth } from "@clerk/nextjs/server";
 import { MongoClient } from "mongodb";
-import { waitUntil } from "@vercel/functions";
+import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
 	req: NextApiRequest,
 	res: NextApiResponse,
 ) {
-	const { userId } = getAuth(req);
-	const { code } = req.body;
+	try {
+		const { server: serverId } = req.query;
+		const mongo = new MongoClient(process.env.MONGO_DB as string);
 
-	if (code == null) {
-		res.status(400).send({ message: "Couldn't find data" });
-		return;
+		const { ownedServer, customizedServer, changeServer } =
+			await checkOwnedServerMetadata(getAuth(req).userId ?? null, mongo, {
+				id: serverId as string,
+			});
+        const db = mongo.db(process.env.CUSTOM_MONGO_DB ?? "mhsf");
+
+		await db.collection("customization").findOneAndDelete({
+			$or: [{ serverId: serverId }],
+		});
+		await db.collection("owned-servers").findOneAndDelete({
+			$or: [{ serverId: serverId }],
+		});
+
+        return res.send({ message: "Success" });
+	} catch (error) {
+		return res.status(400).send({ error: error });
 	}
-
-	if (!userId) {
-		return res.status(401).json({ error: "Unauthorized" });
-	}
-	const client = new MongoClient(process.env.MONGO_DB as string);
-	await client.connect();
-
-	const db = client.db(process.env.CUSTOM_MONGO_DB ?? "mhsf");
-	const collection = db.collection("auth_codes");
-
-	const entry = await collection.findOne({ code });
-	if (entry == null) {
-		res.status(400).send({ message: "Couldn't find code" });
-		return;
-	}
-	collection.findOneAndDelete({ code });
-	const users = db.collection("claimed-users");
-	await users.insertOne({ player: entry.player, userId });
-
-	(await clerkClient()).users.updateUserMetadata(userId, {
-		publicMetadata: {
-			player: entry.player,
-		},
-	});
-
-	// Close the database, but don't close this
-	// serverless instance until it happens
-	waitUntil(client.close());
-
-	res.send({ player: entry.player });
 }

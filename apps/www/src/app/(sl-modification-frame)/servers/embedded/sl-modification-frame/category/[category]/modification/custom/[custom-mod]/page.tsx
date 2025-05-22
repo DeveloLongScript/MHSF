@@ -115,10 +115,12 @@ export default function ModificationPage({
 
 			<span className="p-4">
 				<h1 className="text-xl font-bold w-full">{modObj?.friendlyName}</h1>
-				<Markdown className="text-wrap pt-2">
-					This is a custom modification. Enable it! (or not) It's your own! (are
-					you proud?)
-				</Markdown>
+				<div className="text-wrap pt-2">
+					<Markdown>
+						This is a custom modification. Enable it! (or not) It's your own!
+						(are you proud?)
+					</Markdown>
+				</div>
 				<div className="flex justify-between items-center">
 					<Button
 						className="mt-2"

@@ -103,14 +103,7 @@ export function ServerList() {
 				</h1>
 				<div className="flex items-center justify-between">
 					<span className="flex items-center">
-						<Tooltip>
-							<TooltipTrigger>
-								<ModificationButton disabled={testModeEnabled} />
-							</TooltipTrigger>
-							<TooltipContent side="bottom">
-								{filterCount} modification(s) enabled
-							</TooltipContent>
-						</Tooltip>
+						<ModificationButton disabled={testModeEnabled} />
 						<ServerTestModeSelector
 							testModeStatus={testModeStatus}
 							testModeEnabled={testModeEnabled}

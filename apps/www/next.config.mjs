@@ -51,6 +51,10 @@ const nextConfig = {
         hostname: "exh89c9lva.ufs.sh",
         pathname: "/f/*",
       },
+      {
+        protocol: "https",
+        hostname: "api.mineatar.io"
+      }
     ],
   },
   async redirects() {

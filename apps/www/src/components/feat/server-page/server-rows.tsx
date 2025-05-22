@@ -39,6 +39,7 @@ import { IconsRow } from "./icons/icons-row";
 import { affiliates } from "./util";
 import { AffiliateRow } from "./afilliate/affilliate-row";
 import { EmbedCreatorRow } from "./embeds/embed-creator";
+import { ServerDiscordRow } from "./discord/server-discord-row";
 
 export function ServerRows({ server, mhsfData }: { server: ServerResponse, mhsfData: ReturnType<typeof useMHSFServer> }) {
   const clipboard = useClipboard();
@@ -46,8 +47,9 @@ export function ServerRows({ server, mhsfData }: { server: ServerResponse, mhsfD
   return (
     <span className="lg:grid lg:grid-cols-2 w-full gap-3">
       {affiliates.includes(server.name) && <AffiliateRow />}
-      <MOTDRow server={server} mhsfData={mhsfData}/>
+      <MOTDRow server={server} mhsfData={mhsfData} />
       <StatisticsMainRow server={server} mhsfData={mhsfData} />
+      {mhsfData.server?.customizationData.discord !== undefined && <ServerDiscordRow server={server} mhsfData={mhsfData} />}
       <GeneralInfo server={server} mhsfData={mhsfData} />
       <AchievementsView server={server} mhsfData={mhsfData} />
       <IconsRow server={server} mhsfData={mhsfData} />

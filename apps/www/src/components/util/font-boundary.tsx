@@ -77,6 +77,8 @@ export function FontBoundary({
 			})() as string,
 			"overflow-x-hidden",
 			className,
+			"bg-background",
+			"font-sans"
 		] as string[];
 
     document.body.classList.add(...classes);

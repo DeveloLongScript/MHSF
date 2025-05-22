@@ -53,7 +53,7 @@ export function WaitlistPage() {
 			<h1 className="scroll-m-20 text-2xl font-extrabold tracking-tight lg:text-4xl mb-3">
 				v2 private beta
 			</h1>
-			<p className="mb-3">
+			<p className="mb-3 text-sm">
 				Hello there! MHSF has an exclusive beta that you may have been invited{" "}
 				<br /> to. Please sign into your account below or follow the
 				instructions.
@@ -67,8 +67,8 @@ export function WaitlistPage() {
 				<SignedOut>
 					<p>
 						You must be signed in to check for eligibility for this beta. Please
-						make sure you use the Discord connection so we can check if you
-						eligibile for the beta.
+						make sure you use the Discord connection so we can check if you are
+						eligible for the beta.
 					</p>
 					<span className="flex items-center gap-2">
 						<Button onClick={() => clerk.openSignIn()} variant="secondary">

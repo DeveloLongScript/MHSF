@@ -35,7 +35,7 @@
  */
 //
 
-import { Achievement } from "./types/achievement";
+import type { Achievement } from "./types/achievement";
 
 const connector = (
   endpoint: string,
@@ -168,7 +168,7 @@ export async function isFavorited(server: string): Promise<boolean> {
 export async function getAccountFavorites(): Promise<Array<string>> {
   try {
     const response = await fetch(
-      connector(`/user/favorites`, { version: 1 }),
+      connector(`/user/get`, { version: 1 }),
       {
         method: "POST",
         headers: {
@@ -177,7 +177,7 @@ export async function getAccountFavorites(): Promise<Array<string>> {
       }
     );
 
-    return (await response.json()).result;
+    return (await response.json()).favorites.favorites;
   } catch {
     throw Error("Not authenticated with a user.");
   }

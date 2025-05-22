@@ -167,7 +167,7 @@ export default function Embed({ params }: { params: { server: string } }) {
         <div
           className={cn(
             "flex items-center transition-all duration-300 ease-in-out",
-            staticMode ? "ml-0" : "group-hover:ml-[42px]"
+            staticMode ? "ml-[42px]" : "group-hover:ml-[42px]"
           )}
         >
           {serverObject && (

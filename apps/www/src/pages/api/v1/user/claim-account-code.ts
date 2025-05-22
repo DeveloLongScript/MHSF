@@ -29,42 +29,44 @@
  */
 
 import type { NextApiRequest, NextApiResponse } from "next";
-import { clerkClient, getAuth } from "@clerk/nextjs/server";
-import z from "zod";
-
-const obj = z.object({
-	// Use padding on the sides of only the servers, not the whole server list
-	srv: z.boolean(),
-	// Items per row (4-6 rows)
-	ipr: z.number().min(4).max(6),
-	// Padding of server list (0-120px)
-	pad: z.number().min(0).max(120),
-});
+import { getAuth, clerkClient } from "@clerk/nextjs/server";
+import { MongoClient } from "mongodb";
 
 export default async function handler(
 	req: NextApiRequest,
 	res: NextApiResponse,
 ) {
 	const { userId } = getAuth(req);
+	const { code } = req.query;
 
-	if (!userId) {
-		return res.status(401).json({ error: "Unauthorized" });
-	}
-	const { data } = req.body;
-
-	if (data === undefined) {
+	if (code == null) {
 		res.status(400).send({ message: "Couldn't find data" });
 		return;
 	}
 
-	const v = obj.parse(data);
-	for (const [key, value] of Object.entries(v)) {
-		(await clerkClient()).users.updateUserMetadata(userId, {
-			publicMetadata: {
-				[key]: typeof value === "number" ? value.toString() : value,
-			},
-		});
+	if (!userId) {
+		return res.status(401).json({ error: "Unauthorized" });
 	}
+	const client = new MongoClient(process.env.MONGO_DB as string);
+	await client.connect();
 
-	res.status(200).send({ message: "Success" });
+	const db = client.db(process.env.CUSTOM_MONGO_DB ?? "mhsf");
+	const collection = db.collection("auth_codes");
+
+	const entry = await collection.findOne({ code });
+	if (entry == null) {
+		res.status(400).send({ message: "Couldn't find code" });
+		return;
+	}
+	await collection.findOneAndDelete({ code });
+	const users = db.collection("claimed-users");
+	await users.insertOne({ player: entry.player, userId });
+
+	(await clerkClient()).users.updateUserMetadata(userId, {
+		publicMetadata: {
+			player: entry.player,
+		},
+	});
+
+	res.send({ player: entry.player });
 }

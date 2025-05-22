@@ -12,11 +12,13 @@ import { Button } from "@/components/ui/button";
 import { DebugProvider } from "./debug/debug-provider";
 import { ReportingProvider } from "./reporting/reporting-provider";
 import { ServerEditorProvider } from "./server-editor/server-editor-provider";
+import { useUser } from "@/lib/hooks/use-user";
 
 export function ServerProvider({ serverId }: { serverId: string }) {
   const { server, error, loading, onlineServer } = useServer({ id: serverId });
   const settings = useSettingsStore();
   const mhsf = useMHSFServer(serverId);
+	const mhsfUser = useUser();
 
   if (error !== null)
     return (
@@ -72,7 +74,7 @@ export function ServerProvider({ serverId }: { serverId: string }) {
         </div>
       ) : (
         <div className="px-10">
-          <ServerEditorProvider serverData={mhsf} minehutData={server as ServerResponse}>
+          <ServerEditorProvider serverData={mhsf} minehutData={server as ServerResponse} mhsfUser={mhsfUser}>
             <ReportingProvider server={mhsf}>
               <ServerMainPage
                 server={server as ServerResponse}

@@ -15,7 +15,7 @@ export function Footer() {
 
   if (!hideFooterPages.includes(pathname ?? ""))
     return (
-      <footer className="w-full mt-15 border-t border-neutral-500/20 bg-neutral-100 dark:border-neutral-700/50 dark:bg-neutral-900 text-muted-foreground">
+      <footer className="w-full my-15 border-t border-neutral-500/20 bg-neutral-100 dark:border-neutral-700/50 dark:bg-neutral-900 text-muted-foreground">
         <div className="flex justify-between items-start p-[20px]">
           <span className="flex items-center gap-4">
             <Link href="Special:Root">
@@ -89,7 +89,7 @@ export function Footer() {
 
           </div>
         </div>
-        <span className="block px-4 lg:-translate-y-12">
+        <span className="block px-4">
           <small className="text-[0.75rem]">
             MHSF is an open-source project licensed under the MIT license. MHSF is
             not officially affiliated with with Minehut, Super League Enterprise,
